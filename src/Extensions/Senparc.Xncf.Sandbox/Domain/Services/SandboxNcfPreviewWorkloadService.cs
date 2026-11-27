@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Options;
@@ -120,9 +123,23 @@ public sealed class SandboxNcfPreviewWorkloadService : IXncfSandboxPreviewServic
         };
     }
 
+    /// <summary>
+    /// Stops and destroys the Sandbox preview associated with a session.
+    /// </summary>
+    /// <param name="sandboxSessionId">The Sandbox session identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel cleanup.</param>
+    /// <returns>A task that completes after destruction is requested.</returns>
     public Task StopAsync(string sandboxSessionId, CancellationToken cancellationToken = default) =>
         _orchestrator.DestroyAsync(sandboxSessionId, cancellationToken);
 
+    /// <summary>
+    /// Copies a bounded workspace tree while rejecting symbolic links.
+    /// </summary>
+    /// <param name="sourceRoot">The source workspace directory.</param>
+    /// <param name="destinationRoot">The destination directory.</param>
+    /// <param name="cancellationToken">Token used to cancel copying.</param>
+    /// <exception cref="UnauthorizedAccessException">Thrown when a symbolic link is encountered.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the copied size exceeds the safety limit.</exception>
     private static async Task CopyWorkspaceAsync(string sourceRoot, string destinationRoot, CancellationToken cancellationToken)
     {
         var source = Path.GetFullPath(sourceRoot);
@@ -174,6 +191,12 @@ public sealed class SandboxNcfPreviewWorkloadService : IXncfSandboxPreviewServic
         }
     }
 
+    /// <summary>
+    /// Validates that a preview path is relative and contains no traversal/control characters.
+    /// </summary>
+    /// <param name="value">The path value.</param>
+    /// <param name="parameterName">The parameter name used in the exception.</param>
+    /// <exception cref="ArgumentException">Thrown when the path is unsafe.</exception>
     private static void ValidateRelativePath(string value, string parameterName)
     {
         if (string.IsNullOrWhiteSpace(value)
@@ -185,6 +208,11 @@ public sealed class SandboxNcfPreviewWorkloadService : IXncfSandboxPreviewServic
         }
     }
 
+    /// <summary>
+    /// Validates an XNCF module project name against the supported identifier characters.
+    /// </summary>
+    /// <param name="value">The module name.</param>
+    /// <exception cref="ArgumentException">Thrown when the module name is invalid.</exception>
     private static void ValidateModuleName(string value)
     {
         if (string.IsNullOrWhiteSpace(value)

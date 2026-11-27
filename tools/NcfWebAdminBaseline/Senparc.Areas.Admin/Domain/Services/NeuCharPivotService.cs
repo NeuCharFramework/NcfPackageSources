@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.ACL;
@@ -152,6 +155,13 @@ public sealed class NeuCharPivotService
     private readonly NeuCharPivotLoopTaskService _loopTaskService;
     private readonly NeuCharFunctionService _catalogService;
 
+    /// <summary>
+    /// Initializes pivot configuration, function, loop-task, and live Function-catalog services.
+    /// </summary>
+    /// <param name="configurationService">The pivot configuration service.</param>
+    /// <param name="functionService">The persisted pivot-function service.</param>
+    /// <param name="loopTaskService">The loop-task service.</param>
+    /// <param name="catalogService">The live Function catalog service.</param>
     public NeuCharPivotService(
         NeuCharPivotConfigurationService configurationService,
         NeuCharPivotFunctionService functionService,
@@ -164,6 +174,13 @@ public sealed class NeuCharPivotService
         _catalogService = catalogService;
     }
 
+    /// <summary>
+    /// Loads one module's persisted pivot configuration, functions, loop tasks, and
+    /// live availability/catalog metadata.
+    /// </summary>
+    /// <param name="moduleUid">The target module UID.</param>
+    /// <param name="cancellationToken">Token used to cancel catalog loading.</param>
+    /// <returns>The snapshot, or <see langword="null"/> when no configuration exists.</returns>
     public async Task<NeuCharPivotSnapshot> GetSnapshotAsync(
         string moduleUid,
         CancellationToken cancellationToken = default)
@@ -211,6 +228,11 @@ public sealed class NeuCharPivotService
             catalog.ToDictionary(z => z.FunctionKey, StringComparer.OrdinalIgnoreCase));
     }
 
+    /// <summary>
+    /// Loads snapshots for all persisted pivot configurations in update-time order.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel iteration.</param>
+    /// <returns>The available pivot snapshots.</returns>
     public async Task<IReadOnlyList<NeuCharPivotSnapshot>> GetAllSnapshotsAsync(
         CancellationToken cancellationToken = default)
     {
@@ -231,6 +253,19 @@ public sealed class NeuCharPivotService
         return result;
     }
 
+    /// <summary>
+    /// Validates and persists an AI/deterministic layout, synchronizes its function
+    /// rows, disables stale rows, and returns the resulting live snapshot.
+    /// </summary>
+    /// <param name="moduleUid">The target module UID.</param>
+    /// <param name="requirement">The user requirement used to generate the layout.</param>
+    /// <param name="aiModelId">The AI model identifier, or fallback marker.</param>
+    /// <param name="adminUserId">The administrator who owns the generated layout.</param>
+    /// <param name="chatSessionId">Optional chat session that produced the layout.</param>
+    /// <param name="candidateSchemaJson">The candidate layout JSON.</param>
+    /// <param name="cancellationToken">Token used to cancel catalog/persistence operations.</param>
+    /// <returns>The persisted pivot snapshot.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the module has no registered functions.</exception>
     public async Task<NeuCharPivotSnapshot> SaveGeneratedLayoutAsync(
         string moduleUid,
         string requirement,
@@ -325,12 +360,23 @@ public sealed class NeuCharPivotService
         return await GetSnapshotAsync(moduleUid, cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Builds a deterministic layout JSON containing the supplied Function catalog.
+    /// </summary>
+    /// <param name="catalog">The allowed Function descriptors.</param>
+    /// <returns>Normalized fallback layout JSON.</returns>
     public string BuildFallbackSchemaJson(IReadOnlyList<NeuCharFunctionDescriptor> catalog)
     {
         var layout = NormalizeLayout(null, catalog);
         return JsonSerializer.Serialize(layout, JsonOptions);
     }
 
+    /// <summary>
+    /// Rebuilds a persisted function's parameter schema from the live Function contract.
+    /// </summary>
+    /// <param name="function">The persisted pivot function.</param>
+    /// <param name="catalog">The live Function catalog keyed by Function key.</param>
+    /// <returns>Current parameter schema JSON or the persisted schema when unavailable.</returns>
     public string GetCurrentParameterSchemaJson(
         NeuCharPivotFunction function,
         IReadOnlyDictionary<string, NeuCharFunctionDescriptor> catalog)
@@ -353,6 +399,13 @@ public sealed class NeuCharPivotService
         return JsonSerializer.Serialize(currentSchema, JsonOptions);
     }
 
+    /// <summary>
+    /// Parses, sanitizes, bounds, deduplicates, and completes a candidate pivot layout
+    /// so every catalog Function is represented exactly once.
+    /// </summary>
+    /// <param name="candidateSchemaJson">The candidate JSON, optionally wrapped in model text.</param>
+    /// <param name="catalog">The authoritative Function catalog.</param>
+    /// <returns>A safe normalized layout.</returns>
     public NeuCharPivotLayout NormalizeLayout(
         string candidateSchemaJson,
         IReadOnlyList<NeuCharFunctionDescriptor> catalog)
@@ -472,6 +525,13 @@ public sealed class NeuCharPivotService
         return layout;
     }
 
+    /// <summary>
+    /// Normalizes one layout Function against its descriptor and guarantees required
+    /// parameters remain exposed.
+    /// </summary>
+    /// <param name="item">The candidate layout item, or <see langword="null"/> for a generated fallback.</param>
+    /// <param name="descriptor">The authoritative Function descriptor.</param>
+    /// <returns>A normalized layout Function.</returns>
     private static NeuCharPivotLayoutFunction NormalizeFunction(
         NeuCharPivotLayoutFunction item,
         NeuCharFunctionDescriptor descriptor)
@@ -512,6 +572,11 @@ public sealed class NeuCharPivotService
         };
     }
 
+    /// <summary>
+    /// Restricts panel type text to the supported panel vocabulary.
+    /// </summary>
+    /// <param name="value">The candidate panel type.</param>
+    /// <returns>A supported panel type.</returns>
     private static string NormalizePanelType(string value) =>
         value?.Trim().ToLowerInvariant() switch
         {
@@ -519,6 +584,12 @@ public sealed class NeuCharPivotService
             _ => "shortcuts"
         };
 
+    /// <summary>
+    /// Removes non-alphanumeric characters from a layout key and applies a bounded fallback.
+    /// </summary>
+    /// <param name="value">The candidate key.</param>
+    /// <param name="fallback">The fallback key.</param>
+    /// <returns>A safe key.</returns>
     private static string CleanKey(string value, string fallback)
     {
         var cleaned = new string((value ?? string.Empty)
@@ -528,6 +599,13 @@ public sealed class NeuCharPivotService
         return string.IsNullOrWhiteSpace(cleaned) ? fallback : cleaned[..Math.Min(80, cleaned.Length)];
     }
 
+    /// <summary>
+    /// Projects live Function parameter metadata into the persisted pivot UI schema,
+    /// retaining all required parameters and selected optional parameters.
+    /// </summary>
+    /// <param name="descriptor">The Function descriptor.</param>
+    /// <param name="exposedParameters">Optional parameter names selected for exposure.</param>
+    /// <returns>The UI parameter schema.</returns>
     public static List<NeuCharPivotParameterSchema> BuildParameterSchema(
         NeuCharFunctionDescriptor descriptor,
         IReadOnlyCollection<string> exposedParameters)
@@ -556,6 +634,11 @@ public sealed class NeuCharPivotService
             }).ToList();
     }
 
+    /// <summary>
+    /// Builds default request values from parameter defaults and selection-list defaults.
+    /// </summary>
+    /// <param name="parameters">The parameter schema.</param>
+    /// <returns>Case-insensitive default-value mapping.</returns>
     public static Dictionary<string, object> BuildDefaultParameters(
         IEnumerable<NeuCharPivotParameterSchema> parameters)
     {
@@ -581,6 +664,12 @@ public sealed class NeuCharPivotService
         return result;
     }
 
+    /// <summary>
+    /// Extracts the outermost JSON object from model text that may contain surrounding prose.
+    /// </summary>
+    /// <param name="value">The model output text.</param>
+    /// <returns>The extracted JSON object text.</returns>
+    /// <exception cref="JsonException">Thrown when no object delimiters are present.</exception>
     private static string ExtractJsonObject(string value)
     {
         var start = value.IndexOf('{');
@@ -592,6 +681,12 @@ public sealed class NeuCharPivotService
         return value.Substring(start, end - start + 1);
     }
 
+    /// <summary>
+    /// Removes angle brackets, trims whitespace, and caps layout display text.
+    /// </summary>
+    /// <param name="value">The candidate text.</param>
+    /// <param name="maxLength">The maximum output length.</param>
+    /// <returns>Sanitized text, or <see langword="null"/> for blank input.</returns>
     private static string CleanText(string value, int maxLength)
     {
         if (string.IsNullOrWhiteSpace(value))

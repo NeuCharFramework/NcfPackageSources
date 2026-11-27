@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.12.29 Improved AdminChat, system log analysis, workflow commands, and workspace asset operations.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -56,6 +59,13 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
     private readonly ILogger<AdminChatWorkspaceAssetsController> _logger;
     private readonly IWebHostEnvironment _environment;
 
+    /// <summary>
+    /// Initializes the authenticated Workspace asset API and its protected-share/capability stores.
+    /// </summary>
+    /// <param name="assets">The owner-scoped asset service.</param>
+    /// <param name="shares">The protected public-share store.</param>
+    /// <param name="logger">The request diagnostic logger.</param>
+    /// <param name="environment">The host environment used for HTTPS share policy.</param>
     public AdminChatWorkspaceAssetsController(
         AdminChatWorkspaceAssetService assets, WorkspaceAssetShareStore shares,
         ILogger<AdminChatWorkspaceAssetsController> logger, IWebHostEnvironment environment)
@@ -70,6 +80,13 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
     private WorkspaceAssetCapabilityStore Capabilities =>
         HttpContext?.RequestServices?.GetService<WorkspaceAssetCapabilityStore>() ?? _capabilities;
 
+    /// <summary>
+    /// Returns a sanitized HTML preview for a session-owned workspace file.
+    /// </summary>
+    /// <param name="sessionId">The owner-scoped chat session.</param>
+    /// <param name="path">The workspace-relative HTML path.</param>
+    /// <param name="cancellationToken">Token used to cancel reads and rewriting.</param>
+    /// <returns>An HTML response or a mapped authorization/validation error.</returns>
     [HttpGet("{sessionId:int}/preview")]
     public Task<IActionResult> Preview(int sessionId, [FromQuery] string path, CancellationToken cancellationToken) =>
         ExecuteAsync(async () =>
@@ -79,6 +96,12 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
             return Html(preview.Html);
         });
 
+    /// <summary>
+    /// Returns the upload limits and supported extensions for a session workspace.
+    /// </summary>
+    /// <param name="sessionId">The owner-scoped chat session.</param>
+    /// <param name="cancellationToken">Token used to validate session access.</param>
+    /// <returns>JSON capability metadata.</returns>
     [HttpGet("{sessionId:int}/attachments/capabilities")]
     public Task<IActionResult> AttachmentCapabilities(int sessionId, CancellationToken cancellationToken) =>
         ExecuteAsync(async () =>
@@ -98,6 +121,14 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
     [HttpPost("{sessionId:int}/attachments")]
     [RequestSizeLimit(17 * 1024 * 1024)]
     [RequestFormLimits(MultipartBodyLengthLimit = 17 * 1024 * 1024)]
+    /// <summary>
+    /// Uploads a bounded attachment and optional image vision preview.
+    /// </summary>
+    /// <param name="sessionId">The owner-scoped chat session.</param>
+    /// <param name="file">The multipart attachment.</param>
+    /// <param name="visionPreview">Optional validated JPEG preview.</param>
+    /// <param name="cancellationToken">Token used to cancel upload.</param>
+    /// <returns>JSON attachment metadata.</returns>
     public Task<IActionResult> UploadAttachment(int sessionId, IFormFile file,
         IFormFile visionPreview, CancellationToken cancellationToken) =>
         ExecuteAsync(async () =>
@@ -111,6 +142,13 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
     [HttpPost("{sessionId:int}/attachments/large")]
     [RequestSizeLimit(LargeAttachmentTransportLimit)]
     [RequestFormLimits(MultipartBodyLengthLimit = LargeAttachmentTransportLimit)]
+    /// <summary>
+    /// Streams a large attachment to workspace storage for deferred processing.
+    /// </summary>
+    /// <param name="sessionId">The owner-scoped chat session.</param>
+    /// <param name="file">The multipart attachment.</param>
+    /// <param name="cancellationToken">Token used to cancel streaming.</param>
+    /// <returns>JSON attachment metadata.</returns>
     public Task<IActionResult> UploadLargeAttachment(int sessionId, IFormFile file,
         CancellationToken cancellationToken) =>
         ExecuteAsync(async () =>
@@ -123,6 +161,13 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
 
     [HttpPost("{sessionId:int}/attachments/delete")]
     [RequestSizeLimit(64 * 1024)]
+    /// <summary>
+    /// Deletes an uploaded attachment that is not referenced by an existing message.
+    /// </summary>
+    /// <param name="sessionId">The owner-scoped chat session.</param>
+    /// <param name="request">The attachment path and expected ETag.</param>
+    /// <param name="cancellationToken">Token used to cancel deletion.</param>
+    /// <returns>JSON deletion status.</returns>
     public Task<IActionResult> DeletePendingAttachment(int sessionId,
         [FromBody] AdminChatAttachmentInput request, CancellationToken cancellationToken) =>
         ExecuteAsync(async () =>
@@ -136,6 +181,13 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
         });
 
     [HttpGet("{sessionId:int}/download")]
+    /// <summary>
+    /// Downloads one file or a bounded ZIP archive from the session workspace.
+    /// </summary>
+    /// <param name="sessionId">The owner-scoped chat session.</param>
+    /// <param name="path">The file or directory path, empty for workspace root.</param>
+    /// <param name="cancellationToken">Token used to cancel download.</param>
+    /// <returns>An octet-stream file response or a busy/error response.</returns>
     public Task<IActionResult> Download(int sessionId, [FromQuery] string path = "",
         CancellationToken cancellationToken = default) =>
         ExecuteAsync(async () =>
@@ -154,6 +206,13 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
 
     [HttpPost("{sessionId:int}/capabilities")]
     [RequestSizeLimit(4096)]
+    /// <summary>
+    /// Creates a short-lived capability URL for one session-owned workspace file.
+    /// </summary>
+    /// <param name="sessionId">The owner-scoped chat session.</param>
+    /// <param name="request">The target file path.</param>
+    /// <param name="cancellationToken">Token used to cancel metadata access.</param>
+    /// <returns>Capability URL, expiry, ETag, size, and content type.</returns>
     public Task<IActionResult> CreateCapability(
         int sessionId, [FromBody] WorkspaceCapabilityRequest request,
         CancellationToken cancellationToken) =>
@@ -177,6 +236,13 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
 
     [HttpPost("{sessionId:int}/manifest")]
     [RequestSizeLimit(4096)]
+    /// <summary>
+    /// Builds a bounded capability manifest for preview assets under one source scope.
+    /// </summary>
+    /// <param name="sessionId">The owner-scoped chat session.</param>
+    /// <param name="request">The source preview path.</param>
+    /// <param name="cancellationToken">Token used to cancel traversal.</param>
+    /// <returns>JSON asset capability metadata.</returns>
     public Task<IActionResult> CreateManifest(
         int sessionId, [FromBody] WorkspaceCapabilityRequest request,
         CancellationToken cancellationToken) =>
@@ -230,6 +296,14 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet("asset/{id}/{token}")]
+    /// <summary>
+    /// Serves a public capability-protected workspace asset only while its ETag
+    /// and short-lived token remain valid.
+    /// </summary>
+    /// <param name="id">The capability identifier.</param>
+    /// <param name="token">The capability token.</param>
+    /// <param name="cancellationToken">Token used to cancel the read.</param>
+    /// <returns>The file response or HTTP 404 when the capability is invalid/stale.</returns>
     public async Task<IActionResult> Asset(string id, string token, CancellationToken cancellationToken)
     {
         if (!Capabilities.TryGet(id, token, out var capability))
@@ -257,6 +331,12 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Lists public shares belonging to the owner-scoped session/workspace.
+    /// </summary>
+    /// <param name="sessionId">The owner-scoped chat session.</param>
+    /// <param name="cancellationToken">Token used to cancel the query.</param>
+    /// <returns>Share metadata without HTML bodies.</returns>
     [HttpGet("{sessionId:int}/shares")]
     public Task<IActionResult> ListShares(int sessionId, CancellationToken cancellationToken) =>
         ExecuteAsync(async () =>
@@ -269,6 +349,13 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
 
     [HttpPost("{sessionId:int}/shares")]
     [RequestSizeLimit(4096)]
+    /// <summary>
+    /// Creates an HTTPS-protected, expiring HTML snapshot share for a workspace path.
+    /// </summary>
+    /// <param name="sessionId">The owner-scoped chat session.</param>
+    /// <param name="request">The source path and allowed lifetime.</param>
+    /// <param name="cancellationToken">Token used to cancel preview/share creation.</param>
+    /// <returns>Share metadata and preview warnings.</returns>
     public Task<IActionResult> CreateShare(int sessionId, [FromBody] CreateWorkspaceAssetShare request,
         CancellationToken cancellationToken) =>
         ExecuteAsync(async () =>
@@ -284,6 +371,13 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
         });
 
     [HttpPost("{sessionId:int}/shares/{shareId}/revoke")]
+    /// <summary>
+    /// Revokes one share belonging to the owner-scoped session/workspace.
+    /// </summary>
+    /// <param name="sessionId">The owner-scoped chat session.</param>
+    /// <param name="shareId">The share identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel revocation.</param>
+    /// <returns>Success or not-found response.</returns>
     public Task<IActionResult> RevokeShare(int sessionId, string shareId, CancellationToken cancellationToken) =>
         ExecuteAsync(async () =>
         {
@@ -295,6 +389,14 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet("shared/{id}/{token}")]
+    /// <summary>
+    /// Serves an anonymous HTML share after HTTPS, rate-limit, expiration,
+    /// workspace ownership, and token checks.
+    /// </summary>
+    /// <param name="id">The share identifier.</param>
+    /// <param name="token">The share token.</param>
+    /// <param name="cancellationToken">Token used to cancel share access.</param>
+    /// <returns>The sanitized HTML share or an error response.</returns>
     public Task<IActionResult> Shared(string id, string token, CancellationToken cancellationToken) =>
         ExecuteAsync(async () =>
         {
@@ -309,14 +411,28 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
             return Html(share.Html);
         });
 
+    /// <summary>
+    /// Projects a share into client metadata and its public URL.
+    /// </summary>
+    /// <param name="share">The persisted share.</param>
+    /// <returns>An anonymous response DTO.</returns>
     private object ShareDto(WorkspaceAssetShare share) => new
     {
         share.Id, share.Path, share.CreatedAt, share.ExpiresAt,
         url = $"{Request.PathBase}/api/Senparc.Areas.Admin/WorkspaceAssets/shared/{share.Id}/{share.Token}"
     };
 
+    /// <summary>
+    /// Reads the authenticated administrator identifier from the current principal.
+    /// </summary>
+    /// <returns>The administrator identifier.</returns>
     private int GetOwnerId() => int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
+    /// <summary>
+    /// Requires HTTPS for anonymous share transport, allowing only development
+    /// loopback HTTP for local testing.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">Thrown when transport is not permitted.</exception>
     private void EnsureShareTransport()
     {
         if (Request.IsHttps) return;
@@ -328,6 +444,12 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
         throw new InvalidOperationException("匿名分享需要 HTTPS，本机回环地址调试除外；反向代理应正确转发 HTTPS 协议。");
     }
 
+    /// <summary>
+    /// Creates an HTML response with restrictive preview, framing, referrer,
+    /// indexing, and cache headers.
+    /// </summary>
+    /// <param name="html">The sanitized HTML content.</param>
+    /// <returns>The configured HTML file response.</returns>
     private FileContentResult Html(string html)
     {
         Response.Headers["Content-Security-Policy"] = WorkspaceAssetPreviewBuilder.ContentSecurityPolicy;
@@ -342,6 +464,12 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
         return File(Encoding.UTF8.GetBytes(html), "text/html; charset=utf-8");
     }
 
+    /// <summary>
+    /// Runs an asset operation and maps authorization, validation, missing-file,
+    /// and I/O exceptions to stable HTTP responses.
+    /// </summary>
+    /// <param name="action">The asset operation to execute.</param>
+    /// <returns>The operation result or mapped error response.</returns>
     private async Task<IActionResult> ExecuteAsync(Func<Task<IActionResult>> action)
     {
         try { return await action(); }

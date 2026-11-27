@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.21.14 Updated database integration support and related localization metadata
 
+    Modified by: Senparc - 20261127
+    Change description: v0.21.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -22,7 +25,7 @@ using System.Text;
 namespace Senparc.Ncf.Database.MultipleMigrationDbContext
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Marks a DbContext as participating in provider-specific migration registration.
     /// </summary>
     public interface IMultipleMigrationDbContext
     {

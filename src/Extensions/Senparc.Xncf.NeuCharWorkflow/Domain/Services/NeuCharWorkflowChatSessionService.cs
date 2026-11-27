@@ -17,6 +17,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.0.0 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -50,11 +53,6 @@ public sealed class NeuCharWorkflowChatSessionService
     public const string RoleError = "error";
 
     /// <summary>
-    /// Compute the participant-key hash (the SHA256 hexadecimal digest after
-    /// trimming whitespace). Session keys and database persistence use the same
-    /// algorithm so restart recovery can find the original session.
-    /// </summary>
-    /// <summary>
     /// Hashes a trimmed participant key for session and persistence storage.
     /// </summary>
     /// <param name="participantKey">The participant key to hash.</param>
@@ -69,6 +67,12 @@ public sealed class NeuCharWorkflowChatSessionService
 
     private readonly ConcurrentDictionary<string, ChatSession> _sessions = new(StringComparer.Ordinal);
 
+    /// <summary>
+    /// Returns an existing participant session or creates one after validating its identity.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="participantKey">The authenticated or guest participant key.</param>
+    /// <returns>The in-process chat session.</returns>
     private ChatSession GetOrCreate(int workflowId, string participantKey)
     {
         Validate(workflowId, participantKey);
@@ -77,6 +81,12 @@ public sealed class NeuCharWorkflowChatSessionService
         return _sessions.GetOrAdd(key, _ => new ChatSession(workflowId, participantKey));
     }
 
+    /// <summary>
+    /// Looks up a participant session without creating one.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="participantKey">The participant key.</param>
+    /// <returns>The session, or <see langword="null"/> when absent or invalid.</returns>
     private ChatSession? Get(int workflowId, string participantKey)
     {
         if (workflowId <= 0 || string.IsNullOrWhiteSpace(participantKey))
@@ -87,10 +97,6 @@ public sealed class NeuCharWorkflowChatSessionService
         return session;
     }
 
-    /// <summary>
-    /// Append a message and return the current snapshot; discard the oldest
-    /// messages when the limit is exceeded.
-    /// </summary>
     /// <summary>
     /// Adds a bounded user/assistant/error message to a session and returns its current snapshot.
     /// </summary>
@@ -152,9 +158,11 @@ public sealed class NeuCharWorkflowChatSessionService
     }
 
     /// <summary>
-    /// Record the run currently associated with the session. Only one run may
-    /// be active for a session.
+    /// Associates one active workflow run with a session, replacing any previous association.
     /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="participantKey">The participant key.</param>
+    /// <param name="runId">The active run identifier.</param>
     public void SetPendingRun(int workflowId, string participantKey, Guid runId)
     {
         var session = GetOrCreate(workflowId, participantKey);
@@ -185,9 +193,11 @@ public sealed class NeuCharWorkflowChatSessionService
     }
 
     /// <summary>
-    /// Return the run associated with the session so polling can resume after
-    /// a page refresh.
+    /// Returns the run associated with a session so polling can resume after a page refresh.
     /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="participantKey">The participant key.</param>
+    /// <returns>The pending run identifier, or <see langword="null"/>.</returns>
     public Guid? GetPendingRun(int workflowId, string participantKey)
     {
         var session = Get(workflowId, participantKey);
@@ -202,9 +212,12 @@ public sealed class NeuCharWorkflowChatSessionService
     }
 
     /// <summary>
-    /// Clear the association only while the session still points to this run.
-    /// False means another run has taken over or the session was reset.
+    /// Clears the pending association only when it still points to the supplied run.
     /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="participantKey">The participant key.</param>
+    /// <param name="runId">The run identifier that must still be associated.</param>
+    /// <returns><see langword="true"/> when the association was cleared.</returns>
     public bool ClearPendingRun(int workflowId, string participantKey, Guid runId)
     {
         var session = Get(workflowId, participantKey);
@@ -259,6 +272,12 @@ public sealed class NeuCharWorkflowChatSessionService
         }
     }
 
+    /// <summary>
+    /// Validates workflow/participant identifiers and enforces the active-session capacity limit.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="participantKey">The participant key.</param>
+    /// <exception cref="InvalidOperationException">Thrown when identifiers are invalid or capacity is exhausted.</exception>
     private void Validate(int workflowId, string participantKey)
     {
         if (workflowId <= 0 || string.IsNullOrWhiteSpace(participantKey) || participantKey.Trim().Length > 256)
@@ -271,6 +290,9 @@ public sealed class NeuCharWorkflowChatSessionService
         }
     }
 
+    /// <summary>
+    /// Removes sessions that have been inactive longer than the configured session lifetime.
+    /// </summary>
     private void Cleanup()
     {
         var threshold = DateTimeOffset.UtcNow - SessionTtl;
@@ -288,6 +310,12 @@ public sealed class NeuCharWorkflowChatSessionService
         }
     }
 
+    /// <summary>
+    /// Builds the in-memory dictionary key for a workflow participant session.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="participantKey">The participant key to hash.</param>
+    /// <returns>A stable workflow/participant key.</returns>
     private static string BuildKey(int workflowId, string participantKey) =>
         $"{workflowId}:{HashParticipant(participantKey)}";
 
@@ -326,6 +354,11 @@ public sealed class NeuCharWorkflowChatSessionService
 
     private sealed class ChatSession
     {
+        /// <summary>
+        /// Initializes an empty in-memory chat session.
+        /// </summary>
+        /// <param name="workflowId">The workflow identifier.</param>
+        /// <param name="participantKey">The participant key.</param>
         public ChatSession(int workflowId, string participantKey)
         {
             Key = BuildKey(workflowId, participantKey);

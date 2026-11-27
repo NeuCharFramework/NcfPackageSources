@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.29.1 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.29.1.2 Extend shared chat-tool contracts for admin task initiation.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -20,12 +23,19 @@ using System;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Marks a method with the display name used by XNCF discovery and metadata rendering.
     /// </summary>
     public class XncfMethodAttribute : Attribute
     {
+        /// <summary>
+        /// Gets or sets the method display name or localization key.
+        /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// Initializes an XNCF method metadata attribute.
+        /// </summary>
+        /// <param name="name">The method display name or localization key.</param>
         public XncfMethodAttribute(string name)
         {
             Name = name;

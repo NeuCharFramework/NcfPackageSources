@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.21.14 Updated database integration support and related localization metadata
 
+    Modified by: Senparc - 20261127
+    Change description: v0.21.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Cache;
@@ -29,7 +32,7 @@ using System.Collections.Concurrent;
 namespace Senparc.Ncf.Core.Config
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides cached access to named NCF database connection configurations.
     /// </summary>
     public static class SenparcDatabaseConnectionConfigs
     {
@@ -64,8 +67,10 @@ namespace Senparc.Ncf.Core.Config
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Resolves the configured client database connection string for the current provider.
         /// </summary>
+        /// <returns>The full client database connection string.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the client database configuration is missing.</exception>
         public static string GetClientConnectionString()
         {
             var databaseName = GetFullDatabaseName(Config.SiteConfig.SenparcCoreSetting.DatabaseName ?? "Client");
@@ -91,10 +96,10 @@ namespace Senparc.Ncf.Core.Config
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Appends the current database-provider suffix to a logical database name.
         /// </summary>
-        /// <param name="databaseName"></param>
-        /// <returns></returns>
+        /// <param name="databaseName">The logical database name.</param>
+        /// <returns>The provider-specific configuration key.</returns>
         public static string GetFullDatabaseName(string databaseName)
         {
             var currentDatabaseType = DatabaseConfigurationFactory.Instance.Current.MultipleDatabaseType;

@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.EventBus;
@@ -35,7 +38,8 @@ using Microsoft.Extensions.Logging;
 namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Handles prompt-optimization request events by running the configured PromptCatalyzer
+    /// ChatGroup and publishing either the generated optimization result or a fallback failure result.
     /// </summary>
     public class PromptOptimizationChatTaskHandler : IIntegrationEventHandler<PromptOptimizationRequestEvent>
     {
@@ -46,6 +50,15 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
         private readonly IEventBus _eventBus;
         private readonly ILogger<PromptOptimizationChatTaskHandler> _logger;
 
+        /// <summary>
+        /// Initializes the event handler with the ChatGroup, Agent, fallback, event-bus, and logging services.
+        /// </summary>
+        /// <param name="chatGroupService">The service used to run the optimization ChatGroup.</param>
+        /// <param name="agentsTemplateService">The service used to find the PromptCatalyzer agent.</param>
+        /// <param name="bridge">The bridge carrying tool-produced optimization results.</param>
+        /// <param name="kernelFallback">The fallback service used when the Agent path yields no result.</param>
+        /// <param name="eventBus">The integration event bus used to publish responses.</param>
+        /// <param name="logger">The handler logger.</param>
         public PromptOptimizationChatTaskHandler(
             ChatGroupService chatGroupService,
             AgentsTemplateService agentsTemplateService,
@@ -62,6 +75,13 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Processes one prompt-optimization request, publishes the first successful result,
+        /// and cleans request-scoped bridge state even when execution fails.
+        /// </summary>
+        /// <param name="event">The prompt-optimization request event.</param>
+        /// <param name="cancellationToken">The token passed to fallback execution.</param>
+        /// <returns>A task that completes after the response event has been published or failure handled.</returns>
         public async Task Handle(PromptOptimizationRequestEvent @event, CancellationToken cancellationToken)
         {
             _logger.LogInformation("========== PromptOptimizationChatTaskHandler（Agent 主路径）==========");
@@ -165,6 +185,12 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
             }
         }
 
+        /// <summary>
+        /// Builds the constrained natural-language command supplied to the PromptCatalyzer ChatGroup.
+        /// The command defines the required inspection, optimization, and single-tool-call workflow.
+        /// </summary>
+        /// <param name="event">The request whose prompt, parameters, and correlation identifier are embedded.</param>
+        /// <returns>The complete Agent command text.</returns>
         private string BuildAgentCommand(PromptOptimizationRequestEvent @event)
         {
             var rangeName = @event.PromptCode?.Split('-')[0]?.Trim() ?? "";
@@ -204,13 +230,18 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Completes the ChatTask associated with a prompt-optimization response event.
     /// </summary>
     public class PromptOptimizationTaskCompletionHandler : IIntegrationEventHandler<PromptOptimizationResponseEvent>
     {
         private readonly ChatTaskService _chatTaskService;
         private readonly ILogger<PromptOptimizationTaskCompletionHandler> _logger;
 
+        /// <summary>
+        /// Initializes the completion handler with task persistence and logging services.
+        /// </summary>
+        /// <param name="chatTaskService">The service used to update the related ChatTask.</param>
+        /// <param name="logger">The completion-handler logger.</param>
         public PromptOptimizationTaskCompletionHandler(
             ChatTaskService chatTaskService,
             ILogger<PromptOptimizationTaskCompletionHandler> logger)
@@ -219,6 +250,13 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Finds the latest active ChatTask associated with the response request and marks it
+        /// finished or cancelled according to the response outcome.
+        /// </summary>
+        /// <param name="event">The prompt-optimization response event.</param>
+        /// <param name="cancellationToken">The integration-handler cancellation token.</param>
+        /// <returns>A task that completes after the task status update attempt.</returns>
         public async Task Handle(PromptOptimizationResponseEvent @event, CancellationToken cancellationToken)
         {
             _logger.LogInformation("========== PromptOptimizationTaskCompletionHandler ==========");

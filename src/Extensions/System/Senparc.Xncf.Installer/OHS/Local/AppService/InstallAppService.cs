@@ -1,4 +1,18 @@
-﻿using Microsoft.AspNetCore.Http;
+/*----------------------------------------------------------------
+
+    Copyright (C) 2026 Senparc
+
+    File name: InstallAppService.cs
+    File description: Senparc.Xncf.Installer.OHS.Local.AppService related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261127
+    Change description: v0.6.0.1 Improve source documentation, headers, and module metadata consistency.
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Http;
 using Senparc.Areas.Admin.Domain.Models.Dto;
 using Senparc.CO2NET;
 using Senparc.Ncf.Core.AppServices;
@@ -22,6 +36,13 @@ namespace Senparc.Xncf.Installer.OHS.Local.AppService
         private readonly TenantInfoService _tenantInfoService;
         private readonly Lazy<IHttpContextAccessor> _httpContextAccessor;
 
+        /// <summary>
+        /// Initializes the application-service facade for installer and tenant bootstrap operations.
+        /// </summary>
+        /// <param name="serviceProvider">The provider used by the base application service.</param>
+        /// <param name="installerService">The service that executes the installation workflow.</param>
+        /// <param name="tenantInfoService">The service that creates and reads tenant information.</param>
+        /// <param name="httpContextAccessor">Lazy access to the current HTTP context.</param>
         public InstallAppService(IServiceProvider serviceProvider, InstallerService installerService, TenantInfoService tenantInfoService, Lazy<IHttpContextAccessor> httpContextAccessor) : base(serviceProvider)
         {
             this._installerService = installerService;
@@ -29,6 +50,12 @@ namespace Senparc.Xncf.Installer.OHS.Local.AppService
             this._httpContextAccessor = httpContextAccessor;
         }
 
+        /// <summary>
+        /// Executes the submitted system installation request and wraps its status
+        /// in the standard application response contract.
+        /// </summary>
+        /// <param name="installRequestDto">The database, system, administrator, and module options.</param>
+        /// <returns>The installation response.</returns>
         [ApiBind()]
         public async Task<AppResponseBase<InstallResponseDto>> InstallAsync(InstallRequestDto installRequestDto)
         {
@@ -38,6 +65,10 @@ namespace Senparc.Xncf.Installer.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Returns the default installation options currently available to the wizard.
+        /// </summary>
+        /// <returns>The default database, system, administrator, and module options.</returns>
         public async Task<AppResponseBase<GetDefaultInstallOptionsResponseDto>> GetInstallOptionsAsync()
         {
             return await this.GetResponseAsync<AppResponseBase<GetDefaultInstallOptionsResponseDto>, GetDefaultInstallOptionsResponseDto>(async (response, logger) =>
@@ -46,6 +77,10 @@ namespace Senparc.Xncf.Installer.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Creates or loads the current request tenant context and returns its DTO.
+        /// </summary>
+        /// <returns>The current tenant information response.</returns>
         public async Task<AppResponseBase<TenantInfoDto>> GetTenantInfoAsync()
         {
             var httpContext = _httpContextAccessor.Value.HttpContext;

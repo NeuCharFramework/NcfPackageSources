@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.25.1 Localized Weixin account and administration surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.25.1.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using AutoMapper;
@@ -27,6 +30,9 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models.AutoMapper
 {
     public class WeixinManagerProfile : Profile
     {
+        /// <summary>
+        /// Initializes AutoMapper mappings for public accounts, users, tags, and user-tag links.
+        /// </summary>
         public WeixinManagerProfile()
         {
             //MpAccount

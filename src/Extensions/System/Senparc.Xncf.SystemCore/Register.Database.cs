@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.14.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.14.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -39,6 +42,11 @@ namespace Senparc.Xncf.SystemCore
 
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
+        /// <summary>
+        /// Registers the system-core database context abstractions and client database services.
+        /// The selected provider is resolved from <see cref="MultipleDatabasePool"/> at scope creation time.
+        /// </summary>
+        /// <param name="services">The application service collection.</param>
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
             #region historical solution reference information
@@ -118,6 +126,11 @@ namespace Senparc.Xncf.SystemCore
             EntitySetKeys.TryLoadSetInfo(typeof(BasePoolEntities));
         }
 
+        /// <summary>
+        /// Applies system-core model configuration.
+        /// The current system model relies on convention and registered configuration mappings.
+        /// </summary>
+        /// <param name="modelBuilder">The Entity Framework Core model builder.</param>
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -125,6 +138,13 @@ namespace Senparc.Xncf.SystemCore
 
         #region Legacy section
 
+        /// <summary>
+        /// Generates a database creation script when migrations are pending and then applies
+        /// those migrations through the system database context.
+        /// </summary>
+        /// <param name="serviceProvider">The provider used to resolve the system database context.</param>
+        /// <returns>A tuple indicating success and containing a localized diagnostic message.</returns>
+        /// <exception cref="NcfDatabaseException">Returned as a failure result when migration generation or application fails.</exception>
         public async Task<(bool success, string msg)> GenerateCreateScript(IServiceProvider serviceProvider)
         {
             var success = true;
@@ -171,6 +191,12 @@ namespace Senparc.Xncf.SystemCore
             return (success, msg);
         }
 
+        /// <summary>
+        /// Initializes the system database by temporarily disabling multi-tenant mode while
+        /// pending system migrations are generated and applied.
+        /// </summary>
+        /// <param name="serviceProvider">The provider used to resolve database services.</param>
+        /// <returns>A tuple indicating success and containing the initialization message.</returns>
         public async Task<(bool success, string msg)> InitDatabase(IServiceProvider serviceProvider/*, TenantInfoService tenantInfoService*/
             /*HttpContext httpContext,*/)
         {

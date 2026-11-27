@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.5 Localized file management and upload surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.5.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET;
@@ -50,11 +53,11 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
         {
             return await this.GetResponseAsync<Color_GetOrInitColorResponse>(async (response, logger) =>
             {
-                var dt1 = SystemTime.Now;//Legacy comment translated to English.
+                var dt1 = SystemTime.Now;
 
-                var colorDto = await _colorService.GetOrInitColor();//getorinitializecolorparameters
+                var colorDto = await _colorService.GetOrInitColor();
 
-                var costMs = SystemTime.DiffTotalMS(dt1);//Legacy comment translated to English.
+                var costMs = SystemTime.DiffTotalMS(dt1);
 
                 Color_GetOrInitColorResponse result = new(colorDto.Red, colorDto.Green, colorDto.Blue, costMs);
 

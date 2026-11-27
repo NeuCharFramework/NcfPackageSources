@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.12 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -31,6 +34,13 @@ namespace Senparc.Xncf.Swagger.Builder
 {
     public static class CustomSwaggerServiceCollectionExtensions
     {
+        /// <summary>
+        /// Registers the custom Swagger generator, dynamic API documents, XML comments,
+        /// annotations, and module-specific operation filters.
+        /// </summary>
+        /// <param name="services">The service collection.</param>
+        /// <param name="docXmlPath">The directory used to locate generated XML documentation files.</param>
+        /// <returns>The same service collection after Swagger registration.</returns>
         public static IServiceCollection AddSwaggerCustom(this IServiceCollection services, string docXmlPath)
         {
             var options = ConfigurationHelper.CustsomSwaggerOptions;

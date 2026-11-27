@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -47,6 +50,11 @@ public sealed class IndexModel(
 
     public WeixinClawIntegrationPageDto PageData { get; private set; } = new();
 
+    /// <summary>
+    /// Loads WeixinClaw integration settings, current binding counts, and
+    /// workflows available to the current administrator.
+    /// </summary>
+    /// <returns>The populated integration page.</returns>
     public async Task<IActionResult> OnGetAsync()
     {
         var currentAdminUserId = _adminWorkContextProvider.GetAdminWorkContext().AdminUserId;

@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -23,7 +26,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.KnowledgeBase
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Stores the sample RGB color entity used by knowledge-base module migration demonstrations.
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(Color))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
@@ -54,7 +57,7 @@ namespace Senparc.Xncf.KnowledgeBase
         {
             if (red < 0 || green < 0 || blue < 0)
             {
-                Random();//Legacy comment translated to English.
+                Random();
             }
             else
             {
@@ -71,6 +74,9 @@ namespace Senparc.Xncf.KnowledgeBase
             Blue = colorDto.Blue;
         }
 
+        /// <summary>
+        /// Replaces the color channels with random values in the supported byte range.
+        /// </summary>
         public void Random()
         {
             //generate a random color code
@@ -81,6 +87,9 @@ namespace Senparc.Xncf.KnowledgeBase
             Blue = getRadomColorCode();
         }
 
+        /// <summary>
+        /// Increases each color channel by ten, capped at 255.
+        /// </summary>
         public void Brighten()
         {
             Red = Math.Min(255, Red + 10);
@@ -88,6 +97,9 @@ namespace Senparc.Xncf.KnowledgeBase
             Blue = Math.Min(255, Blue + 10);
         }
 
+        /// <summary>
+        /// Decreases each color channel by ten, floored at zero.
+        /// </summary>
         public void Darken()
         {
             Red = Math.Max(0, Red - 10);

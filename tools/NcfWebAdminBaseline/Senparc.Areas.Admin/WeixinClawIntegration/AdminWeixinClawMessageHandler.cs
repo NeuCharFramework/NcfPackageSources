@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;
@@ -564,6 +567,13 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
             $"最后交互：{binding.LastMessageAt?.ToString("yyyy-MM-dd HH:mm:ss") ?? "暂无"}");
     }
 
+    /// <summary>
+    /// Builds command help for a bound WeixinClaw administrator, including
+    /// optional Workflow and Harness commands enabled by configuration.
+    /// </summary>
+    /// <param name="prefix">The command prefix shown to the user.</param>
+    /// <param name="binding">The current binding and feature flags.</param>
+    /// <returns>The help message text.</returns>
     private string BuildHelp(string prefix, WeixinClawAdminBinding binding)
     {
         var lines = new List<string>
@@ -588,6 +598,11 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
         return string.Join(Environment.NewLine, lines);
     }
 
+    /// <summary>
+    /// Builds the instructions shown when the current WeixinClaw session has no binding.
+    /// </summary>
+    /// <param name="prefix">The command prefix shown to the user.</param>
+    /// <returns>The binding setup instructions.</returns>
     private string BuildUnboundHelp(string prefix)
     {
         return string.Join(
@@ -599,6 +614,11 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
             "绑定码只保存为不可逆哈希；管理员需要在创建或修改时记住它。");
     }
 
+    /// <summary>
+    /// Determines whether an account has at least one enabled binding profile.
+    /// </summary>
+    /// <param name="accountId">The Weixin account identifier.</param>
+    /// <returns><see langword="true"/> when an enabled profile exists.</returns>
     private async Task<bool> HasBindingProfilesAsync(int accountId)
     {
         return (await _bindingProfileService.GetDtosAsync(accountId).ConfigureAwait(false))
@@ -623,6 +643,13 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
         }
     }
 
+    /// <summary>
+    /// Splits reply text into bounded chunks, preferring a nearby newline so
+    /// transport limits do not cut a message at an arbitrary boundary.
+    /// </summary>
+    /// <param name="text">The reply text to split.</param>
+    /// <param name="maxLength">The maximum character count per chunk.</param>
+    /// <returns>The ordered reply chunks.</returns>
     private static IEnumerable<string> SplitText(string text, int maxLength)
     {
         text ??= string.Empty;
@@ -650,11 +677,22 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
         }
     }
 
+    /// <summary>
+    /// Normalizes an optional command prefix to a trimmed value or the default slash.
+    /// </summary>
+    /// <param name="prefix">The configured command prefix.</param>
+    /// <returns>The normalized prefix.</returns>
     private static string NormalizePrefix(string prefix)
     {
         return string.IsNullOrWhiteSpace(prefix) ? "/" : prefix.Trim();
     }
 
+    /// <summary>
+    /// Separates the first command token from its remaining argument text.
+    /// </summary>
+    /// <param name="text">The incoming message text.</param>
+    /// <param name="argument">Receives the trimmed text after the command token.</param>
+    /// <returns>The command token, or <c>help</c> for empty input.</returns>
     private static string ReadCommand(string text, out string argument)
     {
         var parts = (text ?? string.Empty).Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);

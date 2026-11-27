@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.13 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.13.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Extensions;
@@ -32,10 +35,21 @@ namespace Senparc.Xncf.SenMapic.Domain.Services
 {
     public class SenMapicTaskItemService : ServiceBase<SenMapicTaskItem>
     {
+        /// <summary>
+        /// Initializes sitemap task-item persistence operations.
+        /// </summary>
+        /// <param name="repo">The task-item repository.</param>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
         public SenMapicTaskItemService(IRepositoryBase<SenMapicTaskItem> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
         }
 
+        /// <summary>
+        /// Loads crawl items for a task and optionally filters URLs by domain.
+        /// </summary>
+        /// <param name="taskId">The sitemap task identifier.</param>
+        /// <param name="domain">Optional domain substring filter.</param>
+        /// <returns>A mapped paged-list result.</returns>
         public async Task<PagedList<SenMapicTaskItem_ListItemDto>> GetTaskItems(int taskId,string domain)
         {
             var seh = new SenparcExpressionHelper<SenMapicTaskItem>();
@@ -47,6 +61,12 @@ namespace Senparc.Xncf.SenMapic.Domain.Services
             return fullList.ToDtoPagedList<SenMapicTaskItem, SenMapicTaskItem_ListItemDto>(this);
         }
 
+        /// <summary>
+        /// Converts collected URL data into task-item entities and persists them as a batch.
+        /// </summary>
+        /// <param name="task">The parent crawl task.</param>
+        /// <param name="urlDatas">Collected URL data keyed by URL.</param>
+        /// <returns>A task that completes after all items are saved.</returns>
         public async Task SaveTaskItemsAsync(SenMapicTask task, Dictionary<string, UrlData> urlDatas)
         {
             var itemList = new List<SenMapicTaskItem>();

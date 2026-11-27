@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
@@ -31,10 +34,13 @@ public interface IWeixinClawAdminBindingRepository : IClientRepositoryBase<Weixi
 public sealed class WeixinClawAdminBindingRepository
     : ClientRepositoryBase<WeixinClawAdminBinding>, IWeixinClawAdminBindingRepository
 {
+    /// <summary>Reserved parameterless constructor for repository infrastructure.</summary>
     private WeixinClawAdminBindingRepository() : base(null)
     {
     }
 
+    /// <summary>Initializes the binding repository with the NCF database provider.</summary>
+    /// <param name="ncfDbData">The database data provider used by the base repository.</param>
     public WeixinClawAdminBindingRepository(INcfDbData ncfDbData) : base(ncfDbData)
     {
     }

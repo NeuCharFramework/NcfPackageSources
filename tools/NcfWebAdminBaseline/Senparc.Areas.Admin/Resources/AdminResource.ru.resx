@@ -1640,4 +1640,9 @@
   <data name="AdminChat.Action.PreviewAgentTask" xml:space="preserve"><value>Просмотр в реальном времени: {0} #{1}</value></data>
   <data name="AdminChat.Action.AgentTaskPreviewTitle" xml:space="preserve"><value>Просмотр выполнения задачи Agent: {0} #{1}</value></data>
   <data name="AdminChat.Action.OpenInTab" xml:space="preserve"><value>Открыть отдельно</value></data>
+  <data name="AdminChat.Action.AgentTask" xml:space="preserve"><value>Задача Agent</value></data>
+  <data name="AdminChat.Action.WorkflowRun" xml:space="preserve"><value>Запуск Workflow</value></data>
+  <data name="AdminChat.Action.PreviewAsyncTask" xml:space="preserve"><value>Просмотр {0}: {1} #{2}</value></data>
+  <data name="AdminChat.Action.OpenAsyncTask" xml:space="preserve"><value>Открыть {0}: {1}</value></data>
+  <data name="AdminChat.Action.AsyncTaskPreviewTitle" xml:space="preserve"><value>Просмотр {0}: {1} #{2}</value></data>
 </root>

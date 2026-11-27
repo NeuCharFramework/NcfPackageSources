@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Exceptions;
@@ -20,7 +23,7 @@ using Senparc.Ncf.Core.Exceptions;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Stores the active database-provider configuration used by NCF.
     /// </summary>
     public class DatabaseConfigurationFactory
     {
@@ -29,7 +32,7 @@ namespace Senparc.Ncf.Core.Models
         DatabaseConfigurationFactory() { }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the singleton database configuration factory.
         /// </summary>
         public static DatabaseConfigurationFactory Instance
         {
@@ -48,10 +51,12 @@ namespace Senparc.Ncf.Core.Models
 
         #endregion
 
-        //Legacy comment translated to English.
-
         private IDatabaseConfiguration _currentDatabaseConfiguration;
 
+        /// <summary>
+        /// Gets or sets the active database configuration.
+        /// </summary>
+        /// <exception cref="NcfDatabaseException">Thrown when the getter is used before a configuration is assigned.</exception>
         public IDatabaseConfiguration Current
         {
             get
@@ -69,9 +74,7 @@ namespace Senparc.Ncf.Core.Models
         }
 
 
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///// </summary>
-        //public XncfDatabaseData CurrentXncfDatabaseData { get; set; }
+        // XncfDatabaseData is now passed explicitly through provider callbacks
+        // instead of being stored as mutable global factory state.
     }
 }

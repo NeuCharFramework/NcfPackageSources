@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -49,6 +52,11 @@ namespace Senparc.Xncf.AgentsManager
         /// </summary>
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
+        /// <summary>
+        /// Applies AgentsManager entity mappings to the module database model.
+        /// Automatic mapping discovery supplies the current mappings.
+        /// </summary>
+        /// <param name="modelBuilder">The Entity Framework Core model builder.</param>
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
             //after implementing the [XncfAutoConfigurationMapping] attribute, this runs automatically and no manual registration is needed
@@ -64,6 +72,11 @@ namespace Senparc.Xncf.AgentsManager
             modelBuilder.ApplyConfiguration(new PublishedA2AAgentConfigurationMapping());
         }
 
+        /// <summary>
+        /// Registers AgentsManager database services.
+        /// The module currently relies on shared database registrations and automatic entity discovery.
+        /// </summary>
+        /// <param name="services">The application dependency-injection service collection.</param>
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
             //DOT REMOVE OR MODIFY THIS LINE - Entities Point

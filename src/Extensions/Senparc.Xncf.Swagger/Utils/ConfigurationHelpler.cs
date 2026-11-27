@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.12 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -25,37 +28,37 @@ using System;
 namespace Senparc.Xncf.Swagger.Utils
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Holds the configuration and hosting state consumed by Swagger registration helpers.
     /// </summary>
     public class ConfigurationHelper
     {
         /// <summary>
-        /// globalconfiguration
+        /// Gets or sets the application configuration.
         /// </summary>
         public static IConfiguration Configuration { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the Swagger-specific configuration section.
         /// </summary>
         public static IConfiguration SwaggerConfiguration { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the current Swagger UI and API options.
         /// </summary>
         public static CustsomSwaggerOptions CustsomSwaggerOptions { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the current hosting environment.
         /// </summary>
         public static IHostEnvironment HostEnvironment { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the current web-host environment.
         /// </summary>
         public static IWebHostEnvironment WebHostEnvironment { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the application content-root path.
         /// </summary>
         public static string ContentRootPath
         {
@@ -66,7 +69,7 @@ namespace Senparc.Xncf.Swagger.Utils
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the web-root path, falling back to a conventional <c>wwwroot</c> directory.
         /// </summary>
         public static string WebRootPath
         {
@@ -80,26 +83,26 @@ namespace Senparc.Xncf.Swagger.Utils
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the authentication-scheme name used by the Swagger cookie.
         /// </summary>
         public static readonly string SWAGGER_ATUH_COOKIE = nameof(SWAGGER_ATUH_COOKIE);
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Reads an untyped configuration value.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="key">The configuration key.</param>
+        /// <returns>The configured string value, or the provider default when absent.</returns>
         public static string GetValue(string key)
         {
             return Configuration.GetValue<string>(key);
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Reads a typed value from the configured Swagger configuration.
         /// </summary>
-        /// <typeparam name="T">type</typeparam>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <typeparam name="T">The requested configuration value type.</typeparam>
+        /// <param name="key">The configuration key.</param>
+        /// <returns>The configured value, or the provider's default when absent.</returns>
         public static T GetValue<T>(string key)
         {
             return Configuration.GetValue<T>(key);

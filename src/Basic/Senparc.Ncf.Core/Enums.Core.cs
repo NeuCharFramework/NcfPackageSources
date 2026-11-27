@@ -13,12 +13,15 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Ncf.Core.Enums
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Identifies the message severity rendered by NCF UI responses.
     /// </summary>
     public enum MessageType
     {
@@ -30,7 +33,7 @@ namespace Senparc.Ncf.Core.Enums
 
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Identifies the configured SMTP account used for email delivery.
     /// </summary>
     public enum EmailAccountType
     {
@@ -40,7 +43,7 @@ namespace Senparc.Ncf.Core.Enums
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Specifies the direction used by ordering helpers.
     /// </summary>
     public enum OrderingType
     {
@@ -49,7 +52,7 @@ namespace Senparc.Ncf.Core.Enums
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Identifies whether a module lifecycle operation installs or updates a module.
     /// </summary>
     public enum InstallOrUpdate
     {

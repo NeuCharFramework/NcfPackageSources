@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -38,6 +41,13 @@ public sealed class NeuBellChangeNotifier : INeuBellPublisher
     private readonly ConcurrentDictionary<string, long> _providerRevisions =
         new(StringComparer.OrdinalIgnoreCase);
 
+    /// <summary>
+    /// Increments a provider revision and publishes its identifier to every current
+    /// bounded subscriber. Blank provider IDs are ignored.
+    /// </summary>
+    /// <param name="providerId">The provider whose state changed.</param>
+    /// <param name="cancellationToken">Token checked before publishing.</param>
+    /// <returns>A completed value task after the notification is queued.</returns>
     public ValueTask NotifyChangedAsync(string providerId, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(providerId))
@@ -62,11 +72,22 @@ public sealed class NeuBellChangeNotifier : INeuBellPublisher
         return ValueTask.CompletedTask;
     }
 
+    /// <summary>
+    /// Returns the latest in-memory revision observed for a provider.
+    /// </summary>
+    /// <param name="providerId">The provider identifier.</param>
+    /// <returns>The revision, or zero when the provider has not published a change.</returns>
     public long GetRevision(string providerId)
     {
         return _providerRevisions.TryGetValue(providerId, out var revision) ? revision : 0;
     }
 
+    /// <summary>
+    /// Subscribes to provider-change notifications until cancellation or disposal,
+    /// dropping the oldest queued values when a subscriber is slower than the bounded channel.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to end the subscription.</param>
+    /// <returns>An asynchronous sequence of changed provider identifiers.</returns>
     public async IAsyncEnumerable<string> SubscribeAsync(
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {

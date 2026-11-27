@@ -14,6 +14,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -21,18 +24,22 @@ using System.Text.Json;
 
 namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
 {
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Defines supported knowledge-base chunking strategies.</summary>
     public static class ChunkingStrategies
     {
-        ///Legacy comment translated to English.
+        /// Fixed-size chunking with configured overlap.
         public const string Fixed = "Fixed";
-        ///Legacy comment translated to English.
+        /// Recursive separator-aware chunking.
         public const string Recursive = "Recursive";
-        ///Legacy comment translated to English.
+        /// Paragraph-first chunking with recursive fallback.
         public const string Paragraph = "Paragraph";
 
+        /// <summary>
+        /// Parses a chunking strategy name, defaulting to <see cref="Fixed"/> when unknown.
+        /// </summary>
+        /// <param name="value">The strategy name.</param>
+        /// <param name="strategy">Receives the canonical strategy name.</param>
+        /// <returns><see langword="true"/> when the value is recognized.</returns>
         public static bool TryParse(string value, out string strategy)
         {
             if (string.Equals(value, Fixed, StringComparison.OrdinalIgnoreCase))
@@ -55,18 +62,22 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
         }
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Defines supported retrieval reranking modes.</summary>
     public static class RerankModes
     {
-        ///Legacy comment translated to English.
+        /// Disables reranking after vector retrieval.
         public const string None = "None";
-        ///Legacy comment translated to English.
+        /// Applies lexical token-overlap reranking.
         public const string Lexical = "Lexical";
-        ///Legacy comment translated to English.
+        /// Uses a configured language model to rerank candidates.
         public const string Llm = "Llm";
 
+        /// <summary>
+        /// Parses a reranking mode, defaulting to <see cref="None"/> when unknown.
+        /// </summary>
+        /// <param name="value">The mode name.</param>
+        /// <param name="mode">Receives the canonical mode name.</param>
+        /// <returns><see langword="true"/> when the value is recognized.</returns>
         public static bool TryParse(string value, out string mode)
         {
             if (string.Equals(value, None, StringComparison.OrdinalIgnoreCase))
@@ -90,8 +101,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Stores bounded chunking and reranking settings for knowledge-base retrieval.
     /// </summary>
     public sealed class KnowledgeBaseRetrievalConfig
     {
@@ -102,33 +112,36 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
             AllowTrailingCommas = true
         };
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the selected chunking strategy.
         public string ChunkingStrategy { get; set; } = ChunkingStrategies.Fixed;
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the maximum chunk character count.
         public int ChunkSize { get; set; } = 800;
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the overlap character count between adjacent chunks.
         public int ChunkOverlap { get; set; } = 120;
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the selected reranking mode.
         public string RerankMode { get; set; } = RerankModes.None;
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the reranking model identifier.
         public int RerankModelId { get; set; }
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the number of candidates passed to reranking.
         public int RerankCandidateCount { get; set; } = 20;
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the lexical contribution used by score fusion.
         public double LexicalWeight { get; set; } = 0.35;
 
-        ///Legacy comment translated to English.
+        /// Gets the default sanitized retrieval configuration.
         public static KnowledgeBaseRetrievalConfig Default => new();
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Deserializes retrieval configuration and sanitizes invalid or out-of-range values.
+        /// Invalid JSON returns default settings.
         /// </summary>
+        /// <param name="json">The JSON configuration.</param>
+        /// <returns>A sanitized retrieval configuration.</returns>
         public static KnowledgeBaseRetrievalConfig FromJson(string json)
         {
             if (string.IsNullOrWhiteSpace(json))
@@ -147,14 +160,19 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
             }
         }
 
+        /// <summary>
+        /// Serializes this retrieval configuration using the module's camel-case JSON options.
+        /// </summary>
+        /// <returns>The configuration JSON.</returns>
         public string ToJson()
         {
             return JsonSerializer.Serialize(this, JsonOptions);
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Clamps numeric settings and canonicalizes strategy/mode names in place.
         /// </summary>
+        /// <returns>This configuration instance after sanitization.</returns>
         public KnowledgeBaseRetrievalConfig Sanitized()
         {
             ChunkingStrategies.TryParse(ChunkingStrategy, out var strategy);
@@ -169,7 +187,8 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
             return this;
         }
 
-        ///Legacy comment translated to English.
+        /// <summary>
+        /// Determines whether all values equal the default retrieval configuration.</summary>
         public bool IsDefault()
         {
             var d = Default;
@@ -182,6 +201,10 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
                    && Math.Abs(LexicalWeight - d.LexicalWeight) < 1e-9;
         }
 
+        /// <summary>
+        /// Creates a detached copy of this retrieval configuration.
+        /// </summary>
+        /// <returns>A new configuration with the same values.</returns>
         public KnowledgeBaseRetrievalConfig Clone()
         {
             return new KnowledgeBaseRetrievalConfig
@@ -198,17 +221,17 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Carries optional reranking overrides for one retrieval request.
     /// </summary>
     public sealed class RecallOptions
     {
-        ///Legacy comment translated to English.
+        /// Gets or sets the requested reranking mode.
         public string RerankMode { get; set; }
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the requested candidate count.
         public int? CandidateCount { get; set; }
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the reranking model identifier.
         public int? RerankModelId { get; set; }
     }
 }

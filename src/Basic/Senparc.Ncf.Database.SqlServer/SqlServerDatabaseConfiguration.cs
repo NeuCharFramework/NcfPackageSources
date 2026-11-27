@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.14 Updated database integration support and related localization metadata
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -30,10 +33,12 @@ using System.Data.Common;
 namespace Senparc.Ncf.Database.SqlServer
 {
     /// <summary>
-    /// SQL Server databaseconfiguration
+    /// Configures SQL Server EF Core options, retry behavior, backup SQL,
+    /// and table-drop SQL for NCF database contexts.
     /// </summary>
     public class SqlServerDatabaseConfiguration : DatabaseConfigurationBase<SqlServerDbContextOptionsBuilder, SqlServerOptionsExtension>
     {
+        /// <summary>Initializes the SQL Server database configuration.</summary>
         public SqlServerDatabaseConfiguration() { }
 
         public override MultipleDatabaseType MultipleDatabaseType => MultipleDatabaseType.SqlServer;
@@ -62,8 +67,6 @@ namespace Senparc.Ncf.Database.SqlServer
 
         public override string GetDropTableSql(DbContext dbContext, string tableName)
         {
-            //var schma = dbContext.Model.FindEntityType(type).GetSchema();
-            //Legacy comment translated to English.
             return $"DROP TABLE {tableName}";
         }
 

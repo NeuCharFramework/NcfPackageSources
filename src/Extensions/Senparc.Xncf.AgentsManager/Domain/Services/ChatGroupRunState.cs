@@ -14,6 +14,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.AI;
@@ -24,7 +27,8 @@ using System.Text;
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
 /// <summary>
-///Legacy comment translated to English.
+/// Tracks mutable state while one ChatGroup execution streams responses,
+/// records usage, invokes tools, and handles workflow pauses/failures.
 /// </summary>
 internal sealed class ChatGroupRunState
 {

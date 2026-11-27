@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.ACL;
@@ -45,6 +48,12 @@ namespace Senparc.Areas.Admin.Domain.Services
         {
         }
 
+        /// <summary>
+        /// Classifies provider exception text that indicates the auth-config table
+        /// has not yet been created.
+        /// </summary>
+        /// <param name="ex">The database exception to inspect.</param>
+        /// <returns><see langword="true"/> when known missing-table markers are present.</returns>
         private static bool IsTableMissingException(Exception ex)
         {
             var message = ex?.ToString() ?? string.Empty;
@@ -64,6 +73,12 @@ namespace Senparc.Areas.Admin.Domain.Services
             return keywords.Any(k => message.IndexOf(k, StringComparison.OrdinalIgnoreCase) >= 0);
         }
 
+        /// <summary>
+        /// Clamps an authentication expiration setting to the supported range.
+        /// </summary>
+        /// <param name="expireMinutes">The configured duration.</param>
+        /// <param name="defaultValue">The fallback when the configured value is non-positive.</param>
+        /// <returns>The normalized duration in minutes.</returns>
         public int NormalizeExpireMinutes(int expireMinutes, int defaultValue)
         {
             var value = expireMinutes <= 0 ? defaultValue : expireMinutes;
@@ -80,6 +95,11 @@ namespace Senparc.Areas.Admin.Domain.Services
             return value;
         }
 
+        /// <summary>
+        /// Loads effective auth expiration settings, falling back to defaults when
+        /// the record/table is unavailable or another read error occurs.
+        /// </summary>
+        /// <returns>The effective settings and their source marker.</returns>
         public AdminAuthExpireSettings GetEffectiveExpireSettings()
         {
             try
@@ -109,6 +129,11 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
         }
 
+        /// <summary>
+        /// Creates default expiration settings with the specified diagnostic source.
+        /// </summary>
+        /// <param name="source">The reason the defaults were selected.</param>
+        /// <returns>Default auth expiration settings.</returns>
         private static AdminAuthExpireSettings GetDefaultSettings(string source)
         {
             return new AdminAuthExpireSettings

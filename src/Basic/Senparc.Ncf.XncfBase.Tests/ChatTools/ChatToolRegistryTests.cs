@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.Ncf.XncfBase.ChatTools;
 
@@ -70,6 +71,34 @@ public class ChatToolRegistryTests
             new[] { tool });
 
         Assert.AreEqual("42", result.Options.Single().Value);
+    }
+
+    [TestMethod]
+    public void ExtractAsyncActionsReadsNestedFunctionResponseAndDeduplicates()
+    {
+        var result = new
+        {
+            Success = true,
+            Data = JsonSerializer.Serialize(new
+            {
+                kind = "admin-chat-action",
+                actions = new[]
+                {
+                    new
+                    {
+                        type = "agents-task",
+                        task = new { ChatTaskId = 6012, ChatGroupName = "Function group" }
+                    }
+                }
+            })
+        };
+
+        var actions = ChatToolRegistry.ExtractAsyncActions(result);
+
+        Assert.AreEqual(1, actions.Count);
+        Assert.AreEqual("agents-task", actions[0].ActionType);
+        Assert.AreEqual("6012", actions[0].Target);
+        Assert.AreEqual("Function group", actions[0].Name);
     }
 
     private static TestChatToolProvider CreateProvider()

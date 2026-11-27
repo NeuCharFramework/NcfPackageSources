@@ -9,6 +9,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.3.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.3.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET;
@@ -32,11 +35,29 @@ namespace Senparc.Xncf.Accounts.Domain.Services
             
         }
 
+        /// <summary>
+        /// Loads a payment log by its external order number and optional navigation includes.
+        /// </summary>
+        /// <param name="orderNumber">The external order number.</param>
+        /// <param name="includes">Optional related-property include paths.</param>
+        /// <returns>The matching payment log, or <see langword="null"/>.</returns>
         public AccountPayLog GetByOrderNumber(string orderNumber, params string[] includes)
         {
             return this.GetObject(z => z.OrderNumber == orderNumber, includes);
         }
 
+        /// <summary>
+        /// Creates and persists an unpaid payment log initialized from the account,
+        /// order, money, points, and payment-type details.
+        /// </summary>
+        /// <param name="fullAccount">The account receiving the payment result.</param>
+        /// <param name="orderNumber">The external order number.</param>
+        /// <param name="ip">The originating client address.</param>
+        /// <param name="totalFee">The total payment amount.</param>
+        /// <param name="description">The order description.</param>
+        /// <param name="getPoints">The points associated with the payment.</param>
+        /// <param name="payType">The payment channel.</param>
+        /// <returns>The persisted unpaid payment log.</returns>
         public AccountPayLog CreateOrder(FullAccount fullAccount, string orderNumber, string ip, decimal totalFee, string description, decimal getPoints, AccountPayLog_PayType payType)
         {
             AccountPayLog accountPayLog = new AccountPayLog()
@@ -63,6 +84,10 @@ namespace Senparc.Xncf.Accounts.Domain.Services
             return accountPayLog;
         }
 
+        /// <summary>
+        /// Marks a payment log as cancelled and persists its completion time.
+        /// </summary>
+        /// <param name="accountPayLog">The payment log to cancel.</param>
         public void CancelOrder(AccountPayLog accountPayLog)
         {
             accountPayLog.CompleteTime = DateTime.Now;
@@ -71,6 +96,11 @@ namespace Senparc.Xncf.Accounts.Domain.Services
         }
 
 
+        /// <summary>
+        /// Completes an unpaid payment inside a transaction, credits the account,
+        /// and persists both account and payment-log changes.
+        /// </summary>
+        /// <param name="accountPayLog">The unpaid payment log to complete.</param>
         public void PayLogFinish(AccountPayLog accountPayLog)
         {
             if (accountPayLog.Status != (int)AccountPayLog_Status.未支付)

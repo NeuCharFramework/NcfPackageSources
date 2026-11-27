@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +33,10 @@ namespace Senparc.Xncf.PromptRange.Areas.Admin.Pages.PromptRange
         private readonly PromptItemService _promptItemService;
         private readonly PromptRangeService _promptRangeService;
 
+        /// <summary>Initializes the PromptRange prompt page.</summary>
+        /// <param name="xncfModuleService">The lazy XNCF module service.</param>
+        /// <param name="promptItemService">The prompt-item service.</param>
+        /// <param name="promptRangeService">The prompt-range service.</param>
         public PromptModel(
             Lazy<XncfModuleService> xncfModuleService,
             PromptItemService promptItemService,
@@ -39,15 +46,16 @@ namespace Senparc.Xncf.PromptRange.Areas.Admin.Pages.PromptRange
             _promptRangeService = promptRangeService;
         }
 
+        /// <summary>Initializes the prompt page request.</summary>
         public void OnGet()
         {
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Resolves a prompt code and redirects to its prompt editor location.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="promptCode">The prompt code or range alias/version.</param>
+        /// <returns>A redirect to the resolved prompt or a query-preserving fallback.</returns>
         public async Task<IActionResult> OnGetResolveAsync(string promptCode)
         {
             if (string.IsNullOrWhiteSpace(promptCode))
@@ -68,8 +76,10 @@ namespace Senparc.Xncf.PromptRange.Areas.Admin.Pages.PromptRange
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Normalizes a range alias prefix to its canonical range name.
         /// </summary>
+        /// <param name="promptCode">The prompt code to normalize.</param>
+        /// <returns>The canonicalized prompt code.</returns>
         private async Task<string> NormalizePromptCodeAsync(string promptCode)
         {
             if (string.IsNullOrWhiteSpace(promptCode))

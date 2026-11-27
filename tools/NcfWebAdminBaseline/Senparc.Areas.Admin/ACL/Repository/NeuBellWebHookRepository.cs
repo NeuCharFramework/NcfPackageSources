@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
@@ -25,7 +28,10 @@ public interface INeuBellWebHookRepository : IClientRepositoryBase<NeuBellWebHoo
 
 public sealed class NeuBellWebHookRepository : ClientRepositoryBase<NeuBellWebHook>, INeuBellWebHookRepository
 {
+    /// <summary>Reserved parameterless constructor for repository infrastructure.</summary>
     private NeuBellWebHookRepository() : base(null) { }
+    /// <summary>Initializes the webhook repository with the NCF database provider.</summary>
+    /// <param name="ncfDbData">The database data provider used by the base repository.</param>
     public NeuBellWebHookRepository(INcfDbData ncfDbData) : base(ncfDbData) { }
 }
 
@@ -33,6 +39,9 @@ public interface INeuBellWebHookLogRepository : IClientRepositoryBase<NeuBellWeb
 
 public sealed class NeuBellWebHookLogRepository : ClientRepositoryBase<NeuBellWebHookLog>, INeuBellWebHookLogRepository
 {
+    /// <summary>Reserved parameterless constructor for repository infrastructure.</summary>
     private NeuBellWebHookLogRepository() : base(null) { }
+    /// <summary>Initializes the webhook-log repository with the NCF database provider.</summary>
+    /// <param name="ncfDbData">The database data provider used by the base repository.</param>
     public NeuBellWebHookLogRepository(INcfDbData ncfDbData) : base(ncfDbData) { }
 }

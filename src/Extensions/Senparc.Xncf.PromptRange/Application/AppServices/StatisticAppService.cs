@@ -22,6 +22,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -43,8 +46,7 @@ using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    /// TODO: permission validation is required
+    /// Provides administrator-only PromptRange dashboards and historical statistics.
     /// </summary>
     [ApiAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class StatisticAppService : AppServiceBase
@@ -54,6 +56,14 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         private readonly PromptRangeService _promptRangeService;
         private readonly PromptResultService _promptResultService;
 
+        /// <summary>
+        /// Initializes PromptRange statistics and dashboard dependencies.
+        /// </summary>
+        /// <param name="aiModelService">The AI model service.</param>
+        /// <param name="promptItemService">The prompt-item service.</param>
+        /// <param name="promptRangeService">The prompt-range service.</param>
+        /// <param name="promptResultService">The prompt-result service.</param>
+        /// <param name="serviceProvider">The dependency provider.</param>
         public StatisticAppService(
             AIModelService aiModelService,
             PromptItemService promptItemService,
@@ -69,6 +79,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
 
         [ApiBind]
+        /// <summary>
+        /// Returns a simple health response for the statistics application service.
+        /// </summary>
+        /// <returns>A successful service-running response.</returns>
         public async Task<StringAppResponse> TestAsync()
         {
             var response = await this.GetStringResponseAsync(
@@ -78,6 +92,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        /// <summary>
+        /// Builds a bounded PromptRange dashboard over recent activity and score data.
+        /// </summary>
+        /// <param name="recentDays">The trend window, clamped to 7-60 days.</param>
+        /// <param name="topN">The top-item count, clamped to 5-20.</param>
+        /// <returns>The dashboard response.</returns>
         public async Task<AppResponseBase<PromptRange_DashboardResponse>> GetDashboardAsync(int recentDays = 14, int topN = 8)
         {
             return await this.GetResponseAsync<PromptRange_DashboardResponse>(
@@ -484,6 +504,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         [ApiBind]
+        /// <summary>
+        /// Counts prompt items whose range name begins with the requested date prefix.
+        /// </summary>
+        /// <param name="today">The date prefix used for filtering.</param>
+        /// <returns>The count response.</returns>
         public async Task<AppResponseBase<Statistics_TodayTacticResponse>> TodayTacticStatisticAsync([FromQuery] string today)
         {
             var response = await this.GetResponseAsync<Statistics_TodayTacticResponse>(
@@ -499,6 +524,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        /// <summary>
+        /// Returns historical score data for one prompt item.
+        /// </summary>
+        /// <param name="promptItemId">The prompt item identifier.</param>
+        /// <returns>The history score response.</returns>
         public async Task<AppResponseBase<PromptItem_HistoryScoreResponse>> GetHistoryScoreAsync(int promptItemId)
         {
             return await this.GetResponseAsync<PromptItem_HistoryScoreResponse>(
@@ -512,6 +542,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        /// <summary>
+        /// Returns line-chart score data for one prompt item.
+        /// </summary>
+        /// <param name="promptItemId">The prompt item identifier.</param>
+        /// <param name="isAvg">Whether average rather than maximum scores are requested.</param>
+        /// <returns>The line-chart response.</returns>
         public async Task<AppResponseBase<Statistic_TodayTacticResponse>> GetLineChartDataAsync(int promptItemId, bool isAvg = true)
         {
             return await this.GetResponseAsync<Statistic_TodayTacticResponse>(

@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.2.9 Localized workspace management and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.2.9.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System.Text.Encodings.Web;
@@ -39,6 +42,12 @@ public sealed class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelB
     private readonly IWorkspaceCatalog _catalog;
     private readonly ILogger<Index> _logger;
 
+    /// <summary>
+    /// Initializes the Workspace administration page with catalog and logging dependencies.
+    /// </summary>
+    /// <param name="xncfModuleService">The lazy module service used by the base page model.</param>
+    /// <param name="catalog">The workspace catalog used for usage and content operations.</param>
+    /// <param name="logger">The page logger.</param>
     public Index(
         Lazy<XncfModuleService> xncfModuleService,
         IWorkspaceCatalog catalog,
@@ -57,6 +66,10 @@ public sealed class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelB
 
     public string ClientReportJson { get; private set; } = "{}";
 
+    /// <summary>
+    /// Loads the current administrator's visible Workspace usage report and serializes
+    /// it for the client-side administration page.
+    /// </summary>
     public async Task OnGetAsync()
     {
         _ = XncfRegister;
@@ -82,6 +95,11 @@ public sealed class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelB
         ClientReportJson = SerializeReport(Report);
     }
 
+    /// <summary>
+    /// Creates a Workspace owned by the current administrator after identity validation.
+    /// </summary>
+    /// <returns>A redirect to the Workspace page with a success or error message.</returns>
+    /// <exception cref="ArgumentException">Propagated when the catalog rejects the workspace name.</exception>
     public async Task<IActionResult> OnPostCreateAsync()
     {
         _ = XncfRegister;
@@ -102,6 +120,11 @@ public sealed class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelB
         return RedirectToPage("./Index", new { uid = Uid });
     }
 
+    /// <summary>
+    /// Clears the selected Workspace content within the catalog's ownership and authorization rules.
+    /// </summary>
+    /// <param name="workspaceId">The Workspace identifier to clear.</param>
+    /// <returns>A redirect to the Workspace page with the operation result.</returns>
     public async Task<IActionResult> OnPostClearAsync(string workspaceId)
     {
         _ = XncfRegister;
@@ -139,6 +162,11 @@ public sealed class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelB
         return RedirectToPage("./Index", new { uid = Uid });
     }
 
+    /// <summary>
+    /// Projects a server usage report into the JSON contract consumed by the administration page.
+    /// </summary>
+    /// <param name="report">The server-side usage report.</param>
+    /// <returns>Serialized client-report JSON.</returns>
     private static string SerializeReport(WorkspaceUsageReport report) =>
         JsonSerializer.Serialize(new
         {
@@ -152,6 +180,11 @@ public sealed class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelB
             otherWorkspaces = report.OtherWorkspaces.Select(ToClientItem)
         }, JsonOptions);
 
+    /// <summary>
+    /// Projects one workspace usage item into its client-facing JSON shape.
+    /// </summary>
+    /// <param name="item">The workspace usage item.</param>
+    /// <returns>An anonymous client-report item.</returns>
     private static object ToClientItem(WorkspaceUsageItem item) => new
     {
         id = item.Id,

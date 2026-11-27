@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.42.0.0 add MCP endpoint gateway and tool invocation contracts
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -23,6 +26,7 @@ using System.Text;
 
 namespace Senparc.Xncf.XncfBuilder
 {
+    /// <summary>Transfers XNCF Builder solution and generated-module settings.</summary>
     public class ConfigDto : DtoBase
     {
         /// <summary>
@@ -30,21 +34,15 @@ namespace Senparc.Xncf.XncfBuilder
         /// </summary>
         [MaxLength(300)]
         public string SlnPath { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the organization name.</summary>
         [MaxLength(300)]
         public string OrgName { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the generated module name.</summary>
         [MaxLength(50)]
         public string ModuleName { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the module version.</summary>
         [MaxLength(100)]
         public string Version { get; set; }
 

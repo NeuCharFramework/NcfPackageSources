@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.39.9 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.39.10 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Web.Infrastructure.Database;
@@ -21,6 +24,13 @@ public static class DatabaseMaintenanceMiddlewareExtensions
 {
     public const string MaintenancePath = "/Maintenance/DatabaseUpgrade";
 
+    /// <summary>
+    /// Adds maintenance-mode routing that allows health and maintenance endpoints,
+    /// redirects HTML requests when the database is unavailable, and returns a
+    /// structured 503 response for other requests.
+    /// </summary>
+    /// <param name="app">The application builder receiving the middleware.</param>
+    /// <returns>The same application builder for fluent configuration.</returns>
     public static IApplicationBuilder UseDatabaseMaintenanceMode(this IApplicationBuilder app)
     {
         return app.Use(async (context, next) =>

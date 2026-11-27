@@ -15,6 +15,11 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models.MultipleDatabase
 
         public static string RootDictionaryPath => RootDirectory.Value;
 
+        /// <summary>
+        /// Locates the nearest application root containing the design-time database
+        /// configuration, falling back to the current project path.
+        /// </summary>
+        /// <returns>The selected application root directory.</returns>
         private static string ResolveRootDirectory()
         {
             var projectPath = Path.GetFullPath(
@@ -34,6 +39,12 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models.MultipleDatabase
             return candidates.FirstOrDefault(HasDatabaseConfiguration) ?? projectPath;
         }
 
+        /// <summary>
+        /// Determines whether a candidate application root contains the expected
+        /// <c>SenparcConfig.config</c> database configuration file.
+        /// </summary>
+        /// <param name="rootDirectoryPath">The candidate application root.</param>
+        /// <returns><see langword="true"/> when the configuration file exists.</returns>
         private static bool HasDatabaseConfiguration(string rootDirectoryPath)
         {
             return File.Exists(Path.Combine(

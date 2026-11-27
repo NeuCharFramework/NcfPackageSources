@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.12 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authentication;
@@ -36,6 +39,17 @@ namespace Senparc.Xncf.Swagger.Builder
 {
     public static class SwaggerBuilderExtensions
     {
+        /// <summary>
+        /// Adds the configured Swagger JSON endpoints and Swagger UI to the application pipeline.
+        /// The method returns immediately without modifying the pipeline when Swagger is disabled.
+        /// </summary>
+        /// <param name="app">The ASP.NET Core application builder.</param>
+        /// <returns>The same application builder after Swagger middleware has been registered.</returns>
+        /// <summary>
+        /// Adds the configured Swagger JSON endpoints and Swagger UI to the application pipeline.
+        /// </summary>
+        /// <param name="app">The ASP.NET Core application builder.</param>
+        /// <returns>The same application builder after Swagger middleware is registered.</returns>
         public static IApplicationBuilder UseSwaggerCustom(this IApplicationBuilder app)
         {
             var options = ConfigurationHelper.CustsomSwaggerOptions;
@@ -98,11 +112,11 @@ namespace Senparc.Xncf.Swagger.Builder
             return app;
         }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Adds the optional legacy Swagger authentication middleware.
         /// </summary>
-        /// <param name="app"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
+        /// <param name="app">The application builder.</param>
+        /// <param name="options">The Swagger authentication and route options.</param>
+        /// <returns>The same application builder after authentication middleware is registered.</returns>
         private static IApplicationBuilder UseSwaggerCustomAuth(this IApplicationBuilder app, CustsomSwaggerOptions options)
         {
             if (options.AllowAnonymous)
@@ -192,9 +206,9 @@ namespace Senparc.Xncf.Swagger.Builder
             return app;
         }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Configures Swagger UI to serve the embedded custom index page.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="c">The Swagger UI options being configured.</param>
         private static void UseCustomSwaggerIndex(this SwaggerUIOptions c)
         {
             var currentAssembly = typeof(CustsomSwaggerOptions).GetTypeInfo().Assembly;

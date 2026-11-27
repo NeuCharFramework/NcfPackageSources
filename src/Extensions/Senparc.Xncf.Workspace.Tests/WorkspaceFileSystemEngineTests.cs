@@ -109,6 +109,62 @@ public sealed class WorkspaceFileSystemEngineTests
     }
 
     [TestMethod]
+    public async Task CopyEntry_CopiesFilesAndDirectoriesWithEtagsAndOverwriteRules()
+    {
+        await _engine.WriteFileAsync(
+            new WorkspaceWriteFileRequest("src/data.txt", Encoding.UTF8.GetBytes("source")));
+        await _engine.CreateDirectoryAsync("src/nested");
+        await _engine.WriteFileAsync(
+            new WorkspaceWriteFileRequest("src/nested/item.txt", Encoding.UTF8.GetBytes("nested")));
+
+        var sourceMetadata = await _engine.GetFileInfoAsync("src/data.txt");
+        await _engine.CopyEntryAsync(new WorkspaceCopyEntryRequest(
+            "src/data.txt",
+            "copies/data.txt",
+            ExpectedETag: sourceMetadata.ETag));
+        Assert.AreEqual(
+            "source",
+            Encoding.UTF8.GetString((await _engine.ReadFileAsync("copies/data.txt", 1024)).Content));
+
+        await _engine.CopyEntryAsync(new WorkspaceCopyEntryRequest(
+            "src",
+            "copies/tree"));
+        Assert.AreEqual(
+            "nested",
+            Encoding.UTF8.GetString((await _engine.ReadFileAsync("copies/tree/nested/item.txt", 1024)).Content));
+
+        await Assert.ThrowsExactlyAsync<IOException>(() =>
+            _engine.CopyEntryAsync(new WorkspaceCopyEntryRequest(
+                "src/data.txt",
+                "copies/data.txt")));
+
+        await _engine.CopyEntryAsync(new WorkspaceCopyEntryRequest(
+            "src/data.txt",
+            "copies/data.txt",
+            Overwrite: true));
+    }
+
+    [TestMethod]
+    public async Task CopyEntry_RejectsSelfNestingAndStaleEtags()
+    {
+        await _engine.CreateDirectoryAsync("src");
+        await _engine.WriteFileAsync(
+            new WorkspaceWriteFileRequest("src/data.txt", Encoding.UTF8.GetBytes("source")));
+        var metadata = await _engine.GetFileInfoAsync("src/data.txt");
+
+        await Assert.ThrowsExactlyAsync<WorkspaceConflictException>(() =>
+            _engine.CopyEntryAsync(new WorkspaceCopyEntryRequest(
+                "src/data.txt",
+                "copy.txt",
+                ExpectedETag: "\"stale\"")));
+        await Assert.ThrowsExactlyAsync<IOException>(() =>
+            _engine.CopyEntryAsync(new WorkspaceCopyEntryRequest(
+                "src",
+                "src/nested")));
+        Assert.AreEqual(metadata.ETag, (await _engine.GetFileInfoAsync("src/data.txt")).ETag);
+    }
+
+    [TestMethod]
     public async Task TraversalAndInternalMetadata_AreRejected()
     {
         await Assert.ThrowsExactlyAsync<InvalidOperationException>(
@@ -304,9 +360,20 @@ public sealed class WorkspaceFileSystemEngineTests
             _root,
             WorkspaceAgentOperations.Read,
             new WorkspaceAgentReadRequest("pool.txt", 1024));
+        await pool.InvokeAsync<WorkspaceCopyEntryRequest, WorkspaceAgentEmptyResult>(
+            "ws_01234567890123456789012345678901",
+            _root,
+            WorkspaceAgentOperations.Copy,
+            new WorkspaceCopyEntryRequest("pool.txt", "pool-copy.txt"));
+        var copied = await pool.InvokeAsync<WorkspaceAgentReadRequest, WorkspaceFileContent>(
+            "ws_01234567890123456789012345678901",
+            _root,
+            WorkspaceAgentOperations.Read,
+            new WorkspaceAgentReadRequest("pool-copy.txt", 1024));
 
         Assert.IsTrue(written.Created);
         Assert.AreEqual("through-agent", Encoding.UTF8.GetString(read.Content));
+        Assert.AreEqual("through-agent", Encoding.UTF8.GetString(copied.Content));
     }
 
     [TestMethod]

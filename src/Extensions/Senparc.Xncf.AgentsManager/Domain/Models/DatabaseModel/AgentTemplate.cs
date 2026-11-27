@@ -34,6 +34,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -52,7 +55,7 @@ using Senparc.Xncf.Workspace.Abstractions;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Specifies how an agent template selects the AI model used for execution.
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(AgentTemplate))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
@@ -65,7 +68,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
         public string Name { get; private set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Inherits the model selected by the referenced PromptRange.
         /// </summary>
         [Required]
         public string SystemMessage { get; private set; }
@@ -77,18 +80,16 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
         public bool Enable { get; private set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Follows the model selected by the containing chat group task.
         /// </summary>
         public string PromptCode { get; private set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Uses the explicitly assigned AI model identifier.
         /// </summary>
         public HookRobotType HookRobotType { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the hook-specific parameter.</summary>
         public string HookRobotParameter { get; set; }
 
         /// <summary>
@@ -98,39 +99,29 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
 
         public string Avastar { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the configured Function names.</summary>
         public string FunctionCallNames { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets serialized MCP endpoint settings.</summary>
         public string McpEndpoints { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the optional knowledge-base identifier.</summary>
         public int? KnowledgeBaseId { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the model-binding mode.</summary>
         [Required]
         public AgentModelBindingMode ModelBinding { get; private set; } = AgentModelBindingMode.InheritPromptRange;
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the manually bound AI model identifier.</summary>
         public int? AiModelId { get; private set; }
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets or sets serialized skill bindings.</summary>
         public string SkillBindingsJson { get; private set; }
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets or sets serialized workspace policy.</summary>
         public string WorkspacePolicyJson { get; private set; }
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets or sets serialized connector bindings.</summary>
         public string ConnectorBindingsJson { get; private set; }
 
         /// <summary>
@@ -175,6 +166,12 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
         public void SetConnectorBindings(IEnumerable<AgentConnectorBinding> bindings)
             => ConnectorBindingsJson = JsonSerializer.Serialize(bindings ?? Array.Empty<AgentConnectorBinding>());
 
+        /// <summary>
+        /// Deserializes a JSON array into a read-only list and suppresses malformed or empty input.
+        /// </summary>
+        /// <typeparam name="T">The element type expected in the JSON array.</typeparam>
+        /// <param name="json">The serialized array text.</param>
+        /// <returns>A non-null list, or an empty list when the input is absent or invalid.</returns>
         private static IReadOnlyList<T> DeserializeOrEmpty<T>(string json)
         {
             if (string.IsNullOrWhiteSpace(json))
@@ -192,6 +189,13 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
             }
         }
 
+        /// <summary>
+        /// Deserializes a JSON value and returns the supplied fallback for absent or malformed input.
+        /// </summary>
+        /// <typeparam name="T">The value type expected in the JSON text.</typeparam>
+        /// <param name="json">The serialized value text.</param>
+        /// <param name="fallback">The value returned when deserialization cannot produce a result.</param>
+        /// <returns>The deserialized value or <paramref name="fallback"/>.</returns>
         private static T DeserializeOrDefault<T>(string json, T fallback)
         {
             if (string.IsNullOrWhiteSpace(json))
@@ -268,13 +272,11 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
 
             var endpointsDict = GetMcpEndpointsDict();
             
-            //Legacy comment translated to English.
             endpointsDict[name] = new Dictionary<string, string>
             {
                 { "url", url }
             };
 
-            //Legacy comment translated to English.
             McpEndpoints = JsonSerializer.Serialize(endpointsDict);
             return true;
         }
@@ -298,10 +300,8 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
                 return false;
             }
 
-            //Legacy comment translated to English.
             endpointsDict.Remove(name);
 
-            //Legacy comment translated to English.
             McpEndpoints = endpointsDict.Count > 0 
                 ? JsonSerializer.Serialize(endpointsDict)
                 : null;
@@ -324,6 +324,9 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
         [InverseProperty(nameof(ChatGroupHistory.ToAgentTemplate))]
         public ICollection<ChatGroupHistory> ToChatGroupHistoies { get; set; }
 
+        /// <summary>
+        /// Reserved for EF Core materialization.
+        /// </summary>
         private AgentTemplate() { }
 
         /// <summary>
@@ -411,6 +414,12 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
             SetModelBinding(modelBinding, aiModelId);
         }
 
+        /// <summary>
+        /// Applies the model-binding mode and retains a manual model identifier only when
+        /// <see cref="AgentModelBindingMode.ManualAiModel"/> is selected.
+        /// </summary>
+        /// <param name="modelBinding">The requested binding mode.</param>
+        /// <param name="aiModelId">The manually selected model identifier.</param>
         private void SetModelBinding(AgentModelBindingMode modelBinding, int? aiModelId)
         {
             ModelBinding = Enum.IsDefined(modelBinding)
@@ -423,22 +432,22 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Identifies an optional external robot hook used by an agent template.
     /// </summary>
     public enum AgentModelBindingMode
     {
-        ///Legacy comment translated to English.
+        /// Uses no external robot hook.
         InheritPromptRange = 0,
 
-        ///Legacy comment translated to English.
+        /// Uses a Weixin public-account hook.
         FollowGroupTask = 1,
 
-        ///Legacy comment translated to English.
+        /// Uses a Weixin Work robot hook.
         ManualAiModel = 2
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Identifies the optional external robot or model-binding mode used by an agent template.
     /// </summary>
     public enum HookRobotType
     {

@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.11 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.11.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -30,10 +33,19 @@ public partial class Register : IXncfDatabase
 
     public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
+    /// <summary>
+    /// Applies FirmwareUpdate Entity Framework Core model configuration.
+    /// The module currently relies on convention-based mapping.
+    /// </summary>
+    /// <param name="modelBuilder">The model builder supplied by Entity Framework Core.</param>
     public void OnModelCreating(ModelBuilder modelBuilder)
     {
     }
 
+    /// <summary>
+    /// Registers additional FirmwareUpdate database services.
+    /// </summary>
+    /// <param name="services">The application service collection.</param>
     public void AddXncfDatabaseModule(IServiceCollection services)
     {
     }

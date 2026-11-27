@@ -35,6 +35,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.0.0 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -53,6 +56,11 @@ namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 
 public sealed class NeuCharWorkflowService : WorkflowClientServiceBase<WorkflowEntity>
 {
+    /// <summary>
+    /// Initializes the administrator-owned workflow persistence service.
+    /// </summary>
+    /// <param name="repository">The workflow repository.</param>
+    /// <param name="serviceProvider">The dependency provider used by the base service.</param>
     public NeuCharWorkflowService(INeuCharWorkflowRepository repository, IServiceProvider serviceProvider)
         : base(repository, serviceProvider) { }
 
@@ -94,6 +102,12 @@ public sealed class NeuCharWorkflowService : WorkflowClientServiceBase<WorkflowE
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Persists selected runtime properties after validating the workflow entity.
+    /// </summary>
+    /// <param name="workflow">The workflow entity to update.</param>
+    /// <param name="propertyNames">The property names to persist.</param>
+    /// <returns>A task representing the partial persistence operation.</returns>
     private Task SaveRuntimePropertiesAsync(WorkflowEntity workflow, params string[] propertyNames)
     {
         ArgumentNullException.ThrowIfNull(workflow);
@@ -104,12 +118,22 @@ public sealed class NeuCharWorkflowService : WorkflowClientServiceBase<WorkflowE
 
 public sealed class NeuCharWorkflowVersionService : WorkflowClientServiceBase<NeuCharWorkflowVersion>
 {
+    /// <summary>
+    /// Initializes the workflow-version persistence service.
+    /// </summary>
+    /// <param name="repository">The workflow-version repository.</param>
+    /// <param name="serviceProvider">The dependency provider used by the base service.</param>
     public NeuCharWorkflowVersionService(INeuCharWorkflowVersionRepository repository, IServiceProvider serviceProvider)
         : base(repository, serviceProvider) { }
 }
 
 public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBase<NeuCharWorkflowExecutionLog>
 {
+    /// <summary>
+    /// Initializes the workflow execution-log persistence service.
+    /// </summary>
+    /// <param name="repository">The execution-log repository.</param>
+    /// <param name="serviceProvider">The dependency provider used by the base service.</param>
     public NeuCharWorkflowExecutionLogService(INeuCharWorkflowExecutionLogRepository repository, IServiceProvider serviceProvider)
         : base(repository, serviceProvider) { }
 
@@ -355,6 +379,12 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Counts unfinished execution logs for a workflow.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the database query.</param>
+    /// <returns>The number of execution logs without a completion timestamp.</returns>
     public Task<int> GetUnfinishedCountAsync(
         int workflowId,
         CancellationToken cancellationToken = default)
@@ -371,6 +401,12 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
                 cancellationToken);
     }
 
+    /// <summary>
+    /// Finds the newest unfinished execution associated with a workflow run identifier.
+    /// </summary>
+    /// <param name="runId">The run identifier embedded in the execution correlation key.</param>
+    /// <param name="cancellationToken">Token used to cancel the database query.</param>
+    /// <returns>The unfinished execution log, or <see langword="null"/> when none exists.</returns>
     public async Task<NeuCharWorkflowExecutionLog?> GetUnfinishedByRunIdAsync(
         Guid runId,
         CancellationToken cancellationToken = default)
@@ -388,6 +424,12 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Loads an unfinished execution log by its database identifier.
+    /// </summary>
+    /// <param name="executionLogId">The execution-log identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the database query.</param>
+    /// <returns>The unfinished execution log, or <see langword="null"/> when none exists.</returns>
     public Task<NeuCharWorkflowExecutionLog?> GetUnfinishedByIdAsync(
         int executionLogId,
         CancellationToken cancellationToken = default)
@@ -403,6 +445,12 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
                 cancellationToken);
     }
 
+    /// <summary>
+    /// Finds the newest execution log containing the requested replay snapshot hash.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="snapshotHash">The exact persisted snapshot hash.</param>
+    /// <returns>The matching execution log, or <see langword="null"/> when absent.</returns>
     public async Task<NeuCharWorkflowExecutionLog?> GetReplaySnapshotAsync(int workflowId, string snapshotHash)
     {
         if (string.IsNullOrWhiteSpace(snapshotHash))
@@ -421,24 +469,43 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
 }
 
 /// <summary>
-///Legacy comment translated to English.
-///Legacy comment translated to English.
+/// Persists and cleans up workflow chat messages with bounded participant history.
 /// </summary>
 public sealed class NeuCharWorkflowChatMessageService : WorkflowClientServiceBase<NeuCharWorkflowChatMessage>
 {
-    ///Legacy comment translated to English.
+    /// <summary>
+    /// Loads the bounded chronological chat history for one workflow participant.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="participantKeyHash">The hashed participant key.</param>
+    /// <param name="cancellationToken">Token used to cancel the query.</param>
+    /// <returns>Messages in chronological order, or an empty list for invalid input.</returns>
     public const int RetentionDays = 30;
-    ///Legacy comment translated to English.
+    /// <summary>
+    /// Deletes all chat messages belonging to one workflow participant.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="participantKeyHash">The hashed participant key.</param>
+    /// <param name="cancellationToken">Token used to cancel the operation.</param>
     public const int MaxHistoryCount = 200;
 
+    /// <summary>
+    /// Initializes the workflow chat-message persistence service.
+    /// </summary>
+    /// <param name="repository">The chat-message repository.</param>
+    /// <param name="serviceProvider">The dependency provider used by the base service.</param>
     public NeuCharWorkflowChatMessageService(
         INeuCharWorkflowChatMessageRepository repository,
         IServiceProvider serviceProvider)
         : base(repository, serviceProvider) { }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Loads the bounded chronological chat history for one workflow participant.
     /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="participantKeyHash">The hashed participant key.</param>
+    /// <param name="cancellationToken">Token used to cancel the query.</param>
+    /// <returns>Messages in chronological order, or an empty list for invalid input.</returns>
     public async Task<IReadOnlyList<NeuCharWorkflowChatMessage>> GetHistoryAsync(
         int workflowId,
         string participantKeyHash,
@@ -460,7 +527,12 @@ public sealed class NeuCharWorkflowChatMessageService : WorkflowClientServiceBas
             .ToList();
     }
 
-    ///Legacy comment translated to English.
+    /// <summary>
+    /// Deletes all persisted chat messages belonging to one workflow participant.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="participantKeyHash">The hashed participant key.</param>
+    /// <param name="cancellationToken">Token used to cancel the operation.</param>
     public async Task DeleteByParticipantAsync(int workflowId, string participantKeyHash, CancellationToken cancellationToken = default)
     {
         if (workflowId <= 0 || string.IsNullOrWhiteSpace(participantKeyHash))
@@ -477,7 +549,11 @@ public sealed class NeuCharWorkflowChatMessageService : WorkflowClientServiceBas
         }
     }
 
-    ///Legacy comment translated to English.
+    /// <summary>
+    /// Deletes all persisted chat messages belonging to one workflow.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the operation.</param>
     public async Task DeleteByWorkflowAsync(int workflowId, CancellationToken cancellationToken = default)
     {
         if (workflowId <= 0)
@@ -495,8 +571,12 @@ public sealed class NeuCharWorkflowChatMessageService : WorkflowClientServiceBas
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Deletes chat messages older than the supplied cutoff, bounded by the requested cap.
     /// </summary>
+    /// <param name="cutoff">The exclusive age cutoff for retained messages.</param>
+    /// <param name="cap">The maximum number of messages to delete.</param>
+    /// <param name="cancellationToken">Token used to cancel the operation.</param>
+    /// <returns>The number of deleted messages.</returns>
     public async Task<int> DeleteExpiredAsync(DateTime cutoff, int cap = 1000, CancellationToken cancellationToken = default)
     {
         var expired = await GetFullListAsync(

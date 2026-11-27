@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using AutoMapper;
@@ -26,10 +29,13 @@ using System.Text;
 namespace Senparc.Ncf.Core.AutoMapper
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Defines the core AutoMapper projections between system entities, DTOs, and UI models.
     /// </summary>
     public class SystemProfile : Profile
     {
+        /// <summary>
+        /// Initializes the core entity-to-DTO and entity-to-select-list mappings.
+        /// </summary>
         public SystemProfile()
         {
             CreateMap<SysMenu, SelectListItem>().ForMember(_ => _.Text, opt => opt.MapFrom(_ => _.MenuName))

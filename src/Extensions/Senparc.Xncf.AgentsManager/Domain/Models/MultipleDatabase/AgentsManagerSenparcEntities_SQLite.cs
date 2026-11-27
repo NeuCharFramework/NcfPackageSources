@@ -14,6 +14,10 @@ namespace Senparc.Xncf.AgentsManager.Models
     [MultipleMigrationDbContext(MultipleDatabaseType.Sqlite, typeof(Register))]
     public class AgentsManagerSenparcEntities_Sqlite : AgentsManagerSenparcEntities
     {
+        /// <summary>
+        /// Initializes the SQLite-specific AgentsManager DbContext.
+        /// </summary>
+        /// <param name="dbContextOptions">The EF Core options configured for SQLite.</param>
         public AgentsManagerSenparcEntities_Sqlite(DbContextOptions<AgentsManagerSenparcEntities_Sqlite> dbContextOptions) : base(dbContextOptions)
         {
         }
@@ -33,6 +37,9 @@ namespace Senparc.Xncf.AgentsManager.Models
             app.UseNcfDatabase("Senparc.Ncf.Database.Sqlite", "Senparc.Ncf.Database.Sqlite", "SqliteMemoryDatabaseConfiguration");
         };
 
+        /// <summary>
+        /// Initializes the SQLite design-time DbContext factory using the configured root directory.
+        /// </summary>
         public SenparcDbContextFactory_Sqlite() : base(SenparcDbContextFactoryConfig.RootDirectoryPath)
         {
 

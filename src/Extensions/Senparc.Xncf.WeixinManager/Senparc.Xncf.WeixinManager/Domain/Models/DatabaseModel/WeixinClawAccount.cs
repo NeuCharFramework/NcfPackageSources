@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.25.1 Localized Weixin account and administration surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.25.1.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -72,6 +75,9 @@ public class WeixinClawAccount : EntityBase<int>
 
     public DateTime? LastConnectedAt { get; private set; }
 
+    /// <summary>
+    /// Reserved for EF Core materialization.
+    /// </summary>
     private WeixinClawAccount()
     {
     }

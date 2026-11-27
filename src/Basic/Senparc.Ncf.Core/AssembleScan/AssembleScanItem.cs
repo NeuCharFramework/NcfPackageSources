@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Exceptions;
@@ -26,17 +29,22 @@ namespace Senparc.Ncf.Core.AssembleScan
     public class AssembleScanItem
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets a value indicating whether this scan item has completed processing.
         /// </summary>
         public bool ScanFinished { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets a value indicating whether the callback completed successfully.
         /// </summary>
         public bool ScanSuccessed { get; set; }
 
         private Action<Assembly> _action;
 
+        /// <summary>
+        /// Initializes a scan item with the assembly callback to execute.
+        /// </summary>
+        /// <param name="action">The callback invoked for the scanned assembly.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="action"/> is null.</exception>
         public AssembleScanItem(Action<Assembly> action)
         {
             _action = action ?? throw new ArgumentNullException("action");
@@ -44,9 +52,10 @@ namespace Senparc.Ncf.Core.AssembleScan
 
         private object _lock { get; set; } = new object();
         /// <summary>
-        /// Execute scan
+        /// Executes the scan callback once under the item's synchronization lock.
+        /// Exceptions mark the scan as unsuccessful and are recorded through the NCF exception path.
         /// </summary>
-        /// <param name="assembly"></param>
+        /// <param name="assembly">The assembly to inspect.</param>
         public void Run(Assembly assembly)
         {
             lock (_lock)
@@ -67,6 +76,9 @@ namespace Senparc.Ncf.Core.AssembleScan
             }
         }
 
+        /// <summary>
+        /// Marks the scan item as finished.
+        /// </summary>
         public void Finished()
         {
             ScanFinished = true;

@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -34,6 +37,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Mapping
     [XncfAutoConfigurationMapping]
     public class PromptPromptItemConfigurationMapping : ConfigurationMappingWithIdBase<PromptItem, int>
     {
+        /// <inheritdoc />
         public override void Configure(EntityTypeBuilder<PromptItem> builder)
         {
             if (Senparc.Ncf.Core.Models.DatabaseConfigurationFactory.Instance.Current is SqliteDatabaseConfiguration)

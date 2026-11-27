@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Xncf.AIKernel.Domain.Models.Usage;
@@ -23,11 +26,14 @@ using Senparc.Xncf.AIKernel.Domain.Models.Usage;
 namespace Senparc.Xncf.AIKernel.Domain.Services
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Accepts normalized AI token-usage records for live monitoring and asynchronous persistence.
     /// </summary>
     public interface IAITokenUsageRecorder
     {
+        /// <summary>
+        /// Queues one token-usage record for monitoring and persistence.
+        /// </summary>
+        /// <param name="record">The normalized usage record.</param>
         void Record(AITokenUsageRecord record);
     }
 }

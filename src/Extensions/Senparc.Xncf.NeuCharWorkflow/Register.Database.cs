@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.0.0 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +43,10 @@ public partial class Register : IXncfDatabase
     public Type TryGetXncfDatabaseDbContextType =>
         MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
+    /// <summary>
+    /// Configures workflow indexes used for migration lookup, revision checks, replay, and chat history.
+    /// </summary>
+    /// <param name="modelBuilder">The EF Core model builder.</param>
     public void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<WorkflowEntity>()
@@ -56,6 +63,10 @@ public partial class Register : IXncfDatabase
             .HasIndex(z => new { z.WorkflowId, z.ParticipantKeyHash });
     }
 
+    /// <summary>
+    /// Registers workflow database services required by the module.
+    /// </summary>
+    /// <param name="services">The dependency injection service collection.</param>
     public void AddXncfDatabaseModule(IServiceCollection services)
     {
     }

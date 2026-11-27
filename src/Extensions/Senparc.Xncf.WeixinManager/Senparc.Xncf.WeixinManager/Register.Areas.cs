@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.25.1 Localized Weixin account and administration surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.25.1.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -43,8 +46,10 @@ namespace Senparc.Xncf.WeixinManager
     {
         #region Legacy section
 
+        /// <summary>Gets the WeixinManager administration home URL.</summary>
         public string HomeUrl => "/Admin/WeixinManager/Index";
 
+        /// <summary>Gets the WeixinManager administration menu entries.</summary>
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
              new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/Index"), WeixinManagerResource.Get("Area.Home", "首页"),"fa fa-laptop"),
              new AreaPageMenuItem(GetAreaUrl("/swagger"), WeixinManagerResource.Get("Area.ApiDocumentation", "Web API Swagger"),"fa fa-file-code-o"),
@@ -53,6 +58,12 @@ namespace Senparc.Xncf.WeixinManager
              new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/WeixinUser"), WeixinManagerResource.Get("Area.WeixinManager.Users", "用户管理"),"fa fa-users"),
         };
 
+        /// <summary>
+        /// Configures dynamic API discovery and local-only API exposure for WeixinManager.
+        /// </summary>
+        /// <param name="builder">The MVC builder being configured.</param>
+        /// <param name="env">The current host environment.</param>
+        /// <returns>The configured MVC builder.</returns>
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
 

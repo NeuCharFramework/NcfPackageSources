@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.0.0 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Repository;
@@ -35,24 +38,52 @@ public interface INeuCharWorkflowChatMessageRepository : IClientRepositoryBase<N
 
 public sealed class NeuCharWorkflowRepository : ClientRepositoryBase<WorkflowEntity>, INeuCharWorkflowRepository
 {
+    /// <summary>
+    /// Initializes an ORM-only constructor for repository infrastructure.
+    /// </summary>
     private NeuCharWorkflowRepository() : base(null!) { }
+    /// <summary>
+    /// Initializes the workflow repository over the NCF database boundary.
+    /// </summary>
+    /// <param name="ncfDbData">The NCF database abstraction.</param>
     public NeuCharWorkflowRepository(INcfDbData ncfDbData) : base(ncfDbData) { }
 }
 
 public sealed class NeuCharWorkflowVersionRepository : ClientRepositoryBase<NeuCharWorkflowVersion>, INeuCharWorkflowVersionRepository
 {
+    /// <summary>
+    /// Initializes an ORM-only constructor for repository infrastructure.
+    /// </summary>
     private NeuCharWorkflowVersionRepository() : base(null!) { }
+    /// <summary>
+    /// Initializes the workflow-version repository over the NCF database boundary.
+    /// </summary>
+    /// <param name="ncfDbData">The NCF database abstraction.</param>
     public NeuCharWorkflowVersionRepository(INcfDbData ncfDbData) : base(ncfDbData) { }
 }
 
 public sealed class NeuCharWorkflowExecutionLogRepository : ClientRepositoryBase<NeuCharWorkflowExecutionLog>, INeuCharWorkflowExecutionLogRepository
 {
+    /// <summary>
+    /// Initializes an ORM-only constructor for repository infrastructure.
+    /// </summary>
     private NeuCharWorkflowExecutionLogRepository() : base(null!) { }
+    /// <summary>
+    /// Initializes the execution-log repository over the NCF database boundary.
+    /// </summary>
+    /// <param name="ncfDbData">The NCF database abstraction.</param>
     public NeuCharWorkflowExecutionLogRepository(INcfDbData ncfDbData) : base(ncfDbData) { }
 }
 
 public sealed class NeuCharWorkflowChatMessageRepository : ClientRepositoryBase<NeuCharWorkflowChatMessage>, INeuCharWorkflowChatMessageRepository
 {
+    /// <summary>
+    /// Initializes an ORM-only constructor for repository infrastructure.
+    /// </summary>
     private NeuCharWorkflowChatMessageRepository() : base(null!) { }
+    /// <summary>
+    /// Initializes the chat-message repository over the NCF database boundary.
+    /// </summary>
+    /// <param name="ncfDbData">The NCF database abstraction.</param>
     public NeuCharWorkflowChatMessageRepository(INcfDbData ncfDbData) : base(ncfDbData) { }
 }

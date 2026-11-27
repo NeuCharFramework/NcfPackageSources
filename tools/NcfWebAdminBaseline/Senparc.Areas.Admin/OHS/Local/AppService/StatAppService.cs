@@ -31,6 +31,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.OHS.Local.PL;
@@ -51,10 +54,19 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 {
     //[BackendJwtAuthorize]
     [AdminAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
+    /// <summary>
+    /// Exposes administrator diagnostics for trace logs, resource-monitor windows,
+    /// and host metrics.
+    /// </summary>
     public class StatAppService : LocalAppServiceBase
     {
         private readonly HostMetricsCollector _hostMetricsCollector;
 
+        /// <summary>
+        /// Initializes the diagnostics application service.
+        /// </summary>
+        /// <param name="serviceProvider">The request service provider.</param>
+        /// <param name="hostMetricsCollector">The host metrics collector.</param>
         public StatAppService(
             IServiceProvider serviceProvider,
             HostMetricsCollector hostMetricsCollector) : base(serviceProvider)
@@ -62,6 +74,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             _hostMetricsCollector = hostMetricsCollector;
         }
 
+        /// <summary>
+        /// Returns up to fourteen available log dates with normal, exception, and total counts.
+        /// </summary>
+        /// <returns>A response containing daily log summaries ordered by date.</returns>
         [ApiBind]
         public async Task<AppResponseBase<Stat_GetLogsResponse>> GetLogs()
         {
@@ -87,9 +103,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns the current day's trace counts grouped by trace type.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// A response containing today's date and type counts, or an empty result
+        /// when today's log file does not exist.
+        /// </returns>
         [ApiBind]
         public async Task<AppResponseBase<Stat_GetTodayLogResponse>> GetTodayLog()
         {
@@ -123,8 +142,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns cached fine-, medium-, and coarse-resolution resource-monitor windows.
         /// </summary>
+        /// <returns>A response containing the current resource-monitor snapshot.</returns>
         [ApiBind]
         public async Task<AppResponseBase<ResourceMonitorData>> GetResourceMonitor()
         {
@@ -170,8 +190,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Collects the current host metrics snapshot.
         /// </summary>
+        /// <returns>A response containing the collected host metrics.</returns>
         [ApiBind]
         public async Task<AppResponseBase<HostMetricsSnapshot>> GetHostMetrics()
         {

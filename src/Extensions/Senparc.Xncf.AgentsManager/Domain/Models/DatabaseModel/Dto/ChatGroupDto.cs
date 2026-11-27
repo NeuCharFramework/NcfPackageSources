@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -25,12 +28,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Transfers Agent chat-group identity, state, and administrator/entry-agent configuration.
     /// </summary>
     public class ChatGroupDto : DtoBase<int>
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the group display name.
         /// </summary>
         public string Name { get; set; }
 
@@ -50,27 +53,29 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         public string Description { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the context-sharing policy.
         /// </summary>
         public ChatGroupContextSharingMode? ContextSharingMode { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the administrator Agent-template identifier.
         /// </summary>
         public int AdminAgentTemplateId { get; set; }
 
         //public AgentTemplate AdminAgentTemplate { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the entry Agent-template identifier.
         /// </summary>
 
         public int EnterAgentTemplateId { get; set; }
 
         //public AgentTemplate EnterAgentTemplate { get; set; }
 
+        /// <summary>Initializes an empty chat-group DTO.</summary>
         public ChatGroupDto() { }
 
+        /// <summary>Initializes a chat-group DTO from its core configuration.</summary>
         public ChatGroupDto(string name, bool enable, ChatGroupState state, string description, int adminAgentTemplateId, int enterAgentTemplateId)
         {
             Name = name;
@@ -81,6 +86,8 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
             EnterAgentTemplateId = enterAgentTemplateId;
         }
 
+        /// <summary>Maps a persisted chat group to a DTO.</summary>
+        /// <param name="chatGroup">The source chat group.</param>
         public ChatGroupDto(ChatGroup chatGroup)
         {
             Name = chatGroup.Name;
@@ -92,11 +99,13 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
             EnterAgentTemplateId = chatGroup.EnterAgentTemplateId;
         }
 
+        /// <summary>Changes the group state to running.</summary>
         public void Start()
         {
             State = ChatGroupState.Running;
         }
 
+        /// <summary>Changes the group state to finished.</summary>
         public void Finish()
         {
             State = ChatGroupState.Finished;

@@ -52,7 +52,7 @@ namespace Senparc.Xncf.Accounts
 
         public override string Uid => Senparc.Ncf.Core.Config.SiteConfig.SYSTEM_XNCF_MODULE_ACCOUNTS_UID;//Legacy comment translated to English.
 
-        public override string Version => "0.1";//the version number is required
+        public override string Version => "0.3.14.2";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 

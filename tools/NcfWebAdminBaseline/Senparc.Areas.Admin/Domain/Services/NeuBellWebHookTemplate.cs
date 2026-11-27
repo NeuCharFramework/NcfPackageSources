@@ -23,6 +23,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -70,6 +73,12 @@ public static class NeuBellWebHookTemplate
     /// <summary>
     ///Legacy comment translated to English.
     /// </summary>
+    /// <summary>
+    /// Replaces recognized template tokens with a neutral marker without exposing
+    /// their values, for safe display or diagnostics.
+    /// </summary>
+    /// <param name="text">The template text.</param>
+    /// <returns>The text with recognized token values masked.</returns>
     public static string MaskTokens(string text)
     {
         if (string.IsNullOrEmpty(text) || text.IndexOf("{{", StringComparison.Ordinal) < 0)
@@ -83,6 +92,12 @@ public static class NeuBellWebHookTemplate
     ///Legacy comment translated to English.
     ///Legacy comment translated to English.
     /// </summary>
+    /// <summary>
+    /// Replaces recognized tokens in a URL template and URI-escapes each value.
+    /// </summary>
+    /// <param name="urlTemplate">The URL template.</param>
+    /// <param name="tokens">Case-insensitive token values.</param>
+    /// <returns>The rendered URL.</returns>
     public static string RenderUrl(string urlTemplate, IReadOnlyDictionary<string, string> tokens)
     {
         if (string.IsNullOrEmpty(urlTemplate))
@@ -103,6 +118,14 @@ public static class NeuBellWebHookTemplate
     ///Legacy comment translated to English.
     ///Legacy comment translated to English.
     /// </summary>
+    /// <summary>
+    /// Renders a webhook body and selects JSON or UTF-8 text content type based
+    /// on the first non-whitespace character of the template.
+    /// </summary>
+    /// <param name="bodyTemplate">The body template.</param>
+    /// <param name="tokens">Case-insensitive token values.</param>
+    /// <param name="contentType">Receives the selected content type.</param>
+    /// <returns>The rendered body.</returns>
     public static string RenderBody(string bodyTemplate, IReadOnlyDictionary<string, string> tokens, out string contentType)
     {
         if (string.IsNullOrEmpty(bodyTemplate))
@@ -128,12 +151,25 @@ public static class NeuBellWebHookTemplate
     /// <summary>
     ///Legacy comment translated to English.
     /// </summary>
+    /// <summary>
+    /// Determines whether a body template is intended to be JSON based on its first
+    /// non-whitespace character.
+    /// </summary>
+    /// <param name="bodyTemplate">The body template.</param>
+    /// <returns><see langword="true"/> when the template begins with an object or array marker.</returns>
     public static bool IsJsonTemplate(string bodyTemplate)
     {
         var trimmed = (bodyTemplate ?? string.Empty).TrimStart();
         return trimmed.StartsWith("{", StringComparison.Ordinal) || trimmed.StartsWith("[", StringComparison.Ordinal);
     }
 
+    /// <summary>
+    /// Replaces syntactically valid <c>{{token}}</c> placeholders while leaving
+    /// malformed or unknown placeholder syntax unchanged.
+    /// </summary>
+    /// <param name="text">The source template text.</param>
+    /// <param name="replacement">The replacement function for token names.</param>
+    /// <returns>The rendered text.</returns>
     private static string ReplaceTokens(
         string text,
         Func<string, string> replacement)
@@ -171,6 +207,11 @@ public static class NeuBellWebHookTemplate
         return result.ToString();
     }
 
+    /// <summary>
+    /// Validates the identifier grammar used inside a template token.
+    /// </summary>
+    /// <param name="name">The token name.</param>
+    /// <returns><see langword="true"/> when the name starts with a letter and continues with letters, digits, or underscores.</returns>
     private static bool IsTokenName(string name)
     {
         if (string.IsNullOrEmpty(name) || !char.IsLetter(name[0]))
@@ -187,11 +228,22 @@ public static class NeuBellWebHookTemplate
         return true;
     }
 
+    /// <summary>
+    /// Determines whether a character may occur in a token identifier.
+    /// </summary>
+    /// <param name="ch">The character to inspect.</param>
+    /// <returns><see langword="true"/> for letters, digits, and underscores.</returns>
     private static bool IsTokenNameChar(char ch)
     {
         return char.IsLetterOrDigit(ch) || ch == '_';
     }
 
+    /// <summary>
+    /// Looks up a token value using case-insensitive dictionary-key matching.
+    /// </summary>
+    /// <param name="tokens">The token dictionary.</param>
+    /// <param name="name">The token name.</param>
+    /// <returns>The matching value, or <see langword="null"/>.</returns>
     private static string Lookup(IReadOnlyDictionary<string, string> tokens, string name)
     {
         if (tokens == null)

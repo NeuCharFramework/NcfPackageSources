@@ -9,6 +9,9 @@
     Modified by: Senparc - 20261119
     Change description: v1.1.15 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v1.1.16 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Hosting;
@@ -29,8 +32,14 @@ namespace Template_OrgName.Xncf.Template_XncfName
     {
         #region Legacy section
 
+        /// <summary>
+        /// Gets the absolute administration URL used as the module home page.
+        /// </summary>
         public string HomeUrl => "/Admin/Template_XncfName/Index";
 
+        /// <summary>
+        /// Gets the administration menu entries exposed by the template module.
+        /// </summary>
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
                          new AreaPageMenuItem(GetAreaHomeUrl(), Template_XncfNameResource.Get("Area.Home"), "fa fa-laptop"),
 
@@ -39,6 +48,12 @@ namespace Template_OrgName.Xncf.Template_XncfName
                           new AreaPageMenuItem(GetAreaUrl($"/Admin/Template_XncfName/DatabaseSample"), Template_XncfNameResource.Get("Area.DatabaseSample"), "fa fa-bookmark-o")
         };
 
+        /// <summary>
+        /// Configures Razor Pages authorization hooks and writes the module registration log entry.
+        /// </summary>
+        /// <param name="builder">The MVC builder being configured by the host.</param>
+        /// <param name="env">The hosting environment used for environment-specific configuration.</param>
+        /// <returns>The same MVC builder after module configuration.</returns>
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
             builder.AddRazorPagesOptions(options =>
@@ -56,6 +71,9 @@ namespace Template_OrgName.Xncf.Template_XncfName
         #endregion
 
         #region Legacy section
+        /// <summary>
+        /// Gets the absolute path to the generated module library used for runtime compilation.
+        /// </summary>
         public string LibraryPath => Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Template_OrgName.Xncf.Template_XncfName"));
         #endregion
     }

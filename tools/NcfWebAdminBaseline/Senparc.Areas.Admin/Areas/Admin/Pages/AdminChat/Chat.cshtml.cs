@@ -22,6 +22,9 @@
     Modified by: Senparc - 20261125
     Change description: v0.12.29 Improved AdminChat conversation loading and command parameter feedback.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -38,8 +41,9 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.Pages.AdminChat
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Provides the Razor Page model for the administrator chat workspace.
+    /// It prepares the current administrator context and the registered chat-tool metadata
+    /// needed by the client before a conversation is opened.
     /// </summary>
     [Ncf.AreaBase.Admin.Filters.IgnoreAuth]
     public class ChatModel : BaseAdminPageModel
@@ -58,13 +62,13 @@ namespace Senparc.Areas.Admin.Pages.AdminChat
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the optional chat session identifier supplied in the query string.
         /// </summary>
         [BindProperty(SupportsGet = true)]
         public int SessionId { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets an optional message that the client may use to initialize the chat input.
         /// </summary>
         [BindProperty(SupportsGet = true)]
         public string InitialMessage { get; set; }
@@ -75,19 +79,31 @@ namespace Senparc.Areas.Admin.Pages.AdminChat
         public int CurrentUserId { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether the current administrator has the super-administrator role.
         /// </summary>
         public bool IsSuperAdmin { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the optional comma-separated module identifiers used to scope chat tools.
         /// </summary>
         [BindProperty(SupportsGet = true)]
         public string ModuleUids { get; set; }
 
+        /// <summary>
+        /// Gets the chat-tool descriptions exposed to the client-side command picker.
+        /// </summary>
         public IReadOnlyList<ChatToolCommandViewModel> ChatTools { get; private set; }
             = Array.Empty<ChatToolCommandViewModel>();
 
+        /// <summary>
+        /// Builds the client-facing chat-tool metadata, initializes the current administrator
+        /// context, and verifies that a requested session belongs to that administrator.
+        /// An invalid session redirects to the administration dashboard.
+        /// </summary>
+        /// <returns>The chat page result, or a redirect when the requested session is unavailable.</returns>
+        /// <exception cref="InvalidOperationException">
+        /// Propagated if the work-context provider cannot establish an administrator context.
+        /// </exception>
         public async Task<IActionResult> OnGetAsync()
         {
             ChatTools = ChatToolRegistry.GetChatTools()
@@ -135,6 +151,9 @@ namespace Senparc.Areas.Admin.Pages.AdminChat
         }
     }
 
+    /// <summary>
+    /// Describes one registered chat command and its ordered parameters.
+    /// </summary>
     public sealed record ChatToolCommandViewModel(
         string Command,
         string Label,
@@ -143,6 +162,9 @@ namespace Senparc.Areas.Admin.Pages.AdminChat
         string ModuleUid,
         IReadOnlyList<ChatToolParameterViewModel> Parameters);
 
+    /// <summary>
+    /// Describes one chat-command parameter, including validation and option-provider metadata.
+    /// </summary>
     public sealed record ChatToolParameterViewModel(
         string Name,
         string Label,
@@ -155,6 +177,9 @@ namespace Senparc.Areas.Admin.Pages.AdminChat
         bool HasOptionsProvider,
         IReadOnlyList<ChatToolParameterOptionViewModel> Options);
 
+    /// <summary>
+    /// Represents one selectable value exposed for a chat-command parameter.
+    /// </summary>
     public sealed record ChatToolParameterOptionViewModel(
         string Value,
         string Label,

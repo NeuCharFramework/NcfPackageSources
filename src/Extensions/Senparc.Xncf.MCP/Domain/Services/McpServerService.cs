@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.5.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.14.2 Expand MCP endpoint gateway, credentials, and tool invocation support.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
@@ -44,13 +47,17 @@ namespace Senparc.Xncf.MCP.Domain.Services
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Manages optional in-process MCP server hosts registered by module name.
     /// </summary>
     public class McpServerService(IServiceProvider serviceProvider)
     {
         public static Dictionary<string, McpServerData> McpServerCollection = new Dictionary<string, McpServerData>();
 
 
+        /// <summary>
+        /// Reserved asynchronous startup hook for host-wide MCP server initialization.
+        /// The current implementation performs no work.
+        /// </summary>
         public async Task Start()
         {
 
@@ -58,6 +65,11 @@ namespace Senparc.Xncf.MCP.Domain.Services
         }
 
 
+        /// <summary>
+        /// Starts a named local MCP server host when it is not already running.
+        /// </summary>
+        /// <param name="mcpServerName">The registration key used to identify the server.</param>
+        /// <param name="version">The advertised server version.</param>
         public void Start(string mcpServerName, string version = "1.0.0")
         {
             McpServerData mcpServerData = null;
@@ -197,6 +209,11 @@ namespace Senparc.Xncf.MCP.Domain.Services
             Task.Run(() => _extraHost!.RunAsync(_cts.Token));
         }
 
+        /// <summary>
+        /// Cancels and disposes the named local MCP server host when it exists.
+        /// </summary>
+        /// <param name="mcpServerName">The registration key used to identify the server.</param>
+        /// <returns>A task that completes after host shutdown is requested.</returns>
         public async Task StopAsync(string mcpServerName)
         {
             if (McpServerCollection.ContainsKey(mcpServerName) is false)

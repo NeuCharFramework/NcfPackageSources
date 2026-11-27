@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>1.1.15</Version>
+    <Version>1.1.16</Version>
     <XncfHasDatabase>Template_Database</XncfHasDatabase>
     <XncfIsSample>Template_Sample</XncfIsSample>
     <AssemblyName>Template_OrgName.Xncf.Template_XncfName</AssemblyName>
@@ -74,7 +74,11 @@
         2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
         [2026-11-24] v1.1.15 Integrated localization, tooling, and runtime improvements across the module.
         1. Updated functional behavior and package metadata for the current module changes.
-        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.
+        [2026-11-27] v1.1.16 Improve source documentation, headers, and module metadata consistency.
+        1. Removed unused project references and aligned dependent module integration.
+        2. Applied standardized copyright headers, XML documentation, and localization metadata across touched sources.
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

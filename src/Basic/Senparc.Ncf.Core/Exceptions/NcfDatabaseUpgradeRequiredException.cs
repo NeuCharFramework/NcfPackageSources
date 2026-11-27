@@ -13,18 +13,23 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
 
 namespace Senparc.Ncf.Core.Exceptions
 {
-    /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Indicates that database schema upgrade is required before the operation can continue.</summary>
     public sealed class NcfDatabaseUpgradeRequiredException : NcfExceptionBase
     {
+        /// <summary>
+        /// Initializes a database-upgrade-required exception.
+        /// </summary>
+        /// <param name="message">The upgrade requirement message.</param>
+        /// <param name="inner">The underlying provider exception, when available.</param>
         public NcfDatabaseUpgradeRequiredException(string message, Exception inner = null)
             : base(message, inner)
         {

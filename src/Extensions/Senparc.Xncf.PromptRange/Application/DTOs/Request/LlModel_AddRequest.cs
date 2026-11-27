@@ -13,12 +13,16 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.AI;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 {
+    /// <summary>Contains provider and credential values for adding a PromptRange language model.</summary>
     public class LlModel_AddRequest
     {
         /// <summary>
@@ -36,9 +40,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
         /// </summary>
         public string Endpoint { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the AI provider platform.</summary>
         public AiPlatform ModelType { get; set; }
 
         /// <summary>
@@ -51,10 +53,13 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
         /// </summary>
         public string OrganizationId { get; set; }
 
+        /// <summary>Gets or sets the provider API version.</summary>
         public string ApiVersion { get; set; }
 
+        /// <summary>Gets or sets an optional administrative note.</summary>
         public string Note { get; set; } = "";
 
+        /// <summary>Gets or sets whether the model is shared.</summary>
         public bool IsShared { get; set; } = false;
     }
 }

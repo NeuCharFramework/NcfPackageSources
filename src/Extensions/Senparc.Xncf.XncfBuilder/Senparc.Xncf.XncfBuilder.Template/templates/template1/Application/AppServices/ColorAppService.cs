@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v1.1.15 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v1.1.16 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 using Senparc.CO2NET;
 using Senparc.Ncf.Core.AppServices;
@@ -30,6 +33,9 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
     {
         private readonly ColorService _colorService;
 
+        /// <summary>Initializes the template color application service.</summary>
+        /// <param name="serviceProvider">The dependency provider.</param>
+        /// <param name="colorService">The color service.</param>
         public ColorAppService(IServiceProvider serviceProvider, ColorService colorService) : base(serviceProvider)
         {
             this._colorService = colorService;
@@ -37,9 +43,9 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
 
 
         /// <summary>
-        /// get or initialize a ColorDto object
+        /// Gets the stored color or initializes one and returns its RGB values.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An application response containing color values and elapsed time.</returns>
         public async Task<AppResponseBase<Color_GetOrInitColorResponse>> GetOrInitColorAsync()
         {
             return await this.GetResponseAsync<Color_GetOrInitColorResponse>(async (response, logger) =>

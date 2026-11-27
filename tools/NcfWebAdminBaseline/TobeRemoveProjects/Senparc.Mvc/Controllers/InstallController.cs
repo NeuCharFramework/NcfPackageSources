@@ -9,6 +9,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.0.1 Updated legacy MVC integration metadata and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.0.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Service;
@@ -23,11 +26,21 @@ namespace Senparc.Mvc.Controllers
     {
         private readonly AdminUserInfoService _accountInfoService;
         private readonly SystemConfigService _systemConfigService;
+        /// <summary>
+        /// Initializes the legacy installation controller.
+        /// </summary>
+        /// <param name="accountService">The administrator initialization service.</param>
+        /// <param name="systemConfigService">The system configuration initialization service.</param>
         public InstallController(AdminUserInfoService accountService, SystemConfigService systemConfigService)
         {
             _accountInfoService = accountService;
             _systemConfigService = systemConfigService;
         }
+        /// <summary>
+        /// Initializes the administrator and system configuration and displays
+        /// the legacy installation result when initialization is available.
+        /// </summary>
+        /// <returns>The installation view or HTTP 404 when initialization is unavailable.</returns>
         public IActionResult Index()
         {
             var adminUserInfo = _accountInfoService.Init(out string userName, out string password);

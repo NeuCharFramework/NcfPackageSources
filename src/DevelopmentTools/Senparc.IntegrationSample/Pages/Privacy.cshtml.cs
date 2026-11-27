@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.0.19 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.0.20 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -34,6 +37,9 @@ namespace Senparc.IntegrationSample.Pages
             _logger = logger;
         }
 
+        /// <summary>
+        /// Handles the privacy page GET request.
+        /// </summary>
         public void OnGet()
         {
         }

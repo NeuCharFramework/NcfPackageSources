@@ -14,6 +14,10 @@ namespace Senparc.Xncf.AgentsManager.Models
     [MultipleMigrationDbContext(MultipleDatabaseType.MySql, typeof(Register))]
     public class AgentsManagerSenparcEntities_MySql : AgentsManagerSenparcEntities
     {
+        /// <summary>
+        /// Initializes the MySQL-specific AgentsManager DbContext.
+        /// </summary>
+        /// <param name="dbContextOptions">The EF Core options configured for MySQL.</param>
         public AgentsManagerSenparcEntities_MySql(DbContextOptions<AgentsManagerSenparcEntities_MySql> dbContextOptions) : base(dbContextOptions)
         {
         }
@@ -32,6 +36,9 @@ namespace Senparc.Xncf.AgentsManager.Models
             app.UseNcfDatabase("Senparc.Ncf.Database.MySql", "Senparc.Ncf.Database.MySql", "MySqlDatabaseConfiguration");
         };
 
+        /// <summary>
+        /// Initializes the MySQL design-time DbContext factory using the configured root directory.
+        /// </summary>
         public SenparcDbContextFactory_MySql() : base(SenparcDbContextFactoryConfig.RootDirectoryPath)
         {
 

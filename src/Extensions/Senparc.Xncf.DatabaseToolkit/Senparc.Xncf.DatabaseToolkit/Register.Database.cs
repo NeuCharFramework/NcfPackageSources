@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.27.13 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.27.13.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +40,10 @@ namespace Senparc.Xncf.DatabaseToolkit
 
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
+        /// <summary>
+        /// Registers DatabaseToolkit schema metadata and SQL execution services.
+        /// </summary>
+        /// <param name="services">The application service collection.</param>
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
             //AutoMap mapping
@@ -52,6 +59,11 @@ namespace Senparc.Xncf.DatabaseToolkit
             services.AddScoped<DatabaseExecutor>();
         }
 
+        /// <summary>
+        /// Applies DatabaseToolkit Entity Framework Core model configuration.
+        /// The current module relies on convention and attribute-based mappings.
+        /// </summary>
+        /// <param name="modelBuilder">The Entity Framework Core model builder.</param>
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
             //after implementing the [XncfAutoConfigurationMapping] attribute, this runs automatically and no manual registration is needed

@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -28,19 +31,13 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         /// </summary>
         public string RoleName { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the role identifier.</summary>
         public string RoleId { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the administrator account identifier.</summary>
         public int AdminAccountId { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets whether the administrator currently has the role.</summary>
         public bool HasRole { get; set; }
     }
 }

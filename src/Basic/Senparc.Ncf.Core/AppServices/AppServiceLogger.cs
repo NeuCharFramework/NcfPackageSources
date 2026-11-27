@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Trace;
@@ -29,23 +32,37 @@ namespace Senparc.Ncf.Core.AppServices
     {
         StringBuilder stringBuilder = new StringBuilder();
 
+        /// <summary>Appends a blank log line and returns an empty string.</summary>
         public string Append()
         {
             stringBuilder.AppendLine("");
             return "";
         }
 
+        /// <summary>
+        /// Appends a timestamped message to the in-memory log.
+        /// </summary>
+        /// <param name="msg">The message to append.</param>
+        /// <returns>The original message.</returns>
         public string Append(string msg)
         {
             stringBuilder.AppendLine($"[{SystemTime.Now.ToString()}]\t{msg}");
             return msg;
         }
 
+        /// <summary>
+        /// Gets all accumulated log text.
+        /// </summary>
+        /// <returns>The log text including line breaks.</returns>
         public string GetLogs()
         {
             return stringBuilder.ToString();
         }
 
+        /// <summary>
+        /// Publishes the accumulated log text through SenparcTrace.
+        /// </summary>
+        /// <param name="name">The custom-log category.</param>
         public void SaveLogs(string name)
         {
             string logs = GetLogs();
@@ -57,6 +74,7 @@ namespace Senparc.Ncf.Core.AppServices
             SenparcTrace.SendCustomLog(name, utf8String);
         }
 
+        /// <summary>Returns the accumulated log text.</summary>
         public override string ToString()
         {
             return GetLogs();

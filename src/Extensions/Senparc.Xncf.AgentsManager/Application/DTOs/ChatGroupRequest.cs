@@ -37,6 +37,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.XncfBase.FunctionRenders;
@@ -54,30 +57,46 @@ using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.XncfBuilder.OHS.PL;
-using System.Web.Mvc;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using System.Text.Json.Serialization;
 
 namespace Senparc.Xncf.AgentsManager.Application.Dtos
 {
+    /// <summary>Minimal, stable request used by the AdminChat Agent-group command.</summary>
+    public class ChatGroup_ChatToolRunRequest : FunctionAppRequestBase
+    {
+        [Required]
+        public int ChatGroupId { get; set; }
+
+        [Required]
+        [MaxLength(500)]
+        public string Command { get; set; }
+    }
+
+    /// <summary>Requests a bounded search for enabled Agent groups.</summary>
     public class ChatGroup_FindByNameRequest : FunctionAppRequestBase
     {
         [Required]
         [MaxLength(100)]
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.Search.Query")]
+        /// <summary>Gets or sets the case-insensitive text used to search enabled groups.</summary>
         public string Query { get; set; }
 
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.Search.TopN")]
+        /// <summary>Gets or sets the maximum number of matching groups to return.</summary>
         public int TopN { get; set; } = 5;
     }
 
+    /// <summary>Provides group identity, role, member, and policy inputs for group management.</summary>
     public class ChatGroup_ManageChatGroupRequest : FunctionAppRequestBase
     {
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.SelectManage")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(ChatGroupOptions), AllowCreate = true)]
+        /// <summary>Gets or sets the existing group identifier or the create-new sentinel.</summary>
         public string ChatGroup { get; set; }
 
         [JsonIgnore]
+        /// <summary>Gets the UI options used to select an existing group or create one.</summary>
         public SelectionList ChatGroupOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem> {
              new SelectionItem("New", AgentsManagerResource.Get("Agents.Chat.NewGroup"), AgentsManagerResource.Get("Agents.Chat.NewGroup.Help"), true)
             });
@@ -85,43 +104,56 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
         [Required]
         [MaxLength(30)]
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.Name")]
+        /// <summary>Gets or sets the display name of the group being created or updated.</summary>
         public string Name { get; set; }
 
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.Members")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(MembersOptions))]
+        /// <summary>Gets or sets the selected Agent template identifiers.</summary>
         public string[] Members { get; set; }
 
         [JsonIgnore]
+        /// <summary>Gets the selectable Agent template entries for group membership.</summary>
         public SelectionList MembersOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new List<SelectionItem>());
 
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.MembersManual")]
+        /// <summary>Gets or sets manually entered member names or identifiers.</summary>
         public string MemberNamesOrIds { get; set; }
 
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.Admin")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(AdminOptions))]
+        /// <summary>Gets or sets the selected administrator Agent identifier.</summary>
         public string Admin { get; set; }
 
         [JsonIgnore]
+        /// <summary>Gets the selectable non-human Agent entries for the group administrator.</summary>
         public SelectionList AdminOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
 
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.AdminManual")]
+        /// <summary>Gets or sets a manually entered administrator name or identifier.</summary>
         public string AdminNameOrId { get; set; }
 
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.Contact")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(EnterAgentOptions))]
+        /// <summary>Gets or sets the Agent selected as the group's entry contact.</summary>
         public string EnterAgent { get; set; }
 
         [JsonIgnore]
+        /// <summary>Gets the selectable non-human Agent entries for the entry contact.</summary>
         public SelectionList EnterAgentOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
 
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.ContactManual")]
+        /// <summary>Gets or sets a manually entered entry-contact name or identifier.</summary>
         public string EnterAgentNameOrId { get; set; }
 
 
         [MaxLength(200)]
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.Description")]
+        /// <summary>Gets or sets the administrator-facing group description.</summary>
         public string Description { get; set; }
 
+        /// <inheritdoc />
+        /// <remarks>Loads existing groups and eligible Agent templates into selection lists.</remarks>
         public override async Task LoadData(IServiceProvider serviceProvider)
         {
             //ChatGroup
@@ -150,44 +182,53 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
         }
     }
 
+    /// <summary>Provides selection, model, policy, and command inputs for running Agent groups.</summary>
     public class ChatGroup_RunChatGroupRequest : FunctionAppRequestBase
     {
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.SelectRun")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(ChatGroupsOptions))]
+        /// <summary>Gets or sets the identifiers of groups to execute.</summary>
         public string[] ChatGroups { get; set; }
 
         [JsonIgnore]
+        /// <summary>Gets the selectable enabled groups for the run operation.</summary>
         public SelectionList ChatGroupsOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new List<SelectionItem>());
 
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.AIModel")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(AIModelOptions))]
+        /// <summary>Gets or sets the AI model identifier selected for the run.</summary>
         public string AIModel { get; set; }
 
         [JsonIgnore]
+        /// <summary>Gets the available AI model choices populated during request loading.</summary>
         public SelectionList AIModelOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>
         {
-            //Legacy comment translated to English.
         });
 
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.Individuation")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(IndividuationOptions))]
+        /// <summary>Gets or sets whether the group uses individualized Agent behavior.</summary>
         public bool Individuation { get; set; } = true;
 
         /// <summary>
-        /// whether tool calls require human approval first。
+        /// Gets or sets whether tool calls must wait for human approval before execution.
         /// </summary>
         public bool RequireHumanApproval { get; set; }
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets or sets the permitted level of human participation.</summary>
         public HumanInTheLoopLevel HumanInTheLoopLevel { get; set; } = HumanInTheLoopLevel.Automatic;
 
+        /// <summary>Gets or sets the plugin-tool permission mode for this run.</summary>
         public ToolPermissionMode PluginToolPermission { get; set; } = ToolPermissionMode.Inherit;
 
+        /// <summary>Gets or sets the MCP-tool permission mode for this run.</summary>
         public ToolPermissionMode McpToolPermission { get; set; } = ToolPermissionMode.Inherit;
 
+        /// <summary>Gets or sets whether a human participant is included in the run.</summary>
         public bool IncludeHumanParticipant { get; set; }
 
         [JsonIgnore]
+        /// <summary>Gets the UI option used to enable individualized behavior.</summary>
         public SelectionList IndividuationOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new List<SelectionItem>
         {
             new SelectionItem("1", AgentsManagerResource.Get("Common.Yes"), AgentsManagerResource.Get("Agents.Chat.Individuation.Help"), true)
@@ -196,8 +237,11 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
         [Required]
         [MaxLength(500)]
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.Command")]
+        /// <summary>Gets or sets the user command submitted to the selected groups.</summary>
         public string Command { get; set; }
 
+        /// <inheritdoc />
+        /// <remarks>Loads group and AI-model choices before the Function request is rendered.</remarks>
         public override async Task LoadData(IServiceProvider serviceProvider)
         {
             //ChatGroup
@@ -206,7 +250,7 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
 
             ChatGroupsOptions.Items = chatGroups.Select(z => new SelectionItem(z.Id.ToString(), z.Name, z.Description)).ToList();
 
-            //Legacy comment translated to English.
+            // Load the available AI models after the group choices have been prepared.
             await BuildXncfRequestHelper.LoadAiModelData(serviceProvider, AIModelOptions);
 
             await base.LoadData(serviceProvider);
@@ -216,103 +260,104 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
     public class ChatGroup_RunGroupRequest 
     {
         /// <summary>
-        /// task name
+        /// Gets or sets the persisted task name.
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// ChatGroup ID
+        /// Gets or sets the group identifier to execute.
         /// </summary>
         public int ChatGroupId { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the selected AI model identifier.
         /// </summary>
         public int AiModelId { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the prompt or command passed to the group.
         /// </summary>
         public string PromptCommand { get; set; }
 
         /// <summary>
-        /// description
+        /// Gets or sets the task description stored for later inspection.
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether individualized responses are requested.
         /// </summary>
         public bool Personality { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the notification or callback platform.
         /// </summary>
         public HookPlatform HookPlatform { get; set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the platform-specific callback parameter.
         /// </summary>
         public string HookParameter { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the maximum number of conversation rounds.
         /// </summary>
         public int ChatMaxRound { get; set; } = ChatGroupService.DefaultChatMaxRound;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the correlation identifier used to associate related runs.
         /// </summary>
         public string CorrelationId { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Gets or sets whether tool calls require human approval.
         /// </summary>
         public bool RequireHumanApproval { get; set; }
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets or sets the permitted level of human participation.</summary>
         public HumanInTheLoopLevel HumanInTheLoopLevel { get; set; } = HumanInTheLoopLevel.Automatic;
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets or sets the plugin-tool permission mode.</summary>
         public ToolPermissionMode PluginToolPermission { get; set; } = ToolPermissionMode.Inherit;
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets or sets the MCP-tool permission mode.</summary>
         public ToolPermissionMode McpToolPermission { get; set; } = ToolPermissionMode.Inherit;
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets or sets whether a human participant is included.</summary>
         public bool IncludeHumanParticipant { get; set; }
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets or sets whether connector access is restricted to an allow-list.</summary>
         public bool LimitConnectors { get; set; }
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets or sets the connector instance identifiers allowed for the run.</summary>
         public List<string> ConnectorInstanceIds { get; set; }
 
-        ///Legacy comment translated to English.
+        /// <summary>Gets or sets the internal human-recipient identifier.</summary>
         [JsonIgnore]
         public string HumanRecipientUserId { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Gets or sets the cancellation token used by the running task.
         /// </summary>
         [JsonIgnore]
         public System.Threading.CancellationToken CancellationToken { get; set; }
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Supplies the group selection and confirmation inputs for group deletion.
     /// </summary>
     public class ChatGroup_DeleteChatGroupRequest : FunctionAppRequestBase
     {
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.SelectDelete")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(ChatGroupsOptions))]
+        /// <summary>Gets or sets the identifiers of groups to delete.</summary>
         public string[] ChatGroups { get; set; }
 
         [JsonIgnore]
+        /// <summary>Gets the selectable groups available for deletion.</summary>
         public SelectionList ChatGroupsOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new List<SelectionItem>());
 
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.ConfirmDelete")]
+        /// <summary>Gets or sets whether the caller confirmed the destructive operation.</summary>
         public bool ConfirmDelete { get; set; }
 
         public override async Task LoadData(IServiceProvider serviceProvider)

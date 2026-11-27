@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -25,6 +28,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Mapping
     [XncfAutoConfigurationMapping]
     public class PublishedA2AAgentConfigurationMapping : ConfigurationMappingWithIdBase<PublishedA2AAgent, int>
     {
+        /// <inheritdoc/>
         public override void Configure(EntityTypeBuilder<PublishedA2AAgent> builder)
         {
             base.Configure(builder);

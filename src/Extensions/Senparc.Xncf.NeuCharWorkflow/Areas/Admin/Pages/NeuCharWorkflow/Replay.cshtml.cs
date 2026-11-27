@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.0.0 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -31,8 +34,17 @@ public class ReplayModel(
     NeuCharWorkflowAppService workflowAppService,
     IAdminWorkContextProvider adminWorkContextProvider) : AdminXncfModulePageModelBase(xncfModuleService)
 {
+    /// <summary>
+    /// Handles the initial read-only replay page request.
+    /// </summary>
+    /// <returns>A completed task.</returns>
     public Task OnGetAsync() => Task.CompletedTask;
 
+    /// <summary>
+    /// Loads one completed execution log for read-only replay.
+    /// </summary>
+    /// <param name="executionLogId">The execution-log identifier to replay.</param>
+    /// <returns>The replay payload, not-found response, or validation/conflict response.</returns>
     public async Task<IActionResult> OnGetDataAsync(int executionLogId)
     {
         try
@@ -53,6 +65,11 @@ public class ReplayModel(
         }
     }
 
+    /// <summary>
+    /// Copies a completed replay into a new workflow draft for the current administrator.
+    /// </summary>
+    /// <param name="request">The execution-log identifier to copy.</param>
+    /// <returns>The copied workflow or a not-found/conflict/validation response.</returns>
     public async Task<IActionResult> OnPostCopyAsync([FromBody] ReplayCopyRequest request)
     {
         try

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.4.4.1</Version>
+    <Version>0.4.4.2</Version>
     <AssemblyName>Senparc.Xncf.Sandbox</AssemblyName>
     <RootNamespace>Senparc.Xncf.Sandbox</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -88,7 +88,11 @@
         2. Preserved existing public APIs and runtime integration while incorporating the related improvements.
         [2026-11-25] v0.4.4 Improved Sandbox setup, orchestration, and localized user feedback.
         1. Updated sandbox setup and runtime interactions while adding localized messages for the affected user flows.
-        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.
+        [2026-11-27] v0.4.4.2 Improve source documentation, headers, and module metadata consistency.
+        1. Removed unused project references and aligned dependent module integration.
+        2. Applied standardized copyright headers, XML documentation, and localization metadata across touched sources.
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <Nullable>enable</Nullable>

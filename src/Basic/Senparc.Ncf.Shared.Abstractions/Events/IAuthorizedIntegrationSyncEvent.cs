@@ -13,41 +13,45 @@
     Modified by: Senparc - 20261119
     Change description: v0.7.1-preview2 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.7.1.2-preview3 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Ncf.Shared.Abstractions.Events
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Identifies an integration synchronization event that must be checked against
+    /// an owner and policy before it is applied.
     /// </summary>
     /// <remarks>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Consumers should treat the channel, owner, resource, action, and policy values
+    /// as authorization inputs rather than display-only metadata.
     /// </remarks>
     public interface IAuthorizedIntegrationSyncEvent : IIntegrationEvent
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the external channel or integration source.
         /// </summary>
         string Channel { get; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the owner identifier whose resource is being synchronized.
         /// </summary>
         string OwnerId { get; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the external resource identifier.
         /// </summary>
         string ResourceId { get; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the requested synchronization action.
         /// </summary>
         string Action { get; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the policy key required to authorize the action.
         /// </summary>
         string RequiredPolicy { get; }
     }

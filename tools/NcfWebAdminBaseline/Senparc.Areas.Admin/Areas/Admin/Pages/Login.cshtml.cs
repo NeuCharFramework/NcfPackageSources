@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authentication;
@@ -74,6 +77,12 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
 
+        /// <summary>
+        /// Handles the initial login-page request. The current implementation does not
+        /// perform an automatic redirect and returns no explicit action result.
+        /// </summary>
+        /// <param name="ReturnUrl">An optional URL that can be used by the login view for post-login navigation.</param>
+        /// <returns>The action result produced by the login page handler; currently <see langword="null"/>.</returns>
         public async Task<IActionResult> OnGetAsync(string ReturnUrl)
         {
             await Task.CompletedTask;
@@ -128,6 +137,15 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         //    return LocalRedirect(this.ReturnUrl.UrlDecode());
         //}
 
+        /// <summary>
+        /// Authenticates an administrator, optionally selects a tenant, enforces the failed-login
+        /// captcha threshold, and returns a JSON login result. Authentication failures are converted
+        /// into a generic invalid-credentials response except for account-lock responses, which
+        /// include the lock message and a newly generated captcha.
+        /// </summary>
+        /// <param name="loginInDto">The submitted credentials, tenant selector, and captcha values.</param>
+        /// <returns>A <see cref="JsonResult"/> containing a success or localized failure payload.</returns>
+        /// <exception cref="ArgumentNullException">Thrown by downstream services when required login data is null.</exception>
         public async Task<IActionResult> OnPostLoginAsync([FromBody] LoginInDto loginInDto)
         {
             if (!ModelState.IsValid)
@@ -227,8 +245,9 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates a new login captcha and marks the response as non-cacheable.
         /// </summary>
+        /// <returns>An <see cref="OkObjectResult"/> containing the captcha token and image.</returns>
         public async Task<IActionResult> OnGetCaptcha()
         {
             var captcha = await _captchaService.CreateAsync();
@@ -238,8 +257,11 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Determines whether the supplied user has reached the failed-login threshold
+        /// at which a captcha is required.
         /// </summary>
+        /// <param name="name">The user name to inspect; blank input returns <see langword="false"/>.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing the captcha-required flag.</returns>
         public async Task<IActionResult> OnGetCaptchaRequired(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -263,6 +285,12 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             return Ok(failedCount >= LoginCaptchaService.CaptchaRequiredFailedCount);
         }
 
+        /// <summary>
+        /// Terminates the current administrator session and redirects either to the supplied
+        /// local return URL or to the administrator login page.
+        /// </summary>
+        /// <param name="ReturnUrl">An optional local URL to use after logout.</param>
+        /// <returns>A redirect action for the selected destination.</returns>
         public async Task<IActionResult> OnGetLogoutAsync(string ReturnUrl)
         {
             SenparcTrace.SendCustomLog("管理员退出登录", $"用户名：{base.UserName}");
@@ -277,12 +305,19 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             }
         }
 
+        /// <summary>
+        /// Returns whether multi-tenant behavior is enabled in the current site configuration.
+        /// </summary>
+        /// <returns>An <see cref="OkObjectResult"/> containing the configured Boolean value.</returns>
         public IActionResult OnGetCheckMultiTenant()
         {
             return Ok(SiteConfig.SenparcCoreSetting.EnableMultiTenant);
         }
     }
 
+    /// <summary>
+    /// Carries the credentials, tenant selector, and captcha values submitted by the login form.
+    /// </summary>
     public class LoginInDto
     {
         [Required]
@@ -293,6 +328,11 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         public string CaptchaToken { get; set; }
         public string CaptchaCode { get; set; }
 
+        /// <summary>
+        /// Validates the tenant selector according to the login DTO's current validation contract.
+        /// The current contract accepts every value.
+        /// </summary>
+        /// <returns><see langword="true"/> for the current validation contract.</returns>
         public bool ValidateTenant()
         {
             //Legacy comment translated to English.
@@ -302,24 +342,46 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Contains the token and image returned when an administrator must complete a captcha.
     /// </summary>
     public class LoginCaptchaDto
     {
+        /// <summary>
+        /// Gets or sets the opaque captcha token submitted during validation.
+        /// </summary>
         public string Token { get; set; }
+        /// <summary>
+        /// Gets or sets the rendered captcha image payload.
+        /// </summary>
         public string Image { get; set; }
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Represents the success or failure payload returned by the login endpoint.
     /// </summary>
     public class LoginResultDto
     {
+        /// <summary>
+        /// Gets or sets whether authentication completed successfully.
+        /// </summary>
         public bool Success { get; set; }
+        /// <summary>
+        /// Gets or sets the localized failure message, when authentication fails.
+        /// </summary>
         public string Msg { get; set; }
+        /// <summary>
+        /// Gets or sets whether the client must display a captcha challenge.
+        /// </summary>
         public bool CaptchaRequired { get; set; }
+        /// <summary>
+        /// Gets or sets the captcha challenge returned with a failure response.
+        /// </summary>
         public LoginCaptchaDto Captcha { get; set; }
 
+        /// <summary>
+        /// Creates a successful login result without a failure message or captcha.
+        /// </summary>
+        /// <returns>A successful <see cref="LoginResultDto"/>.</returns>
         public static LoginResultDto Ok()
         {
             return new LoginResultDto
@@ -328,6 +390,14 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             };
         }
 
+        /// <summary>
+        /// Creates a failed login result and optionally projects a captcha challenge
+        /// returned by the captcha service.
+        /// </summary>
+        /// <param name="msg">The localized failure message.</param>
+        /// <param name="captchaRequired">Whether the client must complete a captcha.</param>
+        /// <param name="captcha">The optional service captcha model to project.</param>
+        /// <returns>A failed <see cref="LoginResultDto"/>.</returns>
         public static LoginResultDto Fail(string msg, bool captchaRequired = false, LoginCaptchaService.CaptchaModel captcha = null)
         {
             return new LoginResultDto

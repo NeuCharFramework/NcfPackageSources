@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -31,12 +34,22 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.OHS.Local.AppService
 {
     [BackendJwtAuthorize(BackendJwtAuthorizeAttribute.SuperAdminPolicyName)]
+    /// <summary>
+    /// Provides super-administrator APIs for maintaining roles and their permissions.
+    /// </summary>
     public class SysRoleAppService : AppServiceBase
     {
         private readonly SysRoleService _sysRoleService;
         private readonly SysRolePermissionService _sysPermissionService;
         private readonly AutoMapper.IMapper _mapper;
 
+        /// <summary>
+        /// Initializes the role-management application service.
+        /// </summary>
+        /// <param name="sysRoleService">The role persistence service.</param>
+        /// <param name="serviceProvider">The request service provider.</param>
+        /// <param name="mapper">The DTO/entity mapper.</param>
+        /// <param name="sysPermissionService">The role-permission persistence service.</param>
         public SysRoleAppService(SysRoleService sysRoleService, IServiceProvider serviceProvider, AutoMapper.IMapper mapper, SysRolePermissionService sysPermissionService) : base(serviceProvider)
         {
             _sysRoleService = sysRoleService;
@@ -45,11 +58,14 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates a role or updates an existing role after checking role-code uniqueness.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        /// <exception cref="Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        /// <param name="request">The role fields to create or persist.</param>
+        /// <returns>A response containing the persisted role identifier.</returns>
+        /// <exception cref="Ncf.Core.Exceptions.NcfExceptionBase">
+        /// Thrown when the requested role code is already used by another role.
+        /// The standard response pipeline converts it into an error response.
+        /// </exception>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
         //[Permission(Codes = new string[] { "code" })]
         [Ncf.Core.Authorization.Permission("role-add,role-edit")]
@@ -74,10 +90,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns a paged, newest-first list of roles matching the supplied filters.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">The paging and filtering values from the query string.</param>
+        /// <returns>A response containing the total count and mapped role list.</returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         //[Permission("role.query")]
         public async Task<AppResponseBase<SysRole_GetListResponse>> GetListAsync([FromQuery] SysRole_GetListRequest request)
@@ -97,10 +113,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// get details
+        /// Gets one role and maps it to the administrator detail DTO.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="id">The role identifier to retrieve.</param>
+        /// <returns>A response containing the mapped role detail.</returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         //[Permission("role.detail")]
         public async Task<AppResponseBase<SysRole_GetSingleResponse>> GetSingeAsync(string id)
@@ -119,10 +135,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// deleterole
+        /// Deletes one role and returns the deleted role detail.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="id">The role identifier to delete.</param>
+        /// <returns>A response containing the mapped role that was removed.</returns>
         //[Permission("role.delete")]
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Delete)]
         public async Task<AppResponseBase<SysRole_GetSingleResponse>> DeleteSingeAsync(string id)
@@ -142,10 +158,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Replaces or adds the permission assignments represented by the request.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">
+        /// The permission assignment DTOs. A null collection is treated as empty.
+        /// </param>
+        /// <returns>A response indicating whether the permission update completed.</returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Put)]
         //[Permission("role.addPermission")]
         public async Task<AppResponseBase<SysRole_Response>> AddPermissionAsync(SysRole_AddPermissionRequest request)
@@ -173,10 +191,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the permission identifiers currently assigned to a role.
         /// </summary>
-        /// <param name="roleId"></param>
-        /// <returns></returns>
+        /// <param name="roleId">The role identifier whose permissions are requested.</param>
+        /// <returns>A response containing the assigned permission identifiers.</returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         //[Permission("role.getPermission")]
         public async Task<AppResponseBase<SysRole_PermissionsResponse>> GetRolePermissionsAsync(string roleId)

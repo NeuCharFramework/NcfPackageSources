@@ -141,7 +141,7 @@
             </el-form-item>
             <el-form-item label="Bearer Token">
                 <el-input v-model="form.bearerToken" type="textarea" :rows="2"
-                    :placeholder="ncfST('Frontend.Mcp.OptionalSaveAsAuthConfigJSONWithATokenField')"></el-input>
+                    :placeholder="form.authConfigured ? ncfST('Frontend.Mcp.SavedLeaveBlankToKeepTheExistingCredential') : ncfST('Frontend.Mcp.OptionalSaveAsAuthConfigJSONWithATokenField')"></el-input>
             </el-form-item>
             <el-form-item :label="ncfST('Frontend.Mcp.Enabled')">
                 <el-switch v-model="form.enabled"></el-switch>

@@ -22,6 +22,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.42.0.0 add MCP endpoint gateway and tool invocation contracts
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -41,6 +44,13 @@ namespace Senparc.Xncf.XncfBuilder.Areas.XncfBuilder.Pages
         private readonly IXncfDevelopmentJobService _developmentJobService;
         private readonly RequestTenantInfo _requestTenantInfo;
 
+        /// <summary>
+        /// Initializes the XNCF Builder preview/development monitor page.
+        /// </summary>
+        /// <param name="xncfModuleService">The lazy XNCF module service.</param>
+        /// <param name="previewService">The preview session service.</param>
+        /// <param name="developmentJobService">The isolated development job service.</param>
+        /// <param name="requestTenantInfo">The current request tenant context.</param>
         public PreviewMonitor(
             Lazy<XncfModuleService> xncfModuleService,
             IXncfPreviewService previewService,
@@ -53,6 +63,9 @@ namespace Senparc.Xncf.XncfBuilder.Areas.XncfBuilder.Pages
             _requestTenantInfo = requestTenantInfo;
         }
 
+        /// <summary>
+        /// Loads the current XNCF registration for the monitor page.
+        /// </summary>
         public void OnGet()
         {
             //Legacy comment translated to English.
@@ -60,6 +73,10 @@ namespace Senparc.Xncf.XncfBuilder.Areas.XncfBuilder.Pages
             _ = XncfRegister;
         }
 
+        /// <summary>
+        /// Returns preview stages, sessions, development jobs, and persistence status.
+        /// </summary>
+        /// <returns>An HTTP 200 JSON monitor state.</returns>
         public async Task<IActionResult> OnGetStateAsync()
         {
             object developmentJobs;
@@ -107,6 +124,11 @@ namespace Senparc.Xncf.XncfBuilder.Areas.XncfBuilder.Pages
             });
         }
 
+        /// <summary>
+        /// Returns bounded recent output for one preview session.
+        /// </summary>
+        /// <param name="sessionId">The preview session identifier.</param>
+        /// <returns>An HTTP 200 output result or HTTP 404.</returns>
         public IActionResult OnGetSessionOutput(string sessionId)
         {
             var session = _previewService.GetSession(sessionId, includeOutput: true);
@@ -120,6 +142,11 @@ namespace Senparc.Xncf.XncfBuilder.Areas.XncfBuilder.Pages
                 });
         }
 
+        /// <summary>
+        /// Requests graceful stop of one preview session.
+        /// </summary>
+        /// <param name="sessionId">The preview session identifier.</param>
+        /// <returns>An HTTP JSON result describing stop acceptance.</returns>
         public async Task<IActionResult> OnPostStopAsync(string sessionId)
         {
             if (string.IsNullOrWhiteSpace(sessionId))
@@ -136,6 +163,12 @@ namespace Senparc.Xncf.XncfBuilder.Areas.XncfBuilder.Pages
             });
         }
 
+        /// <summary>
+        /// Applies an approved isolated development job after confirmation validation.
+        /// </summary>
+        /// <param name="jobId">The isolated development job identifier.</param>
+        /// <param name="confirmationPhrase">The administrator confirmation phrase.</param>
+        /// <returns>An HTTP JSON result or a mapped bad-request error.</returns>
         public async Task<IActionResult> OnPostApplyDevelopmentAsync(string jobId, string confirmationPhrase)
         {
             if (string.IsNullOrWhiteSpace(jobId) || string.IsNullOrWhiteSpace(confirmationPhrase))
@@ -156,6 +189,11 @@ namespace Senparc.Xncf.XncfBuilder.Areas.XncfBuilder.Pages
             }
         }
 
+        /// <summary>
+        /// Discards an isolated development job and releases its workspace/preview resources.
+        /// </summary>
+        /// <param name="jobId">The isolated development job identifier.</param>
+        /// <returns>An HTTP JSON result or a mapped bad-request error.</returns>
         public async Task<IActionResult> OnPostDiscardDevelopmentAsync(string jobId)
         {
             if (string.IsNullOrWhiteSpace(jobId))

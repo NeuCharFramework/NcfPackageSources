@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -23,7 +26,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides common audit, soft-delete, tenant, and remark fields for NCF entities.
     /// </summary>
     [Serializable]
     public partial class EntityBase : IEntityBase, IMultiTenancy
@@ -31,7 +34,7 @@ namespace Senparc.Ncf.Core.Models
         #region Legacy section
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the soft-delete flag.
         /// </summary>
         public bool Flag { get; set; }
         /// <summary>
@@ -39,7 +42,7 @@ namespace Senparc.Ncf.Core.Models
         /// </summary>
         public DateTime AddTime { get; set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the most recent update time.
         /// </summary>
         public DateTime LastUpdateTime { get; set; }
 
@@ -48,36 +51,38 @@ namespace Senparc.Ncf.Core.Models
         #region Legacy section
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Gets or sets the tenant identifier owning the entity.
         /// </summary>
         public int TenantId { get; set; }
 
         #endregion
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets an administrator-only remark.
         /// </summary>
         [MaxLength(300)]
         public string AdminRemark { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets a general remark.
         /// </summary>
         [MaxLength(300)]
         public string Remark { get; set; }
 
 
+        /// <summary>
+        /// Initializes an entity with the current system time as its creation time.
+        /// </summary>
         public EntityBase()
         {
             AddTime = SystemTime.Now.DateTime;
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Updates <see cref="LastUpdateTime"/> and initializes <see cref="AddTime"/>
+        /// when the entity has not yet been assigned a creation time.
         /// </summary>
-        /// <param name="time"></param>
+        /// <param name="time">An explicit update time, or <see langword="null"/> for the current local time.</param>
         protected void SetUpdateTime(DateTime? time = null)
         {
             if (AddTime == DateTime.MinValue)
@@ -90,14 +95,14 @@ namespace Senparc.Ncf.Core.Models
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides a strongly typed identifier in addition to the common entity fields.
     /// </summary>
-    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TKey">The entity identifier type.</typeparam>
     [Serializable]
     public partial class EntityBase<TKey> : EntityBase, IEntityBase<TKey>, IMultiTenancyEntityBase<TKey>/*defaultsupportmulti-tenancyinterface*/
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the entity identifier.
         /// </summary>
         [Key]
         public TKey Id { get; set; }

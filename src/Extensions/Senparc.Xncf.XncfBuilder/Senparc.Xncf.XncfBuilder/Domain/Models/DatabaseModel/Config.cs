@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.42.0.0 add MCP endpoint gateway and tool invocation contracts
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -29,6 +32,7 @@ namespace Senparc.Xncf.XncfBuilder
     [Table(Register.DATABASE_PREFIX + nameof(Config))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
     [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
+    /// <summary>Stores XNCF Builder solution, module identity, and display metadata.</summary>
     public class Config : EntityBase<int>
     {
         /// <summary>
@@ -36,21 +40,15 @@ namespace Senparc.Xncf.XncfBuilder
         /// </summary>
         [MaxLength(300)]
         public string SlnFilePath { get; private set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the organization name used by generated files.</summary>
         [MaxLength(300)]
         public string OrgName { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the generated XNCF module name.</summary>
         [MaxLength(50)]
         public string XncfName { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the generated module version.</summary>
         [MaxLength(100)]
         public string Version { get; private set; }
 
@@ -74,6 +72,7 @@ namespace Senparc.Xncf.XncfBuilder
 
         private Config() { }
 
+        /// <summary>Initializes XNCF Builder configuration metadata.</summary>
         public Config(string slnFilePath, string orgName, string xncfName, string version, string menuName, string icon, string description)
         {
             SlnFilePath = slnFilePath;

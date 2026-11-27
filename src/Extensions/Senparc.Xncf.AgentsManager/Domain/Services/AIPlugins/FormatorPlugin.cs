@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.SemanticKernel;
@@ -46,6 +49,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
     public class FormatorPlugin
     {
 
+        /// <summary>
+        /// Counts the UTF-16 characters in the supplied text.
+        /// </summary>
+        /// <param name="text">The source text to measure.</param>
+        /// <returns>The source text length.</returns>
         [KernelFunction, LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.TextLength.Description")]
         public async Task<int> Calc(
             [LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.OriginalText")]
@@ -61,11 +69,21 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
     {
         private readonly AIModelService _aiModelService;
 
+        /// <summary>
+        /// Initializes the translation plugin with the model execution service.
+        /// </summary>
+        /// <param name="aiModelService">The service used to execute translation requests.</param>
         public TranslatorPlugin(AIModelService aiModelService)
         {
             _aiModelService = aiModelService;
         }
 
+        /// <summary>
+        /// Translates the supplied text into the requested language through the configured AI model.
+        /// </summary>
+        /// <param name="text">The source text.</param>
+        /// <param name="language">The target language.</param>
+        /// <returns>The translated text returned by the model.</returns>
         [KernelFunction, LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.Translate.Description")]
         public async Task<string> Translate(
             [LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.OriginalText")]

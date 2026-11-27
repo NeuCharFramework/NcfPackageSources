@@ -40,6 +40,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -90,7 +93,7 @@ namespace Senparc.Xncf.AIKernel
 
         public override string Uid => "796D12D8-580B-40F3-A6E8-A5D9D2EABB69";//Legacy comment translated to English.
 
-        public override string Version => "5.0.5";//the version number is required
+        public override string Version => "0.17.4.2";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -98,7 +101,9 @@ namespace Senparc.Xncf.AIKernel
 
         public override string Description => RegisterText.Description;
 
-        public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
+        /// <inheritdoc />
+    /// <inheritdoc/>
+    public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //update the database when installing or upgrading a version
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
@@ -123,7 +128,9 @@ namespace Senparc.Xncf.AIKernel
             }
         }
 
-        public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
+        /// <inheritdoc />
+    /// <inheritdoc/>
+    public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             #region Legacy section
 
@@ -141,7 +148,9 @@ namespace Senparc.Xncf.AIKernel
         }
         #endregion
 
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+        /// <inheritdoc />
+    /// <inheritdoc/>
+    public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddSenparcAI(configuration);
             AgentKernelUsageRegistry.DefaultObserver ??= new Domain.Services.AgentKernelTokenUsageObserver();
@@ -205,6 +214,7 @@ namespace Senparc.Xncf.AIKernel
             return base.AddXncfModule(services, configuration, env);
         }
 
+        /// <inheritdoc />
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             registerService.UseSenparcAI();

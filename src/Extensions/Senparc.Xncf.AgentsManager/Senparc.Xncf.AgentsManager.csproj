@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.19.4.1</Version>
+    <Version>0.20.0.0</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -210,7 +210,13 @@
         2. Preserved existing public APIs and runtime integration while incorporating the related improvements.
         [2026-11-25] v0.19.4 Improved Agent group command parameter selection and conversation loading.
         1. Added localized Agent group parameter metadata, dynamic task/group options, and conversation-loading feedback.
-        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.
+        [2026-11-27] v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+        1. Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring.
+        2. Added MCP connector features and improved admin chat functionality.
+        3. Removed unused project references and aligned dependent module integration.
+        4. Applied standardized copyright headers, XML documentation, and localization metadata across touched sources.
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

@@ -9,6 +9,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.12.29 Improved AdminChat, system log analysis, workflow commands, and workspace asset operations.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.SenparcTraceManager;
@@ -34,6 +37,12 @@ public class SystemLogAnalysisAppService(IServiceProvider serviceProvider) : Loc
         "Trace.AI.OverviewName",
         "Trace.AI.OverviewDescription",
         typeof(Register))]
+    /// <summary>
+    /// Produces a redacted, bounded overview of one SenparcTrace log date, including
+    /// counts, time window, common exception signatures, and active threads.
+    /// </summary>
+    /// <param name="request">The optional date selector; the current local date is used when absent.</param>
+    /// <returns>A string response containing the serialized overview and tool log.</returns>
     public Task<StringAppResponse> GetSystemLogOverview(SystemLogOverviewRequest request)
     {
         return this.GetStringResponseAsync(async (_, logger) =>
@@ -86,6 +95,12 @@ public class SystemLogAnalysisAppService(IServiceProvider serviceProvider) : Loc
         "Trace.AI.SearchName",
         "Trace.AI.SearchDescription",
         typeof(Register))]
+    /// <summary>
+    /// Searches one SenparcTrace log date using bounded page, keyword, type, exception,
+    /// and thread filters.
+    /// </summary>
+    /// <param name="request">The date and optional filters controlling the search.</param>
+    /// <returns>A string response containing the serialized search result and tool log.</returns>
     public Task<StringAppResponse> SearchSystemLogs(SystemLogSearchRequest request)
     {
         return this.GetStringResponseAsync(async (_, logger) =>
@@ -120,6 +135,12 @@ public class SystemLogAnalysisAppService(IServiceProvider serviceProvider) : Loc
         "Trace.AI.EvidenceName",
         "Trace.AI.EvidenceDescription",
         typeof(Register))]
+    /// <summary>
+    /// Retrieves one redacted trace record by line number and truncates its detailed result
+    /// to the configured evidence limit.
+    /// </summary>
+    /// <param name="request">The date, line number, and maximum evidence length.</param>
+    /// <returns>A string response containing the serialized evidence record and tool log.</returns>
     public Task<StringAppResponse> GetSystemLogEvidence(SystemLogEvidenceRequest request)
     {
         return this.GetStringResponseAsync(async (_, logger) =>
@@ -150,6 +171,11 @@ public class SystemLogAnalysisAppService(IServiceProvider serviceProvider) : Loc
         });
     }
 
+    /// <summary>
+    /// Normalizes an optional log date to the local <c>yyyyMMdd</c> representation.
+    /// </summary>
+    /// <param name="date">The requested date text.</param>
+    /// <returns>The trimmed date or the current local date.</returns>
     private static string NormalizeDate(string date)
     {
         return string.IsNullOrWhiteSpace(date)
@@ -157,6 +183,12 @@ public class SystemLogAnalysisAppService(IServiceProvider serviceProvider) : Loc
             : date.Trim();
     }
 
+    /// <summary>
+    /// Limits text to the requested character count and appends a truncation marker.
+    /// </summary>
+    /// <param name="content">The source text.</param>
+    /// <param name="maxCharacters">The maximum number of source characters to retain.</param>
+    /// <returns>The original or truncated text.</returns>
     private static string Truncate(string content, int maxCharacters)
     {
         if (string.IsNullOrEmpty(content) || content.Length <= maxCharacters)

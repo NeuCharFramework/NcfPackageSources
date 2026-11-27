@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -34,9 +37,14 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Extensions
 {
     public static class PromptRangeItemHelper
     {
+        /// <summary>
+        /// Adds a manual-entry option and the currently available PromptRange items to a selection list.
+        /// </summary>
+        /// <param name="serviceProvider">The provider used to resolve <see cref="PromptItemService"/>.</param>
+        /// <param name="SystemMessagePromptCodeSelection">The selection list receiving prompt-code options.</param>
+        /// <returns>A task that completes after the prompt tree has been loaded.</returns>
         public static async Task LoadPromptRangeItemSelection(IServiceProvider serviceProvider, SelectionList SystemMessagePromptCodeSelection)
         {
-            //Legacy comment translated to English.
             SystemMessagePromptCodeSelection.Items.Add(new SelectionItem()
             {
                 Value = "0",

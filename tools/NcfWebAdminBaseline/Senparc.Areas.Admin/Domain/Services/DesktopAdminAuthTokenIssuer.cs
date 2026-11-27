@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -26,11 +29,24 @@ public sealed class DesktopAdminAuthTokenIssuer : IDesktopAdminAuthTokenIssuer
 {
     private readonly AdminUserInfoService _adminUserInfoService;
 
+    /// <summary>
+    /// Initializes the desktop handoff token issuer.
+    /// </summary>
+    /// <param name="adminUserInfoService">The administrator service used to validate and issue tokens.</param>
     public DesktopAdminAuthTokenIssuer(AdminUserInfoService adminUserInfoService)
     {
         _adminUserInfoService = adminUserInfoService;
     }
 
+    /// <summary>
+    /// Issues a short-lived desktop handoff token only while the source web
+    /// authentication remains valid and the administrator is eligible.
+    /// Multi-tenant accounts are rejected by the current handoff contract.
+    /// </summary>
+    /// <param name="adminUserId">The authenticated administrator identifier.</param>
+    /// <param name="sourceAuthenticationExpiresUtc">The source web authentication expiration.</param>
+    /// <param name="cancellationToken">Token used to cancel validation and token issuance.</param>
+    /// <returns>A success result with username/token/expiration or a diagnostic failure.</returns>
     public async Task<DesktopAdminAuthTokenIssueResult> IssueAsync(
         int adminUserId,
         DateTimeOffset sourceAuthenticationExpiresUtc,

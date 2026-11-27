@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.16 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.16.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -48,22 +51,28 @@ namespace Senparc.Ncf.Core.Email
         private string Body { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the subject used for the most recent send operation.
         /// </summary>
         public string SentSubject { get; set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the body used for the most recent send operation.
         /// </summary>
         public string SentBody { get; set; }
 
-
+        /// <summary>
+        /// Gets or sets whether the sender applies a configured email template.
+        /// </summary>
         public bool UseEmailTemplate { get; set; }
 
+        /// <summary>
+        /// Initializes an email sender and optionally loads one template configuration.
+        /// </summary>
+        /// <param name="toUse">The template type to load, or <see langword="null"/> for direct sending.</param>
         public SendEmail(SendEmailType? toUse)
         {
             if (toUse != null)
             {
-                ConfigNode = EmailXmlConfig.GetEmailConfig((SendEmailType)toUse);//Legacy comment translated to English.
+                ConfigNode = EmailXmlConfig.GetEmailConfig((SendEmailType)toUse);
                 Subject = ConfigNode.Subject;
                 Body = ConfigNode.Body.HtmlDecode();
             }
@@ -71,9 +80,13 @@ namespace Senparc.Ncf.Core.Email
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Resolves the SMTP account configuration associated with an account type.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="emailUserType">The configured account category to resolve.</param>
+        /// <returns>
+        /// The matching account, or <see langword="null"/> when no configuration
+        /// with that name exists.
+        /// </returns>
         private EmailUser GetEmailUser(EmailAccountType emailUserType)
         {
             //emailUserType = emailUserType == EmailUserType.Default ? EmailUserType._163 : emailUserType;
@@ -90,6 +103,18 @@ namespace Senparc.Ncf.Core.Email
 
         #region Legacy section
 
+        /// <summary>
+        /// Sends an HTML email through the configured SMTP account and records the result.
+        /// Exceptions are logged and converted into a <see langword="false"/> result.
+        /// </summary>
+        /// <param name="to">The recipient address.</param>
+        /// <param name="subject">The email subject.</param>
+        /// <param name="body">The email body.</param>
+        /// <param name="username">The associated user name for logging.</param>
+        /// <param name="useEmailTemplate">Whether to wrap the body in the configured template.</param>
+        /// <param name="emailUserType">The configured SMTP account type.</param>
+        /// <param name="fromCache">Whether the message came from the retry cache.</param>
+        /// <returns><see langword="true"/> when SMTP delivery succeeds.</returns>
         public bool DoSendEmail(string to, string subject, string body, string username, bool useEmailTemplate, EmailAccountType emailUserType, bool fromCache)
         {
             bool sendSuccess = false;
@@ -164,39 +189,26 @@ namespace Senparc.Ncf.Core.Email
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Sends a typed email, optionally placing it in the retry cache.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sendEmailParameter"></param>
-        /// <param name="lineInCache"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The typed email parameter type.</typeparam>
+        /// <param name="sendEmailParameter">The values used to fill the template.</param>
+        /// <param name="lineInCache">Whether the message should be queued instead of sent immediately.</param>
+        /// <returns><see langword="true"/> when delivery or cache insertion succeeds.</returns>
         public bool Send<T>(T sendEmailParameter, bool lineInCache) where T : SendEmailParameter
         {
             return this.Send(sendEmailParameter, lineInCache, true, EmailAccountType.Default);
         }
 
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///// </summary>
-        ///// <typeparam name="T"></typeparam>
-        ///// <param name="sendEmailParameter"></param>
-        ///// <param name="lineInCache"></param>
-        ///Legacy comment translated to English.
-        ///// <returns></returns>
-        //public bool Send<T>(T sendEmailParameter, bool lineInCache, bool useBackupEmail) where T : SendEmailParameter
-        //{
-        //    return this.Send(sendEmailParameter, lineInCache, true, useBackupEmail);
-        //}
-
         /// <summary>
-        /// sendEmail
+        /// Sends or queues a typed email using the selected account and delivery policy.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sendEmailParameter"></param>
-        /// <param name="lineInCache"></param>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <typeparam name="T">The typed email parameter type.</typeparam>
+        /// <param name="sendEmailParameter">The values used to fill the template.</param>
+        /// <param name="lineInCache">Whether a retry-cache record should be created.</param>
+        /// <param name="sendImmediately">Whether queued records may be sent immediately.</param>
+        /// <param name="emailUserType">The SMTP account type.</param>
+        /// <returns><see langword="true"/> when delivery or cache insertion succeeds.</returns>
         public bool Send<T>(T sendEmailParameter, bool lineInCache, bool sendImmediately, EmailAccountType emailUserType) where T : SendEmailParameter
         {
             SentSubject = null;
@@ -254,6 +266,13 @@ namespace Senparc.Ncf.Core.Email
             }
         }
 
+        /// <summary>
+        /// Replaces template placeholders with public parameter properties and the current time.
+        /// </summary>
+        /// <typeparam name="T">The typed email parameter type.</typeparam>
+        /// <param name="sendEmailParameter">The values used for replacement.</param>
+        /// <param name="content">The template text.</param>
+        /// <returns>The rendered template text.</returns>
         public string ReplaceHolderValue<T>(T sendEmailParameter, string content) where T : SendEmailParameter
         {
             foreach (var member in sendEmailParameter.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty))
@@ -281,21 +300,21 @@ namespace Senparc.Ncf.Core.Email
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Fills the configured subject template with typed parameter values.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sendEmailParameter"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The typed email parameter type.</typeparam>
+        /// <param name="sendEmailParameter">The values used for replacement.</param>
+        /// <returns>The rendered subject.</returns>
         public string GetFilledSubject<T>(T sendEmailParameter) where T : SendEmailParameter
         {
             return ReplaceHolderValue(sendEmailParameter, this.Subject);
         }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Fills the configured body template with typed parameter values.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sendEmailParameter"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The typed email parameter type.</typeparam>
+        /// <param name="sendEmailParameter">The values used for replacement.</param>
+        /// <returns>The rendered body.</returns>
         public string GetFilledBody<T>(T sendEmailParameter) where T : SendEmailParameter
         {
             return ReplaceHolderValue(sendEmailParameter, this.Body);
@@ -307,6 +326,13 @@ namespace Senparc.Ncf.Core.Email
 
         #region Legacy section
 
+        /// <summary>
+        /// Wraps a rendered email body in the configured HTML template when requested.
+        /// </summary>
+        /// <param name="body">The rendered email body.</param>
+        /// <param name="usingEmailTemplate">Whether the shared HTML template should be loaded.</param>
+        /// <returns>The templated or original body.</returns>
+        /// <exception cref="Exception">Thrown when the template file cannot be loaded or populated.</exception>
         private string GetEmailTemplate(string body, bool usingEmailTemplate)
         {
             if (usingEmailTemplate)
@@ -324,6 +350,13 @@ namespace Senparc.Ncf.Core.Email
             return body;
         }
 
+        /// <summary>
+        /// Replaces one named placeholder in an email template.
+        /// </summary>
+        /// <param name="template">The template text to update.</param>
+        /// <param name="valueName">The placeholder name without delimiters.</param>
+        /// <param name="value">The replacement value.</param>
+        /// <exception cref="Exception">Thrown when the template text is empty.</exception>
         private void InsertTemplateValue(ref string template, string valueName, string value)
         {
             if (template.IsNullOrEmpty())

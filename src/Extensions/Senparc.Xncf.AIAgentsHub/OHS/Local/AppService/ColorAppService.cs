@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.13.16 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.13.16.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET;
@@ -31,6 +34,11 @@ namespace Senparc.Xncf.AIAgentsHub.OHS.Local.AppService
     {
         private readonly ColorService _colorService;
 
+        /// <summary>
+        /// Initializes the color application service.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
+        /// <param name="colorService">The color persistence service.</param>
         public ColorAppService(IServiceProvider serviceProvider, ColorService colorService) : base(serviceProvider)
         {
             this._colorService = colorService;
@@ -38,9 +46,9 @@ namespace Senparc.Xncf.AIAgentsHub.OHS.Local.AppService
 
 
         /// <summary>
-        /// get or initialize a ColorDto object
+        /// Gets the newest persisted color or creates the initial color.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An application response containing RGB values and elapsed operation time.</returns>
         public async Task<AppResponseBase<Color_GetOrInitColorResponse>> GetOrInitColorAsync()
         {
             return await this.GetResponseAsync<Color_GetOrInitColorResponse>(async (response, logger) =>

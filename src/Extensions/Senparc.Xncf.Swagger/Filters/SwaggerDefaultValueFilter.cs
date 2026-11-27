@@ -13,9 +13,12 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.12 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
-using Microsoft.OpenApi; //Legacy comment translated to English.
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Linq;
 using System.Collections.Generic;
@@ -23,10 +26,15 @@ using System.Collections.Generic;
 namespace Senparc.Xncf.Swagger.Filters
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Copies MVC parameter descriptions and required-route metadata into generated OpenAPI operations.
     /// </summary>
     public class SwaggerDefaultValueFilter : IOperationFilter
     {
+        /// <summary>
+        /// Copies MVC parameter descriptions and route-required metadata into the OpenAPI operation.
+        /// </summary>
+        /// <param name="operation">The OpenAPI operation being generated.</param>
+        /// <param name="context">The API description and metadata context.</param>
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
             if (operation.Parameters == null || operation.Parameters.Count == 0)
@@ -34,18 +42,15 @@ namespace Senparc.Xncf.Swagger.Filters
                 return;
             }
 
-            //Legacy comment translated to English.
             for (int i = 0; i < operation.Parameters.Count; i++)
             {
                 var parameter = operation.Parameters[i];
 
-                //Legacy comment translated to English.
                 var description = context.ApiDescription.ParameterDescriptions
                                     .FirstOrDefault(p => p.Name == parameter.Name);
 
                 if (description == null) continue;
 
-                //Legacy comment translated to English.
                 var newDescription = parameter.Description ?? description.ModelMetadata?.Description;
                 var newRequired = parameter.Required;
 
@@ -54,12 +59,8 @@ namespace Senparc.Xncf.Swagger.Filters
                     newRequired |= !description.RouteInfo.IsOptional;
                 }
 
-                //Legacy comment translated to English.
-                //Legacy comment translated to English.
                 if (newDescription != parameter.Description || newRequired != parameter.Required)
                 {
-                    //Legacy comment translated to English.
-                    //Legacy comment translated to English.
                     operation.Parameters[i] = new OpenApiParameter
                     {
                         Name = parameter.Name,
@@ -72,7 +73,6 @@ namespace Senparc.Xncf.Swagger.Filters
                         Content = parameter.Content,
                         Deprecated = parameter.Deprecated,
                         Extensions = parameter.Extensions,
-                        //Legacy comment translated to English.
                         Description = newDescription,
                         Required = newRequired
                     };

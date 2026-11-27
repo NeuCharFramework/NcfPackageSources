@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.1.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.1.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Extensions;
@@ -33,7 +36,7 @@ using System.Linq;
 namespace Senparc.Xncf.Application.Functions
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides the function that starts a local application process from a supplied path.
     /// </summary>
     public class LaunchApp : FunctionBase
     {

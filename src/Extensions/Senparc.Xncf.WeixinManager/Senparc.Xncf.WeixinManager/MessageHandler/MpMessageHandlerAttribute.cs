@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.25.1 Localized Weixin account and administration surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.25.1.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -22,16 +25,23 @@ using System.Text;
 namespace Senparc.Xncf.WeixinManager
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Marks a message-handler type with the logical handler name used by discovery.
     /// </summary>
     public class MpMessageHandlerAttribute : Attribute
     {
+        /// <summary>
+        /// Initializes the attribute with a handler name.
+        /// </summary>
+        /// <param name="name">The logical handler name.</param>
         public MpMessageHandlerAttribute(string name)
         {
             Name = name;
         }
 
 
+        /// <summary>
+        /// Gets or sets the logical handler name.
+        /// </summary>
         public string Name { get; set; }
     }
 }

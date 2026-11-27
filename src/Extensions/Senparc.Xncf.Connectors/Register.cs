@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.1.1 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.1.1.4 Extend MCP connector management and localization coverage.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -43,7 +46,7 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Uid => "C4E8A1D2-7B63-4F05-9A18-2D6E0B5C7F41";
 
-    public override string Version => "0.1.0";
+    public override string Version => "0.1.1.4";
 
     public override string MenuName => RegisterText.MenuName;
 
@@ -51,6 +54,7 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Description => RegisterText.Description;
 
+    /// <inheritdoc />
     public override IServiceCollection AddXncfModule(
         IServiceCollection services,
         IConfiguration configuration,
@@ -67,6 +71,7 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
         return base.AddXncfModule(services, configuration, env);
     }
 
+    /// <inheritdoc />
     public override Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         => XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 }

@@ -381,6 +381,33 @@ public sealed class WorkspaceGatewayController : ControllerBase
     }
 
     /// <summary>
+    /// Copies a workspace entry to a new relative path.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="request">The source, target, overwrite, and ETag options.</param>
+    /// <param name="cancellationToken">Token used to cancel the copy.</param>
+    [HttpPost("workspaces/{workspaceId}/copy")]
+    [RequestSizeLimit(4096)]
+    public async Task<IActionResult> CopyEntry(
+        string workspaceId,
+        [FromBody] WorkspaceCopyEntryRequest request,
+        CancellationToken cancellationToken)
+    {
+        var authorizationFailure = AuthorizeGateway(out var actorId);
+        if (authorizationFailure != null)
+        {
+            return authorizationFailure;
+        }
+
+        return await ExecuteNoContentAsync(async () =>
+        {
+            await EnsureOwnedWorkspaceAsync(workspaceId, actorId, cancellationToken).ConfigureAwait(false);
+            await using var client = CreateClient(workspaceId, actorId, allowWrite: true);
+            await client.CopyEntryAsync(request, cancellationToken).ConfigureAwait(false);
+        }).ConfigureAwait(false);
+    }
+
+    /// <summary>
     /// Searches workspace paths and content using the supplied bounded search request.
     /// </summary>
     /// <param name="workspaceId">The workspace identifier.</param>

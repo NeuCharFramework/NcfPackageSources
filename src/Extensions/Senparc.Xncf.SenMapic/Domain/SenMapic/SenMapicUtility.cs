@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.13 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.13.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -28,6 +31,12 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 {
     public static class SenMapicUtility
     {
+        /// <summary>
+        /// Returns a response stream, transparently decompressing gzip content.
+        /// </summary>
+        /// <param name="contentEncoding">The response content-encoding value.</param>
+        /// <param name="response">The HTTP response containing the body stream.</param>
+        /// <returns>The decompressed or original response stream.</returns>
         public static Stream GetReceiveStream(string contentEncoding, HttpResponseMessage response)
         {
             var responseStream = response.Content.ReadAsStream();

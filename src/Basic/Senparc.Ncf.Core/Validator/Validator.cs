@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -761,13 +764,6 @@ namespace Senparc.Ncf.Core.Validator
             return container;
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="container"></param>
-        /// <param name="checkCodeKind"></param>
-        /// <param name="stopWhileFail"></param>
-        /// <returns></returns>
         /// <summary>
         /// Validates a check-code value using the configured check-code kind.
         /// </summary>

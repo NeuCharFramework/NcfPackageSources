@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -25,12 +28,13 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Represents an administrator role and its enabled/resource-code metadata.
     /// </summary>
     [Table("SysRoles")]
     public class SysRole : EntityBase<string>
     {
 
+        /// <summary>Initializes a role with generated identity and timestamps.</summary>
         public SysRole()
         {
             this.AddTime = DateTime.Now;
@@ -38,6 +42,10 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
             Id = Guid.NewGuid().ToString();
         }
 
+        /// <summary>
+        /// Initializes a role from a DTO.
+        /// </summary>
+        /// <param name="roleDto">The role values.</param>
         public SysRole(SysRoleDto roleDto) : this()
         {
             RoleName = roleDto.RoleName;
@@ -47,6 +55,10 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
             AdminRemark = roleDto.AdminRemark;
         }
 
+        /// <summary>
+        /// Updates editable role values and refreshes the modification timestamp.
+        /// </summary>
+        /// <param name="roleDto">The replacement role values.</param>
         public void Update(SysRoleDto roleDto)
         {
             LastUpdateTime = DateTime.Now;
@@ -58,7 +70,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether the role may be assigned and evaluated.
         /// </summary>
         public bool Enabled { get; set; }
 

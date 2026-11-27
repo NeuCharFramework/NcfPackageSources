@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.5 Localized file management and upload surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.5.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET;
@@ -35,16 +38,6 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
         public ApiAppService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
-
-        /*
-
-         * Legacy comment translated to English.
-
-         * Legacy comment translated to English.
-
-         * Legacy comment translated to English.
-
-         */
 
         /// <summary>
         /// Returns the fixed sample status value through the standard API response pipeline.
@@ -69,7 +62,7 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> MyCustomApi(Api_MyCustomApiRequest request)
         {
-            //StringAppResponse is a shorthand for AppResponseBase<string>
+            // StringAppResponse is the string-payload form of AppResponseBase.
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 throw new NcfExceptionBase($"Exception test; parameters: {request.FirstName} {request.LastName}");

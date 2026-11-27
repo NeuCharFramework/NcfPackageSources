@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -24,12 +27,13 @@ using System.Text;
 
 namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Stores one administrative button permission and its route.</summary>
     [Table("SysButtons")]
     public class SysButton : EntityBase<string>
     {
+        /// <summary>
+        /// Initializes a new button entity with identifier and timestamps.
+        /// </summary>
         public SysButton()
         {
             Id = Guid.NewGuid().ToString();
@@ -37,6 +41,10 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
             LastUpdateTime = AddTime;
         }
 
+        /// <summary>
+        /// Initializes a button entity from an editable DTO.
+        /// </summary>
+        /// <param name="sysButtonDto">The button values to copy.</param>
         public SysButton(SysButtonDto sysButtonDto) : this()
         {
             MenuId = sysButtonDto.MenuId;
@@ -45,25 +53,24 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
             Url = sysButtonDto.Url;
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the owning menu identifier.</summary>
         [MaxLength(150)]
         public string MenuId { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the button display name.</summary>
         [MaxLength(150)]
         [Required]
         public string ButtonName { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the operation/resource marker.</summary>
         [MaxLength(150)]
         public string OpearMark { get; set; }
 
+        /// <summary>
+        /// Copies editable button fields from a DTO and refreshes the entity update timestamp.
+        /// The associated menu identifier is intentionally not changed by this operation.
+        /// </summary>
+        /// <param name="item">The DTO containing the new button name, operation mark, and URL.</param>
         public void Update(SysButtonDto item)
         {
             ButtonName = item.ButtonName;
@@ -72,9 +79,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
             LastUpdateTime = DateTime.Now;
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the button URL or action route.</summary>
         [MaxLength(500)]
         public string Url { get; set; }
     }

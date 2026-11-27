@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261125
     Change description: v0.12.29 Improved AdminChat conversation loading and command parameter feedback.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -51,6 +54,8 @@ public sealed class AdminChatAttachment
     public string ChangeType { get; set; } = "";
     public string ActionType { get; set; } = "";
     public int ActionTargetId { get; set; }
+    public string ActionTarget { get; set; } = "";
+    public int ActionOwnerId { get; set; }
     public string PreviewKind { get; set; } = "";
     public DateTimeOffset CreatedAt { get; set; }
     public string LocalStatus { get; set; } = "";

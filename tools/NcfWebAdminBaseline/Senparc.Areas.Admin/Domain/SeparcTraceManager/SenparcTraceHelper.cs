@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.12.29 Improved AdminChat, system log analysis, workflow commands, and workspace asset operations.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -71,6 +74,11 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Lists valid yyyyMMdd log dates found in the configured trace directory,
+        /// newest first.
+        /// </summary>
+        /// <returns>The available log dates.</returns>
         public static List<string> GetLogDate()
         {
             if (!Directory.Exists(DefaultLogPath))
@@ -87,6 +95,12 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
                 .ToList();
         }
 
+        /// <summary>
+        /// Returns paged metadata for available trace log files.
+        /// </summary>
+        /// <param name="pageIndex">The one-based page index.</param>
+        /// <param name="pageSize">The requested page size, bounded to 100.</param>
+        /// <returns>Paged log-file metadata.</returns>
         public static SenparcTraceLogFileResult GetLogFiles(int pageIndex = 1, int pageSize = 10)
         {
             pageIndex = Math.Max(1, pageIndex);
@@ -118,6 +132,14 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Scans one dated log file for totals/type counts, using a cache when requested.
+        /// </summary>
+        /// <param name="serviceProvider">Optional provider for the shared cache.</param>
+        /// <param name="date">The yyyyMMdd log date.</param>
+        /// <param name="useCache">Whether to read/store the scan cache.</param>
+        /// <returns>The scan counts.</returns>
+        /// <exception cref="Exception">Thrown when the requested log file does not exist.</exception>
         public static async Task<SenparcTraceLogScanResult> GetLogScanResultAsync(
             IServiceProvider serviceProvider,
             string date,
@@ -159,6 +181,13 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Parses all entries from one dated trace file and returns them newest first.
+        /// </summary>
+        /// <param name="serviceProvider">Optional provider for a cache lock.</param>
+        /// <param name="date">The yyyyMMdd log date.</param>
+        /// <returns>Parsed trace entries.</returns>
+        /// <exception cref="Exception">Thrown when the requested log file does not exist.</exception>
         public static async Task<List<SenparcTraceItem>> GetAllLogsAsync(IServiceProvider serviceProvider, string date)
         {
             var logFile = GetLogFilePath(date);
@@ -186,6 +215,12 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
             return logList;
         }
 
+        /// <summary>
+        /// Reads and parses trace sections, request/result blocks, and exception details
+        /// from a physical log file.
+        /// </summary>
+        /// <param name="logFile">The physical log file path.</param>
+        /// <returns>Parsed entries in file order.</returns>
         private static async Task<List<SenparcTraceItem>> ReadAllLogsAsync(string logFile)
         {
             var logList = new List<SenparcTraceItem>();
@@ -307,6 +342,20 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
             return logList;
         }
 
+        /// <summary>
+        /// Searches and filters a dated log file, returning redacted paged result metadata.
+        /// </summary>
+        /// <param name="serviceProvider">The provider used for cached log access.</param>
+        /// <param name="date">The yyyyMMdd log date.</param>
+        /// <param name="pageIndex">The one-based page index.</param>
+        /// <param name="pageSize">The requested page size.</param>
+        /// <param name="keyword">Optional case-insensitive keyword.</param>
+        /// <param name="traceType">Optional trace-type filter.</param>
+        /// <param name="isException">Optional exception/non-exception filter.</param>
+        /// <param name="threadId">Optional thread filter.</param>
+        /// <param name="startTime">Optional lower timestamp bound.</param>
+        /// <param name="endTime">Optional upper timestamp bound.</param>
+        /// <returns>The filtered query result.</returns>
         public static async Task<SenparcTraceLogQueryResult> QueryLogsAsync(
             IServiceProvider serviceProvider,
             string date,
@@ -399,6 +448,15 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
             };
         }
 
+        /// <summary>
+        /// Returns one redacted full trace entry identified by its source line.
+        /// </summary>
+        /// <param name="serviceProvider">The provider used for log access.</param>
+        /// <param name="date">The yyyyMMdd log date.</param>
+        /// <param name="line">The source line number.</param>
+        /// <returns>The redacted detail.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when line is not positive.</exception>
+        /// <exception cref="KeyNotFoundException">Thrown when no entry uses the line.</exception>
         public static async Task<SenparcTraceLogDetail> GetLogDetailAsync(
             IServiceProvider serviceProvider,
             string date,
@@ -430,6 +488,11 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
             };
         }
 
+        /// <summary>
+        /// Creates a redacted single-line preview capped at 160 characters.
+        /// </summary>
+        /// <param name="item">The trace entry.</param>
+        /// <returns>The safe preview text.</returns>
         private static string CreatePreview(SenparcTraceItem item)
         {
             var text = RedactSensitiveData(item.Result?.ExceptionMessage
@@ -440,11 +503,22 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
             return text.Length <= 160 ? text : text[..157] + "...";
         }
 
+        /// <summary>
+        /// Performs a case-insensitive containment check for optional log text.
+        /// </summary>
+        /// <param name="content">The candidate content.</param>
+        /// <param name="keyword">The search keyword.</param>
+        /// <returns><see langword="true"/> when the keyword occurs.</returns>
         private static bool Contains(string content, string keyword)
         {
             return content?.Contains(keyword, StringComparison.OrdinalIgnoreCase) == true;
         }
 
+        /// <summary>
+        /// Parses the trace timestamp format used by log entries.
+        /// </summary>
+        /// <param name="value">The timestamp text.</param>
+        /// <returns>The parsed time, or <see langword="null"/>.</returns>
         private static DateTime? TryParseLogTime(string value)
         {
             return DateTime.TryParseExact(
@@ -457,6 +531,11 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
                 : null;
         }
 
+        /// <summary>
+        /// Redacts credentials and authorization-like values from log content.
+        /// </summary>
+        /// <param name="content">The log content.</param>
+        /// <returns>Content with recognized secrets replaced by asterisks.</returns>
         public static string RedactSensitiveData(string content)
         {
             if (string.IsNullOrEmpty(content))
@@ -470,6 +549,12 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
             return BearerRegex.Replace(content, "${prefix}***");
         }
 
+        /// <summary>
+        /// Resolves a validated yyyyMMdd date to a path under the configured log root.
+        /// </summary>
+        /// <param name="date">The yyyyMMdd date.</param>
+        /// <returns>The physical log path.</returns>
+        /// <exception cref="ArgumentException">Thrown when the date format is invalid.</exception>
         private static string GetLogFilePath(string date)
         {
             if (string.IsNullOrWhiteSpace(date) ||
@@ -489,6 +574,11 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
             return result;
         }
 
+        /// <summary>
+        /// Trims a log line and removes a leading UTF-8 BOM character.
+        /// </summary>
+        /// <param name="lineText">The raw log line.</param>
+        /// <returns>The normalized line.</returns>
         private static string NormalizeLine(string lineText)
         {
             return lineText == null ? string.Empty : lineText.Trim().TrimStart('\uFEFF');
@@ -652,6 +742,9 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
                 _bakFilePath = bakFilePath;
             }
 
+            /// <summary>
+            /// Closes the trace reader and removes the temporary backup file once.
+            /// </summary>
             public void Dispose()
             {
                 if (_disposed)
@@ -664,12 +757,20 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
                 TryDeleteBak();
             }
 
+            /// <summary>
+            /// Performs the synchronous disposal path for async-disposable consumers.
+            /// </summary>
+            /// <returns>A completed value task.</returns>
             public ValueTask DisposeAsync()
             {
                 Dispose();
                 return ValueTask.CompletedTask;
             }
 
+            /// <summary>
+            /// Best-effort deletion of the temporary backup file created for reading.
+            /// Cleanup failures are intentionally ignored after the reader is closed.
+            /// </summary>
             private void TryDeleteBak()
             {
                 if (string.IsNullOrEmpty(_bakFilePath))

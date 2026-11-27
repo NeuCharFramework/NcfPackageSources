@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -24,7 +27,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AIKernel.Domain.Models
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Identifies the capability or modality provided by an AI model configuration.
     /// </summary>
     public enum ConfigModelType
     {

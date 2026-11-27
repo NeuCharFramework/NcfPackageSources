@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.25.1 Localized Weixin account and administration surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.25.1.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Weixin.MP.AdvancedAPIs.TemplateMessage;
@@ -20,7 +23,7 @@ using Senparc.Weixin.MP.AdvancedAPIs.TemplateMessage;
 namespace Senparc.Xncf.WeixinManager.WeixinTemplate
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Represents the Weixin template-message payload used to report an application audit result.
     /// </summary>
     public class WeixinTemplate_AppAuditNotice : WeixinTemplateBase
     {
@@ -60,12 +63,13 @@ namespace Senparc.Xncf.WeixinManager.WeixinTemplate
         public TemplateDataItem remark { get; set; }
 
         /// <summary>
-        /// 
+        /// Initializes the audit-notice template with its first, keyword, and remark values.
         /// </summary>
-        /// <param name="_first"></param>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <param name="_remark"></param>
+        /// <param name="_first">The primary audit subject text.</param>
+        /// <param name="_keyword1">The first audit detail.</param>
+        /// <param name="_keyword2">The second audit detail.</param>
+        /// <param name="_keyword3">The third audit detail.</param>
+        /// <param name="_remark">The final audit remark.</param>
         public WeixinTemplate_AppAuditNotice(string _first, string _keyword1, string _keyword2, string _keyword3,
             string _remark) : base("_1_gRx85XBc7OGY4dw9D-fyW4XEeu6Q5URn_ikKH2UD", "审核结果通知")
         {

@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.13-preview13 Updated SMS integration support and related localization metadata
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.13.2-preview14 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -23,26 +26,35 @@ namespace Senparc.Ncf.SMS
 {
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Identifies the SMS provider implementation used by NCF.
     /// </summary>
     public enum SmsPlatformType
     {
+        /// <summary>Unknown or unsupported provider.</summary>
         Unknow = -1,
+        /// <summary>JunMei provider.</summary>
         JunMei = 0,
+        /// <summary>Fissoft provider.</summary>
         Fissoft = 1,
+        /// <summary>First custom SMS provider slot.</summary>
         SMS1 = 10,
+        /// <summary>Second custom SMS provider slot.</summary>
         SMS2 = 20,
+        /// <summary>Third custom SMS provider slot.</summary>
         SMS3 = 30,
+        /// <summary>Fourth custom SMS provider slot.</summary>
         SMS4 = 40
     }
 
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Result codes returned by SMS provider implementations.
     /// </summary>
     public enum SmsResult
     {
+        /// <summary>The provider returned an unknown failure.</summary>
         未知错误 = 0,
+        /// <summary>The message was accepted successfully.</summary>
         成功 = 1,
         访问数据库写入数据错误 = -1,
         一次发送的手机号码过多 = -3,

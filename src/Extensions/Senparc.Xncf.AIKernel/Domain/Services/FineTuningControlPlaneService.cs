@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Repository;
@@ -36,6 +39,14 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         private readonly IRepositoryBase<AIFineTuningArtifact> _artifactRepository;
         private readonly IRepositoryBase<AIFineTuningMigration> _migrationRepository;
 
+        /// <summary>
+        /// Initializes the local fine-tuning control-plane repositories.
+        /// </summary>
+        /// <param name="datasetRepository">Dataset repository.</param>
+        /// <param name="jobRepository">Job repository.</param>
+        /// <param name="eventRepository">Event repository.</param>
+        /// <param name="artifactRepository">Artifact repository.</param>
+        /// <param name="migrationRepository">Migration repository.</param>
         public FineTuningControlPlaneService(
             IRepositoryBase<AIFineTuningDataset> datasetRepository,
             IRepositoryBase<AIFineTuningJob> jobRepository,
@@ -50,6 +61,10 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             _migrationRepository = migrationRepository;
         }
 
+        /// <summary>Inserts or updates one fine-tuning dataset record.</summary>
+        /// <param name="dataset">The dataset entity.</param>
+        /// <param name="cancellationToken">Token used to cancel persistence.</param>
+        /// <returns>The inserted or existing updated entity.</returns>
         public async Task<AIFineTuningDataset> UpsertDatasetAsync(AIFineTuningDataset dataset, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -75,6 +90,10 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             return existing;
         }
 
+        /// <summary>Inserts or updates one fine-tuning job record.</summary>
+        /// <param name="job">The job entity.</param>
+        /// <param name="cancellationToken">Token used to cancel persistence.</param>
+        /// <returns>The inserted or existing updated entity.</returns>
         public async Task<AIFineTuningJob> UpsertJobAsync(AIFineTuningJob job, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -92,6 +111,10 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             return existing;
         }
 
+        /// <summary>Inserts or updates one Worker event keyed by Worker/job/sequence.</summary>
+        /// <param name="fineTuningEvent">The event entity.</param>
+        /// <param name="cancellationToken">Token used to cancel persistence.</param>
+        /// <returns>The inserted or existing updated entity.</returns>
         public async Task<AIFineTuningEvent> UpsertEventAsync(AIFineTuningEvent fineTuningEvent, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -111,6 +134,10 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             return existing;
         }
 
+        /// <summary>Inserts or updates one fine-tuning artifact record.</summary>
+        /// <param name="artifact">The artifact entity.</param>
+        /// <param name="cancellationToken">Token used to cancel persistence.</param>
+        /// <returns>The inserted or existing updated entity.</returns>
         public async Task<AIFineTuningArtifact> UpsertArtifactAsync(AIFineTuningArtifact artifact, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -131,6 +158,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             return existing;
         }
 
+        /// <summary>Deletes a job and its events/artifacts, returning linked FileManager IDs.</summary>
+        /// <param name="workerAlias">The Worker alias.</param>
+        /// <param name="jobExternalId">The Worker-side job identifier.</param>
+        /// <param name="cancellationToken">Token used to cancel deletion.</param>
+        /// <returns>Distinct linked file identifiers that can be removed by the caller.</returns>
         public async Task<List<int>> DeleteJobAsync(string workerAlias, string jobExternalId,
             CancellationToken cancellationToken = default)
         {
@@ -160,6 +192,12 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             return artifacts.Where(item => item.FileId.HasValue).Select(item => item.FileId!.Value).Distinct().ToList();
         }
 
+        /// <summary>Finds one artifact by Worker, job, and external identifier.</summary>
+        /// <param name="workerAlias">The Worker alias.</param>
+        /// <param name="jobExternalId">The Worker-side job identifier.</param>
+        /// <param name="externalId">The artifact identifier.</param>
+        /// <param name="cancellationToken">Token used to cancel lookup.</param>
+        /// <returns>The artifact, or <see langword="null"/> when absent.</returns>
         public Task<AIFineTuningArtifact> FindArtifactAsync(string workerAlias, string jobExternalId,
             string externalId, CancellationToken cancellationToken = default)
         {
@@ -170,6 +208,10 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 item.ExternalId == externalId);
         }
 
+        /// <summary>Inserts or updates a Worker-store migration record.</summary>
+        /// <param name="migration">The migration entity.</param>
+        /// <param name="cancellationToken">Token used to cancel persistence.</param>
+        /// <returns>The inserted or existing updated entity.</returns>
         public async Task<AIFineTuningMigration> UpsertMigrationAsync(AIFineTuningMigration migration, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();

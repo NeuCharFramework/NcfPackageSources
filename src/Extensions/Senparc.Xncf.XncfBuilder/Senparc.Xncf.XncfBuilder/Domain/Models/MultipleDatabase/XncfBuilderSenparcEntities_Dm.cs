@@ -13,7 +13,7 @@ using System.Text;
 namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Dameng-specific XNCF Builder database context used by runtime registration and migrations.
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.Dm, typeof(Register))]
     public class XncfBuilderSenparcEntities_Dm : XncfBuilderSenparcEntities, IMultipleMigrationDbContext

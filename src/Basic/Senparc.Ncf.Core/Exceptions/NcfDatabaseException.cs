@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Trace;
@@ -23,17 +26,17 @@ using System.Text;
 namespace Senparc.Ncf.Core.Exceptions
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Represents a database configuration, provider, or DbContext failure in NCF.
     /// </summary>
     public class NcfDatabaseException : NcfExceptionBase
     {
         /// <summary>
-        /// constructor
+        /// Initializes a database exception and records the related provider/context types.
         /// </summary>
-        /// <param name="message"></param>
-        /// <param name="typeOfDatabaseConfiguration">DatabaseConfiguration type</param>
-        ///Legacy comment translated to English.
-        /// <param name="inner"></param>
+        /// <param name="message">The primary failure message.</param>
+        /// <param name="typeOfDatabaseConfiguration">The database configuration type involved.</param>
+        /// <param name="typeOfDbContext">The DbContext type involved, when known.</param>
+        /// <param name="inner">The underlying exception, when available.</param>
         public NcfDatabaseException(string message, Type typeOfDatabaseConfiguration, Type typeOfDbContext = null, Exception inner = null)
             : base(message, inner, true)
         {

@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -49,6 +52,10 @@ public class AggregateModel(
     private readonly IWorkflowFunctionCallingProvider _workflowProvider = workflowProviders?.FirstOrDefault();
     private readonly IAdminWorkContextProvider _adminWorkContextProvider = adminWorkContextProvider;
 
+    /// <summary>
+    /// Consumes pending NeuCharPivot provider changes and wakes NeuBell subscribers
+    /// when the page is opened.
+    /// </summary>
     public async Task OnGetAsync()
     {
         if (neuBellProvider.ConsumeAll() > 0)
@@ -59,6 +66,11 @@ public class AggregateModel(
         }
     }
 
+    /// <summary>
+    /// Builds the aggregate NeuCharPivot view containing module snapshots, function
+    /// availability, loop-task status, workflow options, and execution statistics.
+    /// </summary>
+    /// <returns>An HTTP 200 response containing the aggregate dashboard model.</returns>
     public async Task<IActionResult> OnGetListAsync()
     {
         var snapshots = await pivotService.GetAllSnapshotsAsync(HttpContext.RequestAborted).ConfigureAwait(false);
@@ -161,6 +173,12 @@ public class AggregateModel(
         });
     }
 
+    /// <summary>
+    /// Loads workflow function-calling descriptors for the current administrator
+    /// and maps them to the compact options used by loop-task configuration.
+    /// </summary>
+    /// <param name="cancellationToken">Token used while loading workflow descriptors.</param>
+    /// <returns>Available workflow options, or an empty list when the provider is absent.</returns>
     private async Task<IReadOnlyList<NeuCharPivotWorkflowOption>> GetWorkflowOptionsAsync(
         CancellationToken cancellationToken)
     {
@@ -182,6 +200,14 @@ public class AggregateModel(
             .ToList();
     }
 
+    /// <summary>
+    /// Derives the display status of a loop task from execution state, enablement,
+    /// last result, and next scheduled time.
+    /// </summary>
+    /// <param name="task">The loop-task entity.</param>
+    /// <param name="isRunning">Whether an unfinished execution log exists.</param>
+    /// <param name="now">The reference time used for countdown classification.</param>
+    /// <returns>A stable status key such as <c>running</c>, <c>failed</c>, or <c>due</c>.</returns>
     private static string GetLoopTaskStatus(
         NeuCharPivotLoopTask task,
         bool isRunning,
@@ -206,6 +232,12 @@ public class AggregateModel(
         return "due";
     }
 
+    /// <summary>
+    /// Executes a visible NeuCharPivot function and records the invocation and
+    /// completion result in the execution log.
+    /// </summary>
+    /// <param name="request">The function identifier and serialized parameters.</param>
+    /// <returns>The function result or an HTTP 400 validation response.</returns>
     public async Task<IActionResult> OnPostRunAsync([FromBody] AggregateRunRequest request)
     {
         if (request == null || request.FunctionId <= 0)

@@ -13,40 +13,12 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.16 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.16.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Utility
 {
-    ///// <summary>
-    ///Legacy comment translated to English.
-    ///// </summary>
-    //public class WurflThread
-    //{
-    //    public WurflThread()
-    //    {
-    //    }
-
-    //    public void Run()
-    //    {
-    //        try
-    //        {
-    //            lock (WurflUtility.RegisterLock)
-    //            {
-    //Legacy comment translated to English.
-
-    //                WurflUtility.RegisterState = "begin";
-    //                var startTime = DateTime.Now;
-    //                Senparc.Utility.WurflUtility.RegisterWurfl();
-    //                var endTime = DateTime.Now;
-    //                Senparc.Utility.WurflUtility.WurflStartupTime = (endTime - startTime).TotalSeconds.ToString("##.##");
-    //                WurflUtility.RegisterState = "finish";
-    //            }
-    //        }
-    //        catch (Exception ex)
-    //        {
-    //            WurflUtility.RegisterState = "failed";
-    //            LogUtility.WebLogger.Error(ex.Message, ex);
-    //        }
-    //    }
-    //}
+    // The former WURFL background thread was retired with the legacy WURFL integration.
 }

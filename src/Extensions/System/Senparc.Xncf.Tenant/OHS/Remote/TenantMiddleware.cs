@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.15.17 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.15.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authentication;
@@ -34,7 +37,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.Tenant.OHS.Remote
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Resolves request tenant context before downstream authentication and endpoint processing.
     /// </summary>
     public class TenantMiddleware
     {
@@ -52,11 +55,21 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
             return $"[{SystemTime.Now}] {msg}";
         }
 
+        /// <summary>
+        /// Initializes tenant middleware with the downstream request delegate.
+        /// </summary>
+        /// <param name="next">The next middleware component.</param>
         public TenantMiddleware(RequestDelegate next)
         {
             _next = next;
         }
 
+        /// <summary>
+        /// Applies tenant-header authorization and resolves the scoped tenant before continuing.
+        /// Installation mode and unloaded database modules bypass tenant resolution.
+        /// </summary>
+        /// <param name="context">The current HTTP context.</param>
+        /// <returns>A task that completes after downstream processing.</returns>
         public async Task InvokeAsync(HttpContext context)
         {
             try
@@ -145,6 +158,16 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
 
     public static class TenantHeaderAccessPolicy
     {
+        /// <summary>
+        /// Determines whether a tenant header may be trusted for the current request.
+        /// A single non-empty tenant key is required, bearer authorization must be absent,
+        /// and any authenticated cookie/request principal must carry the same tenant claim.
+        /// </summary>
+        /// <param name="tenantKeys">Tenant keys parsed from the request header.</param>
+        /// <param name="hasAuthorizationHeader">Whether an Authorization header is present.</param>
+        /// <param name="cookiePrincipal">The optional cookie-authenticated principal.</param>
+        /// <param name="requestPrincipal">The principal resolved for the current request.</param>
+        /// <returns><see langword="true"/> when header-based tenant selection is allowed.</returns>
         public static bool IsHeaderAllowed(
             string[] tenantKeys,
             bool hasAuthorizationHeader,
@@ -159,6 +182,12 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
                     || HasTenantAccess(requestPrincipal, tenantKeys[0]));
         }
 
+        /// <summary>
+        /// Checks that an authenticated principal has exactly one matching TenantKey claim.
+        /// </summary>
+        /// <param name="principal">The principal to inspect.</param>
+        /// <param name="tenantKey">The requested tenant key.</param>
+        /// <returns><see langword="true"/> when the principal is authenticated and matches.</returns>
         public static bool HasTenantAccess(ClaimsPrincipal principal, string tenantKey)
         {
             var tenantClaims = principal?.FindAll("TenantKey").ToArray();

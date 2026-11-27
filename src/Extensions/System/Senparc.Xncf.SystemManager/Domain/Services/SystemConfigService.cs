@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.15.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.15.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.DataProtection;
@@ -37,6 +40,11 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
 {
     public class SystemConfigService : ClientServiceBase<SystemConfig>/*, ISystemConfigService*/
     {
+        /// <summary>
+        /// Initializes the system configuration service.
+        /// </summary>
+        /// <param name="systemConfigRepo">The system configuration repository.</param>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
         public SystemConfigService(SystemConfigRepository systemConfigRepo, IServiceProvider serviceProvider)
             : base(systemConfigRepo, serviceProvider)
         {
@@ -44,11 +52,11 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Validates NeuChar App credentials against the remote AppStore and persists the returned account data.
         /// </summary>
-        /// <param name="neuCharAppKey"></param>
-        /// <param name="neuCharAppSecret"></param>
-        /// <returns></returns>
+        /// <param name="neuCharAppKey">The NeuChar application key.</param>
+        /// <param name="neuCharAppSecret">The NeuChar application secret.</param>
+        /// <returns>A localized validation/persistence result message.</returns>
         public async Task<string> UpdateNeuCharAccount(string neuCharAppKey, string neuCharAppSecret)
         {
             var developerId = 0;
@@ -93,6 +101,11 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
             }
         }
 
+        /// <summary>
+        /// Creates initial system configuration when no configuration exists.
+        /// </summary>
+        /// <param name="systemName">Optional initial system name.</param>
+        /// <returns>The existing or newly initialized configuration, according to the current service behavior.</returns>
         public SystemConfig Init(string systemName = null)
         {
             var systemConfig = GetObject(z => true);

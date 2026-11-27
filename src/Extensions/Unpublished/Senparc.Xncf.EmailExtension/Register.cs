@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.16 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.16.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -39,7 +42,7 @@ namespace Senparc.Xncf.EmailExtension
             "Email 插件");
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the maximum number of attempts made before a queued email is abandoned.
         /// </summary>
         public static readonly int MaxSendEmailTimes = 5;
 
@@ -47,9 +50,9 @@ namespace Senparc.Xncf.EmailExtension
 
         public override string Name => "Senparc.Xncf.EmailExtension";
 
-        public override string Uid => "9439B96F-A6BE-0910-EE93-B46420ADC704";//Legacy comment translated to English.
+        public override string Uid => "9439B96F-A6BE-0910-EE93-B46420ADC704";
 
-        public override string Version => "0.1";//the version number is required
+        public override string Version => "0.12.16.2";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -67,6 +70,7 @@ namespace Senparc.Xncf.EmailExtension
         }
         #endregion
 
+        /// <inheritdoc />
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             return base.AddXncfModule(services, configuration, env);

@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.5 Localized file management and upload surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.5.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.StaticFiles;
@@ -104,11 +107,6 @@ public static class NcfFileResourcePolicy
         };
     }
 
-    /// <summary>
-    /// Existing installations may already contain legacy formats which are no
-    /// longer accepted for new KnowledgeBase uploads. They remain readable and
-    /// downloadable, but cannot bypass the newer ingestion policy.
-    /// </summary>
     /// <summary>
     /// Determines whether an existing stored extension remains readable under compatibility rules.
     /// </summary>

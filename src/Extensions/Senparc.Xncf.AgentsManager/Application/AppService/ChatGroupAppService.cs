@@ -46,6 +46,9 @@
     Modified by: Senparc - 20261125
     Change description: v0.19.4 Improved Agent group command parameter selection and conversation loading.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.CodeAnalysis.CSharp;
@@ -162,6 +165,14 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 }
 
                 var topN = request.TopN <= 0 ? 5 : Math.Min(request.TopN, 10);
+                if (int.TryParse(query, out var requestedGroupId) && requestedGroupId > 0)
+                {
+                    var exactGroup = await _chatGroupService.GetObjectAsync(
+                        group => group.Id == requestedGroupId && group.Enable);
+                    return exactGroup == null
+                        ? $"没有找到启用状态的 ChatGroup，ID：{requestedGroupId}。"
+                        : FormatChatGroup(exactGroup, Array.Empty<ChatGroupMember>(), new Dictionary<int, string>());
+                }
                 var groups = await _chatGroupService.GetObjectListAsync(
                     0,
                     topN,
@@ -194,30 +205,35 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     : await _agentsTemplateService.GetFullListAsync(agent => agentIds.Contains(agent.Id));
                 var agentNames = agents.ToDictionary(agent => agent.Id, agent => agent.Name);
 
-                return string.Join(
-                    "\n",
-                    groupList.Select(group =>
-                    {
-                        var groupMembers = memberLinksByGroup[group.Id];
-                        var members = groupMembers
-                            .Select(member => agentNames.TryGetValue(member.AgentTemplateId, out var name)
-                                ? name
-                                : $"AgentTemplate #{member.AgentTemplateId}")
-                            .Distinct(StringComparer.OrdinalIgnoreCase)
-                            .ToList();
-                        var description = string.IsNullOrWhiteSpace(group.Description)
-                            ? "(无说明)"
-                            : group.Description.Length <= 200
-                                ? group.Description
-                                : group.Description.Substring(0, 200) + "…";
-                        var memberSummary = string.Join("、", members.Take(12));
-                        if (members.Count > 12)
-                        {
-                            memberSummary += " 等更多成员";
-                        }
-                        return $"ID: {group.Id}; 名称: {group.Name}; 说明: {description}; 成员: {memberSummary}";
-                    }));
+                return string.Join("\n", groupList.Select(group => FormatChatGroup(
+                    group,
+                    memberLinksByGroup[group.Id],
+                    agentNames)));
             });
+        }
+
+        private static string FormatChatGroup(
+            ChatGroup group,
+            IReadOnlyCollection<ChatGroupMember> groupMembers,
+            IReadOnlyDictionary<int, string> agentNames)
+        {
+            var members = groupMembers
+                .Select(member => agentNames.TryGetValue(member.AgentTemplateId, out var name)
+                    ? name
+                    : $"AgentTemplate #{member.AgentTemplateId}")
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+            var description = string.IsNullOrWhiteSpace(group.Description)
+                ? "(无说明)"
+                : group.Description.Length <= 200
+                    ? group.Description
+                    : group.Description.Substring(0, 200) + "…";
+            var memberSummary = string.Join("、", members.Take(12));
+            if (members.Count > 12)
+            {
+                memberSummary += " 等更多成员";
+            }
+            return $"ID: {group.Id}; 名称: {group.Name}; 说明: {description}; 成员: {memberSummary}";
         }
 
         /// <summary>
@@ -527,6 +543,74 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         /// </summary>
         /// <param name="request">The selected groups, command, model, and human-approval options.</param>
         /// <returns>A task containing operation logs and started-task metadata.</returns>
+        [FunctionRender(typeof(AgentsManagerResource), "Function.Agents.StartChatGroup.Name", "Function.Agents.StartChatGroup.Description", typeof(Register))]
+        public Task<StringAppResponse> StartChatToolTask(ChatGroup_ChatToolRunRequest request)
+        {
+            return this.GetStringResponseAsync(async (response, logger) =>
+            {
+                if (request == null || request.ChatGroupId <= 0)
+                {
+                    response.Success = false;
+                    response.ErrorMessage = "ChatGroupId must be greater than 0.";
+                    return null;
+                }
+                if (string.IsNullOrWhiteSpace(request.Command))
+                {
+                    response.Success = false;
+                    response.ErrorMessage = "Command is required.";
+                    return null;
+                }
+
+                var group = await _chatGroupService.GetObjectAsync(item =>
+                    item.Id == request.ChatGroupId && item.Enable);
+                if (group == null)
+                {
+                    response.Success = false;
+                    response.ErrorMessage = $"Enabled ChatGroup was not found: {request.ChatGroupId}.";
+                    return null;
+                }
+
+                var started = await _chatGroupService.StartChatGroupInThreadAsync(new ChatGroupRunCommand
+                {
+                    Name = $"AdminChat-{request.ChatGroupId}-{DateTime.Now:yyyyMMddHHmmss}",
+                    ChatGroupId = request.ChatGroupId,
+                    AiModelId = 0,
+                    PromptCommand = request.Command.Trim(),
+                    Description = "Started by AdminChat slash command",
+                    Personality = true,
+                    RequireHumanApproval = false,
+                    HumanInTheLoopLevel = HumanInTheLoopLevel.Automatic,
+                    PluginToolPermission = ToolPermissionMode.Inherit,
+                    McpToolPermission = ToolPermissionMode.Inherit,
+                    IncludeHumanParticipant = false,
+                    HumanRecipientUserId = GetCurrentAdminUserId(),
+                    HookPlatform = HookPlatform.None,
+                    HookParameter = string.Empty,
+                    ChatMaxRound = ChatGroupService.DefaultChatMaxRound
+                });
+
+                logger.Append(JsonSerializer.Serialize(new
+                {
+                    kind = "admin-chat-action",
+                    actions = new[]
+                    {
+                        new
+                        {
+                            type = "agents-task",
+                            task = new
+                            {
+                                started.ChatTaskId,
+                                started.ChatGroupId,
+                                started.ChatGroupName,
+                                Status = started.Status.ToString()
+                            }
+                        }
+                    }
+                }));
+                return logger.GetLogs();
+            });
+        }
+
         [FunctionRender(typeof(AgentsManagerResource), "Function.Agents.StartChatGroup.Name", "Function.Agents.StartChatGroup.Description", typeof(Register))]
         public async Task<StringAppResponse> RunChatGroup(ChatGroup_RunChatGroupRequest request)
         {
@@ -1006,8 +1090,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Enables or disables a ChatGroup and persists its lifecycle state.
         /// </summary>
+        /// <param name="id">The ChatGroup identifier.</param>
+        /// <param name="enable">Whether the group should be enabled.</param>
+        /// <returns>A response containing the operation message.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the group does not exist.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<string>> Enable(int id, bool enable)
         {
@@ -1034,10 +1122,14 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// Gets one ChatGroup with local members, role agents, and remote members.
+        /// Returns a paged list of ChatGroups, optionally filtered by member AgentTemplate
+        /// and group name.
         /// </summary>
-        /// <param name="id">The ChatGroup identifier.</param>
-        /// <returns>A task containing the group detail response.</returns>
+        /// <param name="agentTemplateId">Optional local AgentTemplate member filter.</param>
+        /// <param name="pageIndex">The page index.</param>
+        /// <param name="pageSize">The page size.</param>
+        /// <param name="filter">Optional group-name filter.</param>
+        /// <returns>A response containing the paged ChatGroup DTO list.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<ChatGroup_GetListResponse>> GetChatGroupList(int agentTemplateId, int pageIndex, int pageSize, string filter = "")
         {
@@ -1070,9 +1162,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// createorsettings ChatGroup
+        /// Loads one ChatGroup with local members, role agents, and remote members.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="id">The ChatGroup identifier.</param>
+        /// <returns>A response containing group detail and member metadata.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<ChatGroup_GetItemResponse>> GetChatGroupItem(int id)
         {
@@ -1228,9 +1321,6 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <summary>
         /// Converts a Studio run request into the domain chat-group command.
         /// </summary>
         /// <param name="request">The Studio run request.</param>
@@ -1262,8 +1352,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns an Agent collaboration graph filtered by optional agent name.
         /// </summary>
+        /// <param name="filter">Optional local/remote agent name filter.</param>
+        /// <returns>A response containing agents, groups, links, collaborations, and tasks.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<AgentGraphSnapshotResponse>> GetAgentGraphSnapshot(string filter = "")
         {
@@ -1518,9 +1610,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Returns dashboard counts for local agents, remote/published A2A agents,
+        /// groups, active tasks, and currently chatting participants.
         /// </summary>
+        /// <returns>A response containing the dashboard overview.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<AgentsDashboardOverviewResponse>> GetDashboardOverview()
         {

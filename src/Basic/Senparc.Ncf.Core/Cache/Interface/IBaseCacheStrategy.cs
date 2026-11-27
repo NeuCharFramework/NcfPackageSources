@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -38,12 +41,12 @@ namespace Senparc.Ncf.Core.Cache
     //}
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Extends the shared cache strategy with the cache-set identifier used by NCF.
     /// </summary>
     public interface INcfCacheStrategy : IBaseObjectCacheStrategy
     { 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the logical cache-set key.
         /// </summary>
         string CacheSetKey { get; set; }
     }

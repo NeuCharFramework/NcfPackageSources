@@ -28,6 +28,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain;
@@ -52,16 +55,32 @@ using System.ComponentModel;
 namespace Senparc.Areas.Admin.OHS.Local.AppService
 {
     [BackendJwtAuthorize(BackendJwtAuthorizeAttribute.SuperAdminPolicyName)]
+    /// <summary>
+    /// Provides administrator-account management, login, role assignment, and
+    /// device-display operations.
+    /// </summary>
     public class AdminUserInfoAppService : LocalAppServiceBase
     {
         private readonly AdminUserInfoService _adminUserInfoService;
         private readonly AutoMapper.IMapper _mapper;
+        /// <summary>
+        /// Initializes the administrator-account application service.
+        /// </summary>
+        /// <param name="serviceProvider">The request service provider.</param>
+        /// <param name="mapper">The DTO/entity mapper.</param>
+        /// <param name="adminUserInfoService">The administrator persistence and authentication service.</param>
         public AdminUserInfoAppService(IServiceProvider serviceProvider, AutoMapper.IMapper mapper, AdminUserInfoService adminUserInfoService) : base(serviceProvider)
         {
             this._adminUserInfoService = adminUserInfoService;
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Returns a paged administrator list without exposing stored passwords.
+        /// </summary>
+        /// <param name="pageIndex">The requested page index.</param>
+        /// <param name="pageSize">The maximum records per page.</param>
+        /// <returns>A response containing sanitized administrator DTOs and total count.</returns>
         [ApiBind]
         public async Task<AppResponseBase<AdminUserInfo_GetListResponse>> GetList(int pageIndex, int pageSize)
         {
@@ -83,10 +102,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates an administrator account.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="request">The administrator account fields.</param>
+        /// <returns>A response containing the new administrator identifier.</returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
         public async Task<AppResponseBase<AdminUserInfo_CreateResponse>> Create(AdminUserInfo_CreateOrUpdateRequest request)
         {
@@ -102,10 +121,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Updates an existing administrator account.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="request">The updated administrator account fields.</param>
+        /// <returns>A response containing the updated administrator identifier.</returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Put)]
         public async Task<AppResponseBase<AdminUserInfo_CreateResponse>> Update(AdminUserInfo_CreateOrUpdateRequest request)
         {
@@ -121,10 +140,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Authenticates an administrator and returns the account login result.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">The submitted administrator credentials.</param>
+        /// <returns>A response containing the authentication result.</returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
         [FunctionRender("管理员登录", "测试当前管理员登录", typeof(Register))]
         [Microsoft.AspNetCore.Authorization.AllowAnonymous]
@@ -154,6 +173,11 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
 
+        /// <summary>
+        /// Sends the requested number to the configured digital display device.
+        /// </summary>
+        /// <param name="request">The number to display.</param>
+        /// <returns>A response containing the device request result.</returns>
         [FunctionRender("设置数字管", "设置数字管显示", typeof(Register), AllowAiInvocation = false)]
         public async Task<AppResponseBase<AdminUserInfo_SetDigitalPipeResponse>> SetDigitalPipeAsync(AdminUserInfo_SetDigitalPipeRequest request)
         {
@@ -190,9 +214,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the currently authenticated administrator's profile.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A response containing the current administrator account details.</returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         public async Task<AppResponseBase<AccountLoginResultDto>> GetAdminUserInfoAsync()
         {
@@ -206,10 +230,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Assigns a role to an administrator account.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">The administrator and role identifiers.</param>
+        /// <returns>A response indicating whether the assignment completed.</returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Put)]
         public async Task<AppResponseBase<AdminUserInfo_AddRoleResponse>> AddRoleAsync(AdminUserInfo_AddRoleRequest request)
         {
@@ -222,10 +246,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the role identifiers assigned to an administrator account.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">The administrator identifier.</param>
+        /// <returns>A response containing the assigned role identifiers.</returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Put)]
         public async Task<AppResponseBase<AdminUserInfo_GetRolesResponse>> GetRolesAsync(AdminUserInfo_AddRoleRequest request)
         {
@@ -242,10 +266,15 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Deletes an administrator account, except that the current administrator
+        /// cannot delete their own account.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="id">The administrator identifier to delete.</param>
+        /// <returns>A string response describing the deletion result.</returns>
+        /// <exception cref="NcfExceptionBase">
+        /// Thrown when the current administrator attempts self-deletion or the
+        /// requested account does not exist.
+        /// </exception>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Delete)]
         public async Task<StringAppResponse> DeleteAsync(int id)
         {
@@ -263,8 +292,6 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 {
                     throw new NcfExceptionBase("管理员不存在！");
                 }
-
-                //Legacy comment translated to English.
 
                 await _adminUserInfoService.DeleteObjectAsync(adminUserInfo);
 

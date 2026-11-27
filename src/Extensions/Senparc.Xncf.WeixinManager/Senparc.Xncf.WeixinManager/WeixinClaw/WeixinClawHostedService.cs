@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.25.1 Localized Weixin account and administration surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.25.1.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -118,6 +121,11 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
         }
     }
 
+    /// <summary>
+    /// Runs the periodic tenant/account scan until cancellation and isolates per-scan failures
+    /// so one failed account discovery does not terminate the hosted service.
+    /// </summary>
+    /// <param name="stoppingToken">Token that ends the background loop.</param>
     private async Task RunAsync(CancellationToken stoppingToken)
     {
         try
@@ -152,6 +160,11 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
         _stoppingCts.Dispose();
     }
 
+    /// <summary>
+    /// Discovers enabled polling accounts across tenants and starts missing account loops.
+    /// Stale running-account loops are canceled after the scan.
+    /// </summary>
+    /// <param name="stoppingToken">The hosted-service cancellation token.</param>
     private async Task ScanAccountsAsync(CancellationToken stoppingToken)
     {
         var accounts = new List<(int TenantId, int AccountId)>();
@@ -193,6 +206,11 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
             canceledCount);
     }
 
+    /// <summary>
+    /// Runs one account loop and removes/disposes its state when the loop exits.
+    /// </summary>
+    /// <param name="key">The tenant/account key.</param>
+    /// <param name="state">The running-account cancellation state.</param>
     private async Task RunAccountAndCleanupAsync((int TenantId, int AccountId) key, RunningAccount state)
     {
         try
@@ -206,6 +224,12 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
         }
     }
 
+    /// <summary>
+    /// Polls one WeixinClaw account, processes inbound messages, and handles reconnect/backoff behavior.
+    /// </summary>
+    /// <param name="tenantId">The tenant identifier.</param>
+    /// <param name="accountId">The WeixinClaw account identifier.</param>
+    /// <param name="stoppingToken">The account-loop cancellation token.</param>
     private async Task RunAccountAsync(
         int tenantId,
         int accountId,
@@ -431,6 +455,11 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
         }
     }
 
+    /// <summary>
+    /// Cancels running account loops that have completed or were not discovered in the latest scan.
+    /// </summary>
+    /// <param name="activeKeys">The account keys discovered by the latest scan.</param>
+    /// <returns>The number of account states canceled.</returns>
     private int CancelStaleAccounts(HashSet<(int TenantId, int AccountId)> activeKeys)
     {
         var canceledCount = 0;
@@ -446,6 +475,12 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
         return canceledCount;
     }
 
+    /// <summary>
+    /// Determines whether an exception is an expected long-poll timeout rather than a real failure.
+    /// </summary>
+    /// <param name="exception">The polling exception.</param>
+    /// <param name="stoppingToken">The hosted-service cancellation token.</param>
+    /// <returns><see langword="true"/> when the timeout may be ignored and polling resumed.</returns>
     private static bool IsExpectedLongPollTimeout(
         Exception exception,
         CancellationToken stoppingToken)
@@ -478,6 +513,10 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
         private bool _disposeRequested;
         private int _cancelOperations;
 
+        /// <summary>
+        /// Creates a per-account cancellation state linked to the hosted-service stop token.
+        /// </summary>
+        /// <param name="stoppingToken">The host token that should cancel this account loop.</param>
         public RunningAccount(CancellationToken stoppingToken)
         {
             _cancellationTokenSource = new CancellationTokenSource();
@@ -489,6 +528,9 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
 
         public Task Task { get; set; }
 
+        /// <summary>
+        /// Requests cancellation of the account loop and safely coordinates concurrent disposal.
+        /// </summary>
         public void Cancel()
         {
             lock (_sync)
@@ -517,6 +559,9 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
             }
         }
 
+        /// <summary>
+        /// Unregisters the host callback and disposes the account cancellation source.
+        /// </summary>
         public void Dispose()
         {
             lock (_sync)

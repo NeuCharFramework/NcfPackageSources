@@ -14,6 +14,10 @@ namespace Senparc.Xncf.AgentsManager.Models
     [MultipleMigrationDbContext(MultipleDatabaseType.Oracle, typeof(Register))]
     public class AgentsManagerSenparcEntities_Oracle : AgentsManagerSenparcEntities
     {
+        /// <summary>
+        /// Initializes the Oracle-specific AgentsManager DbContext.
+        /// </summary>
+        /// <param name="dbContextOptions">The EF Core options configured for Oracle.</param>
         public AgentsManagerSenparcEntities_Oracle(DbContextOptions<AgentsManagerSenparcEntities_Oracle> dbContextOptions) : base(dbContextOptions)
         {
         }
@@ -33,6 +37,9 @@ namespace Senparc.Xncf.AgentsManager.Models
             app.UseNcfDatabase("Senparc.Ncf.Database.Oracle", "Senparc.Ncf.Database.Oracle", "OracleDatabaseConfiguration");
         };
 
+        /// <summary>
+        /// Initializes the Oracle design-time DbContext factory using the configured root directory.
+        /// </summary>
         public SenparcDbContextFactory_Oracle() : base(SenparcDbContextFactoryConfig.RootDirectoryPath)
         {
 

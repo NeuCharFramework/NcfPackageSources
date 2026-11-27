@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.0.0 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -26,6 +29,11 @@ namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 public abstract class WorkflowClientServiceBase<TEntity> : ClientServiceBase<TEntity>
     where TEntity : EntityBase
 {
+    /// <summary>
+    /// Initializes a workflow client service with its repository and dependency provider.
+    /// </summary>
+    /// <param name="repository">The client repository for the entity type.</param>
+    /// <param name="serviceProvider">The dependency provider used by the service.</param>
     protected WorkflowClientServiceBase(IClientRepositoryBase<TEntity> repository, IServiceProvider serviceProvider)
         : base(repository, serviceProvider) { }
 }

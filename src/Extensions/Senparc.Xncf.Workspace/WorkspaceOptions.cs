@@ -19,10 +19,17 @@
     Modified by: Senparc - 20261119
     Change description: v0.2.9 Localized workspace management and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.2.9.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Workspace;
 
+/// <summary>
+/// Configures Workspace storage quotas, search limits, command execution policy,
+/// and the selected local or containerized runtime provider.
+/// </summary>
 public sealed class WorkspaceOptions
 {
     public const string SectionName = "SenparcXncfWorkspace";

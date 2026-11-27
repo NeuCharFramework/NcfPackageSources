@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.15.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.15.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -61,7 +64,7 @@ namespace Senparc.Xncf.SystemManager
 
         public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_SERVICE_MANAGER_UID;// "00000000-0000-0000-0000-000000000002";
 
-        public override string Version => "1.1.3";//the version number is required
+        public override string Version => "0.15.14.2";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -69,7 +72,8 @@ namespace Senparc.Xncf.SystemManager
 
         public override string Description => RegisterText.Description;
 
-        public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
+    /// <inheritdoc/>
+    public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //install or upgrade the database
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
@@ -83,7 +87,8 @@ namespace Senparc.Xncf.SystemManager
             await base.InstallOrUpdateAsync(serviceProvider, installOrUpdate);
         }
 
-        public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
+    /// <inheritdoc/>
+    public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             //Legacy comment translated to English.
 
@@ -91,7 +96,8 @@ namespace Senparc.Xncf.SystemManager
         }
         #endregion
 
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+    /// <inheritdoc/>
+    public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             return base.AddXncfModule(services, configuration, env);
         }

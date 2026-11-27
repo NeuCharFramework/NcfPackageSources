@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Cache;
@@ -222,6 +225,12 @@ namespace Senparc.Areas.Admin.Domain.Services
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Formats a captcha coordinate or radius with invariant one-decimal
+        /// precision for deterministic SVG output.
+        /// </summary>
+        /// <param name="value">The numeric value to format.</param>
+        /// <returns>The invariant-culture one-decimal representation.</returns>
         private static string Format(double value)
         {
             return value.ToString("0.0", CultureInfo.InvariantCulture);

@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.7.12 Localized DynamicData configuration and layout surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.7.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Hosting;
@@ -43,8 +46,14 @@ namespace Senparc.Xncf.DynamicData
 			 		//Legacy comment translated to English.
 			 		//};
 
+        /// <summary>
+        /// Gets the DynamicData administration root URL.
+        /// </summary>
         public string HomeUrl => "/Admin/DynamicData/";
 
+        /// <summary>
+        /// Gets the administration menu entries for page and table settings.
+        /// </summary>
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
                          new AreaPageMenuItem(GetAreaUrl(HomeUrl+"PageSet"), DynamicDataResource.Get("Area.DynamicData.PageSettings", "界面设置"),"fa fa-laptop"),
                            new AreaPageMenuItem(GetAreaUrl(HomeUrl+"DataSheetSet"), DynamicDataResource.Get("Area.DynamicData.TableSettings", "数据库表设置"),"fa fa-laptop")
@@ -71,6 +80,9 @@ namespace Senparc.Xncf.DynamicData
         #endregion
 
         #region Legacy section
+        /// <summary>
+        /// Gets the absolute path to the DynamicData assembly used for runtime compilation.
+        /// </summary>
         public string LibraryPath => Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Senparc.Xncf.DynamicData"));
         #endregion
     }

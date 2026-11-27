@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.25.1 Localized Weixin account and administration surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.25.1.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -48,6 +51,15 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
         private readonly IServiceProvider _serviceProvider;
         private int pageCount = 20;
 
+        /// <summary>
+        /// Initializes the Weixin-user administration page with account, user, and
+        /// tag services used by its page and AJAX handlers.
+        /// </summary>
+        /// <param name="serviceProvider">The request service provider.</param>
+        /// <param name="xncfModuleService">The lazy XNCF module service required by the base page.</param>
+        /// <param name="mpAccountService">The public-account persistence service.</param>
+        /// <param name="weixinUserService">The Weixin-user persistence service.</param>
+        /// <param name="userTagService">The user-tag persistence service.</param>
         public WeixinUser_IndexModel(
             IServiceProvider serviceProvider,
             Lazy<XncfModuleService> xncfModuleService,
@@ -62,6 +74,14 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
             _userTagService = userTagService;
         }
 
+        /// <summary>
+        /// Handles the initial Weixin-user page request. The actual account and user list
+        /// is loaded by the AJAX endpoint used by the administration view.
+        /// </summary>
+        /// <param name="mpId">The optional public-account identifier selected by the page.</param>
+        /// <param name="pageIndex">The requested one-based page number.</param>
+        /// <param name="pageSize">The requested page size.</param>
+        /// <returns>The Razor Page result for the Weixin-user administration view.</returns>
         public async Task<IActionResult> OnGetAsync(int mpId = 0, int pageIndex = 1, int pageSize = 20)
         {
             //if (mpId > 0)
@@ -86,11 +106,13 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
         }
 
         /// <summary>
-        /// handler=Ajax
+        /// Returns a paged Weixin-user list, optionally filtered by public-account ID,
+        /// including tag associations for the AJAX administration view.
         /// </summary>
-        /// <param name="mpId"></param>
-        /// <param name="pageIndex"></param>
-        /// <returns></returns>
+        /// <param name="mpId">The optional public-account identifier.</param>
+        /// <param name="pageIndex">The one-based page number.</param>
+        /// <param name="pageSize">The maximum number of users per page.</param>
+        /// <returns>An HTTP result containing account data and mapped users.</returns>
         public async Task<IActionResult> OnGetAjaxAsync(int mpId = 0, int pageIndex = 1, int pageSize = 10)
         {
             try
@@ -160,15 +182,24 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
         public enum SyncType
         {
             /// <summary>
-            ///Legacy comment translated to English.
+            /// Adds tags to users returned by the Weixin API.
             /// </summary>
             add,
             /// <summary>
-            ///Legacy comment translated to English.
+            /// Reconciles all remote tags with persisted tag records.
             /// </summary>
             all
         }
 
+        /// <summary>
+        /// Synchronizes remote Weixin users and tags for one configured public account.
+        /// The operation pages through remote open identifiers, reconciles local tag records,
+        /// and optionally updates user-tag associations according to <paramref name="syncType"/>.
+        /// </summary>
+        /// <param name="mpId">The configured public-account identifier.</param>
+        /// <param name="syncType">The tag synchronization mode.</param>
+        /// <returns>A redirect or error result for the synchronization operation.</returns>
+        /// <exception cref="InvalidOperationException">Propagated when the remote Weixin API rejects synchronization.</exception>
         public async Task<IActionResult> OnGetSyncUserAsync(int mpId, SyncType syncType)
         {
             var mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == mpId);
@@ -380,6 +411,17 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
             return Ok(new { uid = Uid, mpId });
         }
 
+        /// <summary>
+        /// Deletes each existing Weixin-user record identified by the request body.
+        /// Missing identifiers are ignored; the last deleted account identifier is
+        /// returned for the page's follow-up refresh.
+        /// </summary>
+        /// <param name="ids">The user identifiers selected for deletion.</param>
+        /// <returns>An HTTP 200 result containing the last associated account identifier.</returns>
+        /// <exception cref="NullReferenceException">
+        /// May be raised when the request body is unavailable and <paramref name="ids"/>
+        /// is <see langword="null"/>.
+        /// </exception>
         public async Task<IActionResult> OnPostDeleteAsync([FromBody] int[] ids)
         {
             var mpId = 0;

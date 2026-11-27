@@ -241,4 +241,5 @@
   <data name="Frontend.Mcp.DeleteFailed" xml:space="preserve"><value>删除失败</value></data>
   <data name="Frontend.Mcp.InputSchema" xml:space="preserve"><value>输入 Schema</value></data>
   <data name="Frontend.Mcp.NoJSONSchemaInformation" xml:space="preserve"><value>（无 JSON Schema 信息）</value></data>
+  <data name="Frontend.Mcp.SavedLeaveBlankToKeepTheExistingCredential" xml:space="preserve"><value>已保存；留空则继续使用现有凭据</value></data>
 </root>

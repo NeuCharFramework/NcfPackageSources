@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -23,6 +26,12 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
 {
     internal static class TenantMonitorScope
     {
+        /// <summary>
+        /// Resolves the current request tenant identifier for token monitoring.
+        /// Single-tenant deployments use tenant identifier zero.
+        /// </summary>
+        /// <param name="serviceProvider">The request service provider.</param>
+        /// <returns>The current tenant identifier, or zero when multi-tenancy is disabled.</returns>
         public static int GetTenantId(IServiceProvider serviceProvider)
         {
             return SiteConfig.SenparcCoreSetting.EnableMultiTenant

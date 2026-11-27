@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -30,7 +33,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
     public class PagedResponse<T>
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the total matching record count.
         /// </summary>
         public int Total { get; set; }
 
@@ -39,6 +42,11 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         /// </summary>
         public IEnumerable<T> Data { get; set; }
 
+        /// <summary>
+        /// Initializes a paged response with total count and result data.
+        /// </summary>
+        /// <param name="total">The total number of matching records.</param>
+        /// <param name="data">The records included in the current page.</param>
         public PagedResponse(int total, IEnumerable<T> data)
         {
             Total = total;
@@ -49,17 +57,17 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
     public class PagedRequest
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the requested page number.
         /// </summary>
         public int Page { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the requested page size.
         /// </summary>
         public int Size { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the textual ordering expression.
         /// </summary>
         public string Order { get; set; } = "Id desc";
     }
@@ -77,17 +85,17 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         public string DeploymentName { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the provider endpoint filter.
         /// </summary>
         public string Endpoint { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the AI platform filter.
         /// </summary>
         public AiPlatform AiPlatform { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the provider organization filter.
         /// </summary>
         public string OrganizationId { get; set; }
 
@@ -120,12 +128,12 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         public string DeploymentName { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the provider endpoint.
         /// </summary>
         public string Endpoint { get; set; } = "";
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the AI platform provider.
         /// </summary>
         public AiPlatform AiPlatform { get; set; }
 
@@ -135,12 +143,12 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         public ConfigModelType ConfigModelType { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the provider organization identifier.
         /// </summary>
         public string OrganizationId { get; set; } = "";
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the provider credential.
         /// </summary>
         public string ApiKey { get; set; }
 
@@ -150,12 +158,12 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         public string ApiVersion { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets an administrative note.
         /// </summary>
         public string Note { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the maximum completion-token budget.
         /// </summary>
         public int MaxToken { get; set; }
 

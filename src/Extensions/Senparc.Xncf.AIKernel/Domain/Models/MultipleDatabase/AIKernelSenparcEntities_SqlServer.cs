@@ -13,6 +13,10 @@ namespace Senparc.Xncf.AIKernel.Models
     [MultipleMigrationDbContext(MultipleDatabaseType.SqlServer, typeof(Register))]
     public class AIKernelSenparcEntities_SqlServer : AIKernelSenparcEntities
     {
+        /// <summary>
+        /// Initializes the SQL Server-specific AIKernel DbContext.
+        /// </summary>
+        /// <param name="dbContextOptions">The EF Core options configured for SQL Server.</param>
         public AIKernelSenparcEntities_SqlServer(DbContextOptions<AIKernelSenparcEntities_SqlServer> dbContextOptions) : base(dbContextOptions)
         {
         }
@@ -32,6 +36,9 @@ namespace Senparc.Xncf.AIKernel.Models
             app.UseNcfDatabase("Senparc.Ncf.Database.SqlServer", "Senparc.Ncf.Database.SqlServer", "SqlServerDatabaseConfiguration");
         };
 
+        /// <summary>
+        /// Initializes the SQL Server design-time DbContext factory.
+        /// </summary>
         public SenparcDbContextFactory_SqlServer() : base(SenparcDbContextFactoryConfig.RootDirectoryPath)
         {
 

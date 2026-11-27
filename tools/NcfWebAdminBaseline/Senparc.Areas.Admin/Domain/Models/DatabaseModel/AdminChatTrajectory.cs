@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 using System;
 using System.Collections.Generic;
@@ -71,6 +74,16 @@ public class AdminChatTrajectory : EntityBase<int>
 
     private AdminChatTrajectory() { }
 
+    /// <summary>
+    /// Initializes a running Harness trajectory with optional parent/fork lineage.
+    /// </summary>
+    /// <param name="sessionId">The administrator chat session identifier.</param>
+    /// <param name="userId">The administrator identifier owning the trajectory.</param>
+    /// <param name="title">The display title, truncated to the entity limit when necessary.</param>
+    /// <param name="mode">The Harness execution mode.</param>
+    /// <param name="modelIdentifier">The optional model identifier used for execution.</param>
+    /// <param name="parentTrajectoryId">The optional parent trajectory identifier.</param>
+    /// <param name="forkFromSequence">The optional source sequence for a fork.</param>
     public AdminChatTrajectory(
         int sessionId,
         int userId,
@@ -94,8 +107,16 @@ public class AdminChatTrajectory : EntityBase<int>
         ForkFromSequence = forkFromSequence;
     }
 
+    /// <summary>
+    /// Returns the next sequence number after the latest recorded trajectory event.
+    /// </summary>
+    /// <returns>The next sequence number.</returns>
     public int NextSequence() => LastSequence + 1;
 
+    /// <summary>
+    /// Advances <see cref="LastSequence"/> when the supplied sequence is greater and records the update time.
+    /// </summary>
+    /// <param name="sequence">The sequence number observed by the event writer.</param>
     public void MarkSequence(int sequence)
     {
         if (sequence > LastSequence)
@@ -105,12 +126,19 @@ public class AdminChatTrajectory : EntityBase<int>
         base.SetUpdateTime();
     }
 
+    /// <summary>
+    /// Replaces the serialized session state snapshot and records the update time.
+    /// </summary>
+    /// <param name="sessionStateJson">The serialized state payload.</param>
     public void SetSessionState(string sessionStateJson)
     {
         SessionStateJson = sessionStateJson;
         base.SetUpdateTime();
     }
 
+    /// <summary>
+    /// Marks the trajectory as completed and records its finish time.
+    /// </summary>
     public void Complete()
     {
         Status = AdminChatTrajectoryStatus.Completed;
@@ -118,12 +146,19 @@ public class AdminChatTrajectory : EntityBase<int>
         base.SetUpdateTime();
     }
 
+    /// <summary>
+    /// Marks the trajectory as waiting for an external approval decision.
+    /// </summary>
     public void WaitForApproval()
     {
         Status = AdminChatTrajectoryStatus.WaitingForApproval;
         base.SetUpdateTime();
     }
 
+    /// <summary>
+    /// Marks the trajectory as failed, stores the diagnostic error, and records its finish time.
+    /// </summary>
+    /// <param name="error">The failure detail to retain.</param>
     public void Fail(string error)
     {
         Status = AdminChatTrajectoryStatus.Failed;
@@ -132,6 +167,9 @@ public class AdminChatTrajectory : EntityBase<int>
         base.SetUpdateTime();
     }
 
+    /// <summary>
+    /// Marks the trajectory as cancelled and records its finish time.
+    /// </summary>
     public void Cancel()
     {
         Status = AdminChatTrajectoryStatus.Cancelled;
@@ -189,6 +227,18 @@ public class AdminChatTrajectoryEvent : EntityBase<int>
 
     private AdminChatTrajectoryEvent() { }
 
+    /// <summary>
+    /// Initializes one append-only trajectory event with its sequence, payload, and replayability flag.
+    /// </summary>
+    /// <param name="trajectoryId">The owning trajectory identifier.</param>
+    /// <param name="sequence">The event sequence within the trajectory.</param>
+    /// <param name="eventType">The event type; null defaults to <c>system</c>.</param>
+    /// <param name="source">The component that produced the event.</param>
+    /// <param name="name">The event name.</param>
+    /// <param name="content">The human-readable event content.</param>
+    /// <param name="payloadJson">The serialized event payload.</param>
+    /// <param name="correlationId">An optional correlation identifier.</param>
+    /// <param name="isReplayable">Whether the event may be replayed.</param>
     public AdminChatTrajectoryEvent(
         int trajectoryId,
         int sequence,

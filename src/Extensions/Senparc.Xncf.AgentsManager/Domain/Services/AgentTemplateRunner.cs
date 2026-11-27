@@ -37,6 +37,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
@@ -156,9 +159,7 @@ public sealed class AgentTemplateRunner
             return AgentTemplateRunResult.Failed(build.ErrorMessage, build.Diagnostics);
         }
 
-        //Legacy comment translated to English.
-        //Legacy comment translated to English.
-        //Legacy comment translated to English.
+        // Execute the prepared runner, then apply the bounded empty-output retry policy.
         var execution = await ExecuteBuiltResponseRunnerAsync(build, userText, request, cancellationToken)
             .ConfigureAwait(false);
         return await RetryEmptyOutputWithHigherTokenBudgetAsync(
@@ -403,8 +404,8 @@ public sealed class AgentTemplateRunner
         }
         catch (Exception ex) when (session != null && !AgentModelFallbackResolver.ContainsForbiddenStatus(ex))
         {
-            //Legacy comment translated to English.
-            //Legacy comment translated to English.
+            // Retry through the model service only for provider errors that are eligible
+            // for the configured compatibility fallback.
             response = await _aiModelService.RunChatResponseWithUsageAsync(
                     build.Runner,
                     input,
@@ -1357,6 +1358,9 @@ public sealed class AgentTemplateRunner
     }
 
 
+    /// <summary>
+    /// Captures the internal configuration assembled before an Agent template run.
+    /// </summary>
     private sealed record AgentTemplateExecutionConfiguration(
         ISenparcAiSetting Setting,
         AIModelDto ResolvedModel,
@@ -1371,42 +1375,44 @@ public sealed class AgentTemplateRunner
 /// </summary>
 public sealed class AgentTemplateRunRequest
 {
+    /// <summary>Profile name used to select compatible execution behavior.</summary>
     public const string LocalWorkflowCompatibleProfile = "local-workflow-compatible";
+    /// <summary>Profile name used for local ChatGroup execution.</summary>
     public const string LocalChatGroupCompatibleProfile = "local-chat-group-compatible";
+    /// <summary>Gets the execution profile name.</summary>
     public string ProfileName { get; init; } = LocalWorkflowCompatibleProfile;
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Optional AI model identifier selected by the caller.
     /// </summary>
     public int? AiModelId { get; init; }
-    ///Legacy comment translated to English.
+    /// <summary>Administrator identity used for tool authorization.</summary>
     public int AdminUserId { get; init; }
+    /// <summary>Whether function and tool calls are enabled.</summary>
     public bool AllowFunctionCalls { get; init; }
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Whether tool calls require human approval.
     /// </summary>
     public bool RequireHumanApproval { get; init; }
-    ///Legacy comment translated to English.
+    /// <summary>Human-in-the-loop policy for tool execution.</summary>
     public HumanInTheLoopLevel HumanInTheLoopLevel { get; init; } = HumanInTheLoopLevel.Automatic;
-    ///Legacy comment translated to English.
+    /// <summary>Permission policy for plugin tools.</summary>
     public ToolPermissionMode PluginToolPermission { get; init; } = ToolPermissionMode.Inherit;
-    ///Legacy comment translated to English.
+    /// <summary>Permission policy for MCP tools.</summary>
     public ToolPermissionMode McpToolPermission { get; init; } = ToolPermissionMode.Inherit;
     /// <summary>
-    ///Legacy comment translated to English.
+    /// <summary>Fallback model setting when no persisted model is selected.</summary>
     /// </summary>
     public ISenparcAiSetting DefaultSetting { get; init; }
     /// <summary>
-    ///Legacy comment translated to English.
+    /// <summary>Whether template model settings are applied.</summary>
     /// </summary>
     public bool UseTemplateModelSettings { get; init; } = true;
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// <summary>Whether template prompt parameters are applied.</summary>
     /// </summary>
     public bool UseTemplatePromptParameters { get; init; } = true;
     /// <summary>
-    ///Legacy comment translated to English.
+    /// <summary>Whether a fresh Agent session is created for the run.</summary>
     /// </summary>
     public bool UseFreshAgentSession { get; init; } = true;
     /// <summary>
@@ -1415,30 +1421,28 @@ public sealed class AgentTemplateRunRequest
     /// </summary>
     public bool AllowDeploymentNameModelIdFallback { get; init; }
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// <summary>Whether transport-level model diagnostics are enabled.</summary>
     /// </summary>
     public bool EnableModelTransportDiagnostics { get; init; }
     /// <summary>
-    ///Legacy comment translated to English.
+    /// <summary>Correlation identifier used in diagnostics.</summary>
     /// </summary>
     public string DiagnosticId { get; init; }
     public string RunnerName { get; init; }
     public int MaxOutputTokens { get; init; } = 3000;
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// <summary>Optional output-token override for a retry or caller policy.</summary>
     /// </summary>
     public int? MaxOutputTokensOverride { get; init; }
-    ///Legacy comment translated to English.
+    /// <summary>Whether the empty-output token-budget retry has already been attempted.</summary>
     public bool EmptyOutputTokenBudgetRetryAttempted { get; init; }
     public float Temperature { get; init; } = 0.5f;
     public float? TopP { get; init; }
 
-    ///Legacy comment translated to English.
+    /// <summary>Whether connector access is restricted to an allow-list.</summary>
     public bool LimitConnectors { get; init; }
 
-    ///Legacy comment translated to English.
+    /// <summary>Connector instance identifiers allowed for execution.</summary>
     public IReadOnlyList<string> ConnectorInstanceIds { get; init; }
 
     /// <summary>
@@ -1500,8 +1504,8 @@ public sealed class AgentTemplateRunRequest
         {
             RunnerName = $"WorkflowAgent-{agentTemplateId}-A2A-{publicAgentKey}",
             ProfileName = LocalWorkflowCompatibleProfile,
-            //Legacy comment translated to English.
-            //Legacy comment translated to English.
+            // Published A2A execution keeps the template's model and prompt settings
+            // enabled while disabling local transport fallbacks.
             AllowFunctionCalls = allowFunctionCalls,
             UseTemplateModelSettings = true,
             UseTemplatePromptParameters = true,
@@ -1715,6 +1719,9 @@ public sealed record AgentTemplateRunnerBuildResult(
         => new(false, null, null, null, null, diagnostics, errorMessage);
 }
 
+/// <summary>
+/// Represents the final success/failure result and diagnostics of an Agent template run.
+/// </summary>
 public sealed record AgentTemplateRunResult(
     bool Success,
     string Output,

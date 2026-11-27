@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -49,12 +52,12 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
         public string Name { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the vector provider connection string.
         /// </summary>
         public string ConnectionString { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the vector database provider type.
         /// </summary>
         public VectorDBType VectorDBType { get; set; }
 
@@ -74,10 +77,18 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
         /// </summary>
         public bool Show { get; set; }
 
+        /// <summary>
+        /// Initializes an empty vector DTO for binding.
+        /// </summary>
         public AIVectorDto()
         {
         }
 
+        /// <summary>
+        /// Projects a vector database entity into a transport DTO.
+        /// </summary>
+        /// <param name="aIVector">The vector entity to project.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="aIVector"/> is null.</exception>
         public AIVectorDto(AIVector aIVector)
         {
             Id = aIVector.Id;

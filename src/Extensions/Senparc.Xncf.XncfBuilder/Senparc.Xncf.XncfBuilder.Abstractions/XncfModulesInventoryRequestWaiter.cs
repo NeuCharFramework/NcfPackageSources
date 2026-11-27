@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.1.6-preview7 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.1.6.2-preview8 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -24,7 +27,7 @@ using Senparc.Xncf.XncfBuilder.Abstractions.Events;
 namespace Senparc.Xncf.XncfBuilder.Abstractions
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Coordinates request/response correlation for asynchronous XNCF module inventory queries.
     /// </summary>
     public interface IXncfModulesInventoryRequestWaiter
     {

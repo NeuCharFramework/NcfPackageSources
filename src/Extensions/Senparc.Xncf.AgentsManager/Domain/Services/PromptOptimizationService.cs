@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -49,10 +52,18 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             = new ConcurrentDictionary<string, TaskCompletionSource<PromptInitResponseEvent>>();
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Ensures the PromptCatalyzer agent and its optimization chat group are initialized,
+        /// creating or repairing persisted records when necessary.
         /// </summary>
         private static readonly ConcurrentDictionary<string, SemaphoreSlim> _optimizeInFlightByPrompt = new();
 
+        /// <summary>
+        /// Builds the stable single-flight key for one prompt, requirement, and model context.
+        /// </summary>
+        /// <param name="promptCode">The prompt code being optimized.</param>
+        /// <param name="userRequirement">The requested optimization requirement.</param>
+        /// <param name="context">The model optimization context.</param>
+        /// <returns>A delimiter-separated concurrency key.</returns>
         private static string BuildOptimizeSingleFlightKey(string promptCode, string userRequirement, OptimizationContext context)
         {
             var req = userRequirement?.Trim() ?? string.Empty;
@@ -60,6 +71,14 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             return $"{promptCode?.Trim() ?? ""}\u001F{req}\u001F{mid}";
         }
 
+        /// <summary>
+        /// Initializes the PromptOptimization service and its event-bus, Agent, group, and logging dependencies.
+        /// </summary>
+        /// <param name="eventBus">The event bus used for optimization requests and responses.</param>
+        /// <param name="agentsTemplateService">The Agent template service.</param>
+        /// <param name="chatGroupService">The ChatGroup execution service.</param>
+        /// <param name="chatGroupMemberService">The ChatGroup membership service.</param>
+        /// <param name="logger">The optimization service logger.</param>
         public PromptOptimizationService(
             IEventBus eventBus, 
             AgentsTemplateService agentsTemplateService,
@@ -75,9 +94,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Completes a pending PromptCatalyzer initialization request.
         /// </summary>
-        ///Legacy comment translated to English.
+        /// Publishes a prompt-optimization request and waits for its event-bus response.
+        /// A single-flight guard prevents concurrent optimization of the same prompt/context key.
         public async Task<PromptInitResponseEvent> EnsureInitializedAsync(int? modelId = null)
         {
             _logger.LogInformation("========== EnsureInitializedAsync 开始（细粒度检查）==========");
@@ -241,7 +261,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Completes a pending prompt-initialization request with its response event.
         /// </summary>
         public void CompleteInitRequest(string requestId, PromptInitResponseEvent response)
         {
@@ -257,8 +277,15 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Starts prompt optimization and waits for the event-bus response.
         /// </summary>
+        /// <param name="promptCode">The prompt code being optimized.</param>
+        /// <param name="promptContent">The current prompt content.</param>
+        /// <param name="userRequirement">The requested optimization goal.</param>
+        /// <param name="context">Optional model and optimization context.</param>
+        /// <returns>The optimization response event.</returns>
+        /// <exception cref="TimeoutException">Thrown when the event-bus response exceeds the timeout.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when another optimization is already running for the same key.</exception>
         public async Task<PromptOptimizationResponseEvent> OptimizePromptAsync(
             string promptCode, 
             string promptContent,
@@ -353,7 +380,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Completes a pending prompt-optimization request.
         /// </summary>
         public void CompleteRequest(string requestId, PromptOptimizationResponseEvent response)
         {

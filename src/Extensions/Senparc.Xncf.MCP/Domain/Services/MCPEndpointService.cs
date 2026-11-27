@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.5.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.14.2 Expand MCP endpoint gateway, credentials, and tool invocation support.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -35,18 +38,24 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.MCP.Domain.Services
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides persistence and connectivity-test operations for configured MCP endpoints.
     /// </summary>
     public class MCPEndpointService : ServiceBase<MCPEndpoint>
     {
+        /// <summary>
+        /// Initializes the MCP endpoint service.
+        /// </summary>
+        /// <param name="repo">The endpoint repository.</param>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
         public MCPEndpointService(IRepositoryBase<MCPEndpoint> repo, IServiceProvider serviceProvider) 
             : base(repo, serviceProvider)
         {
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Loads all enabled MCP endpoints.
         /// </summary>
+        /// <returns>The enabled endpoint entities, or an empty list when none exist.</returns>
         public async Task<List<MCPEndpoint>> GetEnabledEndpointsAsync()
         {
             var endpoints = await this.GetFullListAsync(x => x.Enabled);
@@ -54,24 +63,32 @@ namespace Senparc.Xncf.MCP.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Loads an MCP endpoint by its exact configured name.
         /// </summary>
+        /// <param name="name">The endpoint name.</param>
+        /// <returns>The matching endpoint, or <see langword="null"/> when not found.</returns>
         public async Task<MCPEndpoint> GetEndpointByNameAsync(string name)
         {
             return await this.GetObjectAsync(x => x.Name == name);
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Loads an MCP endpoint by its exact configured address.
         /// </summary>
+        /// <param name="endpoint">The endpoint address.</param>
+        /// <returns>The matching endpoint, or <see langword="null"/> when not found.</returns>
         public async Task<MCPEndpoint> GetEndpointByAddressAsync(string endpoint)
         {
             return await this.GetObjectAsync(x => x.Endpoint == endpoint);
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Tests the endpoint identified by the supplied database identifier and persists
+        /// the latest test result and discovered tool count.
         /// </summary>
+        /// <param name="endpointId">The endpoint identifier.</param>
+        /// <param name="cancellationToken">Token used to cancel the network test.</param>
+        /// <returns>A structured connection result; a missing endpoint returns status 404.</returns>
         public async Task<McpConnectionTestResult> TestEndpointAsync(int endpointId, CancellationToken cancellationToken = default)
         {
             var endpoint = await this.GetObjectAsync(x => x.Id == endpointId);
@@ -89,14 +106,19 @@ namespace Senparc.Xncf.MCP.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Tests a supplied MCP endpoint configuration, extracts a bearer token from its
+        /// JSON authentication settings, and persists the resulting tool discovery metadata.
         /// </summary>
+        /// <param name="endpoint">The endpoint entity to test and update.</param>
+        /// <param name="cancellationToken">Token used to cancel the network test.</param>
+        /// <returns>The structured connection and tool-discovery result.</returns>
         public async Task<McpConnectionTestResult> TestEndpointCoreAsync(MCPEndpoint endpoint, CancellationToken cancellationToken = default)
         {
             var tester = ServiceProvider.GetRequiredService<McpConnectionTestService>();
-            string? bearerToken = ExtractBearerToken(endpoint.AuthConfig);
+            var secrets = ServiceProvider.GetRequiredService<McpEndpointSecretProtector>();
+            string? authConfig = secrets.Unprotect(endpoint.AuthConfig);
 
-            var result = await tester.TestAsync(endpoint.Name, endpoint.Endpoint, bearerToken,
+            var result = await tester.TestAsync(endpoint.Name, endpoint.Endpoint, authConfig,
                 endpointType: endpoint.EndpointType, cancellationToken: cancellationToken);
 
             endpoint.LastTestedTime = DateTime.Now;
@@ -109,8 +131,11 @@ namespace Senparc.Xncf.MCP.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Extracts the first non-empty bearer-style token value from supported authentication
+        /// JSON property names. Invalid JSON is treated as a legacy raw token value.
         /// </summary>
+        /// <param name="authConfigJson">The JSON authentication configuration or legacy raw token.</param>
+        /// <returns>The extracted token, or <see langword="null"/> when no token is available.</returns>
         internal static string? ExtractBearerToken(string? authConfigJson)
         {
             if (string.IsNullOrWhiteSpace(authConfigJson))

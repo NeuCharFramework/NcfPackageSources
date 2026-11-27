@@ -14,6 +14,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.0.0 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -64,13 +67,30 @@ public sealed class NeuCharWorkflowChatConfig
         };
     }
 
+    /// <summary>
+    /// Parses persisted chat configuration and applies the same normalization rules used for requests.
+    /// </summary>
+    /// <param name="json">The stored JSON configuration, or blank text for defaults.</param>
+    /// <returns>The normalized chat configuration.</returns>
     public static NeuCharWorkflowChatConfig ParseStored(string json)
     {
         return Normalize(json, null);
     }
 
+    /// <summary>
+    /// Serializes this normalized chat configuration for persistence or transport.
+    /// </summary>
+    /// <returns>The JSON representation of the configuration.</returns>
     public string ToJson() => JsonSerializer.Serialize(this, JsonOptions);
 
+    /// <summary>
+    /// Trims a configuration value and rejects text longer than the configured limit.
+    /// </summary>
+    /// <param name="value">The requested or stored value.</param>
+    /// <param name="maxLength">The maximum permitted length.</param>
+    /// <param name="label">The label used in the validation exception.</param>
+    /// <returns>The trimmed value, or <see langword="null"/> for blank input.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the trimmed value exceeds <paramref name="maxLength"/>.</exception>
     private static string? Limit(string? value, int maxLength, string label)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -85,6 +105,12 @@ public sealed class NeuCharWorkflowChatConfig
         return trimmed;
     }
 
+    /// <summary>
+    /// Parses a JSON object and returns a detached root element for later property reads.
+    /// </summary>
+    /// <param name="json">The JSON text to parse.</param>
+    /// <returns>The cloned object root, or an undefined element for blank/non-object input.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the text is not valid JSON.</exception>
     private static JsonElement ParseObject(string json)
     {
         if (string.IsNullOrWhiteSpace(json))
@@ -104,6 +130,12 @@ public sealed class NeuCharWorkflowChatConfig
         }
     }
 
+    /// <summary>
+    /// Reads a string-valued property from a JSON object.
+    /// </summary>
+    /// <param name="root">The JSON object root.</param>
+    /// <param name="propertyName">The property name to read.</param>
+    /// <returns>The property string, or <see langword="null"/> when absent or non-string.</returns>
     private static string? GetString(JsonElement root, string propertyName)
     {
         return root.ValueKind == JsonValueKind.Object &&
@@ -113,6 +145,12 @@ public sealed class NeuCharWorkflowChatConfig
             : null;
     }
 
+    /// <summary>
+    /// Reads a Boolean property from a JSON object.
+    /// </summary>
+    /// <param name="root">The JSON object root.</param>
+    /// <param name="propertyName">The property name to read.</param>
+    /// <returns>The Boolean value, or <see langword="null"/> when absent or not Boolean.</returns>
     private static bool? GetBool(JsonElement root, string propertyName)
     {
         if (root.ValueKind == JsonValueKind.Object && root.TryGetProperty(propertyName, out var value))

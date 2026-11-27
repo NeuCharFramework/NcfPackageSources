@@ -50,7 +50,7 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Name => "Senparc.Xncf.Workspace";
     public override string Uid => "9D0AA0B5-1E76-4BA3-96A0-4BE1A8D6A6E7";
-    public override string Version => "0.2.2";
+    public override string Version => "0.2.9.2";
     public override string MenuName => RegisterText.MenuName;
     public override string Icon => "fa fa-folder-open";
     public override string Description => RegisterText.Description;

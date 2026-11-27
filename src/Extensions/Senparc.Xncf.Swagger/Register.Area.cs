@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.12 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 //using Enyim.Caching.Configuration;
@@ -41,6 +44,12 @@ namespace Senparc.Xncf.Swagger
              new AreaPageMenuItem(GetAreaHomeUrl(), SwaggerResource.Get("Area.Home", "首页"),"fa fa-laptop"),
                      };
 
+        /// <summary>
+        /// Registers the Swagger area's cookie authentication scheme and Razor Pages configuration.
+        /// </summary>
+        /// <param name="builder">The MVC builder being configured.</param>
+        /// <param name="env">The host environment used by area configuration.</param>
+        /// <returns>The same MVC builder after Swagger authentication configuration.</returns>
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
             builder.Services

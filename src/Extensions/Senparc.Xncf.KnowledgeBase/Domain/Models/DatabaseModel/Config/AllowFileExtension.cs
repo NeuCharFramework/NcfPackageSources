@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -22,19 +25,19 @@ using System.Text;
 namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Config
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Defines file-extension allowlists used by knowledge-base upload validation.
     /// </summary>
     public class AllowFileExtension
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the image extensions accepted by the knowledge-base UI.
         /// </summary>
         public static readonly HashSet<string> ImageExtension = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             ".png", ".jpg", ".jpeg", ".gif", ".bmp"
         };
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the audio/video extensions accepted by the knowledge-base UI.
         /// </summary>
         public static readonly HashSet<string> VideoExtensiong = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
@@ -42,7 +45,7 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Config
             ".ogg", ".ogv", ".mov", ".wmv", ".mp4", ".webm", ".mp3", ".wav", ".mid"
         };
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the complete file-extension allowlist for knowledge-base content.
         /// </summary>
         public static readonly HashSet<string> FileExtension = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {

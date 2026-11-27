@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 
@@ -57,6 +60,12 @@ internal sealed class ConnectorAIFunction : AIFunction
 
 
 
+    /// <summary>
+    /// Initializes an AI function wrapper for one configured connector action.
+    /// </summary>
+    /// <param name="gateway">The gateway used to invoke connector actions.</param>
+    /// <param name="connector">The configured connector instance.</param>
+    /// <param name="action">The action descriptor exposed to the model.</param>
     public ConnectorAIFunction(
 
         IConnectorGateway gateway,
@@ -99,6 +108,11 @@ internal sealed class ConnectorAIFunction : AIFunction
 
 
 
+    /// <inheritdoc/>
+    /// <remarks>
+    /// Converts model arguments to strings, invokes the connector gateway,
+    /// and returns either action output or the gateway error.
+    /// </remarks>
     protected override async ValueTask<object?> InvokeCoreAsync(
 
         AIFunctionArguments arguments,
@@ -137,6 +151,11 @@ internal sealed class ConnectorAIFunction : AIFunction
 
 
 
+    /// <summary>
+    /// Builds a JSON Schema from connector action parameters and required flags.
+    /// </summary>
+    /// <param name="action">The connector action descriptor.</param>
+    /// <returns>A cloned JSON Schema element.</returns>
     private static JsonElement BuildSchema(ConnectorActionDescriptor action)
 
     {
@@ -195,6 +214,11 @@ internal sealed class ConnectorAIFunction : AIFunction
 
 
 
+    /// <summary>
+    /// Converts a function name into an identifier-safe representation.
+    /// </summary>
+    /// <param name="value">The original function name.</param>
+    /// <returns>The name with non-alphanumeric characters replaced by underscores.</returns>
     private static string Sanitize(string value)
 
     {
@@ -207,6 +231,11 @@ internal sealed class ConnectorAIFunction : AIFunction
 
 
 
+    /// <summary>
+    /// Converts supported model argument values to invariant text for connector transport.
+    /// </summary>
+    /// <param name="value">The model argument value.</param>
+    /// <returns>The transport string representation.</returns>
     private static string ConvertToString(object value)
 
         => value switch

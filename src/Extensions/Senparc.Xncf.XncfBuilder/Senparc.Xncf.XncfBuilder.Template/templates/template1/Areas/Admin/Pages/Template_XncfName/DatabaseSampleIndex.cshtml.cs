@@ -12,6 +12,9 @@
     Modified by: Senparc - 20261124
     Change description: v1.1.15 Integrated localization, tooling, and runtime improvements across the module.
 
+    Modified by: Senparc - 20261127
+    Change description: v1.1.16 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -29,23 +32,27 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
     {
         private readonly ColorService _colorService;
 
+        /// <summary>Initializes the template database sample page.</summary>
+        /// <param name="xncfModuleService">The lazy XNCF module service.</param>
+        /// <param name="colorService">The sample color service.</param>
         public DatabaseSampleIndex(Lazy<XncfModuleService> xncfModuleService, ColorService colorService) : base(xncfModuleService)
         {
             _colorService = colorService;
         }
 
+        /// <summary>Initializes the database sample index request.</summary>
         public void OnGet()
         {
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns a paged color list for the template sample grid.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="keyword">Optional search keyword.</param>
+        /// <param name="orderField">The textual order expression.</param>
+        /// <param name="pageIndex">The page index.</param>
+        /// <param name="pageSize">The page size.</param>
+        /// <returns>An HTTP JSON result containing the color page.</returns>
         public async Task<IActionResult> OnGetColorListAsync(string keyword, string orderField, int pageIndex, int pageSize)
         {
             try
@@ -102,10 +109,11 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates a color from the submitted RGB values and returns the persisted color data.
+        /// Validation and persistence failures are converted into an unsuccessful JSON result.
         /// </summary>
-        /// <param name="request">createcolorrequest</param>
-        /// <returns></returns>
+        /// <param name="request">The RGB values and optional note to persist.</param>
+        /// <returns>An HTTP 200 JSON result describing the creation outcome.</returns>
         public async Task<IActionResult> OnPostCreateColorAsync([FromBody] CreateColorRequestDto request)
         {
             try
@@ -131,10 +139,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        /// updatecolor
+        /// Updates an existing color's RGB values and note, returning the updated record.
         /// </summary>
-        /// <param name="request">updatecolorrequest</param>
-        /// <returns></returns>
+        /// <param name="request">The color identifier and replacement values.</param>
+        /// <returns>An HTTP 200 JSON result describing the update outcome.</returns>
         public async Task<IActionResult> OnPostUpdateColorAsync([FromBody] UpdateColorRequestDto request)
         {
             try
@@ -168,10 +176,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        /// deletecolor
+        /// Permanently deletes an existing color record.
         /// </summary>
-        /// <param name="request">deletecolorrequest</param>
-        /// <returns></returns>
+        /// <param name="request">The identifier of the color to delete.</param>
+        /// <returns>An HTTP 200 JSON result describing the deletion outcome.</returns>
         public async Task<IActionResult> OnPostDeleteColorAsync([FromBody] DeleteColorRequestDto request)
         {
             try
@@ -201,10 +209,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Replaces an existing color with newly generated RGB values and persists the change.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="request">The identifier of the color to randomize.</param>
+        /// <returns>An HTTP 200 JSON result describing the randomization outcome.</returns>
         public async Task<IActionResult> OnPostRandomizeColorAsync([FromBody] RandomizeColorRequestDto request)
         {
             try
@@ -236,10 +244,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Loads one color record and returns its persisted values and metadata.
         /// </summary>
-        /// <param name="id">colorID</param>
-        /// <returns></returns>
+        /// <param name="id">The color identifier.</param>
+        /// <returns>An HTTP 200 JSON result containing the color details or an error message.</returns>
         public async Task<IActionResult> OnGetColorDetailAsync(int id)
         {
             try

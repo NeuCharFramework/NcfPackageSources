@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -25,6 +28,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.Entities
 {
     public class PromptItemTreeList : List<PromptItemTreeNode>
     {
+        /// <summary>Initializes an empty prompt-item tree list.</summary>
         public PromptItemTreeList() { }
 
         public PromptItemTreeNode this[string key]
@@ -35,6 +39,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.Entities
             }
         }
 
+        /// <summary>Adds a tree node and returns the created node.</summary>
+        /// <param name="key">The node key.</param>
+        /// <param name="text">The display text.</param>
+        /// <param name="value">The node value.</param>
+        /// <param name="level">The tree level.</param>
+        /// <param name="subNodeCount">The number of child nodes.</param>
+        /// <returns>The added node.</returns>
         public PromptItemTreeNode AddNode(string key, string text, string value, int level, int subNodeCount)
         {
             PromptItemTreeNode node = new PromptItemTreeNode(key, text, value, level, subNodeCount);

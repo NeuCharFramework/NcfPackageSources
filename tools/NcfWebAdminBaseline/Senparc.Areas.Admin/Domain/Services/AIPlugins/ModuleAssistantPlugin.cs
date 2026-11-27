@@ -22,6 +22,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 using Microsoft.SemanticKernel;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
@@ -227,6 +230,12 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
             return LimitToolResult(sb.ToString());
         }
 
+        /// <summary>
+        /// Limits module-catalog text to the provider tool-result budget and adds
+        /// a marker when the tail is omitted.
+        /// </summary>
+        /// <param name="value">The generated tool result.</param>
+        /// <returns>The original or bounded result text.</returns>
         private static string LimitToolResult(string value)
         {
             if (value.Length <= MaxToolResultCharacters)

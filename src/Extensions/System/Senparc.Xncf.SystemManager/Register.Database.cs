@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.15.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.15.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -33,11 +36,19 @@ namespace Senparc.Xncf.SystemManager
 
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
+        /// <summary>
+        /// Registers SystemManager database services required by the module.
+        /// </summary>
+        /// <param name="services">The dependency injection service collection.</param>
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
 
         }
 
+        /// <summary>
+        /// Configures SystemManager entity mappings for the module database.
+        /// </summary>
+        /// <param name="modelBuilder">The EF Core model builder.</param>
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
            

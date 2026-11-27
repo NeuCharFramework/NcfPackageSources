@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.25.1 Localized Weixin account and administration surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.25.1.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +27,6 @@ using Senparc.Xncf.WeixinManager.Domain.Models.VD.Admin.WeixinManager;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 
 namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
 {
@@ -36,11 +38,20 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
         private int pageCount = 20;
 
 
+        /// <summary>
+        /// Initializes the public-account administration page model.
+        /// </summary>
+        /// <param name="xncfModuleService">The module service used by the base administration model.</param>
+        /// <param name="mpAccountService">The service used to query and delete public accounts.</param>
         public MpAccount_IndexModel(Lazy<XncfModuleService> xncfModuleService, ServiceBase<Domain.Models.DatabaseModel.MpAccount> mpAccountService) : base(xncfModuleService)
         {
             _mpAccountService = mpAccountService;
         }
 
+        /// <summary>
+        /// Loads a paged list of public Weixin accounts for the administration page.
+        /// </summary>
+        /// <param name="pageIndex">The one-based page number.</param>
         public async Task OnGetAsync(int pageIndex = 1)
         {
             var result = await _mpAccountService.GetObjectListAsync(pageIndex, pageCount, z => true, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
@@ -51,10 +62,11 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
         }
 
         /// <summary>
-        /// Handler=Ajax
+        /// Returns a paged public-account list for the AJAX administration view.
         /// </summary>
-        /// <param name="pageIndex"></param>
-        /// <returns></returns>
+        /// <param name="pageIndex">The one-based page number.</param>
+        /// <param name="pageSize">The maximum number of records per page.</param>
+        /// <returns>An HTTP 200 JSON result containing pagination metadata and DTOs.</returns>
         public async Task<IActionResult> OnGetAjaxAsync(int pageIndex = 1, int pageSize = 10)
         {
             var result = await _mpAccountService.GetObjectListAsync(pageIndex, pageSize, z => true, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
@@ -64,6 +76,11 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
             //await Senparc.Weixin.MP.AdvancedAPIs.UserTagApi.BatchTaggingAsync(MpAccountDtos[0].AppId, 2, new System.Collections.Generic.List<string> { "oxRg0uLsnpHjb8o93uVnwMK_WAVw" });
         }
 
+        /// <summary>
+        /// Deletes the selected public-account records and removes their access-token cache entries.
+        /// </summary>
+        /// <param name="ids">The account identifiers selected for deletion.</param>
+        /// <returns>An HTTP 200 response containing the current module identifier.</returns>
         public async Task<IActionResult> OnPostDeleteAsync([FromBody] int[] ids)
         {
             foreach (var id in ids)

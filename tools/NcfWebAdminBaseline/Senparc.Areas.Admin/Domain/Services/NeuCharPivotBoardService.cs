@@ -20,6 +20,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -66,6 +69,14 @@ public sealed class NeuCharPivotBoardService : BaseClientService<NeuCharPivotBoa
     private readonly AdminChatAiService _aiService;
     private readonly AdminChatSessionService _sessionService;
 
+    /// <summary>
+    /// Initializes board persistence, Function catalog, AI generation, and session services.
+    /// </summary>
+    /// <param name="repository">The board repository.</param>
+    /// <param name="serviceProvider">The base-service dependency provider.</param>
+    /// <param name="functionService">The persisted Function service.</param>
+    /// <param name="aiService">The AdminChat AI service.</param>
+    /// <param name="sessionService">The temporary chat-session service.</param>
     public NeuCharPivotBoardService(
         INeuCharPivotBoardRepository repository,
         IServiceProvider serviceProvider,
@@ -81,6 +92,11 @@ public sealed class NeuCharPivotBoardService : BaseClientService<NeuCharPivotBoa
 
     #region Legacy section
 
+    /// <summary>
+    /// Loads the enabled board bound to a normalized page key.
+    /// </summary>
+    /// <param name="pageKey">The page key to resolve.</param>
+    /// <returns>The enabled board, or <see langword="null"/>.</returns>
     public async Task<NeuCharPivotBoard> GetEnabledBoardByPageKeyAsync(string pageKey)
     {
         var board = await GetObjectAsync(
@@ -89,6 +105,15 @@ public sealed class NeuCharPivotBoardService : BaseClientService<NeuCharPivotBoa
         return board;
     }
 
+    /// <summary>
+    /// Creates and persists an enabled pivot board.
+    /// </summary>
+    /// <param name="name">The board display name.</param>
+    /// <param name="pageKey">The page key bound to the board.</param>
+    /// <param name="description">The board description.</param>
+    /// <param name="columns">The requested column count.</param>
+    /// <param name="adminUserId">The owning administrator identifier.</param>
+    /// <returns>The persisted board.</returns>
     public async Task<NeuCharPivotBoard> CreateBoardAsync(
         string name,
         string pageKey,
@@ -102,6 +127,16 @@ public sealed class NeuCharPivotBoardService : BaseClientService<NeuCharPivotBoa
         return board;
     }
 
+    /// <summary>
+    /// Updates board metadata, optional page binding, and enabled state.
+    /// </summary>
+    /// <param name="boardId">The board identifier.</param>
+    /// <param name="name">The board display name.</param>
+    /// <param name="pageKey">Optional replacement page key.</param>
+    /// <param name="description">The board description.</param>
+    /// <param name="columns">The requested column count.</param>
+    /// <param name="isEnabled">Whether the board should be enabled.</param>
+    /// <returns>The updated board, or <see langword="null"/> when missing.</returns>
     public async Task<NeuCharPivotBoard> UpdateBoardAsync(
         int boardId,
         string name,
@@ -196,9 +231,20 @@ public sealed class NeuCharPivotBoardService : BaseClientService<NeuCharPivotBoa
             StringComparer.OrdinalIgnoreCase);
     }
 
+    /// <summary>
+    /// Builds a stable module/function key for a board block.
+    /// </summary>
+    /// <param name="block">The board block.</param>
+    /// <returns>The trimmed composite key.</returns>
     public static string GetBlockKey(NeuCharPivotBoardBlock block) =>
         GetBlockKey(block?.ModuleUid, block?.FunctionKey);
 
+    /// <summary>
+    /// Builds a stable module/function key from its components.
+    /// </summary>
+    /// <param name="moduleUid">The module UID.</param>
+    /// <param name="functionKey">The Function key.</param>
+    /// <returns>The composite key.</returns>
     public static string GetBlockKey(string moduleUid, string functionKey) =>
         $"{moduleUid?.Trim()}|{functionKey?.Trim()}";
 
@@ -268,6 +314,11 @@ public sealed class NeuCharPivotBoardService : BaseClientService<NeuCharPivotBoa
         return (true, "ok", board);
     }
 
+    /// <summary>
+    /// Deserializes persisted board blocks, returning an empty list for blank or invalid JSON.
+    /// </summary>
+    /// <param name="blocksJson">The persisted blocks JSON.</param>
+    /// <returns>The deserialized blocks.</returns>
     public static List<NeuCharPivotBoardBlock> DeserializeBlocks(string blocksJson)
     {
         if (string.IsNullOrWhiteSpace(blocksJson))
@@ -294,6 +345,15 @@ public sealed class NeuCharPivotBoardService : BaseClientService<NeuCharPivotBoa
     ///Legacy comment translated to English.
     ///Legacy comment translated to English.
     /// </summary>
+    /// <summary>
+    /// Generates a board change from a natural-language instruction, validates every
+    /// selected Function against the catalog, and persists the accepted blocks.
+    /// </summary>
+    /// <param name="boardId">The board identifier.</param>
+    /// <param name="instruction">The administrator's board-change instruction.</param>
+    /// <param name="adminUserId">The administrator requesting the change.</param>
+    /// <param name="cancellationToken">Token used to cancel AI and persistence operations.</param>
+    /// <returns>Success flag, message, AI reply, and resulting board.</returns>
     public async Task<(bool success, string message, string aiReply, NeuCharPivotBoard board)> ApplyAiChangeAsync(
         int boardId,
         string instruction,
@@ -377,6 +437,12 @@ public sealed class NeuCharPivotBoardService : BaseClientService<NeuCharPivotBoa
         }
     }
 
+    /// <summary>
+    /// Builds the constrained AI instruction containing the current board and allowed catalog.
+    /// </summary>
+    /// <param name="board">The current board.</param>
+    /// <param name="catalog">The allowed Function catalog.</param>
+    /// <returns>The system instruction text.</returns>
     private static string BuildAiSystemInstruction(
         NeuCharPivotBoard board,
         List<NeuCharPivotBoardFunctionOption> catalog)
@@ -422,6 +488,13 @@ public sealed class NeuCharPivotBoardService : BaseClientService<NeuCharPivotBoa
         public string Accent { get; set; }
     }
 
+    /// <summary>
+    /// Parses AI JSON and removes blocks that are not present in the authoritative catalog.
+    /// </summary>
+    /// <param name="response">The AI response text.</param>
+    /// <param name="board">The current board.</param>
+    /// <param name="catalog">The authoritative Function catalog.</param>
+    /// <returns>A validated proposal, or <see langword="null"/> when invalid.</returns>
     private static AiBoardProposal ParseAiBoardJson(
         string response,
         NeuCharPivotBoard board,
@@ -491,6 +564,11 @@ public sealed class NeuCharPivotBoardService : BaseClientService<NeuCharPivotBoa
         };
     }
 
+    /// <summary>
+    /// Extracts a JSON object from plain or fenced AI response text.
+    /// </summary>
+    /// <param name="response">The AI response text.</param>
+    /// <returns>The object JSON, or <see langword="null"/> when no object is found.</returns>
     private static string ExtractJsonPayload(string response)
     {
         if (string.IsNullOrWhiteSpace(response))

@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.ACL.Repository;
@@ -29,6 +32,11 @@ namespace Senparc.Areas.Admin.Domain.Services;
 
 public sealed class WeixinClawAdminBindingService : BaseClientService<WeixinClawAdminBinding>
 {
+    /// <summary>
+    /// Initializes persistence for administrator-owned Weixin Claw routing bindings.
+    /// </summary>
+    /// <param name="repository">The binding repository.</param>
+    /// <param name="serviceProvider">The dependency provider used by the base service.</param>
     public WeixinClawAdminBindingService(
         IWeixinClawAdminBindingRepository repository,
         IServiceProvider serviceProvider)
@@ -36,6 +44,13 @@ public sealed class WeixinClawAdminBindingService : BaseClientService<WeixinClaw
     {
     }
 
+    /// <summary>
+    /// Finds an enabled binding for one account, sender, and group context after trimming identifiers.
+    /// </summary>
+    /// <param name="accountId">The Weixin Claw account identifier.</param>
+    /// <param name="fromUserId">The sender identifier.</param>
+    /// <param name="groupId">The group identifier, or an empty value for direct messages.</param>
+    /// <returns>The enabled binding, or <see langword="null"/> when none exists.</returns>
     public async Task<WeixinClawAdminBinding> GetBindingAsync(
         int accountId,
         string fromUserId,
@@ -50,6 +65,10 @@ public sealed class WeixinClawAdminBindingService : BaseClientService<WeixinClaw
             && item.Enabled).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Lists enabled bindings that have NeuBell routing enabled.
+    /// </summary>
+    /// <returns>The matching bindings.</returns>
     public async Task<List<WeixinClawAdminBinding>> GetNeuBellBindingsAsync()
     {
         var bindings = await GetFullListAsync(item =>
@@ -57,6 +76,14 @@ public sealed class WeixinClawAdminBindingService : BaseClientService<WeixinClaw
         return bindings.ToList();
     }
 
+    /// <summary>
+    /// Stores the latest conversation context token and message timestamp for a binding.
+    /// Blank input or a missing binding is ignored.
+    /// </summary>
+    /// <param name="binding">The binding to update.</param>
+    /// <param name="contextToken">The provider conversation context token.</param>
+    /// <param name="messageAt">The message timestamp associated with the token.</param>
+    /// <returns>A task that completes after persistence.</returns>
     public async Task SaveContextAsync(
         WeixinClawAdminBinding binding,
         string contextToken,
@@ -71,6 +98,20 @@ public sealed class WeixinClawAdminBindingService : BaseClientService<WeixinClaw
         await SaveObjectAsync(binding).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Creates or updates the routing binding for one sender/group context and
+    /// persists the selected AI, workflow, and NeuBell options.
+    /// </summary>
+    /// <param name="accountId">The Weixin Claw account identifier.</param>
+    /// <param name="fromUserId">The sender identifier.</param>
+    /// <param name="groupId">The group identifier.</param>
+    /// <param name="adminUserId">The administrator who owns the binding.</param>
+    /// <param name="enableNeuBell">Whether NeuBell notifications are enabled.</param>
+    /// <param name="enableWorkflow">Whether workflow routing is enabled.</param>
+    /// <param name="workflowId">Optional workflow identifier.</param>
+    /// <param name="aiModelId">The selected AI model identifier.</param>
+    /// <param name="mode">The binding routing mode.</param>
+    /// <returns>The existing updated or newly created binding.</returns>
     public async Task<WeixinClawAdminBinding> BindAsync(
         int accountId,
         string fromUserId,
@@ -118,6 +159,11 @@ public sealed class WeixinClawAdminBindingService : BaseClientService<WeixinClaw
         return binding;
     }
 
+    /// <summary>
+    /// Retrieves an enabled binding by its database identifier.
+    /// </summary>
+    /// <param name="id">The binding identifier.</param>
+    /// <returns>The enabled binding, or <see langword="null"/> when absent or disabled.</returns>
     public async Task<WeixinClawAdminBinding> GetByIdAsync(int id)
     {
         return await GetObjectAsync(item => item.Id == id && item.Enabled).ConfigureAwait(false);

@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.16 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.16.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Utility;
@@ -28,16 +31,27 @@ namespace Senparc.Xncf.EmailExtension.Domain
 
         public XmlDataContext XmlDataContext { get; set; }
 
+        /// <summary>
+        /// Initializes an email XML data context backed by the shared XML storage helper.
+        /// </summary>
         public EmailXmlDataContext()
         {
             XmlDataContext = new XmlDataContext();
         }
 
+        /// <summary>
+        /// Loads pending automatic email records from XML storage.
+        /// </summary>
+        /// <returns>The persisted automatic-email records.</returns>
         public List<AutoSendEmail> GetAutoSendEmailList()
         {
             return XmlDataContext.GetXmlList<AutoSendEmail>();
         }
 
+        /// <summary>
+        /// Loads backup automatic-email records from XML storage.
+        /// </summary>
+        /// <returns>The persisted backup records.</returns>
         public List<AutoSendEmailBak> GetAutoSendEmailBakList()
         {
             return XmlDataContext.GetXmlList<AutoSendEmailBak>();

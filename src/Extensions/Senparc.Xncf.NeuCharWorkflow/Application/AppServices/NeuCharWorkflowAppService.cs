@@ -43,6 +43,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.0.0 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -983,8 +986,8 @@ public sealed class NeuCharWorkflowAppService
         var fetchedLogs = logPage.ToList();
         var pageLogs = fetchedLogs.Take(TaskListPageSize).ToList();
         tasks.AddRange(pageLogs
-            //Legacy comment translated to English.
-            //Legacy comment translated to English.
+            // Do not duplicate a persisted log that is still represented by an active
+            // coordinator-owned run in the current process.
             .Where(log => log.FinishedAt != null ||
                           !activeRunIds.Contains(GetTaskRunId(log.WorkflowId, log.CorrelationId).GetValueOrDefault()))
             .Select(log => new WorkflowTaskListItem(
@@ -1081,7 +1084,8 @@ public sealed class NeuCharWorkflowAppService
 
         var logs = await GetCompletedTaskLogsAsync(adminUserId, effectiveCutoff, cancellationToken).ConfigureAwait(false);
         cancellationToken.ThrowIfCancellationRequested();
-        //Legacy comment translated to English.
+        // The cleanup operation is intentionally performed only after the preview query
+        // and cutoff normalization have completed.
         await _executionLogService.DeleteAllAsync(logs).ConfigureAwait(false);
 
         return new WorkflowTaskCleanupResult(logs.Count, effectiveCutoff);
@@ -1502,7 +1506,8 @@ public sealed class NeuCharWorkflowAppService
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Resolves chat access, module availability, trigger configuration, and guest policy
+    /// for one workflow participant.
     /// </summary>
     private async Task<WorkflowChatAccess> GetChatAccessAsync(
         int workflowId,
@@ -1540,8 +1545,7 @@ public sealed class NeuCharWorkflowAppService
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Restores persisted chat messages into the in-memory session cache.
     /// </summary>
     private async Task<IReadOnlyList<WorkflowChatMessage>> RestoreChatHistoryAsync(
         int workflowId,
@@ -2207,24 +2211,44 @@ public sealed record WorkflowTaskListItem(
     int? ExecutionLogId,
     bool ReplayAvailable);
 
-///Legacy comment translated to English.
+/// <summary>
+/// Represents one page of workflow execution tasks and optional analytics summary.
+/// </summary>
+/// <param name="Items">The task items in descending start order.</param>
+/// <param name="HasMore">Whether older persisted tasks remain.</param>
+/// <param name="NextExecutionLogId">The cursor for the next page.</param>
+/// <param name="Summary">Optional aggregate analytics for the query.</param>
 public sealed record WorkflowTaskListPage(
     IReadOnlyList<WorkflowTaskListItem> Items,
     bool HasMore,
     int? NextExecutionLogId,
     WorkflowAnalyticsSummary? Summary = null);
 
-///Legacy comment translated to English.
+/// <summary>
+/// Summarizes completed workflow tasks eligible for cleanup at a cutoff.
+/// </summary>
+/// <param name="CompletedCount">The number of completed tasks.</param>
+/// <param name="SucceededCount">The number of successful tasks.</param>
+/// <param name="FailedCount">The number of failed tasks.</param>
+/// <param name="Cutoff">The cleanup cutoff timestamp.</param>
 public sealed record WorkflowTaskCleanupPreview(
     int CompletedCount,
     int SucceededCount,
     int FailedCount,
     DateTime Cutoff);
 
+/// <summary>
+/// Reports the number of execution logs deleted by a cleanup operation.
+/// </summary>
+/// <param name="DeletedCount">The number of deleted logs.</param>
+/// <param name="Cutoff">The effective UTC cutoff used for deletion.</param>
 public sealed record WorkflowTaskCleanupResult(
     int DeletedCount,
     DateTime Cutoff);
 
+/// <summary>
+/// Represents one persisted event in a workflow replay sequence.
+/// </summary>
 public sealed record WorkflowReplayEvent(
     int Sequence,
     string NodeId,
@@ -2236,9 +2260,15 @@ public sealed record WorkflowReplayEvent(
     string? OutputSchema = null,
     string? Input = null)
 {
+    /// <summary>
+    /// Gets or initializes the optional object reference emitted by the replayed node.
+    /// </summary>
     public WorkflowObjectExecutionReference? ObjectReference { get; init; }
 }
 
+/// <summary>
+/// Contains the persisted workflow definition and ordered replay events for one execution.
+/// </summary>
 public sealed record WorkflowRunReplay(
     int ExecutionLogId,
     int WorkflowId,
@@ -2252,16 +2282,27 @@ public sealed record WorkflowRunReplay(
     NeuCharWorkflowReplayDefinition Definition,
     IReadOnlyList<WorkflowReplayEvent> Events);
 
+/// <summary>
+/// Describes one Function available in the Workflow designer.
+/// </summary>
 public sealed record WorkflowDesignerFunction(
     string FunctionKey, string Name, string? Description, string ModuleUid, string ModuleName, string ModuleVersion,
     bool ModuleAvailable, string ModuleState, string ParameterSchemaJson, string DefaultParametersJson,
     NeuCharFunctionOutputDescriptor? Output, string? CatalogError)
 {
-    //Legacy comment translated to English.
+    /// <summary>
+    /// Gets the compatibility identifier retained for legacy designer consumers.
+    /// </summary>
     public int Id => 0;
+    /// <summary>
+    /// Gets the display name through the legacy property name.
+    /// </summary>
     public string FunctionName => Name;
 }
 
+/// <summary>
+/// Contains the Function catalog and executable object catalog used by the designer.
+/// </summary>
 public sealed record WorkflowDesignerData(
     IReadOnlyList<WorkflowDesignerFunction> Functions,
     IReadOnlyList<Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow.WorkflowObjectDescriptor> Objects);
@@ -2291,16 +2332,25 @@ public sealed record WorkflowWebhookTriggerResult(
 }
 
 /// <summary>
-///Legacy comment translated to English.
+/// Represents one chat message returned by the Workflow chat surface.
 /// </summary>
+/// <param name="Role">The message role.</param>
+/// <param name="Content">The message content.</param>
+/// <param name="Timestamp">The UTC message timestamp.</param>
 public sealed record WorkflowChatMessage(
     string Role,
     string Content,
     DateTimeOffset Timestamp);
 
 /// <summary>
-///Legacy comment translated to English.
+/// Describes whether a participant may access a chat-triggered workflow.
 /// </summary>
+/// <param name="Ok">Whether access is permitted.</param>
+/// <param name="StatusCode">The HTTP-style status code for the decision.</param>
+/// <param name="ErrorMessage">The failure message when access is denied.</param>
+/// <param name="Workflow">The accessible workflow entity.</param>
+/// <param name="Config">The parsed chat configuration.</param>
+/// <param name="IsGuest">Whether the participant is an anonymous guest.</param>
 public sealed record WorkflowChatAccess(
     bool Ok,
     int StatusCode,
@@ -2323,7 +2373,7 @@ public sealed record WorkflowChatAccess(
 }
 
 /// <summary>
-///Legacy comment translated to English.
+/// Represents the bootstrap response returned before a chat session begins.
 /// </summary>
 public sealed record WorkflowChatBootstrapResult(
     int StatusCode,
@@ -2355,7 +2405,7 @@ public sealed record WorkflowChatBootstrapResult(
 }
 
 /// <summary>
-///Legacy comment translated to English.
+/// Represents the response returned after a chat message starts a workflow run.
 /// </summary>
 public sealed record WorkflowChatSendResult(
     int StatusCode,
@@ -2376,7 +2426,7 @@ public sealed record WorkflowChatSendResult(
 }
 
 /// <summary>
-///Legacy comment translated to English.
+/// Represents the current or completed status of a chat-triggered workflow run.
 /// </summary>
 public sealed record WorkflowChatRunResult(
     int StatusCode,
@@ -2407,7 +2457,7 @@ public sealed record WorkflowChatRunResult(
 }
 
 /// <summary>
-///Legacy comment translated to English.
+/// Represents the result of a chat-session reset operation.
 /// </summary>
 public sealed record WorkflowChatResult(
     int StatusCode,
@@ -2423,8 +2473,16 @@ public sealed record WorkflowChatResult(
     public static WorkflowChatResult Ok() => new(200);
 }
 
+/// <summary>
+/// Indicates that a Workflow request or graph cannot be accepted because its input is invalid.
+/// </summary>
 public sealed class WorkflowInputException : InvalidOperationException
 {
+    /// <summary>
+    /// Initializes an input exception with a diagnostic message and optional cause.
+    /// </summary>
+    /// <param name="message">The validation message.</param>
+    /// <param name="innerException">The underlying parsing or validation exception.</param>
     public WorkflowInputException(string message, Exception? innerException = null) : base(message, innerException) { }
 }
 

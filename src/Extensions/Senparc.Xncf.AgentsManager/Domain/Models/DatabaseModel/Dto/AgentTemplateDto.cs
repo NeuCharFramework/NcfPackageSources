@@ -37,6 +37,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Identity.Client;
@@ -55,7 +58,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Transfers Agent-template configuration and runtime summary data across application-service boundaries.
     /// </summary>
     public class AgentTemplateDto : DtoBase<int>
     {
@@ -65,7 +68,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         public string Name { get;  set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the system prompt used as the Agent's initial instruction.
         /// </summary>
         public string SystemMessage { get;  set; }
 
@@ -80,46 +83,46 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         public string Description { get;  set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the prompt-range code associated with the template.
         /// </summary>
         public string PromptCode { get;  set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the hook platform used for notifications.
         /// </summary>
         public HookRobotType HookRobotType { get;  set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the hook platform parameter.
         /// </summary>
         public string HookRobotParameter { get; set; }
 
         public string Avastar { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the serialized plugin/function binding names.
         /// </summary>
         public string FunctionCallNames { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the structured plugin, function, and Workflow bindings.
         /// </summary>
         public List<AgentFunctionBindingDto> FunctionBindings { get; set; } = new();
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the serialized MCP endpoint bindings.
         /// </summary>
         public string McpEndpoints { get; set; }
 
         public int? KnowledgeBaseId { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets how the Agent obtains its AI model.
         /// </summary>
         public AgentModelBindingMode ModelBinding { get; set; } = AgentModelBindingMode.InheritPromptRange;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the selected AI model identifier when manual binding is used.
         /// </summary>
         public int? AiModelId { get; set; }
 
@@ -179,10 +182,10 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
             set => ConnectorBindingsJson = System.Text.Json.JsonSerializer.Serialize(value ?? new());
         }
 
-        ///Legacy comment translated to English.
+        /// Gets or sets whether this template represents the reserved human Agent.
         public bool IsHuman { get; set; }
 
-        ///Legacy comment translated to English.
+        /// Gets or sets whether this template is a system-owned Agent.
         public bool IsSystemAgent { get; set; }
 
         public string SystemAgentKind { get; set; }
@@ -203,8 +206,28 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 
         public DateTime? LastActiveTime { get; set; }
 
+        /// <summary>
+        /// Initializes an empty Agent template DTO for binding.
+        /// </summary>
         public AgentTemplateDto() { }
 
+        /// <summary>
+        /// Initializes an Agent template DTO with prompt, hook, function, knowledge-base,
+        /// and model-binding configuration.
+        /// </summary>
+        /// <param name="name">The Agent display name.</param>
+        /// <param name="systemMessage">The system message or PromptRange reference.</param>
+        /// <param name="enable">Whether the Agent is enabled.</param>
+        /// <param name="description">The Agent description.</param>
+        /// <param name="promptCode">The optional PromptRange code.</param>
+        /// <param name="hookRobotType">The hook type.</param>
+        /// <param name="hookRobotParameter">The hook parameter.</param>
+        /// <param name="avastar">The optional avatar.</param>
+        /// <param name="functionCallNames">The function binding data.</param>
+        /// <param name="mcpEndpoints">The MCP endpoint data.</param>
+        /// <param name="knowledgeBaseId">The optional knowledge-base identifier.</param>
+        /// <param name="modelBinding">The model-binding mode.</param>
+        /// <param name="aiModelId">The optional manually selected model identifier.</param>
         public AgentTemplateDto(string name, string systemMessage, bool enable, string description, string promptCode = null, HookRobotType hookRobotType = default, string hookRobotParameter = null, string avastar = null, string functionCallNames = null, string mcpEndpoints = null, int? knowledgeBaseId = null, AgentModelBindingMode modelBinding = AgentModelBindingMode.InheritPromptRange, int? aiModelId = null)
         {
             Name = name;
@@ -232,10 +255,10 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         /// <summary>plugin、function or workflow。</summary>
         public string Kind { get; set; }
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the stable binding key.
         public string Key { get; set; }
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the display name of the binding.
         public string Name { get; set; }
 
         public string Description { get; set; }

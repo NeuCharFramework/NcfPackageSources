@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.1.1 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.1.1.4 Extend MCP connector management and localization coverage.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -33,10 +36,18 @@ public partial class Register : IXncfDatabase
     public Type TryGetXncfDatabaseDbContextType
         => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
+    /// <summary>
+    /// Configures connector entity mappings for the module database.
+    /// </summary>
+    /// <param name="modelBuilder">The EF Core model builder.</param>
     public void OnModelCreating(ModelBuilder modelBuilder)
     {
     }
 
+    /// <summary>
+    /// Registers connector database services required by the module.
+    /// </summary>
+    /// <param name="services">The dependency injection service collection.</param>
     public void AddXncfDatabaseModule(IServiceCollection services)
     {
     }

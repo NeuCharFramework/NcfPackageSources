@@ -16,13 +16,17 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 using Senparc.Xncf.Sandbox.Abstractions;
 
 namespace Senparc.Xncf.Sandbox.Domain.Services.Runtime;
 
 /// <summary>
-///Legacy comment translated to English.
+/// Defines the runtime-provider contract used by Sandbox orchestration.
+/// Implementations create, execute, inspect, and destroy isolated runtime sessions.
 /// </summary>
 public interface ISandboxRuntime
 {

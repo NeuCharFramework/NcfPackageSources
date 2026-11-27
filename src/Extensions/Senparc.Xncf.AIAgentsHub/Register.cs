@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.13.16 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.13.16.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -54,7 +57,7 @@ namespace Senparc.Xncf.AIAgentsHub
 
         public override string Uid => "49EFBD38-B093-46B1-9297-31FF8E6E8B29";//Legacy comment translated to English.
 
-        public override string Version => "0.1.0";//the version number is required
+        public override string Version => "0.13.16.2";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -62,6 +65,7 @@ namespace Senparc.Xncf.AIAgentsHub
 
         public override string Description => RegisterText.Description;
 
+        /// <inheritdoc />
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //update the database when installing or upgrading a version
@@ -85,6 +89,7 @@ namespace Senparc.Xncf.AIAgentsHub
             }
         }
 
+        /// <inheritdoc />
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             #region Legacy section
@@ -103,6 +108,7 @@ namespace Senparc.Xncf.AIAgentsHub
         }
         #endregion
 
+        /// <inheritdoc />
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddScoped<ColorAppService>();

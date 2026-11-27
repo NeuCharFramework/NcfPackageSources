@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.7.12 Localized DynamicData configuration and layout surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.7.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -32,6 +35,12 @@ namespace Senparc.Xncf.DynamicData.Domain.Models
 
         public List<TableDataDto> TableDataDtos { get; set; }
 
+        /// <summary>
+        /// Initializes a data template with optional column definitions and row data.
+        /// </summary>
+        /// <param name="tableId">The table identifier.</param>
+        /// <param name="columnTemplate">Optional column metadata template.</param>
+        /// <param name="tableDataDtos">Optional table rows.</param>
         public DataTemplate(int tableId, ColumnTemplate columnTemplate = null, List<TableDataDto> tableDataDtos = null)
         {
             TableId = tableId;

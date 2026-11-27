@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.14 Updated database integration support and related localization metadata
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -62,12 +65,14 @@ namespace Senparc.Ncf.Database.InMemory
         };
 
 
+        /// <inheritdoc />
         public override string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath)
         {
             //Legacy comment translated to English.
             return null;
         }
 
+        /// <inheritdoc />
         public override string GetDropTableSql(DbContext dbContext, string tableName)
         {
             //Legacy comment translated to English.

@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
@@ -201,9 +204,7 @@ namespace Senparc.Ncf.Core.Utility
         }
 
 
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///// </summary>
+        // The legacy ResetPasswordCodes XML collection was removed from the active context.
         //public List<ResetPasswordCode> ResetPasswordCodes
         //{
         //    get
@@ -501,9 +502,7 @@ namespace Senparc.Ncf.Core.Utility
 
     #region Legacy section
 
-    ///// <summary>
-    ///Legacy comment translated to English.
-    ///// </summary>
+    // The former ResetPasswordCode entity is retained only in migration history.
     //public partial class ResetPasswordCode
     //{
     //    public string UserName { get; set; }

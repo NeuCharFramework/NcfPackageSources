@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -46,7 +49,7 @@ namespace Senparc.Ncf.Core.Cache
     //}
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Stores phone verification-code payloads with a ten-minute expiration window.
     /// </summary>
     [Serializable]
     public class PhoneCheckCodeCache : QueueCache<PhoneCheckCodeData>/*, IPhoneCheckCodeCache*/

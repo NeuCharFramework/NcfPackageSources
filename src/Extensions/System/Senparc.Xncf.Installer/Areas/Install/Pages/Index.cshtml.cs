@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261103
     Change description: v0.5.12 Updated module behavior and related support.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.6.0.1 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;
@@ -60,46 +63,46 @@ namespace Senparc.Xncf.Instraller.Pages
         private readonly IServiceProvider _serviceProvider;
         private readonly IStringLocalizer<InstallerResource> _localizer;
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the display name configured during installation.</summary>
         public string SystemName { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the initial administrator username.</summary>
         public string AdminUserName { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the initial administrator password.</summary>
         public string AdminPassword { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the selected database connection string.</summary>
         public string DbConnectionString { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the namespace used during installation.</summary>
         public string Namespace { get; set; }
+        /// <summary>Gets or sets the current installation wizard step.</summary>
         public int Step { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets modules requiring installation or update.</summary>
         public List<XncfRegisterDto> NeedModelList { get; set; }
 
 
         public MultipleDatabaseType MultipleDatabaseType { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the tenant context created during installation.</summary>
         public RequestTenantInfo CreatedRequestTenantInfo { get; set; }
 
+        /// <summary>Gets a value indicating whether tenant installation is active.</summary>
         public bool InstallingTenant { get; private set; }
+        /// <summary>Gets the tenant DTO produced during installation.</summary>
         public TenantInfoDto TenantInfoDto { get; private set; }
+        /// <summary>Gets or sets the tenant configuration rule.</summary>
         public TenantRule TenantRule { get; set; }
+        /// <summary>Gets or sets whether multi-tenant installation is enabled.</summary>
         public bool MultiTenantEnable { get; set; }
 
+        /// <summary>
+        /// Initializes the installation wizard page with account, installation,
+        /// and localization services.
+        /// </summary>
+        /// <param name="serviceProvider">The request service provider.</param>
+        /// <param name="accountService">The administrator account service.</param>
+        /// <param name="xncfModuleServiceEx">The module service used by installation support.</param>
+        /// <param name="installAppService">The application service that runs installation operations.</param>
+        /// <param name="localizer">The installer resource localizer.</param>
         public IndexModel(IServiceProvider serviceProvider,
             AdminUserInfoService accountService,
             XncfModuleServiceExtension xncfModuleServiceEx,
@@ -115,6 +118,13 @@ namespace Senparc.Xncf.Instraller.Pages
             TenantRule = SiteConfig.SenparcCoreSetting.TenantRule;
         }
 
+        /// <summary>
+        /// Loads the installer wizard or reconciles an already initialized system.
+        /// A local force-update request is handled as a module update operation.
+        /// </summary>
+        /// <param name="forceUpdateModule">Optional module assembly name for a local forced update.</param>
+        /// <param name="tenantId">Optional tenant identifier used by tenant installation flows.</param>
+        /// <returns>The installer page, a redirect, a force-update response, or a not-found result.</returns>
         public async Task<IActionResult> OnGetAsync(string forceUpdateModule,int tenantId=0)
         {
             Console.WriteLine("进入安装程序，检测是否需要初始化");
@@ -193,6 +203,16 @@ namespace Senparc.Xncf.Instraller.Pages
             }
         }
 
+        /// <summary>
+        /// Executes the first-install workflow after validating the installation marker,
+        /// schema state, and submitted options, then exposes the resulting administrator
+        /// and tenant information to the completion page.
+        /// </summary>
+        /// <param name="installRequestDto">The submitted installation options.</param>
+        /// <returns>
+        /// The installer page on success, an HTTP status result for validation or
+        /// infrastructure failures, or a maintenance redirect when schema upgrade is required.
+        /// </returns>
         public async Task<IActionResult> OnPostAsync([FromBody] InstallRequestDto installRequestDto)
         {
             if (!SiteConfig.IsInstalling || installRequestDto == null)
@@ -259,6 +279,14 @@ namespace Senparc.Xncf.Instraller.Pages
             return Page();
         }
 
+        /// <summary>
+        /// Returns default installer options while the system is still eligible for
+        /// first-time setup. Completed or already initialized systems are hidden.
+        /// </summary>
+        /// <returns>
+        /// A JSON response containing defaults, HTTP 404 for completed setup, a
+        /// maintenance redirect for schema upgrades, or HTTP 503 for unexpected failures.
+        /// </returns>
         public async Task<IActionResult> OnGetDefaultOptionsAsync()
         {
             if (SiteConfig.CheckInstallFinishedFileExisted())
@@ -291,6 +319,11 @@ namespace Senparc.Xncf.Instraller.Pages
             return new JsonResult(await _installAppService.GetInstallOptionsAsync());
         }
 
+        /// <summary>
+        /// Checks whether the full system configuration cache is available,
+        /// treating cache-provider failures as an uninitialized state.
+        /// </summary>
+        /// <returns><see langword="true"/> when a system configuration value is available.</returns>
         private bool IsSystemInitialized()
         {
             try

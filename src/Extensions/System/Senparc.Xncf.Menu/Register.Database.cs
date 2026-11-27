@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.14.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.14.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -33,11 +36,19 @@ namespace Senparc.Xncf.Menu
 
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
+        /// <summary>
+        /// Registers Menu database services used by menu persistence.
+        /// </summary>
+        /// <param name="services">The application service collection.</param>
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
 
         }
 
+        /// <summary>
+        /// Applies Menu Entity Framework Core model configuration.
+        /// </summary>
+        /// <param name="modelBuilder">The Entity Framework Core model builder.</param>
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
            

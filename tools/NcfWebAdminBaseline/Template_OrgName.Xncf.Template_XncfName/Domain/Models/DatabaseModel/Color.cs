@@ -12,6 +12,9 @@
     Modified by: Senparc - 20261124
     Change description: v1.1.15 Integrated localization, tooling, and runtime improvements across the module.
 
+    Modified by: Senparc - 20261127
+    Change description: v1.1.16 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -50,6 +53,13 @@ namespace Template_OrgName.Xncf.Template_XncfName
 
         private Color() { }
 
+        /// <summary>
+        /// Initializes a color from RGB channels; any negative channel requests
+        /// select generated channel values instead.
+        /// </summary>
+        /// <param name="red">The red channel, or a negative value to generate channels.</param>
+        /// <param name="green">The green channel, or a negative value to generate channels.</param>
+        /// <param name="blue">The blue channel, or a negative value to generate channels.</param>
         public Color(int red, int green, int blue)
         {
             if (red < 0 || green < 0 || blue < 0)
@@ -64,11 +74,22 @@ namespace Template_OrgName.Xncf.Template_XncfName
             }
         }
 
+        /// <summary>
+        /// Initializes a color and stores an additional sample note.
+        /// </summary>
+        /// <param name="red">The red channel.</param>
+        /// <param name="green">The green channel.</param>
+        /// <param name="blue">The blue channel.</param>
+        /// <param name="additionNote">The additional sample note.</param>
         public Color(int red, int green, int blue, string additionNote) : this(red, green, blue)
         {
             AdditionNote = additionNote;
         }
 
+        /// <summary>
+        /// Creates an entity from a color DTO.
+        /// </summary>
+        /// <param name="colorDto">The DTO containing RGB channel values.</param>
         public Color(ColorDto colorDto)
         {
             Red = colorDto.Red;
@@ -76,6 +97,9 @@ namespace Template_OrgName.Xncf.Template_XncfName
             Blue = colorDto.Blue;
         }
 
+        /// <summary>
+        /// Replaces all RGB channels with independently generated values.
+        /// </summary>
         public void Random()
         {
             //generate a random color code
@@ -86,6 +110,9 @@ namespace Template_OrgName.Xncf.Template_XncfName
             Blue = getRadomColorCode();
         }
 
+        /// <summary>
+        /// Raises each RGB channel by ten while capping values at 255.
+        /// </summary>
         public void Brighten()
         {
             Red = Math.Min(255, Red + 10);
@@ -93,6 +120,9 @@ namespace Template_OrgName.Xncf.Template_XncfName
             Blue = Math.Min(255, Blue + 10);
         }
 
+        /// <summary>
+        /// Lowers each RGB channel by ten while flooring values at zero.
+        /// </summary>
         public void Darken()
         {
             Red = Math.Max(0, Red - 10);
@@ -100,6 +130,10 @@ namespace Template_OrgName.Xncf.Template_XncfName
             Blue = Math.Max(0, Blue - 10);
         }
 
+        /// <summary>
+        /// Replaces RGB channels and the additional note from an update DTO.
+        /// </summary>
+        /// <param name="dto">The replacement color values.</param>
         public void Update(UpdateColorRequestDto dto)
         {
             Red = dto.Red;

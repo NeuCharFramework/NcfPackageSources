@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.39.9 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.39.10 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -21,20 +24,26 @@ using System.Collections.Concurrent;
 namespace Senparc.Web.Infrastructure.Security
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Tracks request counts in independent fixed time windows for a bounded
+    /// in-process rate-limit decision.
     /// </summary>
     public sealed class FixedWindowRateLimiter
     {
         private readonly ConcurrentDictionary<string, (long Window, long Count)> _store = new();
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Records one request for <paramref name="key"/> and determines whether
+        /// the key has exceeded the configured request limit in the current window.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// <param name="key">The identifier whose request count is incremented.</param>
+        /// <param name="now">The timestamp used to select the current fixed window.</param>
+        /// <param name="maxRequests">The maximum allowed requests in the current window.</param>
+        /// <param name="window">The fixed-window duration.</param>
+        /// <returns>
+        /// <see langword="true"/> when the incremented count exceeds
+        /// <paramref name="maxRequests"/>; otherwise, <see langword="false"/>.
+        /// Invalid or non-positive limits are treated as unrestricted.
+        /// </returns>
         public bool IsLimited(string key, DateTimeOffset now, int maxRequests, TimeSpan window)
         {
             if (string.IsNullOrEmpty(key) || maxRequests <= 0 || window <= TimeSpan.Zero)
@@ -69,9 +78,11 @@ namespace Senparc.Web.Infrastructure.Security
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Removes entries whose fixed window is older than the current window.
         /// </summary>
-        ///Legacy comment translated to English.
+        /// <param name="now">The timestamp used to identify the current window.</param>
+        /// <param name="window">The fixed-window duration.</param>
+        /// <returns>The number of stale keys removed.</returns>
         public int Prune(DateTimeOffset now, TimeSpan window)
         {
             if (window <= TimeSpan.Zero)

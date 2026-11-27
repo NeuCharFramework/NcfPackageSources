@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.13.16 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.13.16.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Service;
@@ -27,6 +30,9 @@ namespace Senparc.Xncf.AIAgentsHub.Areas.AIAgentsHub.Pages
 
         }
 
+        /// <summary>
+        /// Handles the initial GET request for the AI Agents Hub administration page.
+        /// </summary>
         public void OnGet()
         {
         }

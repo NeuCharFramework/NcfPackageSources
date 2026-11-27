@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -22,7 +25,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.MultiTenant
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Marks an entity or contract that must bypass ordinary tenant filtering.
     /// </summary>
     public interface IIgnoreMulitTenant
     {

@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +39,10 @@ namespace Senparc.Xncf.AIKernel.Models
 {
     public class AIKernelSenparcEntities : XncfDatabaseDbContext
     {
+        /// <summary>
+        /// Initializes the AIKernel database context.
+        /// </summary>
+        /// <param name="dbContextOptions">The EF Core context options.</param>
         public AIKernelSenparcEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {
         }

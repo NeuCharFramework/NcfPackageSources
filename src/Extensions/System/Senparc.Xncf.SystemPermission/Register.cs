@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.15.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.15.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -50,7 +53,7 @@ namespace Senparc.Xncf.SystemPermission
 
         public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_SYSTEM_PERMISSION_UID;// "00000000-0000-0000-0000-000000000003";
 
-        public override string Version => "0.2.0";//the version number is required
+        public override string Version => "0.15.14.2";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -58,19 +61,22 @@ namespace Senparc.Xncf.SystemPermission
 
         public override string Description => RegisterText.Description;
 
-        public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
+    /// <inheritdoc/>
+    public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //install or upgrade the database
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
         }
 
-        public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
+    /// <inheritdoc/>
+    public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             await unsinstallFunc().ConfigureAwait(false);
         }
         #endregion
 
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+    /// <inheritdoc/>
+    public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             return base.AddXncfModule(services, configuration, env);
         }

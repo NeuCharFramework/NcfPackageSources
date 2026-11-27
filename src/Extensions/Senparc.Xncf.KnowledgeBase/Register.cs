@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261125
     Change description: v0.8.4 Registered and localized KnowledgeBase chat-tool services.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -62,7 +65,7 @@ namespace Senparc.Xncf.KnowledgeBase
 
         public override string Uid => "CEAFC442-EE03-42EA-AD54-E607AD0C03A9";//Legacy comment translated to English.
 
-        public override string Version => "0.1.10";//the version number is required
+        public override string Version => "0.8.4.2";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -70,7 +73,8 @@ namespace Senparc.Xncf.KnowledgeBase
 
         public override string Description => RegisterText.Description;
 
-        public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
+    /// <inheritdoc/>
+    public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //update the database when installing or upgrading a version
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
@@ -93,7 +97,8 @@ namespace Senparc.Xncf.KnowledgeBase
             }
         }
 
-        public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
+    /// <inheritdoc/>
+    public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             #region Legacy section
 
@@ -111,7 +116,8 @@ namespace Senparc.Xncf.KnowledgeBase
         }
         #endregion
 
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+    /// <inheritdoc/>
+    public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddScoped<ColorAppService>();
             services.AddScoped<Domain.Services.KnowledgeBaseService>();

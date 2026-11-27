@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -25,17 +28,24 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Associates an administrator account with a role.
     /// </summary>
     [Table("SysRoleAdminUserInfos")]
     public class SysRoleAdminUserInfo : EntityBase<int>
     {
+        /// <summary>Initializes an empty role-account association.</summary>
         public SysRoleAdminUserInfo()
         {
             AddTime = DateTime.Now;
             LastUpdateTime = DateTime.Now;
         }
 
+        /// <summary>
+        /// Initializes a role-account association.
+        /// </summary>
+        /// <param name="accountId">The administrator account identifier.</param>
+        /// <param name="roleId">The role identifier.</param>
+        /// <param name="roleCode">The role code.</param>
         public SysRoleAdminUserInfo(int accountId, string roleId, string roleCode) : this()
         {
             AccountId = accountId;
@@ -47,7 +57,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public string RoleCode { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the administrator account identifier.
         /// </summary>
         public int AccountId { get; set; }
 

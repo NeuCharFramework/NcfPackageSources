@@ -26,6 +26,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -265,6 +268,12 @@ public class IndexModel(
         };
     }
 
+    /// <summary>
+    /// Projects a webhook delivery log entity into the JSON shape used by the
+    /// NeuBell webhook log table.
+    /// </summary>
+    /// <param name="item">The persisted webhook log entity.</param>
+    /// <returns>The JSON-ready log projection.</returns>
     private static object ToLogDto(NeuBellWebHookLog item)
     {
         return new

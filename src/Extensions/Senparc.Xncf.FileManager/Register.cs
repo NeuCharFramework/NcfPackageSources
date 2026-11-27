@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.5 Localized file management and upload surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.5.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -68,7 +71,7 @@ namespace Senparc.Xncf.FileManager
 
         public override string Uid => "BC7769FE-E094-4EAF-9B1F-D82670D1D691";//Legacy comment translated to English.
 
-        public override string Version => "0.7.3";//the version number is required
+        public override string Version => "0.8.5.2";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -76,7 +79,8 @@ namespace Senparc.Xncf.FileManager
 
         public override string Description => RegisterText.Description;
 
-        public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
+    /// <inheritdoc/>
+    public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //update the database when installing or upgrading a version
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
@@ -99,7 +103,8 @@ namespace Senparc.Xncf.FileManager
             }
         }
 
-        public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
+    /// <inheritdoc/>
+    public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             #region Legacy section
 
@@ -117,7 +122,8 @@ namespace Senparc.Xncf.FileManager
         }
         #endregion
 
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+    /// <inheritdoc/>
+    public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddScoped<ColorAppService>();
             services.AddScoped<IFileManagerGateway, NcfFileManagerGateway>();
@@ -130,7 +136,8 @@ namespace Senparc.Xncf.FileManager
             return base.AddXncfModule(services, configuration, env);
         }
 
-        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+    /// <inheritdoc/>
+    public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             app.UseStaticFiles(new StaticFileOptions
             {

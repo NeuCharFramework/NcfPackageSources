@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.25.1 Localized Weixin account and administration surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.25.1.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -25,7 +28,7 @@ using System.Text;
 namespace Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Persists the Weixin public-account user profile and subscription metadata.
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(WeixinUser))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
@@ -35,75 +38,78 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel
         public int MpAccountId { get; private set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the subscription state reported by Weixin.
         /// </summary>
         [Required]
         public int Subscribe { get; private set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the stable Weixin open identifier.
         /// </summary>
         [Required]
         public string OpenId { get; private set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the display nickname.
         /// </summary>
         [Required]
         public string NickName { get; private set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the numeric sex value reported by Weixin.
         /// </summary>
         [Required]
         public int Sex { get; private set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the preferred language reported by Weixin.
         /// </summary>
         public string Language { get; private set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the city reported by Weixin.
         /// </summary>
         public string City { get; private set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the province reported by Weixin.
         /// </summary>
         public string Province { get; private set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the country reported by Weixin.
         /// </summary>
         public string Country { get; private set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the avatar URL reported by Weixin.
         /// </summary>
         public string HeadImgUrl { get; private set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the Weixin subscription timestamp.
         /// </summary>
         public long Subscribe_Time { get; private set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the Weixin union identifier.
         /// </summary>
         public string UnionId { get; private set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the administrator remark.
         /// </summary>
         public string Remark { get; private set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the Weixin group identifier.
         /// </summary>
         public int Groupid { get; private set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the subscription source.
         /// </summary>
         public string Subscribe_Scene { get; private set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the numeric QR-scene identifier.
         /// </summary>
         public uint Qr_Scene { get; private set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the textual QR-scene value.
         /// </summary>
         public string Qr_Scene_Str { get; private set; }
 
+        /// <summary>
+        /// Reserved for EF Core materialization.
+        /// </summary>
         private WeixinUser()
         {
         }
@@ -130,12 +136,12 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel
         //}
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Gets the user-tag links associated with this Weixin user.
         /// </summary>
         public IList<UserTag_WeixinUser> UserTags_WeixinUsers { get; private set; } = new List<UserTag_WeixinUser>();
 
 
+        /// <summary>Updates the entity's last-update timestamp.</summary>
         public void UpdateTime()
         {
             SetUpdateTime();

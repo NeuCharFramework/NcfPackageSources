@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Utilities;
@@ -30,11 +33,21 @@ namespace Senparc.Ncf.Core.Config
     public partial class XmlConfig
     {
 
+        /// <summary>
+        /// Loads an XML document from a path resolved against the application content root.
+        /// </summary>
+        /// <param name="path">The application-relative XML path.</param>
+        /// <returns>The loaded XML root element.</returns>
         public static XElement GetXElement(string path)
         {
             return XElement.Load(ServerUtility.ContentRootMapPath(path));
         }
 
+        /// <summary>
+        /// Resolves an application-relative path against the content root.
+        /// </summary>
+        /// <param name="path">The application-relative path.</param>
+        /// <returns>The physical mapped path.</returns>
         public static string GetMapPath(string path)
         {
             return ServerUtility.ContentRootMapPath(path);

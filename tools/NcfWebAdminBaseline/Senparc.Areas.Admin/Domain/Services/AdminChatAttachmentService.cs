@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.12.29 Improved AdminChat, system log analysis, workflow commands, and workspace asset operations.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -54,6 +57,13 @@ public sealed class AdminChatAttachmentService
     private readonly WorkspaceOptions _options;
     private readonly ILogger<AdminChatAttachmentService> _logger;
 
+    /// <summary>
+    /// Initializes attachment validation, document extraction, and workspace storage services.
+    /// </summary>
+    /// <param name="services">The provider for workspace storage clients.</param>
+    /// <param name="documents">The document reader and extraction cache.</param>
+    /// <param name="options">Workspace size and upload limits.</param>
+    /// <param name="logger">The attachment operation logger.</param>
     public AdminChatAttachmentService(IServiceProvider services, WorkspaceDocumentReader documents, IOptions<WorkspaceOptions> options,
         ILogger<AdminChatAttachmentService> logger)
     {
@@ -66,6 +76,17 @@ public sealed class AdminChatAttachmentService
     public int UploadLimit => Math.Min(_documents.ReadLimit, _options.MaxFileWriteBytes);
     public long LargeUploadLimit => _options.MaxUploadFileBytes;
 
+    /// <summary>
+    /// Validates, reads, extracts, and stores a bounded attachment, optionally storing
+    /// a separately validated JPEG vision preview.
+    /// </summary>
+    /// <param name="session">The owner-scoped chat session and workspace.</param>
+    /// <param name="file">The uploaded attachment.</param>
+    /// <param name="visionPreview">Optional compressed vision preview for image files.</param>
+    /// <param name="cancellationToken">Token used to cancel upload and extraction.</param>
+    /// <returns>The attachment metadata persisted in the workspace.</returns>
+    /// <exception cref="ArgumentException">Thrown when name, size, type, or vision rules fail.</exception>
+    /// <exception cref="InvalidDataException">Thrown when file bytes do not match the declared extension.</exception>
     public async Task<AdminChatAttachment> UploadAsync(
         AdminChatSession session, IFormFile file, IFormFile visionPreview, CancellationToken cancellationToken)
     {
@@ -123,6 +144,14 @@ public sealed class AdminChatAttachmentService
         }
     }
 
+    /// <summary>
+    /// Streams a large supported attachment directly into workspace storage and
+    /// marks it for deferred processing.
+    /// </summary>
+    /// <param name="session">The owner-scoped chat session and workspace.</param>
+    /// <param name="file">The uploaded large attachment.</param>
+    /// <param name="cancellationToken">Token used to cancel streaming.</param>
+    /// <returns>Metadata for the deferred attachment.</returns>
     public async Task<AdminChatAttachment> UploadLargeAsync(
         AdminChatSession session, IFormFile file, CancellationToken cancellationToken)
     {
@@ -163,6 +192,14 @@ public sealed class AdminChatAttachmentService
         }
     }
 
+    /// <summary>
+    /// Deletes an uploaded attachment that has not yet been committed to a chat message,
+    /// enforcing ownership and optimistic ETag checks.
+    /// </summary>
+    /// <param name="session">The owner-scoped chat session.</param>
+    /// <param name="input">The attachment path and expected ETag.</param>
+    /// <param name="messages">Existing messages used to reject committed attachments.</param>
+    /// <param name="cancellationToken">Token used to cancel storage operations.</param>
     public async Task DeletePendingAsync(
         AdminChatSession session,
         AdminChatAttachmentInput input,
@@ -204,6 +241,14 @@ public sealed class AdminChatAttachmentService
             cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Validates attachment references against workspace metadata, extracts text when
+    /// within limits, and applies vision authorization and count restrictions.
+    /// </summary>
+    /// <param name="session">The owner-scoped chat session.</param>
+    /// <param name="inputs">The attachment references supplied by the caller.</param>
+    /// <param name="cancellationToken">Token used to cancel validation and extraction.</param>
+    /// <returns>Validated attachment metadata.</returns>
     public async Task<IReadOnlyList<AdminChatAttachment>> ValidateAsync(
         AdminChatSession session, IReadOnlyList<AdminChatAttachmentInput> inputs, CancellationToken cancellationToken = default)
     {
@@ -247,6 +292,14 @@ public sealed class AdminChatAttachmentService
         return result;
     }
 
+    /// <summary>
+    /// Validates the expected <c>uploads/{guid}/{file}</c> layout and returns
+    /// both the normalized file path and its upload directory.
+    /// </summary>
+    /// <param name="relativePath">The attachment workspace path.</param>
+    /// <param name="etag">The caller-observed ETag.</param>
+    /// <returns>The normalized file path and containing upload directory.</returns>
+    /// <exception cref="ArgumentException">Thrown when path layout or ETag validation fails.</exception>
     private static (string Path, string Directory) ValidateAttachmentPath(string relativePath, string etag)
     {
         var path = WorkspaceAssetPreviewBuilder.NormalizePath(relativePath);
@@ -263,6 +316,17 @@ public sealed class AdminChatAttachmentService
         return (path, path[..path.LastIndexOf('/')]);
     }
 
+    /// <summary>
+    /// Builds a user chat message containing explicitly authorized JPEG previews
+    /// for attachments marked for vision processing.
+    /// </summary>
+    /// <param name="sessionId">The chat session identifier.</param>
+    /// <param name="ownerId">The administrator owning the session.</param>
+    /// <param name="prompt">The user prompt accompanying the images.</param>
+    /// <param name="attachments">Validated attachment metadata.</param>
+    /// <param name="sessions">The session service used for ownership checks.</param>
+    /// <param name="cancellationToken">Token used to cancel workspace reads.</param>
+    /// <returns>A single user message containing text and authorized image content.</returns>
     public async Task<IList<ChatMessage>> BuildVisionMessagesAsync(
         int sessionId, int ownerId, string prompt, IReadOnlyList<AdminChatAttachment> attachments,
         AdminChatSessionService sessions, CancellationToken cancellationToken)
@@ -288,10 +352,21 @@ public sealed class AdminChatAttachmentService
         return new List<ChatMessage> { new(ChatRole.User, content) };
     }
 
+    /// <summary>
+    /// Creates a workspace client scoped to the session owner and attachment access policy.
+    /// </summary>
+    /// <param name="session">The owner-scoped chat session.</param>
+    /// <returns>A read-capable workspace client bounded by attachment limits.</returns>
     private IWorkspaceClient CreateClient(AdminChatSession session) => _services.GetRequiredService<IWorkspaceClientFactory>().Create(new WorkspaceAccessContext(
         session.WorkspaceId, new WorkspacePolicy(AllowRead: true, MaxBytes: UploadLimit),
         "AdminChatAttachments", session.UserId.ToString(), session.Id.ToString()));
 
+    /// <summary>
+    /// Normalizes and validates an uploaded file name and returns its lower-case extension.
+    /// </summary>
+    /// <param name="file">The uploaded form file.</param>
+    /// <returns>The safe file name and extension.</returns>
+    /// <exception cref="ArgumentException">Thrown when the file name is blank, unsafe, or oversized.</exception>
     private static (string Name, string Extension) ValidateFileName(IFormFile file)
     {
         var name = Path.GetFileName(file.FileName.Replace('\\', '/'));
@@ -300,9 +375,29 @@ public sealed class AdminChatAttachmentService
         return (name, Path.GetExtension(name).ToLowerInvariant());
     }
 
+    /// <summary>
+    /// Maps an uploaded attachment path to its sibling compressed vision-preview path.
+    /// </summary>
+    /// <param name="path">The uploaded attachment path.</param>
+    /// <returns>The hidden JPEG preview path.</returns>
     private static string VisionPath(string path) => path[..path.LastIndexOf('/')] + "/.vision.jpg";
+
+    /// <summary>
+    /// Determines whether an extension identifies an image eligible for vision preview.
+    /// </summary>
+    /// <param name="extension">The normalized extension.</param>
+    /// <returns><see langword="true"/> for supported image formats.</returns>
     private static bool IsImage(string extension) => extension is ".png" or ".jpg" or ".jpeg" or ".webp";
 
+    /// <summary>
+    /// Projects workspace file metadata and optional extracted document data into
+    /// the attachment contract shown to the chat UI.
+    /// </summary>
+    /// <param name="path">The workspace-relative path.</param>
+    /// <param name="metadata">The workspace file metadata.</param>
+    /// <param name="document">Optional extracted document data.</param>
+    /// <param name="deferredProcessing">Whether server-side extraction was deferred.</param>
+    /// <returns>The attachment metadata and processing notice.</returns>
     private static AdminChatAttachment Describe(
         string path, WorkspaceFileMetadata metadata, WorkspaceDocument document, bool deferredProcessing = false)
     {
@@ -328,6 +423,14 @@ public sealed class AdminChatAttachmentService
         };
     }
 
+    /// <summary>
+    /// Reads an uploaded form file into memory while enforcing the supplied byte limit.
+    /// </summary>
+    /// <param name="file">The uploaded form file.</param>
+    /// <param name="limit">The maximum allowed byte count.</param>
+    /// <param name="cancellationToken">Token used to cancel reading.</param>
+    /// <returns>The uploaded bytes.</returns>
+    /// <exception cref="ArgumentException">Thrown when the file is empty or exceeds the limit.</exception>
     private static async Task<byte[]> ReadUploadAsync(IFormFile file, int limit, CancellationToken cancellationToken)
     {
         if (file.Length <= 0 || file.Length > limit) throw new ArgumentException("上传文件超过允许大小。");
@@ -343,6 +446,12 @@ public sealed class AdminChatAttachmentService
         return memory.ToArray();
     }
 
+    /// <summary>
+    /// Validates that file bytes have a signature consistent with the normalized extension.
+    /// </summary>
+    /// <param name="bytes">The uploaded file bytes.</param>
+    /// <param name="extension">The normalized file extension.</param>
+    /// <exception cref="InvalidDataException">Thrown when the signature does not match.</exception>
     private static void ValidateSignature(byte[] bytes, string extension)
     {
         bool match = extension switch
@@ -362,6 +471,13 @@ public sealed class AdminChatAttachmentService
         if (!match) throw new InvalidDataException("文件内容与扩展名不符，已拒绝上传。");
     }
 
+    /// <summary>
+    /// Validates the JPEG signature, encoded size, and baseline/progressive dimensions
+    /// used for a vision preview.
+    /// </summary>
+    /// <param name="bytes">The JPEG preview bytes.</param>
+    /// <exception cref="ArgumentException">Thrown when size or dimensions exceed limits.</exception>
+    /// <exception cref="InvalidDataException">Thrown when JPEG structure cannot be validated.</exception>
     public static void ValidateVisionJpeg(byte[] bytes)
     {
         if (bytes.Length > MaxVisionBytes) throw new ArgumentException("视觉预览不能超过 512 KB。");

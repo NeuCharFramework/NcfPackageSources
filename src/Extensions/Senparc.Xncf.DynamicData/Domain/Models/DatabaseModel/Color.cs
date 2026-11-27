@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.7.12 Localized DynamicData configuration and layout surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.7.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -23,7 +26,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.DynamicData
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Stores an RGB color used by the DynamicData sample and configuration surfaces.
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(Color))]//a prefix is required to prevent system-wide conflicts
     [Serializable]

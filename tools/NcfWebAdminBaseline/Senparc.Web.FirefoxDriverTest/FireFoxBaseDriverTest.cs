@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+
+    Copyright (C) 2026 Senparc
+
+    File name: FireFoxBaseDriverTest.cs
+    File description: Senparc.Web.FirefoxDriverTest related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261127
+    Change description: v0.0.2 Improve source documentation, headers, and module metadata consistency.
+
+----------------------------------------------------------------*/
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
@@ -9,7 +23,7 @@ using System.Threading;
 namespace Senparc.Web.FirefoxDriverTest
 {
     /// <summary>
-    /// ui×Ô¶¯»¯²âÊÔ»ùÀà
+    /// uiè‡ªåŠ¨åŒ–æµ‹è¯•åŸºç±»
     /// </summary>
     [TestClass]
     public class FireFoxBaseDriverTest
@@ -21,17 +35,17 @@ namespace Senparc.Web.FirefoxDriverTest
         protected /*RemoteWebDriver*/ RemoteWebDriver _driver;
 
         /// <summary>
-        /// ½ØÍ¼Â·¾¶
+        /// æˆªå›¾è·¯å¾„
         /// </summary>
         private string screenShotPath;//"F:\\auto-test\\ncf";
 
         /// <summary>
-        /// ²½Öè
+        /// æ­¥éª¤
         /// </summary>
         private int step = 0;
 
         /// <summary>
-        /// NCFÏîÄ¿µØÖ·
+        /// NCFé¡¹ç›®åœ°å€
         /// </summary>
         const string webSite = "https://localhost:5001/Admin/Login";
 
@@ -40,13 +54,13 @@ namespace Senparc.Web.FirefoxDriverTest
         {
             // Initialize firefox driver 
             System.Text.CodePagesEncodingProvider.Instance.GetEncoding(437);
-            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);//×¢²á±àÂë
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);//æ³¨å†Œç¼–ç 
             var options = new FirefoxOptions
             {
                 PageLoadStrategy = PageLoadStrategy.Normal,
-                AcceptInsecureCertificates = true//ºöÂÔssl¾¯¸æ
+                AcceptInsecureCertificates = true//å¿½ç•¥sslè­¦å‘Š
             };
-            screenShotPath = System.IO.Path.Combine(Environment.CurrentDirectory, "screenShot\\", DateTime.Now.ToString("yyyyÄêMMÔÂddÈÕHHÊ±mm·Ö"));
+            screenShotPath = System.IO.Path.Combine(Environment.CurrentDirectory, "screenShot\\", DateTime.Now.ToString("yyyyå¹´MMæœˆddæ—¥HHæ—¶mmåˆ†"));
             if (!System.IO.Directory.Exists(screenShotPath))
             {
                 System.IO.Directory.CreateDirectory(screenShotPath);
@@ -56,22 +70,22 @@ namespace Senparc.Web.FirefoxDriverTest
         }
 
         /// <summary>
-        /// ³õÊ¼»¯Ò³Ãæ
+        /// åˆå§‹åŒ–é¡µé¢
         /// </summary>
         private void loadPage() => _driver.Url = webSite;
 
         /// <summary>
-        /// ²âÊÔ
+        /// æµ‹è¯•
         /// </summary>
         [TestMethod]
         public void VerifyPageTitle()
         {
-            captureScreenShot("µÇÂ¼Ò³Ãæ");
-            Assert.AreEqual("µÇÂ¼ NCF ¹ÜÀíºóÌ¨", _driver.Title);
+            captureScreenShot("ç™»å½•é¡µé¢");
+            Assert.AreEqual("ç™»å½• NCF ç®¡ç†åå°", _driver.Title);
         }
 
         /// <summary>
-        /// ÑéÖ¤µÇÂ¼Âß¼­
+        /// éªŒè¯ç™»å½•é€»è¾‘
         /// </summary>
         [TestMethod]
         public void VerifyLoginModule()
@@ -80,21 +94,21 @@ namespace Senparc.Web.FirefoxDriverTest
         }
 
         /// <summary>
-        /// ÑéÖ¤µÇÂ¼Âß¼­
+        /// éªŒè¯ç™»å½•é€»è¾‘
         /// </summary>
         public void _verifyLogin()
         {
-            string userName = "NCFAISys";//µÇÂ¼Ãû
-            string pwd = "fa41658ca004419c";//µÇÂ½ÃÜÂë
-            IWebElement loginInput = _driver.FindElementByCssSelector("div.el-form-item:nth-child(1) > div:nth-child(1) > div:nth-child(1) > input:nth-child(1)");//ÓÃ»§ÃûÊäÈë¿ò
-            IWebElement pwdInput = _driver.FindElementByCssSelector("div.el-form-item:nth-child(2) > div:nth-child(1) > div:nth-child(1) > input:nth-child(1)");//ÃÜÂëÊäÈë¿ò
-            IWebElement loginBtn = _driver.FindElementByCssSelector(".el-button");//µÇÂ¼°´Å¥
+            string userName = "NCFAISys";//ç™»å½•å
+            string pwd = "fa41658ca004419c";//ç™»é™†å¯†ç 
+            IWebElement loginInput = _driver.FindElementByCssSelector("div.el-form-item:nth-child(1) > div:nth-child(1) > div:nth-child(1) > input:nth-child(1)");//ç”¨æˆ·åè¾“å…¥æ¡†
+            IWebElement pwdInput = _driver.FindElementByCssSelector("div.el-form-item:nth-child(2) > div:nth-child(1) > div:nth-child(1) > input:nth-child(1)");//å¯†ç è¾“å…¥æ¡†
+            IWebElement loginBtn = _driver.FindElementByCssSelector(".el-button");//ç™»å½•æŒ‰é’®
             loginInput.SendKeys(userName);
             pwdInput.SendKeys(pwd);
             captureScreenShot();
-            loginBtn.Click();//µÇÂ¼°´Å¥clickÊÂ¼ş
+            loginBtn.Click();//ç™»å½•æŒ‰é’®clickäº‹ä»¶
             captureScreenShot();
-            Assert.AreEqual("¹ÜÀíÔ±ºóÌ¨Ê×Ò³", _driver.Title);
+            Assert.AreEqual("ç®¡ç†å‘˜åå°é¦–é¡µ", _driver.Title);
         }
 
         [TestCleanup]
@@ -104,9 +118,9 @@ namespace Senparc.Web.FirefoxDriverTest
         }
 
         /// <summary>
-        /// ½ØÍ¼²¢±£´æ
+        /// Captures a screenshot for the current browser step and stores it with an incrementing file name.
         /// </summary>
-        /// <param name="stepName"></param>
+        /// <param name="stepName">An optional label appended to the screenshot file name.</param>
         protected void captureScreenShot(string stepName = "")
         {
             Screenshot screenShot = _driver.GetScreenshot();

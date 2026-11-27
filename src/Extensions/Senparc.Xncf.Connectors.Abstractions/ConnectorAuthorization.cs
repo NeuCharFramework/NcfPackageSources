@@ -13,12 +13,15 @@
     Modified by: Senparc - 20261119
     Change description: v0.1.1 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.1.1.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Connectors.Abstractions;
 
 /// <summary>
-///Legacy comment translated to English.
+/// Provides the authorization predicate shared by connector invocation surfaces.
 /// </summary>
 public static class ConnectorAuthorization
 {

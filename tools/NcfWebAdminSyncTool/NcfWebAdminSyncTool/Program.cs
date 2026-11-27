@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.0.3 Improved bilingual sync tool messages, language selection, and ignore handling.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.0.4 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 using Microsoft.Extensions.Logging;
 
@@ -170,6 +173,12 @@ class Program
         }
     }
 
+    /// <summary>
+    /// Enumerates source files that are not ignored and synchronizes each one
+    /// into the corresponding relative path under the target directory.
+    /// </summary>
+    /// <param name="sourceDir">The source tree root.</param>
+    /// <param name="targetDir">The destination tree root.</param>
     static async Task SyncDirectoriesAsync(string sourceDir, string targetDir)
     {
         var sourceFiles = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories)
@@ -182,6 +191,12 @@ class Program
         }
     }
 
+    /// <summary>
+    /// Determines whether a path is excluded by relative fragments, folder names,
+    /// file names, extensions, solution patterns, or hidden-file rules.
+    /// </summary>
+    /// <param name="path">The candidate file or directory path.</param>
+    /// <returns><see langword="true"/> when the path must not be synchronized.</returns>
     static bool ShouldIgnore(string path)
     {
         var normalizedPath = path.Replace('\\', '/');
@@ -222,7 +237,11 @@ class Program
         return false;
     }
 
-    //Legacy comment translated to English.
+    /// <summary>
+    /// Synchronizes a template source tree using template-specific ignore rules.
+    /// </summary>
+    /// <param name="sourceDir">The template source root.</param>
+    /// <param name="targetDir">The template destination root.</param>
     static async Task SyncTemplateDirectoryAsync(string sourceDir, string targetDir)
     {
         var sourceFiles = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories)
@@ -238,7 +257,11 @@ class Program
         }
     }
 
-    //Legacy comment translated to English.
+    /// <summary>
+    /// Applies the reduced ignore policy used while copying a template tree.
+    /// </summary>
+    /// <param name="path">The candidate template path.</param>
+    /// <returns><see langword="true"/> when the path is excluded.</returns>
     static bool ShouldIgnoreForTemplate(string path)
     {
         //Legacy comment translated to English.
@@ -267,7 +290,13 @@ class Program
         return false;
     }
 
-    //Legacy comment translated to English.
+    /// <summary>
+    /// Copies one template file and rewrites template-specific registration
+    /// placeholders when the source file is a module registration file.
+    /// </summary>
+    /// <param name="sourceFile">The source file to process.</param>
+    /// <param name="sourceBaseDir">The source tree root used for relative paths.</param>
+    /// <param name="targetBaseDir">The destination tree root.</param>
     static async Task SyncTemplateFileAsync(string sourceFile, string sourceBaseDir, string targetBaseDir)
     {
         var relativePath = Path.GetRelativePath(sourceBaseDir, sourceFile);
@@ -384,7 +413,13 @@ class Program
         }
     }
 
-    //Legacy comment translated to English.
+    /// <summary>
+    /// Computes a line-oriented longest-common-subsequence diff between source
+    /// and target content, preserving unchanged context and additions/removals.
+    /// </summary>
+    /// <param name="sourceLines">The source file lines.</param>
+    /// <param name="targetLines">The target file lines.</param>
+    /// <returns>Diff entries marked as unchanged, added, or removed.</returns>
     static List<(string Line, char Type)> GetDiff(string[] sourceLines, string[] targetLines)
     {
         var diff = new List<(string Line, char Type)>();
@@ -440,6 +475,13 @@ class Program
         return tempDiff;
     }
 
+    /// <summary>
+    /// Prints a bounded colored comparison between two files and distinguishes
+    /// real content changes from timestamp-only differences.
+    /// </summary>
+    /// <param name="sourceFile">The source file path.</param>
+    /// <param name="targetFile">The target file path.</param>
+    /// <param name="contentSame">Whether the caller already determined content equality.</param>
     static void ShowFileDifference(string sourceFile, string targetFile, bool contentSame)
     {
         var sourceLines = File.ReadAllLines(sourceFile);
@@ -510,6 +552,13 @@ class Program
         Console.WriteLine("=".PadRight(50, '='));
     }
 
+    /// <summary>
+    /// Synchronizes one source file, applying the tool's timestamp/content
+    /// comparison and interactive conflict policy.
+    /// </summary>
+    /// <param name="sourceFile">The source file path.</param>
+    /// <param name="sourceBaseDir">The source tree root.</param>
+    /// <param name="targetBaseDir">The destination tree root.</param>
     static async Task SyncFileAsync(string sourceFile, string sourceBaseDir, string targetBaseDir)
     {
         var relativePath = Path.GetRelativePath(sourceBaseDir, sourceFile);
@@ -771,6 +820,12 @@ class Program
         Chinese
     }
 
+    /// <summary>
+    /// Removes a language option from command-line arguments and returns the
+    /// parsed language together with the remaining arguments.
+    /// </summary>
+    /// <param name="args">The original command-line arguments.</param>
+    /// <returns>The selected language and unconsumed arguments.</returns>
     static (UiLanguage? Lang, string[] RemainingArgs) ParseLanguageArgument(string[] args)
     {
         var remaining = new List<string>(args.Length);
@@ -801,6 +856,12 @@ class Program
         return (lang, remaining.ToArray());
     }
 
+    /// <summary>
+    /// Maps common English/Chinese language aliases to the tool UI language enum.
+    /// Unknown values fall back to English after displaying a warning.
+    /// </summary>
+    /// <param name="code">The language code supplied by the user.</param>
+    /// <returns>The selected UI language.</returns>
     static UiLanguage? ParseLanguageCode(string code)
     {
         if (code.Equals("en", StringComparison.OrdinalIgnoreCase)
@@ -823,6 +884,9 @@ class Program
         return UiLanguage.English;
     }
 
+    /// <summary>
+    /// Prompts for the bilingual UI language when no explicit language option was supplied.
+    /// </summary>
     static void ResolveLanguageInteractively()
     {
         // Language picker uses bilingual prompts so either audience can choose before M is set.
@@ -855,6 +919,12 @@ class Program
 // Extension method for File.Copy to support async operations
 public static class FileExtensions
 {
+    /// <summary>
+    /// Copies a file asynchronously using sequential streams.
+    /// </summary>
+    /// <param name="sourceFile">The source file path.</param>
+    /// <param name="destinationFile">The destination file path.</param>
+    /// <param name="overwrite">Whether the destination may be overwritten.</param>
     public static async Task CopyAsync(string sourceFile, string destinationFile, bool overwrite)
     {
         using var sourceStream = new FileStream(sourceFile, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.Asynchronous | FileOptions.SequentialScan);
@@ -862,6 +932,11 @@ public static class FileExtensions
         await sourceStream.CopyToAsync(destinationStream);
     }
 
+    /// <summary>
+    /// Calculates the lowercase hexadecimal MD5 digest of a file's bytes.
+    /// </summary>
+    /// <param name="filePath">The file path to read.</param>
+    /// <returns>The lowercase hexadecimal MD5 digest.</returns>
     public static async Task<string> CalculateMD5Async(string filePath)
     {
         using var md5 = System.Security.Cryptography.MD5.Create();

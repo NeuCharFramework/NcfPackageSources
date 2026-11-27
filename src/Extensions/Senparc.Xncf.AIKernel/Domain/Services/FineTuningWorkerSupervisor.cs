@@ -10,6 +10,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 #nullable enable
@@ -237,6 +240,11 @@ public sealed class FineTuningWorkerSupervisor : IHostedService, IDisposable
             session.DisposeProcess();
     }
 
+    /// <summary>
+    /// Discovers enabled auto-start workers across tenants and starts them best-effort.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to stop discovery/startup.</param>
+    /// <returns>A task that completes after discovery and attempted starts.</returns>
     private async Task AutoStartAsync(CancellationToken cancellationToken)
     {
         try
@@ -284,6 +292,12 @@ public sealed class FineTuningWorkerSupervisor : IHostedService, IDisposable
         private readonly string _apiKey;
         private Process? _process;
 
+        /// <summary>
+        /// Initializes an in-memory managed-worker process session.
+        /// </summary>
+        /// <param name="alias">The Worker alias.</param>
+        /// <param name="apiKey">The secret used for redaction.</param>
+        /// <param name="launch">The validated launch plan.</param>
         public Session(string alias, string apiKey, FineTuningWorkerLaunch launch)
         {
             Alias = alias;
@@ -303,6 +317,10 @@ public sealed class FineTuningWorkerSupervisor : IHostedService, IDisposable
             get { lock (_gate) return _logs.ToArray(); }
         }
 
+        /// <summary>
+        /// Starts the configured Python worker process and attaches bounded output readers.
+        /// </summary>
+        /// <exception cref="NcfExceptionBase">Thrown when the process cannot start.</exception>
         public void Start()
         {
             var info = new ProcessStartInfo
@@ -330,6 +348,11 @@ public sealed class FineTuningWorkerSupervisor : IHostedService, IDisposable
             Append("supervisor", $"process started pid={process.Id}");
         }
 
+        /// <summary>
+        /// Stops the managed process tree and waits up to the bounded shutdown timeout.
+        /// </summary>
+        /// <param name="cancellationToken">Token used to cancel the wait.</param>
+        /// <returns>A task that completes after the stop attempt.</returns>
         public async Task StopAsync(CancellationToken cancellationToken)
         {
             var process = _process;
@@ -350,6 +373,10 @@ public sealed class FineTuningWorkerSupervisor : IHostedService, IDisposable
             }
         }
 
+        /// <summary>
+        /// Copies current process, launch, error, and bounded log state into a status DTO.
+        /// </summary>
+        /// <param name="status">The status DTO to populate.</param>
         public void CopyTo(FineTuningManagedWorkerStatus status)
         {
             var process = _process;
@@ -382,6 +409,9 @@ public sealed class FineTuningWorkerSupervisor : IHostedService, IDisposable
             }
         }
 
+        /// <summary>
+        /// Terminates and disposes the managed process when present.
+        /// </summary>
         public void DisposeProcess()
         {
             try
@@ -399,8 +429,16 @@ public sealed class FineTuningWorkerSupervisor : IHostedService, IDisposable
             }
         }
 
+        /// <summary>
+        /// Disposes the managed process session.
+        /// </summary>
         public void Dispose() => DisposeProcess();
 
+        /// <summary>
+        /// Appends one redacted process log line while retaining only the bounded tail.
+        /// </summary>
+        /// <param name="channel">The source channel label.</param>
+        /// <param name="line">The output line.</param>
         private void Append(string channel, string? line)
         {
             if (string.IsNullOrEmpty(line))

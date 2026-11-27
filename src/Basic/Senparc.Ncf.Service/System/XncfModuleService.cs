@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.23.13-preview12 Updated service infrastructure and related localization metadata
 
+    Modified by: Senparc - 20261127
+    Change description: v0.23.13.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Cache;
@@ -31,16 +34,22 @@ namespace Senparc.Ncf.Service
 {
     public class XncfModuleService : ServiceBase<XncfModule>
     {
+        /// <summary>
+        /// Initializes the XNCF module service.
+        /// </summary>
+        /// <param name="repo">The repository for module entities.</param>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
         public XncfModuleService(IRepositoryBase<XncfModule> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
         }
 
         /// <summary>
-        /// checkandupdateversion
+        /// Compares persisted module metadata with the discovered assembly registration,
+        /// creating a new module record or updating its version metadata when needed.
         /// </summary>
-        /// <param name="storedDto"></param>
-        /// <param name="assemblyDto"></param>
-        /// <returns>returnwhetherneedaddorupdate</returns>
+        /// <param name="storedDto">The persisted module DTO, or <see langword="null"/> when not installed.</param>
+        /// <param name="assemblyDto">The registration metadata discovered from the assembly.</param>
+        /// <returns><see cref="InstallOrUpdate.Install"/> for a new module, <see cref="InstallOrUpdate.Update"/> for a version change, or <see langword="null"/> when unchanged.</returns>
         public async Task<InstallOrUpdate?> CheckAndUpdateVersionAsync(CreateOrUpdate_XncfModuleDto storedDto, UpdateVersion_XncfModuleDto assemblyDto)
         {
             if (storedDto == null)
@@ -66,10 +75,10 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Updates the persisted administration menu identifier for a module.
         /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
+        /// <param name="dto">The module UID and menu identifier.</param>
+        /// <exception cref="InvalidOperationException">Thrown when the module record cannot be found.</exception>
         public async Task UpdateMenuIdAsync(UpdateMenuId_XncfModuleDto dto)
         {
             var xncfModule = await base.GetObjectAsync(z => z.Uid == dto.Uid).ConfigureAwait(false);
@@ -77,6 +86,7 @@ namespace Senparc.Ncf.Service
             await SaveObjectAsync(xncfModule).ConfigureAwait(false);
         }
 
+        /// <inheritdoc />
         public override void SaveObject(XncfModule obj)
         {
             var isInsert = base.IsInsert(obj);
@@ -96,6 +106,7 @@ namespace Senparc.Ncf.Service
             }
         }
 
+        /// <inheritdoc />
         public override async Task SaveObjectAsync(XncfModule obj)
         {
             var isInsert = base.IsInsert(obj);
@@ -115,6 +126,7 @@ namespace Senparc.Ncf.Service
             }
         }
 
+        /// <inheritdoc />
         public override void DeleteObject(XncfModule obj)
         {
             obj.Flag = true;
@@ -130,6 +142,7 @@ namespace Senparc.Ncf.Service
             }
         }
 
+        /// <inheritdoc />
         public override async Task DeleteObjectAsync(XncfModule obj)
         {
             obj.Flag = true;

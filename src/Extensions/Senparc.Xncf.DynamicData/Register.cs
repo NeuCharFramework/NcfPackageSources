@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.7.12 Localized DynamicData configuration and layout surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.7.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -60,7 +63,7 @@ namespace Senparc.Xncf.DynamicData
 
         public override string Uid => "9448D9BA-5DF5-4AF1-8419-1BAB85BE589E";//Legacy comment translated to English.
 
-        public override string Version => "0.1.0";//the version number is required
+        public override string Version => "0.7.12.2";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -68,7 +71,8 @@ namespace Senparc.Xncf.DynamicData
 
         public override string Description => RegisterText.Description;
 
-        public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
+    /// <inheritdoc/>
+    public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //update the database when installing or upgrading a version
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
@@ -91,7 +95,8 @@ namespace Senparc.Xncf.DynamicData
             }
         }
 
-        public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
+    /// <inheritdoc/>
+    public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             #region Legacy section
 
@@ -109,7 +114,8 @@ namespace Senparc.Xncf.DynamicData
         }
         #endregion
 
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+    /// <inheritdoc/>
+    public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddScoped<ColorAppService>();
             services.AddScoped<TableMetadataService>();
@@ -126,7 +132,8 @@ namespace Senparc.Xncf.DynamicData
             });
             return base.AddXncfModule(services, configuration, env);
         }
-        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+    /// <inheritdoc/>
+    public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             app.UseStaticFiles(new StaticFileOptions
             {

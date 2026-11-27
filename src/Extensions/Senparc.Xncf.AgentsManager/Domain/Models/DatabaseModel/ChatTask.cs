@@ -23,6 +23,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -36,6 +39,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
 {
     [Table(Register.DATABASE_PREFIX + nameof(ChatTask))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
+    /// <summary>
+    /// Persists one Agent-group execution task, its execution policy snapshot, lifecycle state,
+    /// and hook/result metadata.
+    /// </summary>
     public class ChatTask : EntityBase<int>
     {
         [Required, MaxLength(150)]
@@ -77,9 +84,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
 
         public bool Score { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets whether the task has been archived from ordinary views.</summary>
         [Required]
         public bool IsArchived { get; private set; }
 
@@ -88,25 +93,23 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
         [Required]
         public DateTime EndTime { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the final result or diagnostic comment.</summary>
         public string ResultComment { get; private set; }
 
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the hook platform used for task delivery.</summary>
         [Required]
         public HookPlatform HookPlatform { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the hook platform parameter.</summary>
         public string HookPlatformParameter { get; private set; }
 
+        /// <summary>
+        /// Reserved for EF Core materialization.
+        /// </summary>
         private ChatTask() { }
 
+        /// <summary>Initializes a task from its execution and hook settings.</summary>
         public ChatTask(string name, int chatGroupId, int aiModelId, ChatTask_Status status, string promptCommand, string description, bool isPersonality, HookPlatform hookPlatform, string hookPlatformParameter, bool score, DateTime startTime, DateTime endTime, string resultComment)
         {
             Name = name;
@@ -125,6 +128,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
             IsArchived = false;
         }
 
+        /// <summary>Initializes a task from its DTO.</summary>
+        /// <param name="chatTaskDto">The task values to copy.</param>
         public ChatTask(ChatTaskDto chatTaskDto)
         {
             Name = chatTaskDto.Name;
@@ -150,6 +155,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
             IsArchived = chatTaskDto.IsArchived;
         }
 
+        /// <summary>
+        /// Changes the lifecycle status and records an end time for terminal statuses.
+        /// </summary>
+        /// <param name="status">The new task status.</param>
         public void ChangeStatus(ChatTask_Status status)
         {
             Status = status;
@@ -161,6 +170,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
             }
         }
 
+        /// <summary>Changes whether the task is archived.</summary>
+        /// <param name="isArchived">Whether the task should be archived.</param>
         public void SetArchived(bool isArchived)
         {
             IsArchived = isArchived;
@@ -168,6 +179,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
 
     }
 
+    /// <summary>Identifies the lifecycle state of an Agent-group task.</summary>
     public enum ChatTask_Status
     {
         Waiting = 0,

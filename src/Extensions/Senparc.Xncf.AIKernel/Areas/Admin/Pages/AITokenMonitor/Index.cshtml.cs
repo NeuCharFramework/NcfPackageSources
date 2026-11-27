@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -29,11 +32,19 @@ namespace Senparc.Xncf.AIKernel.Areas.AITokenMonitor.Pages
     {
         private readonly AITokenUsageService aITokenUsage;
 
+        /// <summary>
+        /// Initializes the AI token monitor page.
+        /// </summary>
+        /// <param name="xncfModuleService">The lazy XNCF module service.</param>
+        /// <param name="aITokenUsage">The token usage service.</param>
         public Index(Lazy<XncfModuleService> xncfModuleService, AITokenUsageService aITokenUsage) : base(xncfModuleService)
         {
             this.aITokenUsage = aITokenUsage;
         }
 
+        /// <summary>
+        /// Initializes the token monitor page request.
+        /// </summary>
         public void OnGet()
         {
         }

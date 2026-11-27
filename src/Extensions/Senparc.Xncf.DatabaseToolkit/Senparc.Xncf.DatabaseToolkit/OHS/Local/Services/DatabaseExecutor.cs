@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.27.13 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.27.13.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -128,6 +131,12 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
             };
         }
 
+        /// <summary>
+        /// Loads all rows for a reflected entity service, optionally applying a string-property filter.
+        /// </summary>
+        /// <param name="entityType">The entity CLR type.</param>
+        /// <param name="filter">Optional filter text.</param>
+        /// <returns>Materialized entity rows.</returns>
         private async Task<List<object>> GetAllRowsAsync(Type entityType, string filter = null)
         {
             var serviceType = typeof(ServiceBase<>).MakeGenericType(entityType);
@@ -166,6 +175,14 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
             return result?.Cast<object>().ToList() ?? new List<object>();
         }
 
+        /// <summary>
+        /// Loads a filtered page through the reflected ServiceBase paging overload.
+        /// </summary>
+        /// <param name="entityType">The entity CLR type.</param>
+        /// <param name="filter">Optional string-property filter.</param>
+        /// <param name="pageNumber">The requested page number.</param>
+        /// <param name="pageSize">The requested page size.</param>
+        /// <returns>Materialized rows and database-reported total count.</returns>
         private async Task<(List<object> Rows, int Total)> GetPagedRowsAsync(
             Type entityType,
             string filter,
@@ -209,11 +226,22 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
             return (rows, total);
         }
 
+        /// <summary>
+        /// Creates a predicate that accepts every entity.
+        /// </summary>
+        /// <typeparam name="T">The entity type.</typeparam>
+        /// <returns>An always-true predicate.</returns>
         private static Expression<Func<T, bool>> AlwaysTrue<T>()
         {
             return _ => true;
         }
 
+        /// <summary>
+        /// Builds a closed generic string-property predicate for a reflected entity type.
+        /// </summary>
+        /// <param name="entityType">The entity CLR type.</param>
+        /// <param name="filter">The filter text.</param>
+        /// <returns>An expression object compatible with the entity service.</returns>
         private static object BuildFilterPredicate(Type entityType, string filter)
         {
             return typeof(DatabaseExecutor)
@@ -222,6 +250,12 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
                 ?.Invoke(null, new object[] { filter });
         }
 
+        /// <summary>
+        /// Builds an OR predicate across all readable string properties of <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The entity type.</typeparam>
+        /// <param name="filter">The filter text.</param>
+        /// <returns>An always-true predicate for blank input, otherwise a string contains predicate.</returns>
         private static Expression<Func<T, bool>> BuildFilterPredicateGeneric<T>(string filter)
         {
             if (string.IsNullOrWhiteSpace(filter))
@@ -246,6 +280,11 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
             return Expression.Lambda<Func<T, bool>>(body, parameter);
         }
 
+        /// <summary>
+        /// Resolves a type by assembly-qualified name or by searching loaded assemblies.
+        /// </summary>
+        /// <param name="fullTypeName">The type name to resolve.</param>
+        /// <returns>The resolved type, or <see langword="null"/> when unavailable.</returns>
         private static Type ResolveType(string fullTypeName)
         {
             if (string.IsNullOrWhiteSpace(fullTypeName))

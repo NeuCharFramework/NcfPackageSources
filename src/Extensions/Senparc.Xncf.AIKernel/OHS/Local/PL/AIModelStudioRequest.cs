@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -53,7 +56,11 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         [LocalizedDescription(typeof(AIKernelResource), "Parameter.AI.Prompt")]
         public string Prompt { get; set; }
 
-        public override async Task LoadData(IServiceProvider serviceProvider)
+    /// <inheritdoc />
+    /// <remarks>
+    /// Loads the model choices needed by the AI model studio request editor.
+    /// </remarks>
+    public override async Task LoadData(IServiceProvider serviceProvider)
         {
             try
             {
@@ -111,6 +118,12 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
             public string DisplayText => $"{ModelAlias} - {SenparcAiSetting.AiPlatform} ({SenparcAiSetting.Endpoint})";
             public ISenparcAiSetting SenparcAiSetting { get; set; }
 
+            /// <summary>
+            /// Initializes one model selection item with its source metadata.
+            /// </summary>
+            /// <param name="modelAlias">The selectable model alias.</param>
+            /// <param name="senparcAiSetting">The model settings bound to the selection.</param>
+            /// <param name="from">The source display label.</param>
             public ModelItem(string modelAlias, ISenparcAiSetting senparcAiSetting, string from)
             {
                 ModelAlias = modelAlias;

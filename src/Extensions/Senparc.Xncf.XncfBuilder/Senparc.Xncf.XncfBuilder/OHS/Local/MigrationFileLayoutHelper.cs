@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.42.0.0 add MCP endpoint gateway and tool invocation contracts
+
 ----------------------------------------------------------------*/
 
 using Microsoft.CodeAnalysis;
@@ -359,6 +362,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 .FirstOrDefault(value => !string.IsNullOrWhiteSpace(value) && !value.Contains("$(", StringComparison.Ordinal));
         }
 
+        /// <summary>
+        /// Enumerates EF model snapshot files below a project while excluding
+        /// build, generated, and repository metadata directories.
+        /// </summary>
+        /// <param name="projectDirectory">The project root to search.</param>
+        /// <returns>Candidate model snapshot source paths.</returns>
         private static IEnumerable<string> EnumerateSnapshotFiles(string projectDirectory)
         {
             return Directory
@@ -366,6 +375,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 .Where(path => !ContainsIgnoredDirectory(projectDirectory, path));
         }
 
+        /// <summary>
+        /// Determines whether a snapshot path contains a directory excluded from migration handling.
+        /// </summary>
+        /// <param name="projectDirectory">The project root.</param>
+        /// <param name="path">The candidate snapshot path.</param>
+        /// <returns><see langword="true"/> when an ignored directory appears in the relative path.</returns>
         private static bool ContainsIgnoredDirectory(string projectDirectory, string path)
         {
             var relativePath = Path.GetRelativePath(projectDirectory, path);
@@ -375,6 +390,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 .Any(IgnoredDirectoryNames.Contains);
         }
 
+        /// <summary>
+        /// Parses a model snapshot and extracts its namespace, class, and DbContext metadata.
+        /// </summary>
+        /// <param name="path">The snapshot source path.</param>
+        /// <returns>Snapshot metadata, or <see langword="null"/> when no ModelSnapshot class is found.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when a snapshot lacks a namespace.</exception>
         private static SnapshotSourceInfo TryReadSnapshot(string path)
         {
             var bytes = File.ReadAllBytes(path);
@@ -431,6 +452,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             return null;
         }
 
+        /// <summary>
+        /// Gets the final simple identifier from a Roslyn syntax node.
+        /// </summary>
+        /// <param name="syntaxNode">The syntax node.</param>
+        /// <returns>The final identifier text.</returns>
         private static string GetSimpleName(SyntaxNode syntaxNode)
         {
             return syntaxNode.DescendantNodesAndSelf()
@@ -439,6 +465,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                    ?? syntaxNode.ToString().Split('.').Last();
         }
 
+        /// <summary>
+        /// Rewrites a parsed snapshot namespace and preserves its BOM style.
+        /// </summary>
+        /// <param name="snapshot">The parsed snapshot metadata.</param>
+        /// <param name="expectedNamespace">The target namespace.</param>
+        /// <exception cref="InvalidOperationException">Thrown when namespace syntax is unsupported.</exception>
         private static void RewriteNamespace(SnapshotSourceInfo snapshot, string expectedNamespace)
         {
             BaseNamespaceDeclarationSyntax replacement = snapshot.NamespaceDeclaration switch

@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.42.0.0 add MCP endpoint gateway and tool invocation contracts
+
 ----------------------------------------------------------------*/
 
 using Senparc.Xncf.XncfBuilder.Domain.Services.Preview;
@@ -49,6 +52,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
             XncfPreviewStage.Running
         };
 
+        /// <summary>
+        /// Returns display definitions for every preview stage.
+        /// </summary>
+        /// <returns>The stage definitions ordered by enum value.</returns>
         public static IReadOnlyList<XncfPreviewStageDefinition> GetStageDefinitions()
         {
             return Enum.GetValues<XncfPreviewStage>()
@@ -56,11 +63,20 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
                 .ToArray();
         }
 
+        /// <summary>
+        /// Returns display definitions for the normal preview pipeline stages.
+        /// </summary>
+        /// <returns>The ordered pipeline-stage definitions.</returns>
         public static IReadOnlyList<XncfPreviewStageDefinition> GetPipelineStageDefinitions()
         {
             return PipelineStages.Select(CreateDefinition).ToArray();
         }
 
+        /// <summary>
+        /// Resolves the localized label for a preview stage.
+        /// </summary>
+        /// <param name="stage">The stage to label.</param>
+        /// <returns>The localized stage label.</returns>
         public static string GetStageLabel(XncfPreviewStage stage)
         {
             return XncfBuilderResource.Get(
@@ -68,6 +84,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
                 stage.ToString());
         }
 
+        /// <summary>
+        /// Returns localized definitions for every preview host status.
+        /// </summary>
+        /// <returns>The host-status definitions ordered by enum value.</returns>
         public static IReadOnlyList<XncfPreviewHostStatusDefinition> GetHostStatusDefinitions()
         {
             return Enum.GetValues<XncfPreviewHostStatus>()
@@ -78,6 +98,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
                 .ToArray();
         }
 
+        /// <summary>
+        /// Resolves the localized label for a preview host status.
+        /// </summary>
+        /// <param name="status">The host status to label.</param>
+        /// <returns>The localized host-status label.</returns>
         public static string GetHostStatusLabel(XncfPreviewHostStatus status)
         {
             return XncfBuilderResource.Get(
@@ -85,6 +110,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
                 status.ToString());
         }
 
+        /// <summary>
+        /// Creates one stage definition including progress and terminal-state metadata.
+        /// </summary>
+        /// <param name="stage">The stage to describe.</param>
+        /// <returns>The stage definition.</returns>
         private static XncfPreviewStageDefinition CreateDefinition(XncfPreviewStage stage)
         {
             return new XncfPreviewStageDefinition(

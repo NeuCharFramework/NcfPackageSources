@@ -6,6 +6,9 @@
 
     Created by: Senparc - 20261125
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.OHS.Local.AppService;
@@ -17,6 +20,11 @@ namespace Senparc.Areas.Admin;
 
 public partial class Register : IChatTool
 {
+    /// <summary>
+    /// Returns the command definition that exposes the bounded system-log analysis workflow
+    /// and associates its three analysis functions with AdminChat.
+    /// </summary>
+    /// <returns>The registered AdminChat command definitions for this module.</returns>
     public IReadOnlyCollection<ChatToolDefinition> GetChatTools()
     {
         return new[]

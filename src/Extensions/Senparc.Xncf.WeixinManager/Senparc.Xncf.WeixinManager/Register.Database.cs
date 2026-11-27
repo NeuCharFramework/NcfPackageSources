@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.25.1 Localized Weixin account and administration surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.25.1.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -36,6 +39,10 @@ namespace Senparc.Xncf.WeixinManager
     {
         #region Legacy section
 
+        /// <summary>
+        /// Applies Weixin account, user, tag, and WeixinClaw entity mappings.
+        /// </summary>
+        /// <param name="modelBuilder">The Entity Framework Core model builder.</param>
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UserTag_WeixinUserConfigurationMapping());
@@ -47,6 +54,10 @@ namespace Senparc.Xncf.WeixinManager
             modelBuilder.ApplyConfiguration(new WeixinClawBindingProfileConfigurationMapping());
         }
 
+        /// <summary>
+        /// Registers Weixin DTOs and database-related services required by the module.
+        /// </summary>
+        /// <param name="services">The application service collection.</param>
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
             //services.AddScoped<MpAccount>();

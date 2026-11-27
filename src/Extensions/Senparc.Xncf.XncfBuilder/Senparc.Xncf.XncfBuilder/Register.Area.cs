@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.42.0.0 add MCP endpoint gateway and tool invocation contracts
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -37,6 +40,14 @@ namespace Senparc.Xncf.XncfBuilder
                 "fa fa-dashboard")
         };
 
+        /// <summary>
+        /// Configures Razor Pages for the XNCF Builder area. The current module
+        /// does not add additional page conventions and returns the supplied builder
+        /// with the area's page services registered.
+        /// </summary>
+        /// <param name="builder">The MVC builder being configured.</param>
+        /// <param name="env">The host environment used by the area contract.</param>
+        /// <returns>The MVC builder with XNCF Builder Razor Pages enabled.</returns>
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
             return builder.AddRazorPagesOptions(_ => { });

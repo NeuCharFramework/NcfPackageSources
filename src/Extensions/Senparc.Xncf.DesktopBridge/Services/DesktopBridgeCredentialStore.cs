@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.12 Localized DesktopBridge pairing and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System.Security.Cryptography;
@@ -272,6 +275,11 @@ public sealed class DesktopBridgeCredentialStore
         }
     }
 
+    /// <summary>
+    /// Publishes a best-effort NeuBell change notification after pairing or
+    /// session state changes. Completed notifications are ignored; asynchronous
+    /// failures are observed without changing the already committed store state.
+    /// </summary>
     private void NotifyNeuBellChanged()
     {
         if (_neuBellPublisher == null)
@@ -383,6 +391,10 @@ public sealed class DesktopBridgeCredentialStore
         }
     }
 
+    /// <summary>
+    /// Removes expired pairing/session records while the store lock is held.
+    /// </summary>
+    /// <param name="now">The current UTC timestamp used for expiry comparison.</param>
     private void CleanupExpiredLocked(DateTimeOffset now)
     {
         foreach (var requestId in _pendingPairings
@@ -405,6 +417,10 @@ public sealed class DesktopBridgeCredentialStore
         }
     }
 
+    /// <summary>
+    /// Generates a unique human-readable device code while the store lock is held.
+    /// </summary>
+    /// <returns>A grouped device code using the configured alphabet.</returns>
     private string CreateUniqueDeviceCodeLocked()
     {
         Span<char> characters = stackalloc char[12];
@@ -423,10 +439,26 @@ public sealed class DesktopBridgeCredentialStore
         return code;
     }
 
+    /// <summary>
+    /// Creates a cryptographically random URL-safe pairing/session token.
+    /// </summary>
+    /// <returns>A base64url-encoded 32-byte token.</returns>
     private static string CreateToken() => WebEncoders.Base64UrlEncode(RandomNumberGenerator.GetBytes(32));
 
+    /// <summary>
+    /// Hashes a token for constant-time storage and comparison.
+    /// </summary>
+    /// <param name="token">The token to hash.</param>
+    /// <returns>The SHA-256 digest.</returns>
     private static byte[] HashToken(string token) => SHA256.HashData(Encoding.UTF8.GetBytes(token));
 
+    /// <summary>
+    /// Trims a user-facing value, applies a fallback, and enforces a maximum length.
+    /// </summary>
+    /// <param name="value">The supplied value.</param>
+    /// <param name="fallback">The value used when input is blank.</param>
+    /// <param name="maximumLength">The maximum retained length.</param>
+    /// <returns>The normalized bounded value.</returns>
     private static string Normalize(string? value, string fallback, int maximumLength)
     {
         var normalized = string.IsNullOrWhiteSpace(value) ? fallback : value.Trim();
@@ -442,6 +474,16 @@ public sealed class DesktopBridgeCredentialStore
 
     private sealed class PendingPairing
     {
+        /// <summary>
+        /// Initializes one pending desktop pairing request.
+        /// </summary>
+        /// <param name="requestId">The pairing request identifier.</param>
+        /// <param name="deviceCode">The human-readable device code.</param>
+        /// <param name="clientName">The normalized client name.</param>
+        /// <param name="remoteAddress">The originating remote address.</param>
+        /// <param name="pollSecretHash">The hashed polling secret.</param>
+        /// <param name="createdAt">The creation timestamp.</param>
+        /// <param name="expiresAt">The expiration timestamp.</param>
         public PendingPairing(
             Guid requestId,
             string deviceCode,
@@ -475,6 +517,16 @@ public sealed class DesktopBridgeCredentialStore
 
     private sealed class SessionCredential
     {
+        /// <summary>
+        /// Initializes an approved desktop session credential.
+        /// </summary>
+        /// <param name="sessionId">The session identifier.</param>
+        /// <param name="clientName">The normalized client name.</param>
+        /// <param name="remoteAddress">The originating remote address.</param>
+        /// <param name="approvedBy">The administrator approval identity.</param>
+        /// <param name="tokenHash">The session token digest.</param>
+        /// <param name="approvedAt">The approval timestamp.</param>
+        /// <param name="expiresAt">The expiration timestamp.</param>
         public SessionCredential(
             Guid sessionId,
             string clientName,
@@ -516,6 +568,9 @@ public sealed record DesktopBridgePairingPollResult(
 
 public sealed class DesktopBridgePairingRateLimitException : Exception
 {
+    /// <summary>
+    /// Initializes the standard desktop pairing rate-limit exception.
+    /// </summary>
     public DesktopBridgePairingRateLimitException()
         : base("Pairing requests are being sent too frequently. Try again later.")
     {

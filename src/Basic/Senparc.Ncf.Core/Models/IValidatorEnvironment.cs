@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;
@@ -24,13 +27,11 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Exposes request validation state to services that need to add model errors.
     /// </summary>
     public interface IValidatorEnvironment
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the current MVC model-state dictionary.</summary>
         ModelStateDictionary ModelState { get; }
 
         /// <summary>

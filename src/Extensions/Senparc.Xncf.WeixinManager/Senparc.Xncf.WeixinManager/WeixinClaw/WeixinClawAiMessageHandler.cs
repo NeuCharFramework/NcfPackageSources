@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.25.1 Localized Weixin account and administration surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.25.1.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -118,6 +121,12 @@ public sealed class WeixinClawAiMessageHandler : IWeixinClawMessageHandler
         }
     }
 
+    /// <summary>
+    /// Resolves or creates the cached AI execution kernel for one account/user/prompt combination.
+    /// </summary>
+    /// <param name="account">The WeixinClaw account configuration.</param>
+    /// <param name="context">The inbound message context.</param>
+    /// <returns>The configured AI execution kernel.</returns>
     private async Task<IWantToRun> GetOrCreateIWantToRunAsync(WeixinClawAccount account, WeixinClawMessageReceivedContext context)
     {
         //Legacy comment translated to English.

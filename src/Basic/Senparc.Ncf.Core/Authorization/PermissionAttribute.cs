@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authorization;
@@ -21,17 +24,16 @@ using Microsoft.AspNetCore.Mvc;
 namespace Senparc.Ncf.Core.Authorization
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Applies one or more comma-separated resource codes to an MVC action or controller.
     /// </summary>
     public class PermissionAttribute : TypeFilterAttribute
     {
         //public string[] Codes { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Initializes a permission filter with the requested resource codes.
         /// </summary>
-        ///Legacy comment translated to English.
+        /// <param name="codes">Comma-separated resource codes required by the action.</param>
         public PermissionAttribute(string codes)
             : base(typeof(PermissionFilterAttribute))
         {

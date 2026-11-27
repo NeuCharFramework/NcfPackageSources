@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -27,7 +30,7 @@ namespace Senparc.Ncf.Core.Models
     public interface IMultiTenancy
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the tenant identifier owning the current entity or request.
         /// </summary>
         public int TenantId { get; set; }
     }

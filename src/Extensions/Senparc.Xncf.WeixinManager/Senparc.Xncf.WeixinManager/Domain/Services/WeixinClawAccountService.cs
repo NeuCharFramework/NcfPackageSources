@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.25.1 Localized Weixin account and administration surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.25.1.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.DataProtection;
@@ -186,6 +189,11 @@ public class WeixinClawAccountService : ServiceBase<WeixinClawAccount>, IService
         }
     }
 
+    /// <summary>
+    /// Trims a token and removes an optional Bearer scheme prefix.
+    /// </summary>
+    /// <param name="token">The stored or supplied token.</param>
+    /// <returns>The normalized token value.</returns>
     private static string NormalizeToken(string token)
     {
         var value = token?.Trim();

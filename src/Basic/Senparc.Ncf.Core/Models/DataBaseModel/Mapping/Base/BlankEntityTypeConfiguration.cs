@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -24,16 +27,13 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides an intentionally empty EF Core configuration for an entity type.
     /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
+    /// <typeparam name="TEntity">The entity type being configured.</typeparam>
     public class BlankEntityTypeConfiguration<TEntity> : IEntityTypeConfiguration<TEntity>
          where TEntity : class
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        ///Legacy comment translated to English.
+        /// <inheritdoc />
         public void Configure(EntityTypeBuilder<TEntity> builder)
         {
             

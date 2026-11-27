@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.3.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.3.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 using System;
 using System.IO;
@@ -31,13 +34,13 @@ using Senparc.Xncf.Accounts.Domain.Services;
 
 namespace Senparc.Xncf.Accounts.Domain.OperationQueue
 {
+    /// <summary>Implements deferred account-avatar download and update operations.</summary>
     public class OperationQueueService
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="picUrl"></param>
-        /// <param name="fileName"></param>
+        /// <summary>Downloads a remote avatar image to an application-relative path.</summary>
+        /// <param name="picUrl">The remote image URL.</param>
+        /// <param name="fileName">The destination path.</param>
+        /// <exception cref="IOException">Thrown when the destination cannot be written.</exception>
         public async Task DownLoadPicAsync(string picUrl, string fileName)
         {
             using (MemoryStream stream = new MemoryStream())
@@ -53,11 +56,12 @@ namespace Senparc.Xncf.Accounts.Domain.OperationQueue
             }
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="accountId"></param>
-        /// <returns></returns>
+        /// <summary>Downloads and persists a user's avatar image.</summary>
+        /// <param name="serviceProvider">The scoped service provider.</param>
+        /// <param name="accountId">The account identifier.</param>
+        /// <param name="headImgUrl">The remote avatar URL.</param>
+        /// <returns>The updated account.</returns>
+        /// <exception cref="Exception">Thrown when the URL is empty or the account is missing.</exception>
         public async Task<Account> UpdateAccountHeadImgAsync(IServiceProvider serviceProvider, int accountId, string headImgUrl)
         {
             if (headImgUrl.IsNullOrEmpty())

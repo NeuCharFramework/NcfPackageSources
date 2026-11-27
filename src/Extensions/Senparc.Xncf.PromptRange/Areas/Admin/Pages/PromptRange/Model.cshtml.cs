@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -24,10 +27,13 @@ namespace Senparc.Xncf.PromptRange.Areas.Admin.Pages.PromptRange
 {
     public class ModelModel : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
     {
+        /// <summary>Initializes the PromptRange model page.</summary>
+        /// <param name="xncfModuleService">The lazy XNCF module service.</param>
         public ModelModel(Lazy<XncfModuleService> xncfModuleService) : base(xncfModuleService)
         {
         }
 
+        /// <summary>Initializes the model page request.</summary>
         public void OnGet()
         {
         }

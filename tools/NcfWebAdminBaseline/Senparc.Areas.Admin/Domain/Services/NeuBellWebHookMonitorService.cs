@@ -18,6 +18,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -50,6 +53,15 @@ public sealed class NeuBellWebHookMonitorService : IHostedService, IDisposable
     private readonly CancellationTokenSource _stoppingCts = new();
     private Task _runningTask;
 
+    /// <summary>
+    /// Initializes the NeuBell webhook monitor and clamps its polling interval
+    /// to the configured minimum.
+    /// </summary>
+    /// <param name="serviceProvider">The provider for catalog and snapshot services.</param>
+    /// <param name="configuration">The configuration source for polling settings.</param>
+    /// <param name="changeNotifier">The notifier used to wake polling on changes.</param>
+    /// <param name="dispatcher">The webhook dispatcher.</param>
+    /// <param name="logger">The monitor logger.</param>
     public NeuBellWebHookMonitorService(
         IServiceProvider serviceProvider,
         IConfiguration configuration,
@@ -68,12 +80,16 @@ public sealed class NeuBellWebHookMonitorService : IHostedService, IDisposable
 
     public TimeSpan PollingInterval { get; }
 
+    /// <inheritdoc/>
+    /// <remarks>Starts one background monitor task; the supplied host token is not used for ownership.</remarks>
     public Task StartAsync(CancellationToken cancellationToken)
     {
         _runningTask = Task.Run(() => RunAsync(_stoppingCts.Token));
         return Task.CompletedTask;
     }
 
+    /// <inheritdoc/>
+    /// <remarks>Requests cancellation and waits up to five seconds for the monitor loop to exit.</remarks>
     public async Task StopAsync(CancellationToken cancellationToken)
     {
         _stoppingCts.Cancel();
@@ -92,6 +108,10 @@ public sealed class NeuBellWebHookMonitorService : IHostedService, IDisposable
         }
     }
 
+    /// <summary>
+    /// Runs the change-triggered/polling monitor loop until host shutdown.
+    /// </summary>
+    /// <param name="stoppingToken">Token used to end the loop.</param>
     private async Task RunAsync(CancellationToken stoppingToken)
     {
         try
@@ -115,6 +135,10 @@ public sealed class NeuBellWebHookMonitorService : IHostedService, IDisposable
     /// <summary>
     ///Legacy comment translated to English.
     /// </summary>
+    /// <summary>
+    /// Waits for either the configured polling interval or a provider-change notification.
+    /// </summary>
+    /// <param name="stoppingToken">Token used to cancel both waits.</param>
     private async Task WaitNextTriggerAsync(CancellationToken stoppingToken)
     {
         using var triggerCts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
@@ -132,6 +156,11 @@ public sealed class NeuBellWebHookMonitorService : IHostedService, IDisposable
         }
     }
 
+    /// <summary>
+    /// Waits for the first NeuBell provider change notification and falls back
+    /// silently to timer polling when subscription fails.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to end the subscription.</param>
     private async Task WaitForChangeAsync(CancellationToken cancellationToken)
     {
         try
@@ -150,6 +179,11 @@ public sealed class NeuBellWebHookMonitorService : IHostedService, IDisposable
         }
     }
 
+    /// <summary>
+    /// Resolves available providers, collects snapshots, and lets the dispatcher
+    /// reconcile webhook delivery state for one observation cycle.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel the observation.</param>
     private async Task ObserveOnceAsync(CancellationToken cancellationToken)
     {
         try
@@ -179,6 +213,7 @@ public sealed class NeuBellWebHookMonitorService : IHostedService, IDisposable
         }
     }
 
+    /// <inheritdoc/>
     public void Dispose()
     {
         _stoppingCts.Dispose();

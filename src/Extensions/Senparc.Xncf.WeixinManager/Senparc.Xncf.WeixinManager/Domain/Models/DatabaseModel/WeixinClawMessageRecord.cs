@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.25.1 Localized Weixin account and administration surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.25.1.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -27,7 +30,8 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel;
 
 [Table(Register.DATABASE_PREFIX + nameof(WeixinClawMessageRecord))]
 [Serializable]
-public sealed class WeixinClawMessageRecord : EntityBase<int>
+    /// Stores one inbound or outbound Weixin Claw message and its delivery state.
+    public sealed class WeixinClawMessageRecord : EntityBase<int>
 {
     public int WeixinClawAccountId { get; private set; }
 
@@ -69,10 +73,30 @@ public sealed class WeixinClawMessageRecord : EntityBase<int>
     [Required]
     public string Text { get; private set; }
 
+    /// <summary>
+    /// Reserved for EF Core materialization.
+    /// </summary>
     private WeixinClawMessageRecord()
     {
     }
 
+    /// <summary>
+    /// Initializes a message record with protocol identity, conversation context, and status.
+    /// </summary>
+    /// <param name="accountId">The Claw account identifier.</param>
+    /// <param name="direction">The inbound/outbound direction.</param>
+    /// <param name="messageId">The remote message identifier.</param>
+    /// <param name="seq">The remote sequence number.</param>
+    /// <param name="fromUserId">The sender identifier.</param>
+    /// <param name="toUserId">The recipient identifier.</param>
+    /// <param name="clientId">The client identifier.</param>
+    /// <param name="contextTokenProtected">The protected conversation context token.</param>
+    /// <param name="runId">The associated workflow run identifier.</param>
+    /// <param name="messageType">The protocol message type.</param>
+    /// <param name="messageState">The protocol message state.</param>
+    /// <param name="status">The initial persistence/delivery status.</param>
+    /// <param name="text">The message text.</param>
+    /// <param name="createdAt">Optional creation timestamp.</param>
     public WeixinClawMessageRecord(
         int accountId,
         string direction,
@@ -106,6 +130,10 @@ public sealed class WeixinClawMessageRecord : EntityBase<int>
         SetUpdateTime();
     }
 
+    /// <summary>
+    /// Marks the record as sent and stores the remote message identifier.
+    /// </summary>
+    /// <param name="messageId">The remote message identifier.</param>
     public void MarkSent(string messageId)
     {
         MessageId = messageId;
@@ -114,6 +142,10 @@ public sealed class WeixinClawMessageRecord : EntityBase<int>
         SetUpdateTime();
     }
 
+    /// <summary>
+    /// Marks the record as failed and stores a bounded diagnostic message.
+    /// </summary>
+    /// <param name="error">The failure message.</param>
     public void MarkFailed(string error)
     {
         Status = "failed";
@@ -121,6 +153,10 @@ public sealed class WeixinClawMessageRecord : EntityBase<int>
         SetUpdateTime();
     }
 
+    /// <summary>
+    /// Replaces the stored message text.
+    /// </summary>
+    /// <param name="text">The replacement message text.</param>
     public void SetText(string text)
     {
         Text = text ?? string.Empty;

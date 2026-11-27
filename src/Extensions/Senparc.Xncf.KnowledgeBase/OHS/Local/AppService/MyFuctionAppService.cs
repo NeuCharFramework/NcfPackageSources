@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +44,12 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
             _colorService = colorService;
         }
 
+        /// <summary>
+        /// Evaluates the arithmetic operation selected by the function request and returns
+        /// the calculated value through the standard application-service response wrapper.
+        /// </summary>
+        /// <param name="request">The two operands and supported operator.</param>
+        /// <returns>A response containing the calculation result or the validation failure.</returns>
         [FunctionRender(typeof(KnowledgeBaseResource), "Function.Sample.Name", "Function.Sample.Description", typeof(Register))]
         public async Task<StringAppResponse> Calculate(MyFunction_CaculateRequest request)
         {

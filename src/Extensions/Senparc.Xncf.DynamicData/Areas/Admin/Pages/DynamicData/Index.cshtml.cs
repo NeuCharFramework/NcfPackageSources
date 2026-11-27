@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.7.12 Localized DynamicData configuration and layout surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.7.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Service;
@@ -22,11 +25,14 @@ namespace Senparc.Xncf.DynamicData.Areas.DynamicData.Pages
 {
     public class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
     {
+        /// <summary>Initializes the DynamicData module index page.</summary>
+        /// <param name="xncfModuleService">The lazy module service used by the base page model.</param>
         public Index(Lazy<XncfModuleService> xncfModuleService) : base(xncfModuleService)
         {
 
         }
 
+        /// <summary>Initializes the DynamicData index page request.</summary>
         public void OnGet()
         {
         }

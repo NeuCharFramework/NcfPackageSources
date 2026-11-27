@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -176,12 +179,23 @@ public sealed class MemoryPromptProvider : IMemoryPromptProvider
         Evidence quotes the concrete fact, never just a save command or acknowledgement.
         An earlier announcement to provide information does not authorize saving every later message.");
 
+    /// <summary>
+    /// Initializes the memory-update prompt provider.
+    /// </summary>
+    /// <param name="ranges">The prompt-range service.</param>
+    /// <param name="items">The prompt-item service.</param>
     public MemoryPromptProvider(PromptRangeService ranges, PromptItemService items)
     {
         _ranges = ranges;
         _items = items;
     }
 
+    /// <summary>
+    /// Loads or initializes the published memory-update prompt for a model.
+    /// </summary>
+    /// <param name="modelId">The model identifier used for default prompt creation.</param>
+    /// <param name="cancellationToken">Token used to cancel initialization.</param>
+    /// <returns>The selected memory-update prompt.</returns>
     public async Task<MemoryUpdatePrompt> GetAsync(int modelId, CancellationToken cancellationToken = default)
     {
         await Initialization.WaitAsync(cancellationToken);
@@ -212,6 +226,13 @@ public sealed class MemoryPromptProvider : IMemoryPromptProvider
         finally { Initialization.Release(); }
     }
 
+    /// <summary>
+    /// Creates the default memory-update prompt item.
+    /// </summary>
+    /// <param name="rangeId">The prompt-range identifier.</param>
+    /// <param name="rangeName">The prompt-range name.</param>
+    /// <param name="modelId">The model identifier.</param>
+    /// <returns>A scored, published default prompt item.</returns>
     public static PromptItem CreateDefaultPrompt(int rangeId, string rangeName, int modelId) =>
         new PromptItem(rangeId, rangeName, "1", 1, "", new PromptItem_AddRequest
         {
@@ -220,6 +241,11 @@ public sealed class MemoryPromptProvider : IMemoryPromptProvider
             MaxToken = 1600, Temperature = 0.1f, TopP = 0.8f, Note = RangeAlias
         }).UpdateEvalAvgScore(0).UpdateEvalMaxScore(0);
 
+    /// <summary>
+    /// Replaces one known historical default prompt with the current default text.
+    /// </summary>
+    /// <param name="item">The prompt item to inspect and optionally mutate.</param>
+    /// <returns><see langword="true"/> when the item was upgraded.</returns>
     public static bool UpgradeUnmodifiedDefault(PromptItem item)
     {
         if (item.Note != RangeAlias || item.IsDraft || item.EvalAvgScore != 0 || item.EvalMaxScore != 0
@@ -229,6 +255,12 @@ public sealed class MemoryPromptProvider : IMemoryPromptProvider
         return true;
     }
 
+    /// <summary>
+    /// Selects the highest-scoring published memory prompt with bounded content length.
+    /// </summary>
+    /// <param name="items">The candidate prompt items.</param>
+    /// <returns>The selected memory-update prompt.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when no valid scored published prompt exists.</exception>
     public static MemoryUpdatePrompt SelectPublishedPrompt(IEnumerable<PromptItem> items)
     {
         var selected = items.Where(item => !item.IsDraft && item.EvalAvgScore >= 0)

@@ -4,10 +4,13 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>0.3.0.1</Version>
+		<Version>0.3.0.2</Version>
+		<PackageId>Senparc.Xncf.Installer.Interface</PackageId>
 		<AssemblyName>Senparc.Xncf.Installer.Interface</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Installer.Interface</RootNamespace>
+		<IsPackable>true</IsPackable>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
 		<Description>NCF system installer module contracts</Description>
 		<Copyright>NeuCharFramework</Copyright>
 		<PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.Installer.Interface,System</PackageTags>
@@ -19,7 +22,10 @@
 		    2. Preserved installer integration while keeping the dependency chain consistent.
         [2026-11-24] v0.3.0 Dependency compatibility update for affected Senparc modules.
         1. Aligned dependent package metadata with the current Senparc module versions.
-        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.
+        [2026-11-27] v0.3.0.2 Improve source documentation, headers, and module metadata consistency.
+        1. Removed unused project references and aligned dependent module integration.
+    </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
 	</PropertyGroup>

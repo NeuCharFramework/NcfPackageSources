@@ -22,6 +22,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.11 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.11.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Configuration;
@@ -51,7 +54,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Uid => "E3A61F92-8C54-4A01-B9D7-2F6E8C11A90B";
 
-    public override string Version => "0.1.0";
+    public override string Version => "0.4.11.2";
 
     public override string MenuName => RegisterText.MenuName;
 
@@ -59,6 +62,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Description => RegisterText.Description;
 
+    /// <inheritdoc/>
     public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
     {
         await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this).ConfigureAwait(false);
@@ -79,6 +83,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
         }
     }
 
+    /// <inheritdoc/>
     public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
     {
         var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
@@ -88,6 +93,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
         await unsinstallFunc().ConfigureAwait(false);
     }
 
+    /// <inheritdoc/>
     public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
     {
         services.AddHttpClient("Senparc.Xncf.FirmwareUpdate.GitHub", client =>

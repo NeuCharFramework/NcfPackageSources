@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.5 Localized file management and upload surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.5.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;
@@ -99,6 +102,11 @@ public class NcfFileService : ServiceBase<NcfFile>
     /// Lists only one resource scope. This is intentional: an asset picker must
     /// never accidentally show documents that are meant for a knowledge base.
     /// </summary>
+    /// <param name="page">The one-based page index.</param>
+    /// <param name="pageSize">The requested page size.</param>
+    /// <param name="folderId">Optional folder identifier.</param>
+    /// <param name="resourceScope">The resource boundary to list.</param>
+    /// <returns>A paged list of file DTOs with public URLs where applicable.</returns>
     public async Task<PagedList<NcfFileDto>> GetFilesAsync(
         int page,
         int pageSize,
@@ -209,6 +217,9 @@ public class NcfFileService : ServiceBase<NcfFile>
     /// <summary>
     /// Aggregates enterprise-document (knowledge-base) usage for the admin dashboard.
     /// </summary>
+    /// <param name="startDate">Optional inclusive start date for the trend.</param>
+    /// <param name="endDate">Optional inclusive end date for the trend.</param>
+    /// <returns>A dashboard payload containing totals, category slices, and daily trend data.</returns>
     public async Task<object> GetDashboardStatsAsync(DateTime? startDate = null, DateTime? endDate = null)
     {
         var scope = NcfFileResourceScope.KnowledgeBase;
@@ -249,6 +260,12 @@ public class NcfFileService : ServiceBase<NcfFile>
             });
         }
 
+        /// <summary>
+        /// Classifies a stored file for aggregate statistics using its normalized
+        /// extension and, when available, the persisted <see cref="FileType"/>.
+        /// </summary>
+        /// <param name="file">The file entity to classify.</param>
+        /// <returns>A stable category label such as image, video, audio, document, or other.</returns>
         static string CategoryOf(NcfFile file)
         {
             var ext = (file.FileExtension ?? string.Empty).Trim().ToLowerInvariant();

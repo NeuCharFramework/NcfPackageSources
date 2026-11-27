@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.0.1 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.0.1.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -22,6 +25,9 @@ using System.IO;
 
 namespace Senparc.ImageUtility
 {
+    /// <summary>
+    /// Provides bitmap thumbnail and generated-file-name helpers for the image utility package.
+    /// </summary>
     public partial class ImageHelper
     {
         const string ThumbnailPrefix = "thumbnail";
@@ -30,23 +36,33 @@ namespace Senparc.ImageUtility
         /// You must create a delegate and pass a reference to the delegate as the callback parameter, but the delegate is not used.
         /// </summary>
         /// <remarks>https://docs.microsoft.com/en-us/dotnet/api/system.drawing.image.getthumbnailimage?view=netcore-2.2</remarks>
-        /// <returns></returns>
+        /// <returns>
+        /// Always returns <see langword="false"/> because the callback exists only to
+        /// satisfy the <see cref="Image.GetThumbnailImage"/> delegate contract.
+        /// </returns>
         private static bool GetThumbnailImageCallBack()
         {
             return false;
         }
 
         /// <summary>
-        /// 
+        /// Creates a thumbnail from an image stream, writes it as a PNG file in the
+        /// specified output directory, and optionally deletes the original file.
+        /// When <paramref name="isLocked"/> is <see langword="true"/>, the source
+        /// aspect ratio is preserved and the requested width is treated as a maximum.
         /// </summary>
-        /// <param name="sourceFilePath"></param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        /// <param name="isLocked"></param>
-        /// <param name="outputPath"></param>
-        /// <param name="isoldfilename"></param>
-        /// <param name="isDel"></param>
-        /// <returns></returns>
+        /// <param name="sourceStream">The readable stream containing the source image.</param>
+        /// <param name="orignalFullFileName">The source file name used to determine the extension and optional deletion target.</param>
+        /// <param name="width">The requested thumbnail width in pixels.</param>
+        /// <param name="height">The requested thumbnail height in pixels when aspect-ratio locking is disabled.</param>
+        /// <param name="isLocked">Whether to preserve the source aspect ratio instead of forcing both dimensions.</param>
+        /// <param name="outputPath">The directory in which the generated thumbnail is saved.</param>
+        /// <param name="isoldfilename">Whether to derive the thumbnail name from the original file name instead of a generated identifier.</param>
+        /// <param name="isDel">Whether to delete the file identified by <paramref name="orignalFullFileName"/> after saving.</param>
+        /// <returns>The generated thumbnail file name, without the output directory.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="sourceStream"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">Thrown when the requested dimensions or output path are invalid for the underlying image APIs.</exception>
+        /// <exception cref="System.Runtime.InteropServices.ExternalException">Thrown when the source image cannot be decoded or the thumbnail cannot be saved.</exception>
         public static string GetThumbnail(Stream sourceStream, string orignalFullFileName, int width, int height, bool isLocked, string outputPath, bool isoldfilename, bool isDel)
         {
             int outputWidth;
@@ -97,6 +113,20 @@ namespace Senparc.ImageUtility
             return thumbnailFileName;
         }
 
+        /// <summary>
+        /// Opens a source image file and delegates thumbnail creation to
+        /// <see cref="GetThumbnail(Stream, string, int, int, bool, string, bool, bool)"/>.
+        /// </summary>
+        /// <param name="sourceFilePath">The full path of the source image file.</param>
+        /// <param name="width">The requested thumbnail width in pixels.</param>
+        /// <param name="height">The requested thumbnail height in pixels when aspect-ratio locking is disabled.</param>
+        /// <param name="isLocked">Whether to preserve the source aspect ratio.</param>
+        /// <param name="outputPath">The directory in which the generated thumbnail is saved.</param>
+        /// <param name="isoldfilename">Whether to derive the thumbnail name from the original file name.</param>
+        /// <param name="isDel">Whether to delete the source file after saving.</param>
+        /// <returns>The generated thumbnail file name, without the output directory.</returns>
+        /// <exception cref="FileNotFoundException">Thrown when <paramref name="sourceFilePath"/> does not identify an existing file.</exception>
+        /// <exception cref="IOException">Thrown when the source file cannot be opened or the generated file cannot be written.</exception>
         public static string GetThumbnail(string sourceFilePath, int width, int height, bool isLocked, string outputPath, bool isoldfilename, bool isDel)
         {
             using (FileStream fs = new FileStream(sourceFilePath, FileMode.Open))
@@ -266,9 +296,10 @@ namespace Senparc.ImageUtility
         //}
 
         /// <summary>
-        /// Get a random file name
+        /// Generates a time-based file-name token with a four-digit random suffix.
+        /// This method does not create a file and is not intended to provide a security token.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A string suitable for use as a generated file-name component.</returns>
         public static string GetRndFileName()
         {
             Random rnd = new Random();
@@ -284,10 +315,17 @@ namespace Senparc.ImageUtility
         #region Private Method
 
         /// <summary>
-        /// whether it is a filepath
+        /// Determines whether a path contains a file-name extension.
         /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
+        /// <param name="path">The path to inspect.</param>
+        /// <returns>
+        /// <see langword="true"/> when <see cref="Path.HasExtension(string)"/> reports
+        /// an extension; otherwise, <see langword="false"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Propagated by <see cref="Path.HasExtension(string)"/> when
+        /// <paramref name="path"/> is <see langword="null"/>.
+        /// </exception>
         private static bool IsFilePath(string path)
         {
             if (System.IO.Path.HasExtension(path))
@@ -301,9 +339,13 @@ namespace Senparc.ImageUtility
         }
 
         /// <summary>
-        /// deletefile
+        /// Deletes a file when it exists and translates file-system failures into
+        /// an <see cref="IOException"/>.
         /// </summary>
-        /// <param name="filePath"></param>
+        /// <param name="filePath">The file path to delete.</param>
+        /// <exception cref="IOException">
+        /// Thrown when the file exists but cannot be deleted.
+        /// </exception>
         private static void DeleteFile(string filePath)
         {
             if (File.Exists(filePath))

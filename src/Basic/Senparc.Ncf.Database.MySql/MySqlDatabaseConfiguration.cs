@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.14 Updated database integration support and related localization metadata
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -34,10 +37,12 @@ using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 namespace Senparc.Ncf.Database.MySql
 {
     /// <summary>
-    /// MySQL databaseconfiguration
+    /// Configures Pomelo MySQL EF Core options, retry behavior, and table SQL
+    /// for NCF database contexts.
     /// </summary>
     public class MySqlDatabaseConfiguration : DatabaseConfigurationBase<MySqlDbContextOptionsBuilder, MySqlOptionsExtension>
     {
+        /// <summary>Initializes the MySQL database configuration.</summary>
         public MySqlDatabaseConfiguration() { }
 
         public override MultipleDatabaseType MultipleDatabaseType => MultipleDatabaseType.MySql;
@@ -55,7 +60,6 @@ namespace Senparc.Ncf.Database.MySql
             (optionsBuilder, connectionString, xncfDatabaseData, actionBase) =>
             {
                 optionsBuilder.UseMySql(connectionString,
-                    //Legacy comment translated to English.
                     ServerVersion.AutoDetect(connectionString), 
                     actionBase);//beta6
             };
@@ -72,13 +76,12 @@ namespace Senparc.Ncf.Database.MySql
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Configures a deterministic MySQL 8.0 server version for design-time
+    /// migration and schema generation.
     /// </summary>
     /// <remarks>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Runtime configuration uses server-version auto-detection; design-time
+    /// operations use a fixed MySQL 8.0 version.
     /// </remarks>
     public sealed class MySqlDesignTimeDatabaseConfiguration : MySqlDatabaseConfiguration
     {

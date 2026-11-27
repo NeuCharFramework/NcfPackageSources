@@ -189,7 +189,6 @@ Workspace NativeAgent 默认禁止执行。Docker 是受支持的隔离执行方
 | `Senparc.Ncf.Repository` | 仓储层支持 |
 | `Senparc.Ncf.Service` | 服务层支持 |
 | `Senparc.Ncf.Log` | 日志集成 |
-| `Senparc.Ncf.Mvc.UI` | MVC UI 组件 |
 | `Senparc.Ncf.Utility` | 共享工具类 |
 | `Senparc.Ncf.SMS` | 短信支持 |
 | `Senparc.Ncf.UnitTestExtension` | 单元测试辅助工具 |
@@ -205,7 +204,7 @@ Workspace NativeAgent 默认禁止执行。Docker 是受支持的隔离执行方
 - 集成能力：`Senparc.Xncf.Connectors`、`Senparc.Xncf.MCP`、`Senparc.Xncf.Dapr`、`Senparc.Xncf.FileManager`、`Senparc.Xncf.DesktopBridge`
 - 编排与运行时：`Senparc.Xncf.NeuCharWorkflow`、`Senparc.Xncf.Sandbox`、`Senparc.Xncf.Workspace`、`Senparc.Xncf.WorkspaceAgent`
 - 数据与管理：`Senparc.Xncf.DynamicData`、`Senparc.Xncf.DatabaseToolkit`、`Senparc.Xncf.FirmwareUpdate`、`Senparc.Xncf.WeixinManager`、`Senparc.Xncf.SenMapic`
-- 开发工具：`Senparc.Xncf.XncfBuilder`、`Senparc.Xncf.XncfBuilder.Template`、`Senparc.Xncf.ChangeNamespace`、`Senparc.Xncf.Terminal`、`Senparc.Xncf.Swagger`
+- 开发工具：`Senparc.Xncf.XncfBuilder`、`Senparc.Xncf.XncfBuilder.Template`、`Senparc.Xncf.Terminal`、`Senparc.Xncf.Swagger`
 
 系统包包括 `Senparc.Xncf.Installer`、`Senparc.Xncf.Installer.Interface`、`Senparc.Xncf.AreasBase`、`Senparc.Xncf.Menu`、`Senparc.Xncf.SystemCore`、`Senparc.Xncf.SystemManager`、`Senparc.Xncf.SystemPermission`、`Senparc.Xncf.Tenant`、`Senparc.Xncf.Tenant.Interface` 和 `Senparc.Xncf.XncfModuleManager`。
 

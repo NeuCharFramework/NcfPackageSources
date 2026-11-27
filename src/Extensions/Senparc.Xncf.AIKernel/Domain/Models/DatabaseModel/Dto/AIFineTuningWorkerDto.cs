@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -47,10 +50,18 @@ public sealed class AIFineTuningWorkerDto : DtoBase
     public bool AutoStart { get; set; }
     public string SecretPath { get; set; } = "";
 
+    /// <summary>
+    /// Initializes an empty Worker DTO for model binding.
+    /// </summary>
     public AIFineTuningWorkerDto()
     {
     }
 
+    /// <summary>
+    /// Projects a Worker entity and its launch profile into a DTO.
+    /// </summary>
+    /// <param name="worker">The Worker entity.</param>
+    /// <param name="hasConfiguredSecret">Whether a usable secret is configured.</param>
     public AIFineTuningWorkerDto(AIFineTuningWorker worker, bool hasConfiguredSecret)
     {
         Id = worker.Id;

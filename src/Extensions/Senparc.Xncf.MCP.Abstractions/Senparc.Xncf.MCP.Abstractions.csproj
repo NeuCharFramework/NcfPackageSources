@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.1.2.1</Version>
+    <Version>0.1.2.2</Version>
     <AssemblyName>Senparc.Xncf.MCP.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Xncf.MCP.Abstractions</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -27,7 +27,8 @@
         2. Standardized related English source comments and package metadata for the current release.
         [2026-11-24] v0.1.2 Integrated localization, tooling, and runtime improvements across the module.
         1. Updated functional behavior and package metadata for the current module changes.
-        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.
+        [2026-11-26] v0.1.2.2 add decoupled endpoint discovery, save, test, and tool-call contracts.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.29.1 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.29.1.2 Extend shared chat-tool contracts for admin task initiation.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -41,13 +44,14 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.XncfBase.Database
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Base EF Core context for XNCF module databases, including soft-delete,
+    /// optional tenant query filters, and guarded migration helpers.
     /// </summary>
     public abstract class XncfDatabaseDbContext : DbContext, ISenparcEntitiesDbContext, IMultipleMigrationDbContext
     {
         MultipleMigrationDbContextAttribute _multipleMigrationDbContext;
         /// <summary>
-        /// MultipleMigrationDbContext
+        /// Gets the migration metadata attached to the concrete database context type.
         /// </summary>
         public MultipleMigrationDbContextAttribute MultipleMigrationDbContext
         {
@@ -67,15 +71,20 @@ namespace Senparc.Ncf.XncfBase.Database
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the module database registration associated with this context.
         /// </summary>
         public IXncfDatabase XncfDatabaseRegister => MultipleMigrationDbContext.XncfDatabaseRegister;
 
 
+        /// <summary>
+        /// Initializes the XNCF database context with provider options.
+        /// </summary>
+        /// <param name="dbContextOptions">The EF Core context options.</param>
         protected XncfDatabaseDbContext(DbContextOptions dbContextOptions)
             : base(dbContextOptions)
         { }
 
+        /// <inheritdoc />
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             if (XncfDatabaseRegister == null)
@@ -100,7 +109,8 @@ namespace Senparc.Ncf.XncfBase.Database
         public bool? _enableMultiTenant;
 
         /// <summary>
-        /// whether enabledmulti-tenancy，defaultread SiteConfig.SenparcCoreSetting.EnableMultiTenant
+        /// Gets whether multi-tenant query filters are enabled for this context.
+        /// The default value is read from global NCF configuration.
         /// </summary>
         public bool EnableMultiTenant
         {
@@ -121,7 +131,7 @@ namespace Senparc.Ncf.XncfBase.Database
         private RequestTenantInfo _tenantInfo;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the tenant context used by multi-tenant query filters and inserts.
         /// </summary>
         public RequestTenantInfo TenantInfo
         {
@@ -143,8 +153,10 @@ namespace Senparc.Ncf.XncfBase.Database
         private static readonly bool[] _migrated = { true };
 
         /// <summary>
-        /// 
+        /// Invokes the generic global-query configuration method for the discovered entity type.
         /// </summary>
+        /// <param name="entityType">The EF Core entity metadata.</param>
+        /// <param name="modelBuilder">The model builder receiving the query filter.</param>
         private void SetGlobalQueryMethodInfo(IMutableEntityType entityType, ModelBuilder modelBuilder)
         {
             var dbContextType = this.GetType();
@@ -156,9 +168,10 @@ namespace Senparc.Ncf.XncfBase.Database
 
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Applies a global query filter for soft deletion and, when enabled, tenant ownership.
         /// </summary>
+        /// <typeparam name="T">The entity type receiving the query filter.</typeparam>
+        /// <param name="builder">The model builder used to configure the entity.</param>
         public void SetGlobalQuery<T>(ModelBuilder builder) where T : EntityBase
         {
             var entityBuilder = builder.Entity<T>();//.HasQueryFilter(z => !z.Flag);
@@ -177,16 +190,16 @@ namespace Senparc.Ncf.XncfBase.Database
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Enables or disables tenant query filtering for this context instance.
         /// </summary>
-        /// <param name="enable"></param>
+        /// <param name="enable">Whether multi-tenant filtering should be active.</param>
         public void SetMultiTenantEnable(bool enable)
         {
             EnableMultiTenant = enable;
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Restores the context's tenant filtering flag from global NCF configuration.
         /// </summary>
         public void ResetMultiTenantEnable()
         {
@@ -195,6 +208,7 @@ namespace Senparc.Ncf.XncfBase.Database
 
         #region Legacy section
 
+        /// <inheritdoc />
         public override int SaveChanges()
         {
             //handlingmulti-tenancy
@@ -202,6 +216,7 @@ namespace Senparc.Ncf.XncfBase.Database
             return base.SaveChanges();
         }
 
+        /// <inheritdoc />
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
             //handlingmulti-tenancy
@@ -210,7 +225,8 @@ namespace Senparc.Ncf.XncfBase.Database
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Assigns the current tenant ID to newly added multi-tenant entities unless
+        /// they explicitly opt out of tenant filtering.
         /// </summary>
         private void AddTenantId()
         {
@@ -236,11 +252,20 @@ namespace Senparc.Ncf.XncfBase.Database
 
         #endregion
 
+        /// <summary>
+        /// Clears the process-local migration flag so the next call to <see cref="Migrate"/>
+        /// invokes the database migration pipeline again.
+        /// </summary>
         public void ResetMigrate()
         {
             _migrated[0] = false;
         }
 
+        /// <summary>
+        /// Applies pending EF Core migrations once per context instance/process guard.
+        /// Concurrent callers are serialized by the migration guard.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown when the database provider cannot apply the migrations.</exception>
         public void Migrate()
         {
             if (!_migrated[0])
@@ -260,12 +285,14 @@ namespace Senparc.Ncf.XncfBase.Database
         #endregion
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Resolves the module DbContext, generates a creation script when migrations are pending,
+        /// and applies migrations during module installation.
         /// </summary>
-        /// <param name="serviceProvider"></param>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="serviceProvider">The provider used to resolve the module context.</param>
+        /// <param name="databaseRegister">The module database registration.</param>
+        /// <param name="checkdbContextType">Whether to require the resolved type to derive from this context.</param>
+        /// <returns>A task that completes after migration handling.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when the resolved context type is invalid.</exception>
         public static async Task MigrateOnInstallAsync(IServiceProvider serviceProvider, IXncfDatabase databaseRegister, bool checkdbContextType = true)
         {
             var dbContextType = databaseRegister.TryGetXncfDatabaseDbContextType;
@@ -280,11 +307,11 @@ namespace Senparc.Ncf.XncfBase.Database
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Generates and applies pending migrations for an existing XNCF database context.
         /// </summary>
-        /// <param name="dbContext"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <param name="dbContext">The context to migrate.</param>
+        /// <returns>A task that completes after migration handling.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="dbContext"/> is null.</exception>
         public static async Task MigrateOnInstallAsync(XncfDatabaseDbContext dbContext)
         {
             if (dbContext is null)

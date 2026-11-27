@@ -37,6 +37,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.42.0.0 add MCP endpoint gateway and tool invocation contracts
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -73,6 +76,13 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
     public partial class BuildXncfAppService : AppServiceBase
     {
 
+        /// <summary>
+        /// Initializes the XNCF Builder application service and its module/model dependencies.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
+        /// <param name="aIModelService">The AI model service used by builder operations.</param>
+        /// <param name="xncfModuleService">The XNCF module service.</param>
+        /// <param name="xncfModuleServiceExtension">The extended module service.</param>
         public BuildXncfAppService(IServiceProvider serviceProvider, AIModelService aIModelService, XncfModuleService xncfModuleService, XncfModuleServiceExtension xncfModuleServiceExtension) : base(serviceProvider)
         {
             this._aIModelService = aIModelService;
@@ -94,6 +104,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             public string StandardError { get; init; } = string.Empty;
         }
 
+        /// <summary>
+        /// Executes a dotnet CLI command without shell interpretation and captures both output streams.
+        /// </summary>
+        /// <param name="workingDirectory">The process working directory.</param>
+        /// <param name="args">The tokenized dotnet arguments.</param>
+        /// <returns>The start status, exit code, and captured output.</returns>
         internal static async Task<DotNetCommandResult> ExecuteDotNetCommandAsync(string workingDirectory, IEnumerable<string> args)
         {
             var startInfo = new ProcessStartInfo
@@ -150,6 +166,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             };
         }
 
+        /// <summary>
+        /// Formats tokenized dotnet arguments for human-readable logging.
+        /// </summary>
+        /// <param name="args">The command arguments.</param>
+        /// <returns>A quoted command preview.</returns>
         private static string BuildCommandPreview(IEnumerable<string> args)
         {
             return "dotnet " + string.Join(" ", args.Select(arg =>
@@ -158,6 +179,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                     : arg));
         }
 
+        /// <summary>
+        /// Appends captured command output and exit status to the application log.
+        /// </summary>
+        /// <param name="logger">The application log.</param>
+        /// <param name="result">The command result to record.</param>
         private static void AppendCommandResult(AppServiceLogger logger, DotNetCommandResult result)
         {
             if (!string.IsNullOrWhiteSpace(result.StandardOutput))
@@ -174,6 +200,16 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             logger.Append($"命令退出码：{result.ExitCode}");
         }
 
+        /// <summary>
+        /// Logs and executes one dotnet command, optionally converting non-zero exits to exceptions.
+        /// </summary>
+        /// <param name="operation">The human-readable operation name.</param>
+        /// <param name="workingDirectory">The process working directory.</param>
+        /// <param name="args">The tokenized dotnet arguments.</param>
+        /// <param name="logger">The application log.</param>
+        /// <param name="throwOnFailure">Whether start/exit failures should throw.</param>
+        /// <returns>The captured command result.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when failure is configured to throw.</exception>
         private static async Task<DotNetCommandResult> RunDotNetCommandAsync(
             string operation,
             string workingDirectory,
@@ -205,6 +241,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             return result;
         }
 
+        /// <summary>
+        /// Creates or backs up the solution file according to the build request options.
+        /// </summary>
+        /// <param name="request">The build request containing solution path and options.</param>
+        /// <param name="logger">The application log.</param>
+        /// <returns>The solution path selected for the build.</returns>
         private static string PrepareSolutionFile(BuildXncf_BuildRequest request, AppServiceLogger logger)
         {
             var solutionDirectory = Path.GetDirectoryName(request.SlnFilePath)
@@ -237,9 +279,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Builds the configured sample XNCF project using the selected solution and template options.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="request">The builder request.</param>
+        /// <param name="logger">The operation logger.</param>
+        /// <returns>The generated build result.</returns>
         private async Task<XncfBuildResult> BuildSampleAsync(BuildXncf_BuildRequest request, AppServiceLogger logger)
         {
             string getLibVersionParam(string dllName, string paramName)
@@ -411,10 +455,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Builds the generated project name from organization and module inputs.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">The builder request.</param>
+        /// <returns>The generated project name.</returns>
         private static string GetProjectName(BuildXncf_BuildRequest request)
         {
             return $"{request.OrgName}.Xncf.{request.XncfName}";
@@ -423,6 +467,13 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         // Legacy direct generation writes into the selected solution immediately. Keep it for
         // an administrator using the Builder page, but never make it an AI chat tool. The
         // isolated development-job workflow is the only AI-capable creation path.
+        /// <summary>
+        /// Generates the requested XNCF project in the selected solution and,
+        /// when requested, starts its isolated preview. The legacy operation reports
+        /// failures through the returned response rather than throwing them to callers.
+        /// </summary>
+        /// <param name="request">The solution path, module metadata, template, and preview options.</param>
+        /// <returns>A response describing project generation and optional preview startup.</returns>
         [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Generate.Name", "Function.XncfBuilder.Generate.Description", typeof(Register), AllowAiInvocation = false)]
         public async Task<StringAppResponse> Build(BuildXncf_BuildRequest request)
         {

@@ -9,6 +9,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +33,12 @@ public partial class Register : IAreaRegister, IXncfRazorRuntimeCompilation
         new AreaPageMenuItem(GetAreaUrl("/Admin/Sandbox/Setup"), SandboxResource.Get("Area.Menu.Setup", "环境准备"), "fa fa-wrench")
     };
 
+    /// <summary>
+    /// Configures Razor Page authorization hooks for the Sandbox area.
+    /// </summary>
+    /// <param name="builder">The MVC builder receiving the area configuration.</param>
+    /// <param name="env">The hosting environment used by MVC configuration.</param>
+    /// <returns>The configured MVC builder.</returns>
     public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
     {
         builder.AddRazorPagesOptions(_ =>

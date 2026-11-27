@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -49,10 +52,8 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         private readonly AdminUserInfoService _adminUserInfoService = adminUserInfoService;
         private readonly IStringLocalizer<AdminResource> _localizer = serviceProvider.GetRequiredService<IStringLocalizer<AdminResource>>();
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Determines whether the current request is running in the platform-tenant
+        /// context allowed to manage tenant definitions.
         /// </summary>
         private bool IsPlatformAdmin()
         {
@@ -70,11 +71,13 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             return Ok(false, _localizer["Tenant.PlatformAdminOnly"]);
         }
 
+        /// <summary>Loads the tenant administration page.</summary>
         public async Task<IActionResult> OnGetAsync()
         {
             return Page();
         }
 
+        /// <summary>Returns the current request tenant and active tenant settings.</summary>
         public async Task<IActionResult> OnGetRequestTenantInfoAsync()
         {
             if (!IsPlatformAdmin())
@@ -97,13 +100,10 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             }); ;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="adminUserInfoName"></param>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <returns></returns>
+        /// <summary>Returns a paged tenant list for the platform administrator.</summary>
+        /// <param name="pageIndex">The one-based page index.</param>
+        /// <param name="pageSize">The maximum number of tenants per page.</param>
+        /// <returns>An HTTP 200 JSON result containing tenant rows and paging metadata.</returns>
         //[Ncf.AreaBase.Admin.Filters.CustomerResource("admin-get-systemconfig")]
         public async Task<IActionResult> OnGetListAsync(int pageIndex, int pageSize)
         {
@@ -156,12 +156,9 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             });
         }
 
-        /// <summary>
-        /// Handler=Save
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
+        /// <summary>Creates or updates a tenant after validating names and keys.</summary>
+        /// <param name="dto">The tenant fields to persist.</param>
+        /// <returns>An HTTP result describing validation or persistence success.</returns>
         [CustomerResource("admin-add", "admin-edit")]
         public async Task<IActionResult> OnPostSaveAsync([FromBody] CreateOrUpdate_TenantInfoDto dto)
         {
@@ -198,11 +195,9 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
 
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
+        /// <summary>Initializes a tenant's system configuration and first administrator.</summary>
+        /// <param name="dto">The tenant and administrator initialization values.</param>
+        /// <returns>An HTTP result containing initialization credentials when successful.</returns>
         [CustomerResource("admin-add")]
         public async Task<IActionResult> OnPostInitializeAsync([FromBody] TenantInitializeDto dto)
         {
@@ -268,11 +263,11 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Deletes tenants after checking current-tenant, last-enabled-tenant,
+        /// and administrator-user safety constraints.
         /// </summary>
+        /// <param name="ids">The tenant identifiers selected for deletion.</param>
+        /// <returns>An HTTP result describing the deletion outcome.</returns>
         [CustomerResource("admin-delete")]
         public async Task<IActionResult> OnPostDeleteAsync([FromBody] List<int> ids)
         {

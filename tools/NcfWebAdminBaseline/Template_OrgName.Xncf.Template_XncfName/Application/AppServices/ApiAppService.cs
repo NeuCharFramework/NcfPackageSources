@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261124
     Change description: v1.1.15 Integrated localization, tooling, and runtime improvements across the module.
 
+    Modified by: Senparc - 20261127
+    Change description: v1.1.16 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
@@ -44,9 +47,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
          */
 
         /// <summary>
-        /// expose AppService as a Web API
+        /// Demonstrates exposing an application-service method as a Web API endpoint.
+        /// The sample waits briefly and returns the fixed demonstration value <c>200</c>.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A response containing the demonstration integer.</returns>
         [ApiBind]
         public async Task<AppResponseBase<int>> MyApi()
         {
@@ -58,9 +62,12 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
         }
 
         /// <summary>
-        /// custom Post types and complex parameters while testing exception throwing and custom status codes
+        /// Demonstrates a POST application-service endpoint with a complex request,
+        /// exception handling, and custom response status codes.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="request">The custom request whose names are included in the demonstration exception message.</param>
+        /// <returns>A string response whose error handler records the thrown exception.</returns>
+        /// <exception cref="NcfExceptionBase">Always thrown inside the demonstration callback to exercise exception handling.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> MyCustomApi(Api_MyCustomApiRequest request)
         {

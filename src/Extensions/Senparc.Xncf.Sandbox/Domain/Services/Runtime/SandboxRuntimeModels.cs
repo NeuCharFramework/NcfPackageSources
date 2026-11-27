@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Xncf.Sandbox.Abstractions;
@@ -33,12 +36,19 @@ namespace Senparc.Xncf.Sandbox.Domain.Services.Runtime;
 
 public sealed class SandboxTemplateDefinition
 {
+    /// <summary>Gets the stable template key.</summary>
     public required string Key { get; init; }
+    /// <summary>Gets the display name shown to users.</summary>
     public required string DisplayName { get; init; }
+    /// <summary>Gets the runtime preferred by the template.</summary>
     public required SandboxRuntimeKind PreferredRuntime { get; init; }
+    /// <summary>Gets whether the template supports interactive sessions.</summary>
     public required bool Interactive { get; init; }
+    /// <summary>Gets the container image used by the template.</summary>
     public required string Image { get; init; }
+    /// <summary>Gets the default container port.</summary>
     public int ContainerPort { get; init; }
+    /// <summary>Gets whether interactive control operations are supported.</summary>
     public bool SupportsInteractiveControl { get; init; }
     public string WorkspaceMountPath { get; init; } = "/workspace";
     public double DefaultCpuLimit { get; init; } = 0.5;
@@ -58,9 +68,7 @@ public sealed class SandboxCreateRuntimeRequest
     /// never by a browser or an AI-provided shell command.
     /// </summary>
     public SandboxNcfPreviewRuntimeOptions? NcfPreview { get; init; }
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Optional standard input sent to an interactive command.</summary>
     public IReadOnlyList<SandboxPortMapping>? ExtraPortMappings { get; init; }
 }
 
@@ -81,9 +89,7 @@ public sealed class SandboxCreateRuntimeResult
     public string? AccessUrl { get; init; }
     public string? AccessToken { get; init; }
     public string? Message { get; init; }
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Gets or sets additional host/container port mappings.</summary>
     public string? ExtraPorts { get; init; }
 }
 
@@ -112,21 +118,19 @@ public sealed class SandboxInteractiveExecRequest
     public required string WorkingDirectory { get; init; }
     public TimeSpan Timeout { get; init; } = TimeSpan.FromSeconds(30);
     public int MaxOutputCharacters { get; init; } = 32_000;
-    /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Gets or sets optional standard input for the interactive command.</summary>
     public string? StdinContent { get; init; }
 }
 
 /// <summary>
-///Legacy comment translated to English.
+/// Describes a host/container port mapping and whether it is externally exposed.
 /// </summary>
 public sealed record SandboxPortMapping(int HostPort, int ContainerPort, bool ExposeExternally)
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Formats the mapping using loopback or all-interface host binding.
     /// </summary>
+    /// <returns>A displayable host/container mapping string.</returns>
     public string ToDisplayString() =>
         $"{(ExposeExternally ? "0.0.0.0" : "127.0.0.1")}:{HostPort}:{ContainerPort}";
 }

@@ -22,6 +22,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.42.0.0 add MCP endpoint gateway and tool invocation contracts
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -67,6 +70,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
 
     public static class XncfPreviewStageExtensions
     {
+        /// <summary>
+        /// Maps a preview stage to its user-facing progress percentage.
+        /// </summary>
+        /// <param name="stage">The preview stage.</param>
+        /// <returns>The progress percentage associated with the stage.</returns>
         public static int GetProgressPercent(this XncfPreviewStage stage)
         {
             return stage switch
@@ -84,6 +92,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             };
         }
 
+        /// <summary>
+        /// Determines whether a preview stage represents a completed terminal state.
+        /// </summary>
+        /// <param name="stage">The preview stage.</param>
+        /// <returns><see langword="true"/> when the stage cannot continue.</returns>
         public static bool IsTerminal(this XncfPreviewStage stage)
         {
             return stage is XncfPreviewStage.Stopped
@@ -93,6 +106,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
                 or XncfPreviewStage.Interrupted;
         }
 
+        /// <summary>
+        /// Determines whether a preview at the given stage can accept a stop request.
+        /// </summary>
+        /// <param name="stage">The preview stage.</param>
+        /// <returns><see langword="true"/> when stopping is allowed.</returns>
         public static bool CanStop(this XncfPreviewStage stage)
         {
             return !stage.IsTerminal() && stage != XncfPreviewStage.Stopping;

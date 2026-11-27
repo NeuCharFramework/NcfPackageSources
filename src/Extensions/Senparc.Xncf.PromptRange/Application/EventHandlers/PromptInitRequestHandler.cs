@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.EventBus;
@@ -29,6 +32,10 @@ using System.Linq;
 
 namespace Senparc.Xncf.PromptRange.Application.EventHandlers
 {
+    /// <summary>
+    /// Handles PromptRange initialization requests by ensuring the PromptCatalyzer
+    /// range, model selection, and default prompt item exist.
+    /// </summary>
     public class PromptInitRequestHandler : IIntegrationEventHandler<PromptInitRequestEvent>
     {
         private readonly PromptItemService _promptItemService;
@@ -37,6 +44,14 @@ namespace Senparc.Xncf.PromptRange.Application.EventHandlers
         private readonly IEventBus _eventBus;
         private readonly ILogger<PromptInitRequestHandler> _logger;
 
+        /// <summary>
+        /// Initializes the PromptRange initialization handler.
+        /// </summary>
+        /// <param name="promptItemService">The prompt-item service.</param>
+        /// <param name="promptRangeService">The PromptRange service.</param>
+        /// <param name="aiModelService">The AI model service.</param>
+        /// <param name="eventBus">The EventBus used to publish initialization responses.</param>
+        /// <param name="logger">The handler logger.</param>
         public PromptInitRequestHandler(
             PromptItemService promptItemService,
             PromptRangeService promptRangeService,
@@ -51,6 +66,12 @@ namespace Senparc.Xncf.PromptRange.Application.EventHandlers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Ensures required PromptCatalyzer data exists, then publishes the initialization response.
+        /// </summary>
+        /// <param name="event">The initialization request event.</param>
+        /// <param name="cancellationToken">Token used to cancel response publication.</param>
+        /// <returns>A task that completes after initialization and response publication.</returns>
         public async Task Handle(PromptInitRequestEvent @event, CancellationToken cancellationToken)
         {
             _logger.LogInformation("========== 开始处理 Prompt Init Request ==========");

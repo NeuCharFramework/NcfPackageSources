@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.27.13 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.27.13.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -33,6 +36,10 @@ namespace Senparc.Xncf.DatabaseToolkit
 {
     public partial class Register : IXncfThread
     {
+        /// <summary>
+        /// Registers the periodic database-backup task and its module-availability checks.
+        /// </summary>
+        /// <param name="xncfThreadBuilder">The NCF background-thread builder.</param>
         public void ThreadConfig(XncfThreadBuilder xncfThreadBuilder)
         {
             //Legacy comment translated to English.

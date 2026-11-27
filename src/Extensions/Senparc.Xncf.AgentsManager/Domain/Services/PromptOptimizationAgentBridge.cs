@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -126,23 +129,21 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Stores pending optimization output and evaluation data by normalized request ID.
         /// </summary>
         private static readonly ConcurrentDictionary<string, State> _states = new();
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Tracks request IDs whose prompt version has already been inserted.
         /// </summary>
         private static readonly ConcurrentDictionary<string, byte> _versionInsertClaimed = new();
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Normalizes a request correlation ID for dictionary and async-local lookup.
         /// </summary>
         private static string NormalizeRequestKey(string requestId) =>
             string.IsNullOrWhiteSpace(requestId) ? null : requestId.Trim().ToLowerInvariant();
 
-        ///Legacy comment translated to English.
         /// <summary>
         /// Claims the one-time version-insert slot for a request.
         /// </summary>
@@ -154,7 +155,6 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             return key != null && _versionInsertClaimed.TryAdd(key, 0);
         }
 
-        ///Legacy comment translated to English.
         /// <summary>Releases a previously claimed version-insert slot.</summary>
         /// <param name="requestId">The request correlation ID.</param>
         public void ReleaseVersionInsertClaim(string requestId)
@@ -181,7 +181,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Resolves a model-supplied or active correlation candidate to a registered request key.
         /// </summary>
         public bool TryResolveRegisteredOptimizationKey(string candidateFromModel, out string registeredKey)
         {
@@ -201,7 +201,6 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             }
             if (active != null)
             {
-                //Legacy comment translated to English.
                 _states.TryAdd(active, new State());
                 registeredKey = active;
                 return true;
@@ -220,7 +219,6 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             }
             if (fb != null)
             {
-                //Legacy comment translated to English.
                 _states.TryAdd(fb, new State());
                 registeredKey = fb;
                 return true;
@@ -356,8 +354,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Removes all recorded state and version claims for a request.
         /// </summary>
         public void CleanupRequest(string requestId)
         {

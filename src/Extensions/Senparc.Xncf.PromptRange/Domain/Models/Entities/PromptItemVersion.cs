@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -29,6 +32,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Models
         public string Tactic { get; set; }
         public int Aim { get; set; }
 
+        /// <summary>Initializes a parsed prompt-item version.</summary>
+        /// <param name="rangeName">The range name.</param>
+        /// <param name="tactic">The tactic segment.</param>
+        /// <param name="aim">The aiming number.</param>
         public PromptItemVersion(string rangeName, string tactic, int aim)
         {
             RangeName = rangeName;

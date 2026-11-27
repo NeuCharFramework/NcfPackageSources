@@ -9,6 +9,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.0.1 Updated legacy MVC integration metadata and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.0.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -33,11 +36,20 @@ namespace Senparc.Areas.Admin.Controllers
         private readonly AdminUserInfoService _adminUserInfoService;
 
 
+        /// <summary>
+        /// Initializes the legacy administrator-user controller.
+        /// </summary>
+        /// <param name="adminUserInfoService">The administrator persistence service.</param>
         public AdminUserInfoController(AdminUserInfoService adminUserInfoService)
         {
             _adminUserInfoService = adminUserInfoService;
         }
 
+        /// <summary>
+        /// Lists administrator accounts in descending identifier order.
+        /// </summary>
+        /// <param name="pageIndex">The one-based page number.</param>
+        /// <returns>The administrator list view.</returns>
         public ActionResult Index(int pageIndex = 1)
         {
             var seh = new SenparcExpressionHelper<AdminUserInfo>();
@@ -50,6 +62,11 @@ namespace Senparc.Areas.Admin.Controllers
             };
             return View(vd);
         }
+        /// <summary>
+        /// Loads the administrator editor for an existing record or a new record.
+        /// </summary>
+        /// <param name="id">The administrator identifier; zero creates a new record.</param>
+        /// <returns>The editor view or a legacy error view.</returns>
         public ActionResult Edit(int id = 0)
         {
             bool isEdit = id > 0;
@@ -70,6 +87,12 @@ namespace Senparc.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <summary>
+        /// Validates administrator credentials/profile fields, persists the record,
+        /// and redirects to the administrator list.
+        /// </summary>
+        /// <param name="model">The posted administrator edit model.</param>
+        /// <returns>The edit view on validation failure or a list redirect on success.</returns>
         public async Task<IActionResult> Edit(AdminUserInfo_EditVD model)
         {
 
@@ -121,6 +144,11 @@ namespace Senparc.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <summary>
+        /// Deletes the selected administrator records and redirects to the list.
+        /// </summary>
+        /// <param name="ids">The administrator identifiers selected for deletion.</param>
+        /// <returns>A redirect to the administrator list.</returns>
         public ActionResult Delete(List<int> ids)
         {
             var userInfoList = _adminUserInfoService.GetAdminUserInfo(ids);

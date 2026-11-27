@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -41,6 +44,11 @@ public sealed class WorkspaceFilesController : ControllerBase
     private readonly IWorkspaceStorage _storage;
     private readonly WorkspaceOptions _options;
 
+    /// <summary>
+    /// Initializes the workspace file controller with storage and upload-limit settings.
+    /// </summary>
+    /// <param name="storage">The tenant-aware workspace storage service.</param>
+    /// <param name="options">The workspace upload and quota options.</param>
     public WorkspaceFilesController(
         IWorkspaceStorage storage,
         IOptions<WorkspaceOptions> options)
@@ -49,6 +57,10 @@ public sealed class WorkspaceFilesController : ControllerBase
         _options = options.Value;
     }
 
+    /// <summary>
+    /// Returns the file-size, workspace-quota, and target-directory capabilities exposed to the client.
+    /// </summary>
+    /// <returns>An <see cref="OkObjectResult"/> containing the configured upload capabilities.</returns>
     [HttpGet("capabilities")]
     public IActionResult Capabilities()
     {
@@ -60,6 +72,18 @@ public sealed class WorkspaceFilesController : ControllerBase
         });
     }
 
+    /// <summary>
+    /// Streams one multipart file into the authenticated administrator's workspace input directory.
+    /// The workspace owner, file name, individual size, and transport limits are validated before writing.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier receiving the file.</param>
+    /// <param name="file">The multipart file to store.</param>
+    /// <param name="cancellationToken">The request cancellation token.</param>
+    /// <returns>
+    /// An <see cref="OkObjectResult"/> with stored metadata, or a client error when ownership,
+    /// file, or configured limits are invalid.
+    /// </returns>
+    /// <exception cref="UnauthorizedAccessException">Thrown when the current administrator identity cannot be parsed.</exception>
     [HttpPost("{workspaceId}/upload")]
     [RequestSizeLimit(TransportLimitBytes)]
     [RequestFormLimits(MultipartBodyLengthLimit = TransportLimitBytes)]
@@ -125,6 +149,11 @@ public sealed class WorkspaceFilesController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Reads and validates the current administrator identifier from the authenticated principal.
+    /// </summary>
+    /// <returns>The positive administrator identifier.</returns>
+    /// <exception cref="UnauthorizedAccessException">Thrown when the principal has no valid administrator identifier.</exception>
     private int GetCurrentOwnerId()
     {
         var value = User.FindFirstValue(ClaimTypes.NameIdentifier);

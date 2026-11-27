@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.42.0.0 add MCP endpoint gateway and tool invocation contracts
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -97,16 +100,27 @@ namespace Senparc.Xncf.XncfBuilder
 
         public DateTime? AppliedAtUtc { get; private set; }
 
+        /// <summary>
+        /// Initializes an empty development-job entity for ORM materialization.
+        /// </summary>
         private XncfDevelopmentJob()
         {
         }
 
+        /// <summary>
+        /// Initializes a development-job entity from a persistence snapshot.
+        /// </summary>
+        /// <param name="snapshot">The source snapshot.</param>
         internal XncfDevelopmentJob(XncfDevelopmentJobSnapshot snapshot)
         {
             JobId = snapshot.JobId;
             Apply(snapshot);
         }
 
+        /// <summary>
+        /// Applies snapshot state to the persisted development-job entity.
+        /// </summary>
+        /// <param name="snapshot">The source snapshot.</param>
         internal void Apply(XncfDevelopmentJobSnapshot snapshot)
         {
             Mode = snapshot.Mode;

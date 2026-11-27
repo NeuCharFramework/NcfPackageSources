@@ -9,6 +9,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.3.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.3.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Extensions;
@@ -22,7 +25,7 @@ namespace Senparc.Xncf.Accounts.Domain.Models
 {
 
     /// <summary>
-    /// userinformation
+    /// Cached account activity and identity fields shared by the full-account projection.
     /// </summary>
     [Serializable]
     public partial class FullAccountBase : BaseFullEntity<Account>
@@ -39,7 +42,7 @@ namespace Senparc.Xncf.Accounts.Domain.Models
         public string LastOpenPageUrl { get; set; }
         public string LastActiveUserAgent { get; set; }
         ///// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether the cached account should be forcibly signed out.
         ///// </summary>
         //public IDevice LastActiveDevice
         //{
@@ -58,17 +61,17 @@ namespace Senparc.Xncf.Accounts.Domain.Models
         public bool IsLogined => Id > 0 && !UserName.IsNullOrEmpty() && (DateTime.Now - LastActiveTime).TotalMinutes < 2;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the number of unread messages.
         /// </summary>
         public bool ForceLogout { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether the current verification-code check passed.
         /// </summary>
         public int UnReadMessageCount { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the image path representing the current online/offline state.
         /// </summary>
         public bool CheckCodePassed { get; set; }
 
@@ -181,10 +184,11 @@ namespace Senparc.Xncf.Accounts.Domain.Models
         public string WeixinUnionId { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the preferred display name, falling back to the user name.
         /// </summary>
         public string DisplayName => NickName ?? UserName;
 
+        /// <inheritdoc />
         public override void CreateEntity(Account entity)
         {
             base.CreateEntity(entity);

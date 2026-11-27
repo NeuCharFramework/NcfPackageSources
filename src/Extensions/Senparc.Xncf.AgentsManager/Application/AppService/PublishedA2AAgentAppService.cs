@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;
@@ -36,7 +39,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides authenticated APIs for publishing local Agent templates through A2A.
     /// </summary>
     [ApiAuthorize]
     public class PublishedA2AAgentAppService : AppServiceBase
@@ -45,6 +48,13 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         private readonly AgentsTemplateService _agentsTemplateService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
+        /// <summary>
+        /// Initializes published A2A-agent management services.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base application service.</param>
+        /// <param name="publishedA2AAgentService">The published-agent persistence service.</param>
+        /// <param name="agentsTemplateService">The local AgentTemplate service.</param>
+        /// <param name="httpContextAccessor">Accessor used to construct the public agent-card URL.</param>
         public PublishedA2AAgentAppService(
             IServiceProvider serviceProvider,
             PublishedA2AAgentService publishedA2AAgentService,
@@ -57,6 +67,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             _httpContextAccessor = httpContextAccessor;
         }
 
+        /// <summary>
+        /// Returns the published A2A configuration associated with a local AgentTemplate.
+        /// </summary>
+        /// <param name="agentTemplateId">The local AgentTemplate identifier.</param>
+        /// <returns>The published configuration, or an empty data result when none exists.</returns>
         [ApiBind]
         public async Task<AppResponseBase<PublishedA2AAgentDto>> GetByAgentTemplateId(int agentTemplateId)
         {
@@ -72,6 +87,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Creates or updates an A2A publication after validating the local Agent and public key.
+        /// </summary>
+        /// <param name="dto">The publication configuration.</param>
+        /// <returns>A response containing the persisted publication DTO and endpoint URL.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the local agent, key, or authentication configuration is invalid.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PublishedA2AAgentDto>> SetPublishedAgent([FromBody] PublishedA2AAgentDto dto)
         {
@@ -121,6 +142,13 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Enables or disables an existing A2A publication.
+        /// </summary>
+        /// <param name="id">The publication identifier.</param>
+        /// <param name="enable">Whether the publication should be enabled.</param>
+        /// <returns>A response containing the operation message.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the publication or its local Agent is unavailable.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<string>> Enable(int id, bool enable)
         {
@@ -147,6 +175,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Removes an A2A publication configuration.
+        /// </summary>
+        /// <param name="id">The publication identifier.</param>
+        /// <returns>A response containing the cancellation message.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the publication does not exist.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<string>> Delete(int id)
         {
@@ -159,6 +193,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Projects a published A2A Agent entity and builds its public Agent Card URL
+        /// from the current HTTP request when available.
+        /// </summary>
+        /// <param name="publishedAgent">The published Agent configuration to project.</param>
+        /// <returns>The client-facing publication DTO.</returns>
         private PublishedA2AAgentDto ToResponseDto(PublishedA2AAgent publishedAgent)
         {
             var dto = new PublishedA2AAgentDto(publishedAgent);
@@ -172,6 +212,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             return dto;
         }
 
+        /// <summary>
+        /// Validates publication identity, public-key normalization, and inbound authentication settings.
+        /// </summary>
+        /// <param name="dto">The publication DTO to validate.</param>
+        /// <exception cref="NcfExceptionBase">Thrown when publication or authentication values are invalid.</exception>
         private static void Validate(PublishedA2AAgentDto dto)
         {
             if (dto == null || dto.AgentTemplateId <= 0)

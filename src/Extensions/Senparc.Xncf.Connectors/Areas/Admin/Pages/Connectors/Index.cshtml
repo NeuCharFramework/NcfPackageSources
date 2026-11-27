@@ -9,12 +9,19 @@
 @section Style {
     <style>
         .connector-shell { display: flex; flex-direction: column; gap: 22px; }
-        .connector-hero { display: flex; gap: 16px; align-items: center; padding: 22px 24px; border-radius: 16px; background: linear-gradient(135deg, #12324d 0%, #1f6f8b 58%, #2a9d8f 100%); color: #fff; }
-        .connector-hero i { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; background: rgba(255,255,255,.16); font-size: 24px; }
-        .connector-hero h1 { margin: 0 0 6px; font-size: 22px; font-weight: 650; }
+        .connector-hero { display: flex; gap: 16px; align-items: center; justify-content: space-between; padding: 22px 24px; border-radius: 18px; background: linear-gradient(135deg, #12324d 0%, #1f6f8b 58%, #2a9d8f 100%); color: #fff; box-shadow: 0 18px 48px rgba(18,50,77,.14); }
+        .connector-hero-copy { display: flex; min-width: 0; gap: 16px; align-items: center; }
+        .connector-hero-copy > i { flex: 0 0 52px; width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; background: rgba(255,255,255,.16); font-size: 24px; }
+        .connector-hero h1 { display: flex; align-items: center; gap: 6px; margin: 0 0 6px; font-size: 22px; line-height: 1.3; font-weight: 650; }
         .connector-hero p { margin: 0; max-width: 760px; line-height: 1.6; color: rgba(255,255,255,.88); }
+        .connector-hero .ncf-doc-help-button { width: 24px; height: 24px; margin: 0; color: rgba(255,255,255,.92); font-size: 16px; }
+        .connector-hero .ncf-doc-help-button:hover,
+        .connector-hero .ncf-doc-help-button:focus-visible { color: #409eff; }
+        .connector-hero-cta { flex: 0 0 auto; min-height: 36px; white-space: nowrap; }
+        .connector-hero-cta .el-icon-plus { width: auto; height: auto; margin-right: 5px; font-size: 14px; }
         .connector-grid, .connector-instance-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
-        .connector-card, .connector-instance { background: #fff; border: 1px solid #e6ebf2; border-radius: 14px; padding: 16px; box-shadow: 0 8px 24px rgba(18, 50, 77, .04); }
+        .connector-card, .connector-instance { display: flex; min-width: 0; flex-direction: column; background: #fff; border: 1px solid #e6ebf2; border-radius: 14px; padding: 16px; box-shadow: 0 8px 24px rgba(18, 50, 77, .04); }
+        .connector-card > .el-button { align-self: flex-start; margin-top: auto; }
         .connector-card h3, .connector-instance h3 { margin: 8px 0; font-size: 16px; }
         .connector-card p, .connector-muted { color: #667085; line-height: 1.55; font-size: 13px; }
         .connector-kicker { display: flex; justify-content: space-between; align-items: center; color: #1f6f8b; font-size: 12px; letter-spacing: .04em; }
@@ -26,6 +33,32 @@
         .connector-status { font-size: 12px; }
         .connector-status.ok { color: #0f7b4c; }
         .connector-status.bad { color: #b42318; }
+        .connector-template-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+        .connector-template { position: relative; overflow: hidden; display: flex; min-width: 0; flex-direction: column; background: linear-gradient(160deg,#fff,#f6faff); border: 1px solid #dbe7f5; border-radius: 14px; padding: 16px; min-height: 170px; }
+        .connector-template::after { content:""; position:absolute; width:90px; height:90px; border-radius:50%; background:rgba(31,111,139,.06); right:-30px; top:-30px; }
+        .connector-template > .connector-card-top > i { color: #1f6f8b; font-size: 22px; }
+        .connector-template h3 { margin: 10px 0 6px; font-size: 15px; }
+        .connector-template p { flex: 1 1 auto; min-height: 42px; margin: 0 0 12px; color:#667085; font-size:12px; line-height:1.5; }
+        .connector-template > .el-button { position: relative; z-index: 1; align-self: flex-start; white-space: nowrap; }
+        .connector-template > .el-button .el-icon-plus { margin-right: 4px; color: inherit; font-size: 12px; }
+        .connector-card-top { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+        .connector-source { font-size:11px; color:#667085; background:#f2f4f7; border-radius:999px; padding:3px 8px; }
+        .connector-toolbar { display:flex; gap:10px; align-items:center; }
+        @@media (max-width: 920px) {
+            .connector-hero { align-items: flex-start; flex-direction: column; }
+            .connector-hero-cta { align-self: flex-end; }
+            .connector-template-grid { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+        }
+        @@media (max-width: 560px) {
+            .connector-shell { gap: 18px; }
+            .connector-hero { padding: 18px; }
+            .connector-hero-copy { align-items: flex-start; }
+            .connector-hero-copy > i { flex-basis: 42px; width: 42px; height: 42px; font-size: 20px; }
+            .connector-hero h1 { font-size: 19px; }
+            .connector-hero-cta { align-self: stretch; }
+            .connector-template-grid, .connector-grid, .connector-instance-grid { grid-template-columns: 1fr; }
+            .connector-section-head { align-items: flex-start; flex-direction: column; }
+        }
     </style>
 }
 
@@ -38,10 +71,38 @@
 @Html.AntiForgeryToken()
 <div class="connector-shell">
     <section class="connector-hero">
-        <i class="fa fa-plug"></i>
-        <div>
-            <h1>{{ ncfST('Frontend.Connectors.ExternalToolConnector') }} <ncf-doc-help topic="connectors.manage"></ncf-doc-help></h1>
-            <p>{{ ncfST('Frontend.Connectors.ConfigureTheAccountAndSecretFirstThenChooseWhichActionsAIMay') }}</p>
+        <div class="connector-hero-copy">
+            <i class="fa fa-plug"></i>
+            <div>
+                <h1>{{ ncfST('Frontend.Connectors.ExternalToolConnector') }} <ncf-doc-help topic="connectors.manage"></ncf-doc-help></h1>
+                <p>{{ ncfST('Frontend.Connectors.ConfigureTheAccountAndSecretFirstThenChooseWhichActionsAIMay') }}</p>
+            </div>
+        </div>
+        <el-button v-if="state.mcpAvailable" class="connector-hero-cta" type="primary" plain icon="el-icon-plus" @@click="openQuickMcp(state.templates[0])">
+            {{ ncfST('Frontend.Connectors.AddMcpConnector') }}
+        </el-button>
+    </section>
+
+    <section v-if="state.templates && state.templates.length">
+        <div class="connector-section-head">
+            <div>
+                <h2>{{ ncfST('Frontend.Connectors.ConnectorTemplates') }}</h2>
+                <p class="connector-muted">{{ ncfST('Frontend.Connectors.TemplateDescription') }}</p>
+            </div>
+            <el-tag size="small" type="info">{{ ncfST('Frontend.Connectors.McpManagedCentrally') }}</el-tag>
+        </div>
+        <div class="connector-template-grid" style="margin-top:12px;">
+            <article class="connector-template" v-for="template in state.templates" :key="template.key">
+                <div class="connector-card-top">
+                    <i :class="template.icon"></i>
+                    <el-tag size="mini" effect="plain">{{ template.category }}</el-tag>
+                </div>
+                <h3>{{ template.name }}</h3>
+                <p>{{ template.description }}</p>
+                <el-button type="primary" size="mini" icon="el-icon-plus" @@click="openQuickMcp(template)">
+                    {{ ncfST('Frontend.Connectors.CreateFromTemplate') }}
+                </el-button>
+            </article>
         </div>
     </section>
 
@@ -54,9 +115,13 @@
         </div>
         <div class="connector-grid" style="margin-top:12px;" v-if="state.catalog.length">
             <article class="connector-card" v-for="item in state.catalog" :key="item.key">
-                <div class="connector-kicker"><span><i :class="item.icon || 'fa fa-plug'"></i> {{ item.key }}</span><span>{{ ncfST('Frontend.Connectors.ValueActions', item.actions.length) }}</span></div>
+                <div class="connector-kicker">
+                    <span><i :class="item.icon || 'fa fa-plug'"></i> {{ item.key }}</span>
+                    <span class="connector-source">{{ item.key.indexOf('mcp.endpoint.') === 0 ? 'MCP' : 'XNCF' }}</span>
+                </div>
                 <h3>{{ item.name }}</h3>
                 <p>{{ item.description }}</p>
+                <div class="connector-muted">{{ ncfST('Frontend.Connectors.ValueActions', item.actions.length) }}</div>
                 <el-button type="primary" size="small" icon="el-icon-plus" @@click="openCreate(item)">{{ ncfST('Frontend.Connectors.ConfigureThisConnector') }}</el-button>
             </article>
         </div>
@@ -131,6 +196,44 @@
     </div>
 </el-dialog>
 
+<el-dialog :title="ncfST('Frontend.Connectors.CreateMcpConnector')" :visible.sync="quickMcpVisible" width="680px" :close-on-click-modal="false">
+    <el-form v-if="quickTemplate" label-position="top" size="small">
+        <el-alert :title="quickTemplate.name" :description="quickTemplate.description" type="info" :closable="false" show-icon style="margin-bottom:16px;"></el-alert>
+        <el-row :gutter="14">
+            <el-col :span="12">
+                <el-form-item :label="ncfST('Frontend.Connectors.McpConnectionName')" required>
+                    <el-input v-model="quickForm.mcpName" maxlength="100" :placeholder="ncfST('Frontend.Connectors.McpConnectionPlaceholder')"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="12">
+                <el-form-item :label="ncfST('Frontend.Connectors.ConnectorDisplayName')">
+                    <el-input v-model="quickForm.connectorName" maxlength="100" :placeholder="quickForm.mcpName"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-form-item :label="ncfST('Frontend.Connectors.McpEndpoint')" required>
+            <el-input v-model="quickForm.endpoint" placeholder="https://.../mcp"></el-input>
+        </el-form-item>
+        <el-form-item :label="ncfST('Frontend.Connectors.Transport')">
+            <el-radio-group v-model="quickForm.endpointType">
+                <el-radio-button label="http">HTTP</el-radio-button>
+                <el-radio-button label="sse">SSE</el-radio-button>
+            </el-radio-group>
+        </el-form-item>
+        <el-form-item :label="quickTemplate.authLabel">
+            <el-input v-model="quickForm.token" type="password" show-password :placeholder="ncfST('Frontend.Connectors.SecretStoredByMcpModule')"></el-input>
+        </el-form-item>
+        <el-form-item :label="ncfST('Frontend.Connectors.Description')">
+            <el-input v-model="quickForm.description" type="textarea" :rows="2" maxlength="500"></el-input>
+        </el-form-item>
+        <el-alert :title="ncfST('Frontend.Connectors.QuickCreateBehavior')" type="warning" :closable="false" show-icon></el-alert>
+    </el-form>
+    <div slot="footer">
+        <el-button @@click="quickMcpVisible = false">{{ ncfST('Frontend.Connectors.Cancel') }}</el-button>
+        <el-button type="primary" :loading="quickSaving" @@click="createQuickMcp">{{ ncfST('Frontend.Connectors.TestAndCreate') }}</el-button>
+    </div>
+</el-dialog>
+
 @section scripts {
     @await Html.PartialAsync("_LocalizationScripts")
     <script>
@@ -143,6 +246,10 @@
                     saving: false,
                     testingId: "",
                     currentType: null,
+                    quickMcpVisible: false,
+                    quickSaving: false,
+                    quickTemplate: null,
+                    quickForm: { templateKey: "", mcpName: "", connectorName: "", endpoint: "", endpointType: "http", token: "", description: "" },
                     form: { instanceId: "", name: "", connectorKey: "", description: "", enabled: true, values: {}, actionKeys: [], secretFields: [] }
                 };
             },
@@ -181,6 +288,43 @@
                     this.editorVisible = true;
                     console.log("[Connector] open edit", item.instanceId);
                 },
+                openQuickMcp: function (template) {
+                    if (!template) return;
+                    this.quickTemplate = template;
+                    this.quickForm = {
+                        templateKey: template.key,
+                        mcpName: template.name,
+                        connectorName: "",
+                        endpoint: template.endpoint || "",
+                        endpointType: template.endpointType || "http",
+                        token: "",
+                        description: template.description || ""
+                    };
+                    this.quickMcpVisible = true;
+                },
+                createQuickMcp: async function () {
+                    if (this.quickSaving) return;
+                    if (!this.quickForm.mcpName || !this.quickForm.endpoint) {
+                        this.$message.error(ncfST("Frontend.Connectors.McpFieldsRequired"));
+                        return;
+                    }
+                    this.quickSaving = true;
+                    try {
+                        var data = await this.post("QuickMcp", this.quickForm);
+                        if (!data.success) {
+                            this.$message.error(data.message || ncfST("Frontend.Connectors.CreateFailed"));
+                            return;
+                        }
+                        this.quickMcpVisible = false;
+                        await this.applyState(data);
+                        this.$message.success(data.message || ncfST("Frontend.Connectors.McpConnectorCreated"));
+                    } catch (error) {
+                        console.error("[Connector] quick MCP create failed", error);
+                        this.$message.error(ncfST("Frontend.Connectors.CreateFailed"));
+                    } finally {
+                        this.quickSaving = false;
+                    }
+                },
                 secretPlaceholder: function (field) {
                     if (field.kind === 1 && this.form.secretFields.indexOf(field.key) >= 0) {
                         return ncfST("Frontend.Connectors.SavedLeaveEmptyToKeepItUnchanged");
@@ -209,9 +353,33 @@
                     });
                     var data = await response.json();
                     console.log("[Connector]", handler, data);
+                    if (!response.ok) {
+                        throw new Error(data && (data.message || data.errorMessage)
+                            ? (data.message || data.errorMessage)
+                            : ("HTTP " + response.status));
+                    }
                     return data;
                 },
+                refreshState: async function () {
+                    var url = window.location.pathname + window.location.search;
+                    url += (url.indexOf("?") >= 0 ? "&" : "?") + "handler=State";
+                    var response = await fetch(url, {
+                        headers: { "X-Requested-With": "XMLHttpRequest" }
+                    });
+                    if (!response.ok) {
+                        throw new Error("HTTP " + response.status);
+                    }
+                    this.state = await response.json();
+                },
+                applyState: async function (data) {
+                    if (data && data.state) {
+                        this.state = data.state;
+                    } else {
+                        await this.refreshState();
+                    }
+                },
                 save: async function () {
+                    if (this.saving) return;
                     this.saving = true;
                     try {
                         var data = await this.post("Save", this.form);
@@ -219,8 +387,9 @@
                             this.$message.error(data.message || ncfST("Frontend.Connectors.SaveFailed"));
                             return;
                         }
+                        this.editorVisible = false;
+                        await this.applyState(data);
                         this.$message.success(data.message || ncfST("Frontend.Connectors.Saved"));
-                        window.location.reload();
                     } catch (error) {
                         console.error("[Connector] save failed", error);
                         this.$message.error(ncfST("Frontend.Connectors.SaveFailedPleaseTryAgainLater"));
@@ -234,7 +403,7 @@
                         var data = await this.post("Test", { instanceId: item.instanceId });
                         if (data.success) this.$message.success(data.message || ncfST("Frontend.Connectors.ConnectionSucceeded"));
                         else this.$message.error(data.message || ncfST("Frontend.Connectors.ConnectionFailed"));
-                        window.setTimeout(function () { window.location.reload(); }, 700);
+                        await this.refreshState();
                     } catch (error) {
                         console.error("[Connector] test failed", error);
                         this.$message.error(ncfST("Frontend.Connectors.TestFailedPleaseTryAgainLater"));
@@ -249,7 +418,14 @@
                         this.$message.error(data.message || ncfST("Frontend.Connectors.DeleteFailed"));
                         return;
                     }
-                    window.location.reload();
+                    try {
+                        await this.applyState(data);
+                    } catch (error) {
+                        console.error("[Connector] refresh after delete failed", error);
+                        this.state.instances = this.state.instances.filter(function (entry) {
+                            return entry.instanceId !== item.instanceId;
+                        });
+                    }
                 }
             }
         });

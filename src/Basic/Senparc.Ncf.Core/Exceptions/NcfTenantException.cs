@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -23,10 +26,21 @@ namespace Senparc.Ncf.Core.Exceptions
 {
     public class NcfTenantException : NcfExceptionBase
     {
+        /// <summary>
+        /// Initializes a tenant-scope exception.
+        /// </summary>
+        /// <param name="message">The exception message.</param>
+        /// <param name="logged">Whether the exception has already been logged.</param>
         public NcfTenantException(string message, bool logged = false) : base(message, logged)
         {
         }
 
+        /// <summary>
+        /// Initializes a tenant-scope exception with an inner exception.
+        /// </summary>
+        /// <param name="message">The exception message.</param>
+        /// <param name="inner">The underlying exception.</param>
+        /// <param name="logged">Whether the exception has already been logged.</param>
         public NcfTenantException(string message, Exception inner, bool logged = false) : base(message, inner, logged)
         {
         }

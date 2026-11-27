@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.15.17 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.15.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using AutoMapper;
@@ -56,7 +59,7 @@ namespace Senparc.Xncf.Tenant.Domain.Cache
     //Legacy comment translated to English.
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Caches enabled tenant records keyed by their tenant lookup keys.
     /// </summary>
     [AutoDIType(DILifecycleType.Scoped)]
     public class FullTenantInfoCache : BaseCache<Dictionary<string, TenantInfoDto>>
@@ -70,9 +73,9 @@ namespace Senparc.Xncf.Tenant.Domain.Cache
         //private SenparcEntitiesBase _senparcEntitiesBase => base._db.BaseDataContext as SenparcEntitiesBase;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Loads enabled tenants ordered by their persistent identifiers.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The enabled tenant entities.</returns>
         private async Task<List<TenantInfo>> GetEnabledListAsync()
         {
             return await _tenantInfoRepository.GetObjectListAsync(
@@ -80,6 +83,13 @@ namespace Senparc.Xncf.Tenant.Domain.Cache
         }
 
 
+        /// <summary>
+        /// Initializes the tenant cache with the tenant database and mapper.
+        /// </summary>
+        /// <param name="db">The tenant database wrapper.</param>
+        /// <param name="mapper">The mapper used to create tenant DTOs.</param>
+        /// <param name="senparcEntitiesMultiTenantBase">The multi-tenant DbContext used for recovery.</param>
+        /// <param name="tenantInfoRepository">The repository used to query tenant records.</param>
         public FullTenantInfoCache(TenantInfoDbData db, IMapper mapper, SenparcEntitiesMultiTenant senparcEntitiesMultiTenantBase,
             TenantInfoRepository tenantInfoRepository)
             : this(CACHE_KEY, db, 1440, tenantInfoRepository)
@@ -87,6 +97,12 @@ namespace Senparc.Xncf.Tenant.Domain.Cache
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Initializes the tenant cache using its default repository.
+        /// </summary>
+        /// <param name="db">The tenant database wrapper.</param>
+        /// <param name="mapper">The mapper used to create tenant DTOs.</param>
+        /// <param name="senparcEntitiesMultiTenantBase">The multi-tenant DbContext used for recovery.</param>
         public FullTenantInfoCache(TenantInfoDbData db, IMapper mapper, SenparcEntitiesMultiTenant senparcEntitiesMultiTenantBase)
             : this(db, mapper, senparcEntitiesMultiTenantBase, new TenantInfoRepository(db))
         {
@@ -104,11 +120,17 @@ namespace Senparc.Xncf.Tenant.Domain.Cache
             base.TimeOut = timeOut;
         }
 
+        /// <inheritdoc/>
         public override Dictionary<string, TenantInfoDto> Update()
         {
             throw new Senparc.Ncf.Core.Exceptions.NcfTenantException("FullTenantInfoCache 不支持同步更新方法，请使用异步方法 UpdateAsync()");
         }
 
+        /// <summary>
+        /// Refreshes enabled tenant data, recovering the schema when a migration-related
+        /// query failure prevents the first load.
+        /// </summary>
+        /// <returns>A task containing the refreshed tenant dictionary.</returns>
         public override async Task<Dictionary<string, TenantInfoDto>> UpdateAsync()
         {
             List<TenantInfo> fullList = null;

@@ -9,6 +9,9 @@
     Modified by: Senparc - 20261125
     Change description: v0.19.4 Added chat-tool parameter option integration.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -21,9 +24,18 @@ using Senparc.Xncf.AgentsManager.Domain.Services;
 
 namespace Senparc.Xncf.AgentsManager.Application.ChatTools;
 
+/// <summary>
+/// Provides enabled ChatGroup options for Agent-manager chat-tool parameter selectors.
+/// </summary>
 public sealed class ChatGroupChatToolParameterOptionsProvider(ChatGroupService chatGroupService)
     : IChatToolParameterOptionsProvider
 {
+    /// <summary>
+    /// Returns enabled ChatGroup options filtered by query text and bounded by the requested limit.
+    /// </summary>
+    /// <param name="request">The query and maximum option count.</param>
+    /// <param name="cancellationToken">The cancellation token for option loading.</param>
+    /// <returns>ChatGroup options suitable for a chat-tool selector.</returns>
     public async Task<IReadOnlyCollection<ChatToolParameterOption>> GetOptionsAsync(
         ChatToolParameterOptionsRequest request,
         CancellationToken cancellationToken = default)

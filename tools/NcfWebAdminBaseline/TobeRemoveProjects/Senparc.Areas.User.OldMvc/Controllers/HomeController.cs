@@ -9,6 +9,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.0.1 Updated legacy MVC integration metadata and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.0.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authorization;
@@ -53,6 +56,12 @@ namespace Senparc.Areas.User.Controllers
         private readonly SmsRecordService _smsRecordService;
         private readonly SenparcWeixinSetting _senparcWeixinSetting;
 
+        /// <summary>
+        /// Initializes the legacy user home controller with account, SMS, and Weixin settings.
+        /// </summary>
+        /// <param name="accountService">The account persistence service.</param>
+        /// <param name="smsRecordService">The SMS verification service.</param>
+        /// <param name="senparcWeixinSetting">The configured Weixin application settings.</param>
         public HomeController(AccountService accountService, SmsRecordService smsRecordService, IOptionsSnapshot<SenparcWeixinSetting> senparcWeixinSetting)
         {
             _accountService = accountService;
@@ -60,6 +69,8 @@ namespace Senparc.Areas.User.Controllers
             _senparcWeixinSetting = senparcWeixinSetting.Value;
         }
        
+        /// <summary>Renders the legacy user home page.</summary>
+        /// <returns>The home view result.</returns>
         public ActionResult Index()
         {
             Home_IndexVD vd = new Home_IndexVD()
@@ -68,6 +79,8 @@ namespace Senparc.Areas.User.Controllers
             return View(vd);
         }
 
+        /// <summary>Renders the account-recovery page.</summary>
+        /// <returns>The recovery view result.</returns>
         public ActionResult Recover()
         {
             Home_RecoverVD vd = new Home_RecoverVD()
@@ -77,6 +90,10 @@ namespace Senparc.Areas.User.Controllers
         }
 
         [AllowAnonymous]
+        /// <summary>
+        /// Builds the registration view model, including QR and SMS verification state.
+        /// </summary>
+        /// <returns>The registration view result.</returns>
         public ActionResult Register()
         {
             int lastSeconds = -1;
@@ -102,6 +119,11 @@ namespace Senparc.Areas.User.Controllers
 
         [HttpPost]
         [AllowAnonymous]
+        /// <summary>
+        /// Validates QR/SMS registration inputs and creates an account after successful checks.
+        /// </summary>
+        /// <param name="vd_form">The submitted registration form.</param>
+        /// <returns>A registration view, login redirect, or retry redirect.</returns>
         public ActionResult Register(Home_RegisterVD vd_form)
         {
             //Legacy comment translated to English.
@@ -179,6 +201,8 @@ namespace Senparc.Areas.User.Controllers
             }
         }
 
+        /// <summary>Renders the registration success page.</summary>
+        /// <returns>The success view result.</returns>
         public IActionResult Success()
         {
             return View();
@@ -205,6 +229,11 @@ namespace Senparc.Areas.User.Controllers
         //}
 
         [AllowAnonymous]
+        /// <summary>
+        /// Starts the legacy Weixin OAuth login redirect for the requested return URL.
+        /// </summary>
+        /// <param name="returnUrl">The optional local return URL.</param>
+        /// <returns>A redirect to the configured OAuth authorization endpoint.</returns>
         public ActionResult Login(string returnUrl)
         {
             if (!string.IsNullOrWhiteSpace(base.UserName) && base.IsLogined)
@@ -223,13 +252,14 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Handles the Weixin OAuth callback, exchanges the authorization code,
+        /// and redirects the user to the requested local destination.
         /// </summary>
-        /// <param name="code"></param>
-        /// <param name="state"></param>
-        /// <param name="returnUrl"></param>
-        /// <param name="weixinId"></param>
-        /// <returns></returns>
+        /// <param name="code">The OAuth authorization code.</param>
+        /// <param name="state">The anti-forgery state value expected by the legacy flow.</param>
+        /// <param name="returnUrl">The optional local return URL.</param>
+        /// <param name="weixinId">The configured Weixin account identifier.</param>
+        /// <returns>A redirect or explanatory content when authorization fails.</returns>
         [AllowAnonymous]
         public ActionResult OAuthCallback(string code, string state, string returnUrl, int weixinId = 18635)
         {
@@ -287,6 +317,12 @@ namespace Senparc.Areas.User.Controllers
 
         [HttpPost]
         [AllowAnonymous]
+        /// <summary>
+        /// Processes the legacy login form and redirects authenticated users to
+        /// the requested local destination.
+        /// </summary>
+        /// <param name="vd">The submitted login model.</param>
+        /// <returns>The login view on failure or a redirect on success.</returns>
         public ActionResult Login(Home_LoginVD vd)
         {
             if (IsLogined)
@@ -338,11 +374,12 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Sends an SMS verification code when the phone number is not already registered
+        /// and the submitted token passes the legacy validation flow.
         /// </summary>
-        /// <param name="phone"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
+        /// <param name="phone">The phone number receiving the code.</param>
+        /// <param name="token">The anti-forgery or captcha token supplied by the client.</param>
+        /// <returns>A JSON success or failure envelope.</returns>
         [AllowAnonymous]
         public ActionResult SendSms(string phone, string token)
         {
@@ -375,6 +412,11 @@ namespace Senparc.Areas.User.Controllers
         }
 
         [AllowAnonymous]
+        /// <summary>
+        /// Creates the registration QR-code URL associated with a registration GUID.
+        /// </summary>
+        /// <param name="guid">The registration correlation identifier.</param>
+        /// <returns>The generated QR-code URL.</returns>
         private string GetRegQrCode(Guid guid)
         {
             var sceneId = int.Parse(DateTime.Now.ToString("MMddHHmmss"));
@@ -392,6 +434,8 @@ namespace Senparc.Areas.User.Controllers
             return qrCodeResult.url;
         }
 
+        /// <summary>Clears the legacy user session and redirects to the login page.</summary>
+        /// <returns>A login redirect result.</returns>
         public ActionResult Logout()
         {
             _accountService.Logout();

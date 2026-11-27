@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.15.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.15.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -31,7 +34,7 @@ namespace Senparc.Xncf.XncfModuleManager.Models
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the persisted XNCF module records managed by this context.
         /// </summary>
         public DbSet<XncfModule> XncfModules { get; set; }
 

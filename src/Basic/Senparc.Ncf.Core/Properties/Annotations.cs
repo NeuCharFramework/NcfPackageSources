@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -616,6 +619,10 @@ namespace Senparc.Ncf.Core.Annotations
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
     public sealed class AspMvcAreaMasterLocationFormatAttribute : Attribute
     {
+        /// <summary>
+        /// Initializes an assembly-level MVC master-view location format.
+        /// </summary>
+        /// <param name="format">The view-location format string.</param>
         public AspMvcAreaMasterLocationFormatAttribute(string format)
         {
             Format = format;
@@ -627,6 +634,10 @@ namespace Senparc.Ncf.Core.Annotations
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
     public sealed class AspMvcAreaPartialViewLocationFormatAttribute : Attribute
     {
+        /// <summary>
+        /// Declares an MVC area partial-view location format for analysis tooling.
+        /// </summary>
+        /// <param name="format">The location format string.</param>
         public AspMvcAreaPartialViewLocationFormatAttribute(string format)
         {
             Format = format;
@@ -638,6 +649,10 @@ namespace Senparc.Ncf.Core.Annotations
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
     public sealed class AspMvcAreaViewLocationFormatAttribute : Attribute
     {
+        /// <summary>
+        /// Declares an MVC area-view location format for analysis tooling.
+        /// </summary>
+        /// <param name="format">The location format string.</param>
         public AspMvcAreaViewLocationFormatAttribute(string format)
         {
             Format = format;
@@ -649,6 +664,10 @@ namespace Senparc.Ncf.Core.Annotations
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
     public sealed class AspMvcMasterLocationFormatAttribute : Attribute
     {
+        /// <summary>
+        /// Declares an MVC master-view location format for analysis tooling.
+        /// </summary>
+        /// <param name="format">The location format string.</param>
         public AspMvcMasterLocationFormatAttribute(string format)
         {
             Format = format;
@@ -660,6 +679,10 @@ namespace Senparc.Ncf.Core.Annotations
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
     public sealed class AspMvcPartialViewLocationFormatAttribute : Attribute
     {
+        /// <summary>
+        /// Declares an MVC partial-view location format for analysis tooling.
+        /// </summary>
+        /// <param name="format">The location format string.</param>
         public AspMvcPartialViewLocationFormatAttribute(string format)
         {
             Format = format;
@@ -671,6 +694,10 @@ namespace Senparc.Ncf.Core.Annotations
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
     public sealed class AspMvcViewLocationFormatAttribute : Attribute
     {
+        /// <summary>
+        /// Declares an MVC view location format for analysis tooling.
+        /// </summary>
+        /// <param name="format">The location format string.</param>
         public AspMvcViewLocationFormatAttribute(string format)
         {
             Format = format;
@@ -688,7 +715,14 @@ namespace Senparc.Ncf.Core.Annotations
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
     public sealed class AspMvcActionAttribute : Attribute
     {
+        /// <summary>
+        /// Initializes an MVC action annotation without an anonymous property.
+        /// </summary>
         public AspMvcActionAttribute() { }
+        /// <summary>
+        /// Initializes an MVC action annotation for an anonymous property.
+        /// </summary>
+        /// <param name="anonymousProperty">The property used to infer the action.</param>
         public AspMvcActionAttribute(string anonymousProperty)
         {
             AnonymousProperty = anonymousProperty;
@@ -705,7 +739,14 @@ namespace Senparc.Ncf.Core.Annotations
     [AttributeUsage(AttributeTargets.Parameter)]
     public sealed class AspMvcAreaAttribute : Attribute
     {
+        /// <summary>
+        /// Initializes an MVC area annotation without an anonymous property.
+        /// </summary>
         public AspMvcAreaAttribute() { }
+        /// <summary>
+        /// Initializes an MVC area annotation for an anonymous property.
+        /// </summary>
+        /// <param name="anonymousProperty">The property used to infer the area.</param>
         public AspMvcAreaAttribute(string anonymousProperty)
         {
             AnonymousProperty = anonymousProperty;
@@ -723,7 +764,14 @@ namespace Senparc.Ncf.Core.Annotations
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
     public sealed class AspMvcControllerAttribute : Attribute
     {
+        /// <summary>
+        /// Initializes an MVC controller annotation without an anonymous property.
+        /// </summary>
         public AspMvcControllerAttribute() { }
+        /// <summary>
+        /// Initializes an MVC controller annotation for an anonymous property.
+        /// </summary>
+        /// <param name="anonymousProperty">The property used to infer the controller.</param>
         public AspMvcControllerAttribute(string anonymousProperty)
         {
             AnonymousProperty = anonymousProperty;
@@ -811,7 +859,14 @@ namespace Senparc.Ncf.Core.Annotations
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Field)]
     public sealed class HtmlElementAttributesAttribute : Attribute
     {
+        /// <summary>
+        /// Initializes HTML-element metadata without a named attribute.
+        /// </summary>
         public HtmlElementAttributesAttribute() { }
+        /// <summary>
+        /// Initializes HTML-element metadata for a named attribute.
+        /// </summary>
+        /// <param name="name">The HTML attribute name.</param>
         public HtmlElementAttributesAttribute(string name)
         {
             Name = name;
@@ -823,6 +878,10 @@ namespace Senparc.Ncf.Core.Annotations
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property)]
     public sealed class HtmlAttributeValueAttribute : Attribute
     {
+        /// <summary>
+        /// Associates the annotation with a specific HTML attribute name.
+        /// </summary>
+        /// <param name="name">The HTML attribute name.</param>
         public HtmlAttributeValueAttribute([NotNull] string name)
         {
             Name = name;
@@ -846,6 +905,10 @@ namespace Senparc.Ncf.Core.Annotations
     [AttributeUsage(AttributeTargets.Method)]
     public sealed class CollectionAccessAttribute : Attribute
     {
+        /// <summary>
+        /// Initializes collection-access metadata for a method.
+        /// </summary>
+        /// <param name="collectionAccessType">The collection access behavior.</param>
         public CollectionAccessAttribute(CollectionAccessType collectionAccessType)
         {
             CollectionAccessType = collectionAccessType;
@@ -883,6 +946,10 @@ namespace Senparc.Ncf.Core.Annotations
     [AttributeUsage(AttributeTargets.Parameter)]
     public sealed class AssertionConditionAttribute : Attribute
     {
+        /// <summary>
+        /// Declares the truth condition required for an assertion parameter.
+        /// </summary>
+        /// <param name="conditionType">The assertion condition type.</param>
         public AssertionConditionAttribute(AssertionConditionType conditionType)
         {
             ConditionType = conditionType;
@@ -957,6 +1024,11 @@ namespace Senparc.Ncf.Core.Annotations
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public sealed class AspChildControlTypeAttribute : Attribute
     {
+        /// <summary>
+        /// Associates an ASP child-control tag with its CLR control type.
+        /// </summary>
+        /// <param name="tagName">The markup tag name.</param>
+        /// <param name="controlType">The control CLR type.</param>
         public AspChildControlTypeAttribute(string tagName, Type controlType)
         {
             TagName = tagName;
@@ -979,6 +1051,10 @@ namespace Senparc.Ncf.Core.Annotations
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public sealed class AspRequiredAttributeAttribute : Attribute
     {
+        /// <summary>
+        /// Declares an attribute required by an ASP control.
+        /// </summary>
+        /// <param name="attribute">The required attribute name.</param>
         public AspRequiredAttributeAttribute([NotNull] string attribute)
         {
             Attribute = attribute;
@@ -992,6 +1068,10 @@ namespace Senparc.Ncf.Core.Annotations
     {
         public bool CreateConstructorReferences { get; private set; }
 
+        /// <summary>
+        /// Configures whether constructor references should be created for the property.
+        /// </summary>
+        /// <param name="createConstructorReferences">Whether constructor references should be generated.</param>
         public AspTypePropertyAttribute(bool createConstructorReferences)
         {
             CreateConstructorReferences = createConstructorReferences;
@@ -1001,6 +1081,10 @@ namespace Senparc.Ncf.Core.Annotations
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
     public sealed class RazorImportNamespaceAttribute : Attribute
     {
+        /// <summary>
+        /// Declares a namespace imported by Razor analysis.
+        /// </summary>
+        /// <param name="name">The namespace name.</param>
         public RazorImportNamespaceAttribute(string name)
         {
             Name = name;
@@ -1012,6 +1096,11 @@ namespace Senparc.Ncf.Core.Annotations
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
     public sealed class RazorInjectionAttribute : Attribute
     {
+        /// <summary>
+        /// Declares a Razor-injected field and its type.
+        /// </summary>
+        /// <param name="type">The injected type name.</param>
+        /// <param name="fieldName">The target field name.</param>
         public RazorInjectionAttribute(string type, string fieldName)
         {
             Type = type;

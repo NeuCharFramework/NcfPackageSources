@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Trace;
@@ -30,18 +33,19 @@ namespace Senparc.Ncf.Core.AssembleScan
     public static class AssembleScanHelper
     {
         /// <summary>
-        /// Collection of all scan methods
+        /// Gets the callbacks registered for assembly scanning.
         /// </summary>
         public static List<AssembleScanItem> ScanAssamblesActions { get; set; } = new List<AssembleScanItem>();
 
         private static object _scanLock = new object();
 
         /// <summary>
-        /// Add Scan Item
+        /// Registers an assembly-scan callback and optionally executes all pending scans immediately.
         /// </summary>
-        /// <param name="action">Scanning Process</param>
-        /// <param name="runScanNow">whether to scan immediately</param>
-        /// <param name="dllFilePatterns">File name of the included dll, ".Xncf."will definitely be included inside</param>
+        /// <param name="action">The callback invoked once for each selected assembly.</param>
+        /// <param name="runScanNow">Whether to invoke <see cref="RunScan(string[])"/> immediately.</param>
+        /// <param name="dllFilePatterns">Additional case-insensitive filename fragments accepted during dynamic loading.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="action"/> is <see langword="null"/>.</exception>
         public static void AddAssembleScanItem(Action<Assembly> action, bool runScanNow, string[] dllFilePatterns = null)
         {
             ScanAssamblesActions.Add(new AssembleScanItem(action));
@@ -54,9 +58,10 @@ namespace Senparc.Ncf.Core.AssembleScan
 
 
         /// <summary>
-        /// Execute scan
+        /// Executes all unfinished assembly-scan callbacks against the currently loaded assemblies
+        /// and eligible extension DLLs.
         /// </summary>
-        /// <param name="dllFilePatterns">File name of the included dll, ".Xncf."will definitely be included inside</param>
+        /// <param name="dllFilePatterns">Additional case-insensitive filename fragments accepted during dynamic loading.</param>
         public static void RunScan(string[] dllFilePatterns)
         {
             var dt1 = SystemTime.Now;
@@ -103,12 +108,14 @@ namespace Senparc.Ncf.Core.AssembleScan
         private static object AllAssembliesLock = new object();
 
         /// <summary>
-        /// get the assembly
+        /// Returns the application assemblies and, when requested, dynamically loads eligible extension DLLs.
+        /// Results can be reused from the helper's process-wide assembly cache.
         /// </summary>
-        /// <param name="dynamicLoadAllDlls">whetherfrom dll directory loads other program assemblies not referenced by the program, default for true</param>
-        /// <param name="useCachedData">whether to use cached data, default to true</param>
-        ///Legacy comment translated to English.
-        /// <param name="dllFilePatterns">File name of the included dll, ".Xncf."will definitely be included inside</param>
+        /// <param name="dynamicLoadAllDlls">Whether to inspect the application base directory for additional DLLs.</param>
+        /// <param name="useCachedData">Whether an existing cached assembly list may be returned.</param>
+        /// <param name="forceUpdateCache">Whether to rebuild the cached list before returning.</param>
+        /// <param name="dllFilePatterns">Additional case-insensitive filename fragments accepted during dynamic loading.</param>
+        /// <returns>The assemblies available for scanning.</returns>
         public static List<Assembly> GetAssembiles(bool dynamicLoadAllDlls = true, bool useCachedData = true, bool forceUpdateCache = true, string[] dllFilePatterns = null)
         {
             lock (AllAssembliesLock)

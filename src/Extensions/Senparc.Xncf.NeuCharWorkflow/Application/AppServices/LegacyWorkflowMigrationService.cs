@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.0.0 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +48,10 @@ public sealed class LegacyWorkflowMigrationService
     private const string LegacyFunctionTable = "ADMIN_NeuCharPivotFunction";
     private readonly IServiceScopeFactory _scopeFactory;
 
+    /// <summary>
+    /// Initializes the legacy Workflow migration service.
+    /// </summary>
+    /// <param name="scopeFactory">The scope factory used to resolve the legacy and target DbContexts.</param>
     public LegacyWorkflowMigrationService(IServiceScopeFactory scopeFactory)
     {
         _scopeFactory = scopeFactory;

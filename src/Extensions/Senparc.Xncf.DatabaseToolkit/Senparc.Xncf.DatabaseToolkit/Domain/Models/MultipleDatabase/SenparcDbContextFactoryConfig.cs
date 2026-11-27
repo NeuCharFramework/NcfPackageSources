@@ -6,8 +6,8 @@ using System.Linq;
 namespace Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Resolves the application root used by design-time DatabaseToolkit DbContext factories
+    /// and checks candidate roots for the NCF database configuration file.
     /// </summary>
     internal static class SenparcDbContextFactoryConfig
     {
@@ -15,6 +15,10 @@ namespace Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase
 
         public static string RootDictionaryPath => RootDirectory.Value;
 
+        /// <summary>
+        /// Searches known development and deployment locations for the database configuration root.
+        /// </summary>
+        /// <returns>The first matching root, or the application base directory when none matches.</returns>
         private static string ResolveRootDirectory()
         {
             var projectPath = Path.GetFullPath(
@@ -34,6 +38,11 @@ namespace Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase
             return candidates.FirstOrDefault(HasDatabaseConfiguration) ?? projectPath;
         }
 
+        /// <summary>
+        /// Determines whether a candidate root contains the NCF database configuration file.
+        /// </summary>
+        /// <param name="rootDirectoryPath">The candidate application root.</param>
+        /// <returns><see langword="true"/> when the expected configuration file exists.</returns>
         private static bool HasDatabaseConfiguration(string rootDirectoryPath)
         {
             return File.Exists(Path.Combine(

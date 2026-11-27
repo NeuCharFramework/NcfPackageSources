@@ -518,10 +518,10 @@
                                 class="chat-message-action-card">
                                 <button type="button" class="is-preview" @@click="openAgentTaskPreview(attachment)">
                                     <i class="fa fa-play-circle-o" aria-hidden="true"></i>
-                                    <span>{{ ncfT('AdminChat.Action.PreviewAgentTask', attachment.name, attachment.actionTargetId) }}</span>
+                                    <span>{{ ncfT('AdminChat.Action.PreviewAsyncTask', messageActionTypeLabel(attachment), attachment.name, attachment.actionTarget || attachment.actionTargetId) }}</span>
                                 </button>
                                 <button type="button" class="is-external"
-                                    :title="ncfT('AdminChat.Action.OpenAgentTask', attachment.name, attachment.actionTargetId)"
+                                    :title="ncfT('AdminChat.Action.OpenAsyncTask', messageActionTypeLabel(attachment), attachment.name)"
                                     @@click="openMessageAttachmentAction(attachment)">
                                     <i class="fa fa-external-link" aria-hidden="true"></i>
                                 </button>
@@ -558,11 +558,11 @@
                             <div v-if="workspaceArtifactsExpanded(message)" class="chat-message-attachments is-expanded">
                                 <button v-for="attachment in messageWorkspaceArtifacts(message)" :key="attachment.relativePath"
                                     type="button" class="is-workspace-artifact"
-                                    :class="'change-' + (attachment.changeType || 'changed')"
-                                    :disabled="attachment.changeType === 'deleted'"
+                                    :class="'change-' + workspaceArtifactChangeType(attachment.changeType)"
+                                    :disabled="workspaceArtifactChangeType(attachment.changeType) === 'deleted'"
                                     :title="attachment.relativePath"
                                     @@click="openWorkspaceArtifact(attachment)">
-                                    <i :class="attachment.changeType === 'created' ? 'el-icon-plus' : attachment.changeType === 'deleted' ? 'el-icon-minus' : workspaceFileIcon(attachment.relativePath)"></i>
+                                    <i :class="workspaceArtifactChangeType(attachment.changeType) === 'created' ? 'el-icon-plus' : workspaceArtifactChangeType(attachment.changeType) === 'deleted' ? 'el-icon-minus' : workspaceFileIcon(attachment.relativePath)"></i>
                                     <span>{{ attachment.relativePath }}</span>
                                     <small>{{ workspaceArtifactChangeLabel(attachment.changeType) }}</small>
                                 </button>
@@ -1890,7 +1890,7 @@
         append-to-body
         custom-class="chat-agent-task-preview">
         <div slot="title" class="chat-agent-task-preview-title">
-            <span>{{ agentTaskPreviewAction ? ncfT('AdminChat.Action.AgentTaskPreviewTitle', agentTaskPreviewAction.name, agentTaskPreviewAction.actionTargetId) : '' }}</span>
+            <span>{{ agentTaskPreviewAction ? ncfT('AdminChat.Action.AsyncTaskPreviewTitle', messageActionTypeLabel(agentTaskPreviewAction), agentTaskPreviewAction.name, agentTaskPreviewAction.actionTarget || agentTaskPreviewAction.actionTargetId) : '' }}</span>
             <el-button size="mini" type="text" icon="el-icon-link"
                 @@click="openMessageAttachmentAction(agentTaskPreviewAction)">
                 {{ ncfT('AdminChat.Action.OpenInTab') }}
@@ -1898,7 +1898,7 @@
         </div>
         <iframe v-if="agentTaskPreviewVisible && agentTaskPreviewAction"
             :src="agentTaskUrl(agentTaskPreviewAction, true)"
-            :title="ncfT('AdminChat.Action.AgentTaskPreviewTitle', agentTaskPreviewAction.name, agentTaskPreviewAction.actionTargetId)"></iframe>
+            :title="ncfT('AdminChat.Action.AsyncTaskPreviewTitle', messageActionTypeLabel(agentTaskPreviewAction), agentTaskPreviewAction.name, agentTaskPreviewAction.actionTarget || agentTaskPreviewAction.actionTargetId)"></iframe>
     </el-drawer>
 
     <!-- 超级管理员：用户用量统计（仅数量，不含内容） -->

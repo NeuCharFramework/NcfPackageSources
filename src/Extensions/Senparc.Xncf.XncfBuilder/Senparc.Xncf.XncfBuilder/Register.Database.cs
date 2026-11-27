@@ -22,6 +22,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.42.0.0 add MCP endpoint gateway and tool invocation contracts
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +49,11 @@ namespace Senparc.Xncf.XncfBuilder
 
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this.GetType());
 
+        /// <summary>
+        /// Registers the builder request type and AutoMapper mappings required by
+        /// the XNCF Builder database and application services.
+        /// </summary>
+        /// <param name="services">The application dependency-injection collection.</param>
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
             services.AddScoped<BuildXncf_BuildRequest>();
@@ -62,6 +70,11 @@ namespace Senparc.Xncf.XncfBuilder
             });
         }
 
+        /// <summary>
+        /// Configures indexes used by preview and isolated-development persistence,
+        /// including unique session/job identifiers and query-oriented status indexes.
+        /// </summary>
+        /// <param name="modelBuilder">The Entity Framework Core model builder.</param>
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<XncfPreviewTask>()

@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -36,6 +39,12 @@ namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBase
     public class EditModel : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
     {
         private readonly KnowledgeBaseService _knowledgeBaseService;
+
+        /// <summary>
+        /// Initializes the KnowledgeBase editor with its persistence service.
+        /// </summary>
+        /// <param name="knowledgeBaseService">The KnowledgeBase service.</param>
+        /// <param name="xncfModuleService">The lazy module service required by the base page.</param>
         public EditModel(KnowledgeBaseService knowledgeBaseService,Lazy<XncfModuleService> xncfModuleService) : base(xncfModuleService)
         {
             CurrentMenu = "KnowledgeBase";
@@ -47,9 +56,14 @@ namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBase
         public KnowledgeBaseDto KnowledgeBaseDto { get; set; }
 
         /// <summary>
-        /// Handler=Save
+        /// Creates or updates the current KnowledgeBase definition from the posted DTO.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="knowledgeBaseDto">The submitted KnowledgeBase fields.</param>
+        /// <returns>
+        /// An HTTP 200 result containing a success flag and message. Null input and
+        /// service failures are returned as a failed JSON-style result rather than
+        /// propagated as an unhandled page exception.
+        /// </returns>
         public async Task<IActionResult> OnPostSaveAsync([FromBody] KnowledgeBase_InsertDto knowledgeBaseDto)
         {
             try
@@ -73,6 +87,12 @@ namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBase
             }
         }
 
+        /// <summary>
+        /// Deletes each existing KnowledgeBase identified in the request and returns
+        /// identifiers that could not be matched.
+        /// </summary>
+        /// <param name="ids">The KnowledgeBase identifiers selected for deletion.</param>
+        /// <returns>An HTTP 200 result containing unmatched identifiers.</returns>
         public async Task<IActionResult> OnPostDeleteAsync([FromBody] int[] ids)
         {
             var entity = await _knowledgeBaseService.GetFullListAsync(_ => ids.Contains(_.Id));

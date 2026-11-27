@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.7.12 Localized DynamicData configuration and layout surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.7.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -25,11 +28,14 @@ namespace Senparc.Xncf.DynamicData.Areas.Admin.Pages.DynamicData
 {
     public class PageSetModel : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
     {
+        /// <summary>Initializes the DynamicData page settings page.</summary>
+        /// <param name="xncfModuleService">The lazy module service used by the base page model.</param>
         public PageSetModel(Lazy<XncfModuleService> xncfModuleService) : base(xncfModuleService)
         {
 
         }
 
+        /// <summary>Initializes the page settings page request.</summary>
         public void OnGet()
         {
         }

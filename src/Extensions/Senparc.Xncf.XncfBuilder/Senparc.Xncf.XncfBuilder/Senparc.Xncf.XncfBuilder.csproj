@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.41.10.1</Version>
+    <Version>0.42.0.0</Version>
     <LangVersion>latest</LangVersion>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -167,7 +167,11 @@
         2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
         [2026-11-24] v0.41.10 Integrated localization, tooling, and runtime improvements across the module.
         1. Updated functional behavior and package metadata for the current module changes.
-        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.
+        [2026-11-27] v0.42.0.0 add MCP endpoint gateway and tool invocation contracts
+        1. add MCP endpoint gateway and tool invocation contracts.
+        2. Applied standardized copyright headers, XML documentation, and localization metadata across touched sources.
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <!-- Visual Studio  -->

@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -27,14 +30,18 @@ namespace Senparc.Ncf.Core.AppServices
     /// </summary>
     public static class FunctionRenderSymbolHelper
     {
+        /// <summary>Gets the canonical FunctionRender symbol name.</summary>
         public const string FunctionRenderSymbolName = "FunctionRender";
+        /// <summary>Gets the canonical serialized FunctionRender symbol tag.</summary>
         public const string FunctionRenderSymbolTag = "[#sym:FunctionRender]";
 
         private static readonly Regex SymbolRegex = new Regex(@"\[#sym\s*:\s*(?<name>[A-Za-z0-9_\.\-]+)\s*\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         /// <summary>
-        /// Extract the name of all sym tags in the input.
+        /// Extracts distinct symbol names from all supported symbol tags in the input.
         /// </summary>
+        /// <param name="input">The text that may contain symbol tags.</param>
+        /// <returns>Distinct symbol names using case-insensitive comparison.</returns>
         public static IReadOnlyList<string> ExtractSymbolNames(string input)
         {
             if (string.IsNullOrWhiteSpace(input))
@@ -53,8 +60,11 @@ namespace Senparc.Ncf.Core.AppServices
         }
 
         /// <summary>
-        /// checkinputwhether contains the specified sym tag.
+        /// Determines whether the input contains a symbol tag with the specified name.
         /// </summary>
+        /// <param name="input">The text to inspect.</param>
+        /// <param name="symbolName">The symbol name to find.</param>
+        /// <returns><see langword="true"/> when the named symbol is present.</returns>
         public static bool HasSymbol(string input, string symbolName)
         {
             if (string.IsNullOrWhiteSpace(input) || string.IsNullOrWhiteSpace(symbolName))
@@ -66,8 +76,10 @@ namespace Senparc.Ncf.Core.AppServices
         }
 
         /// <summary>
-        /// checkinputwhether contains FunctionRender sym tag.
+        /// Determines whether the input contains a FunctionRender symbol tag.
         /// </summary>
+        /// <param name="input">The text to inspect.</param>
+        /// <returns><see langword="true"/> when a FunctionRender tag is present.</returns>
         public static bool HasFunctionRenderSymbol(string input)
         {
             return HasSymbol(input, FunctionRenderSymbolName);

@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.15.17 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.15.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -24,11 +27,14 @@ using System.Text;
 
 namespace Senparc.Xncf.Tenant.Domain.Models
 {
+    /// <summary>Provides tenant-specific database context access through the NCF data contract.</summary>
     public interface ITenantInfoDbData : INcfDbData
     {
+        /// <summary>Gets the tenant database context.</summary>
         SenparcEntitiesMultiTenant DataContext { get; }
     }
 
+    /// <summary>Wraps the tenant database context for repository and transaction services.</summary>
     public class TenantInfoDbData : NcfDbData, INcfDbData, ITenantInfoDbData
     {
         private SenparcEntitiesMultiTenant dataContext;
@@ -47,12 +53,9 @@ namespace Senparc.Xncf.Tenant.Domain.Models
             }
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <inheritdoc />
         public override void CloseConnection()
         {
-            //Legacy comment translated to English.
             //BaseDataContext.Database.Connection.Close();
             dataContext = null;
         }
@@ -63,10 +66,8 @@ namespace Senparc.Xncf.Tenant.Domain.Models
             {
                 if (dataContext == null)
                 {
-                    //var connectionString = Ncf.Core.Config.SenparcDatabaseConfigs.ClientConnectionString;
-
-                    //dataContext = SenparcDI.GetService<SenparcEntities>();
-                    //Legacy comment translated to English.
+                    // A closed wrapper intentionally remains disconnected; the scoped
+                    // tenant context is recreated by dependency injection at the next boundary.
                 }
                 return dataContext;
             }

@@ -31,6 +31,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.19.4 Integrated localization, tooling, and runtime improvements across the module.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -66,12 +69,25 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
         //private readonly IWantToRun _iWantToRun;
         private readonly IServiceProvider _serviceProvider;
 
+        /// <summary>
+        /// Initializes the crawl plugin with the service provider used by SenMapic.
+        /// </summary>
+        /// <param name="serviceProvider">The provider passed to the crawler engine.</param>
         public CrawlPlugin(/*IWantToRun iWantToRun, */IServiceProvider serviceProvider)
         {
             //this._iWantToRun = iWantToRun;
             this._serviceProvider = serviceProvider;
         }
 
+        /// <summary>
+        /// Crawls an HTTP(S) URL with bounded depth and page count and returns extracted text.
+        /// </summary>
+        /// <param name="url">The HTTP or HTTPS URL to crawl.</param>
+        /// <param name="maxDepth">The maximum crawl depth, clamped to 0 through 3.</param>
+        /// <param name="maxPageCount">The maximum page count, clamped to 1 through 20.</param>
+        /// <param name="question">An optional question retained for compatibility.</param>
+        /// <returns>The extracted crawl-result Markdown text.</returns>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="url"/> is not HTTP or HTTPS.</exception>
         [KernelFunction, LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.Crawl.Description")]
         public Task<string> Crawl(
             [LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.Crawl.Url")]

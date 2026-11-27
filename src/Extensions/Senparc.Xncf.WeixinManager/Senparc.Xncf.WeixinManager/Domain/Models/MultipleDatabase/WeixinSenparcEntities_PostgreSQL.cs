@@ -11,11 +11,15 @@ using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel;
 namespace Senparc.Xncf.WeixinManager.Domain.Models.MultipleDatabase
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// PostgreSQL-specific WeixinManager database context used by runtime registration and migrations.
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.PostgreSQL, typeof(Register))]
     public class WeixinSenparcEntities_PostgreSQL : WeixinSenparcEntities, IMultipleMigrationDbContext
     {
+        /// <summary>
+        /// Initializes the PostgreSQL-specific WeixinManager DbContext.
+        /// </summary>
+        /// <param name="dbContextOptions">The EF Core options configured for PostgreSQL.</param>
         public WeixinSenparcEntities_PostgreSQL(DbContextOptions<WeixinSenparcEntities_PostgreSQL> dbContextOptions) : base(dbContextOptions)
         {
         }
@@ -34,6 +38,9 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models.MultipleDatabase
             app.UseNcfDatabase("Senparc.Ncf.Database.PostgreSQL", "Senparc.Ncf.Database.PostgreSQL", "PostgreSQLDatabaseConfiguration");
         };
 
+        /// <summary>
+        /// Initializes the PostgreSQL design-time DbContext factory.
+        /// </summary>
         public SenparcDbContextFactory_PostgreSQL()
             : base(SenparcDbContextFactoryConfig.RootDictionaryPath)
         {

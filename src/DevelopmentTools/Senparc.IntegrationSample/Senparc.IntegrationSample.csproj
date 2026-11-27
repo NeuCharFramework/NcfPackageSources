@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 
-		<Version>0.0.19</Version>
+		<Version>0.0.20</Version>
 		<PackageReleaseNotes>[2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 		    1. Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 		    [2026-07-07] v0.0.2 Dependency updates from upstream modules
@@ -144,7 +144,10 @@
 		    2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
         [2026-11-24] v0.0.19 Dependency compatibility update for affected Senparc modules.
         1. Aligned dependent package metadata with the current Senparc module versions.
-        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.
+        [2026-11-27] v0.0.20 Improve source documentation, headers, and module metadata consistency.
+        1. Applied standardized copyright headers, XML documentation, and localization metadata across touched sources.
+    </PackageReleaseNotes>
 		<Configurations>Debug;Release;TemplateRelease</Configurations>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>

@@ -26,6 +26,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.ACL.Repository;
@@ -75,6 +78,17 @@ public sealed class NeuBellWebHookLogService : BaseClientService<NeuBellWebHookL
     {
     }
 
+    /// <summary>
+    /// Creates and persists a pending NeuBell webhook delivery log.
+    /// </summary>
+    /// <param name="eventKind">The event category being delivered.</param>
+    /// <param name="httpMethod">The HTTP method used for delivery.</param>
+    /// <param name="webHookUrl">The destination URL.</param>
+    /// <param name="providerId">The NeuBell provider identifier.</param>
+    /// <param name="title">The notification title.</param>
+    /// <param name="payload">The serialized request payload.</param>
+    /// <param name="adminUserId">The administrator associated with delivery.</param>
+    /// <returns>The persisted pending log.</returns>
     public async Task<NeuBellWebHookLog> CreatePendingAsync(
         string eventKind,
         string httpMethod,
@@ -96,6 +110,16 @@ public sealed class NeuBellWebHookLogService : BaseClientService<NeuBellWebHookL
         return log;
     }
 
+    /// <summary>
+    /// Marks a persisted webhook log as finished with delivery outcome and timing data.
+    /// Missing log identifiers are ignored.
+    /// </summary>
+    /// <param name="logId">The webhook log identifier.</param>
+    /// <param name="success">Whether delivery succeeded.</param>
+    /// <param name="result">The response or failure detail.</param>
+    /// <param name="statusCode">The HTTP status code, when available.</param>
+    /// <param name="elapsedMilliseconds">The measured delivery duration.</param>
+    /// <returns>A task that completes after the update is persisted.</returns>
     public async Task CompleteAsync(
         int logId,
         bool success,

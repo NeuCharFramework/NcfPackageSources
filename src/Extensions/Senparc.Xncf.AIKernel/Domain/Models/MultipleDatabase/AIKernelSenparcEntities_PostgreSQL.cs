@@ -13,6 +13,10 @@ namespace Senparc.Xncf.AIKernel.Models
     [MultipleMigrationDbContext(MultipleDatabaseType.PostgreSQL, typeof(Register))]
     public class AIKernelSenparcEntities_PostgreSQL : AIKernelSenparcEntities
     {
+        /// <summary>
+        /// Initializes the PostgreSQL-specific AIKernel DbContext.
+        /// </summary>
+        /// <param name="dbContextOptions">The EF Core options configured for PostgreSQL.</param>
         public AIKernelSenparcEntities_PostgreSQL(DbContextOptions<AIKernelSenparcEntities_PostgreSQL> dbContextOptions) : base(dbContextOptions)
         {
         }
@@ -32,6 +36,9 @@ namespace Senparc.Xncf.AIKernel.Models
             app.UseNcfDatabase("Senparc.Ncf.Database.PostgreSQL", "Senparc.Ncf.Database.PostgreSQL", "PostgreSQLDatabaseConfiguration");
         };
 
+        /// <summary>
+        /// Initializes the PostgreSQL design-time DbContext factory.
+        /// </summary>
         public SenparcDbContextFactory_PostgreSQL() : base(SenparcDbContextFactoryConfig.RootDirectoryPath)
         {
 

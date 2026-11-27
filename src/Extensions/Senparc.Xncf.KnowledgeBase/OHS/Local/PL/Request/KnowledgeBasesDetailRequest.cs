@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -26,15 +29,15 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.PL.Request
     public class KnowledgeBasesDetailRequest
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the knowledge-base identifier represented as request text.
         /// </summary>
         public string KnowledgeBasesId { get; set; }
         /// <summary>
-        /// contenttype
+        /// Gets or sets the content-type discriminator.
         /// </summary>
         public int ContentType { get; set; }
         /// <summary>
-        /// content
+        /// Gets or sets the content or chunk text.
         /// </summary>
         public string Content { get; set; }
     }

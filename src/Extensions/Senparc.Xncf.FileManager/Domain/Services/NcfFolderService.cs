@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.5 Localized file management and upload surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.5.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Repository;
@@ -102,11 +105,6 @@ namespace Senparc.Xncf.FileManager.Domain.Services
             return path;
         }
 
-        /// <summary>
-        /// Resolves a relative folder path below <paramref name="rootFolderId"/>.
-        /// Existing levels are reused, so multiple browser upload batches retain
-        /// one coherent directory tree.
-        /// </summary>
         /// <summary>
         /// Resolves or creates a sequence of child folders below a root folder.
         /// </summary>
@@ -229,6 +227,16 @@ namespace Senparc.Xncf.FileManager.Domain.Services
             await DeleteObjectAsync(folder);
         }
 
+        /// <summary>
+        /// Trims a folder name and rejects values that are empty, too long, or
+        /// contain path separators or relative-path markers.
+        /// </summary>
+        /// <param name="name">The folder name supplied by the caller.</param>
+        /// <returns>The normalized folder name.</returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown when the name is empty, exceeds 200 characters, or could be
+        /// interpreted as a path component.
+        /// </exception>
         private static string NormalizeName(string name)
         {
             var normalized = name?.Trim();
@@ -247,6 +255,17 @@ namespace Senparc.Xncf.FileManager.Domain.Services
             return normalized;
         }
 
+        /// <summary>
+        /// Confirms that a proposed parent folder exists and belongs to the same
+        /// <see cref="NcfFileResourceScope"/> as the child folder being created.
+        /// A <see langword="null"/> parent identifier represents a root folder.
+        /// </summary>
+        /// <param name="parentId">The optional parent folder identifier.</param>
+        /// <param name="resourceScope">The resource scope required for the parent.</param>
+        /// <returns>A task that completes when the parent has been validated.</returns>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when the parent does not exist or belongs to another resource scope.
+        /// </exception>
         private async Task ValidateParentAsync(int? parentId, NcfFileResourceScope resourceScope)
         {
             if (!parentId.HasValue)
@@ -265,6 +284,14 @@ namespace Senparc.Xncf.FileManager.Domain.Services
             }
         }
 
+        /// <summary>
+        /// Trims a folder description and enforces the persistence length limit.
+        /// </summary>
+        /// <param name="description">The description supplied by the caller.</param>
+        /// <returns>The trimmed description, or <see langword="null"/> when no description was supplied.</returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown when the normalized description exceeds 500 characters.
+        /// </exception>
         private static string NormalizeDescription(string description)
         {
             var normalized = description?.Trim();
@@ -275,6 +302,17 @@ namespace Senparc.Xncf.FileManager.Domain.Services
             return normalized;
         }
 
+        /// <summary>
+        /// Verifies that a folder name is not already used by a sibling in the
+        /// same resource scope.
+        /// </summary>
+        /// <param name="name">The normalized candidate folder name.</param>
+        /// <param name="parentId">The optional parent folder identifier.</param>
+        /// <param name="resourceScope">The resource scope in which uniqueness is required.</param>
+        /// <returns>A task that completes when the uniqueness check finishes.</returns>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when another folder with the same name already exists under the parent.
+        /// </exception>
         private async Task EnsureUniqueNameAsync(string name, int? parentId, NcfFileResourceScope resourceScope)
         {
             var duplicate = await GetObjectAsync(z => z.ParentId == parentId && z.Name == name && z.ResourceScope == resourceScope);
@@ -284,6 +322,14 @@ namespace Senparc.Xncf.FileManager.Domain.Services
             }
         }
 
+        /// <summary>
+        /// Validates that a resource scope is one of the values supported by
+        /// <see cref="NcfFileResourcePolicy"/>.
+        /// </summary>
+        /// <param name="resourceScope">The scope to validate.</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown when the scope is not supported.
+        /// </exception>
         private static void EnsureValidScope(NcfFileResourceScope resourceScope)
         {
             if (!NcfFileResourcePolicy.IsValidScope(resourceScope))

@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -56,9 +59,21 @@ public sealed class AdminChatMemoryProfile
     public Dictionary<int, AdminChatMemoryMode> SessionModes { get; set; } = new();
     public List<AdminChatMemoryRevision> History { get; set; } = new();
 
+    /// <summary>
+    /// Resolves the effective mode for a session, preserving the legacy boolean
+    /// session flag as Learn when no explicit mode exists.
+    /// </summary>
+    /// <param name="sessionId">The chat session identifier.</param>
+    /// <returns>The effective memory mode.</returns>
     public AdminChatMemoryMode ModeFor(int sessionId) => SessionModes.TryGetValue(sessionId, out var mode)
         ? mode : Sessions.GetValueOrDefault(sessionId) ? AdminChatMemoryMode.Learn : AdminChatMemoryMode.Off;
 
+    /// <summary>
+    /// Appends a bounded audit revision describing an added, updated, or deleted entry.
+    /// </summary>
+    /// <param name="before">The previous entry, or <see langword="null"/> for an addition.</param>
+    /// <param name="after">The new entry, or <see langword="null"/> for a deletion.</param>
+    /// <param name="source">The operation source label.</param>
     public void Record(AdminChatMemoryEntry before, AdminChatMemoryEntry after, string source)
     {
         if (after == null)
@@ -103,6 +118,12 @@ public static class AdminChatMemoryDocument
         @"https?://|[\w.+-]+@[\w.-]+\.\w+|-----BEGIN|(?:sk-|ghp_|github_pat_)[a-zA-Z0-9]|password|secret|api.?key|token\s*[:=]|密码|密钥|身份证|银行卡|住址|手机号|病史|诊断|宗教|政治|性取向",
         RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100));
 
+    /// <summary>
+    /// Serializes memory entries into the editable Markdown representation grouped
+    /// into Core, Topic, and Archive sections.
+    /// </summary>
+    /// <param name="entries">The entries to export.</param>
+    /// <returns>The Markdown memory document.</returns>
     public static string Export(IEnumerable<AdminChatMemoryEntry> entries)
     {
         var all = entries.ToList();
@@ -118,6 +139,12 @@ public static class AdminChatMemoryDocument
         return result.ToString();
     }
 
+    /// <summary>
+    /// Parses the constrained Markdown memory format and creates pinned manual entries.
+    /// </summary>
+    /// <param name="markdown">The Markdown document to parse.</param>
+    /// <returns>The parsed entries.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when size, headings, lines, duplicates, or entry count are invalid.</exception>
     public static List<AdminChatMemoryEntry> Parse(string markdown)
     {
         if (markdown == null || markdown.Length > MaxMarkdownCharacters)
@@ -151,6 +178,13 @@ public static class AdminChatMemoryDocument
         return entries;
     }
 
+    /// <summary>
+    /// Calculates lexical relevance from topic and text terms, including Chinese
+    /// bigram matching and a topic exact-match bonus.
+    /// </summary>
+    /// <param name="entry">The memory entry to score.</param>
+    /// <param name="query">The retrieval query.</param>
+    /// <returns>A non-negative relevance score.</returns>
     public static int Relevance(AdminChatMemoryEntry entry, string query)
     {
         var terms = Regex.Matches((query ?? "").ToLowerInvariant(), @"[\p{L}\p{N}]{2,}")
@@ -165,6 +199,13 @@ public static class AdminChatMemoryDocument
             || term.Contains(entry.Topic, StringComparison.OrdinalIgnoreCase) && entry.Topic.Length > 0);
     }
 
+    /// <summary>
+    /// Selects relevant/core entries and serializes them within the conservative
+    /// UTF-8 context byte budget.
+    /// </summary>
+    /// <param name="entries">The eligible memory entries.</param>
+    /// <param name="query">The current retrieval query.</param>
+    /// <returns>Serialized context JSON, or an empty string when nothing is selected.</returns>
     public static string BuildContext(IEnumerable<AdminChatMemoryEntry> entries, string query)
     {
         var result = new List<object>();
@@ -187,6 +228,13 @@ public static class AdminChatMemoryDocument
         return result.Count == 0 ? "" : JsonSerializer.Serialize(result, ContextJson);
     }
 
+    /// <summary>
+    /// Validates the strict two-property memory extraction envelope and returns
+    /// its intent and raw changes array.
+    /// </summary>
+    /// <param name="json">The model-produced extraction JSON.</param>
+    /// <returns>The validated intent and changes JSON.</returns>
+    /// <exception cref="AdminChatMemoryValidationException">Thrown when the envelope is invalid.</exception>
     public static (string Intent, string Changes) ReadExtraction(string json)
     {
         if (json == null || json.Length > 12000)
@@ -202,10 +250,33 @@ public static class AdminChatMemoryDocument
         return (intent.GetString(), changes.GetRawText());
     }
 
+    /// <summary>
+    /// Applies validated automatic memory changes and reports whether the profile changed.
+    /// </summary>
+    /// <param name="profile">The profile to mutate.</param>
+    /// <param name="json">The serialized changes array.</param>
+    /// <param name="userMessage">The user message used for intent/evidence checks.</param>
+    /// <param name="workspaceId">The active workspace scope.</param>
+    /// <param name="sourceMessageId">The source user message identifier.</param>
+    /// <param name="sourceSessionId">The source chat session identifier.</param>
+    /// <returns><see langword="true"/> when entries changed.</returns>
     public static bool Merge(AdminChatMemoryProfile profile, string json, string userMessage,
         string workspaceId = "", int? sourceMessageId = null, int? sourceSessionId = null) =>
         MergeWithResult(profile, json, userMessage, workspaceId, sourceMessageId, sourceSessionId).Changed;
 
+    /// <summary>
+    /// Validates and merges bounded memory changes, tracks revisions, determines
+    /// whether assistant-derived changes require review, and returns change counts.
+    /// </summary>
+    /// <param name="profile">The profile to mutate.</param>
+    /// <param name="json">The serialized changes array.</param>
+    /// <param name="userMessage">The user message providing intent and evidence.</param>
+    /// <param name="workspaceId">The active workspace scope.</param>
+    /// <param name="sourceMessageId">The source message identifier.</param>
+    /// <param name="sourceSessionId">The source session identifier.</param>
+    /// <param name="recentMessages">Recent conversation evidence used for reference resolution.</param>
+    /// <returns>The merge result, reason, change counts, and review requirement.</returns>
+    /// <exception cref="AdminChatMemoryValidationException">Thrown when changes fail validation or capacity limits.</exception>
     public static AdminChatMemoryMergeResult MergeWithResult(AdminChatMemoryProfile profile, string json, string userMessage,
         string workspaceId = "", int? sourceMessageId = null, int? sourceSessionId = null,
         IReadOnlyList<AdminChatMemorySource> recentMessages = null)

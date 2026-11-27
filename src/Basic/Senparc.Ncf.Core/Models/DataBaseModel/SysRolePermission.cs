@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -25,7 +28,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Associates a role with a menu or permission resource.
     /// </summary>
     [Table("SysRolePermissions")]
     public class SysRolePermission : EntityBase<int>
@@ -36,12 +39,17 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
 
          */
 
+        /// <summary>Initializes an empty role-permission association.</summary>
         public SysRolePermission()
         {
             AddTime = DateTime.Now;
             LastUpdateTime = DateTime.Now;
         }
 
+        /// <summary>
+        /// Initializes a role-permission association from a permission DTO.
+        /// </summary>
+        /// <param name="item">The permission values to copy.</param>
         public SysRolePermission(SysPermissionDto item) : this()
         {
             RoleId = item.RoleId;
@@ -58,7 +66,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public string RoleCode { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the resource code represented by this association.
         /// </summary>
         [MaxLength(150)]
         public string ResourceCode { get; set; }
@@ -70,12 +78,12 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public string RoleId { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether the associated resource is a menu.
         /// </summary>
         public bool IsMenu { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the permission identifier.
         /// </summary>
         [MaxLength(150)]
         public string PermissionId { get; set; }

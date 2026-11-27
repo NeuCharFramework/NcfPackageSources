@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -85,7 +88,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         private readonly ConcurrentDictionary<Guid, RunState> _runs = new();
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Limits retained completed run states so in-memory progress tracking remains bounded.
         /// </summary>
         private const int MaxCompletedRuns = 256;
 
@@ -270,6 +273,9 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             }
         }
 
+        /// <summary>
+        /// Removes completed progress runs when the in-memory registry exceeds its retention limit.
+        /// </summary>
         private void TrimCompletedRuns()
         {
             if (_runs.Count <= MaxCompletedRuns)
@@ -307,8 +313,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns the buffered progress events for a tenant-owned run in publication order.
         /// </summary>
+        /// <param name="runId">The monitored run identifier.</param>
+        /// <param name="tenantId">The tenant owning the run.</param>
+        /// <returns>A snapshot of buffered events, or an empty list when unavailable.</returns>
         public IReadOnlyList<AITokenProgressEvent> GetBufferedProgress(Guid runId, int tenantId = 0)
         {
             if (_runs.TryGetValue(runId, out var run) && run.TenantId == tenantId)
@@ -322,11 +331,12 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Streams buffered and newly published progress events for a tenant-owned run.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// <param name="runId">The monitored run identifier.</param>
+        /// <param name="replayBuffered">Whether existing buffered events should be replayed first.</param>
+        /// <param name="cancellationToken">Token used to stop the subscription.</param>
+        /// <param name="tenantId">The tenant owning the run.</param>
         public async IAsyncEnumerable<AITokenProgressEvent> SubscribeAsync(
             Guid runId,
             bool replayBuffered = true,

@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v1.1.15 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v1.1.16 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Ncf.XncfBase;
@@ -70,7 +73,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.DTOs.Request
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Marks the template EventBus round-trip Function request.
     /// </summary>
     public class EventBusRoundTripRequest : FunctionAppRequestBase
     {

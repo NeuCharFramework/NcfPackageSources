@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.0.0 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 #nullable enable
@@ -26,6 +29,12 @@ namespace Senparc.Xncf.NeuCharWorkflow;
 /// </summary>
 public sealed class NeuCharWorkflowResource
 {
+    /// <summary>
+    /// Resolves a workflow localization key and returns the fallback when the key is unavailable.
+    /// </summary>
+    /// <param name="key">The resource key to resolve.</param>
+    /// <param name="fallback">The text returned when the key has no localized value.</param>
+    /// <returns>The localized text or the fallback text.</returns>
     public static string Get(string key, string? fallback = null) =>
         ResourceStringLocalizer.Get(typeof(NeuCharWorkflowResource), key, fallback);
 }

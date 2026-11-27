@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.25.1 Localized Weixin account and administration surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.25.1.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System.Collections.Generic;
@@ -32,6 +35,10 @@ public sealed class WeixinClawMessageDispatcher
     /// Initializes the ordered message-handler dispatcher.
     /// </summary>
     /// <param name="handlers">Handlers invoked sequentially for each received message.</param>
+    /// <summary>
+    /// Initializes a dispatcher with the ordered inbound message handlers.
+    /// </summary>
+    /// <param name="handlers">Handlers considered for each received message.</param>
     public WeixinClawMessageDispatcher(IEnumerable<IWeixinClawMessageHandler> handlers)
     {
         _handlers = handlers;

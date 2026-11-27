@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.14.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.14.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -23,20 +26,27 @@ using Senparc.Ncf.Core.Models.DataBaseModel;
 
 namespace Senparc.Xncf.Menu.Models
 {
+    /// <summary>
+    /// EF Core context for the system menu module's menu and button entities.
+    /// </summary>
     public class MenuSenparcEntities : XncfDatabaseDbContext
     {
+        /// <summary>
+        /// Initializes the menu module database context.
+        /// </summary>
+        /// <param name="dbContextOptions">The provider-specific EF Core options.</param>
         public MenuSenparcEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {
         }
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the persisted system menu set.
         /// </summary>
         public DbSet<SysMenu> SysMenus { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the persisted system button set.
         /// </summary>
         public DbSet<SysButton> SysButtons { get; set; }
 

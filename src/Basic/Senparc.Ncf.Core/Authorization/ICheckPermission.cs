@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -23,16 +26,16 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Core.Authorization
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Defines the service contract used to evaluate administrator resource permissions.
     /// </summary>
     public interface ICheckPermission
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Determines whether an administrator has at least one of the requested resources.
         /// </summary>
-        /// <param name="resourceCodes"></param>
-        /// <param name="adminUserInfoId"></param>
-        /// <returns></returns>
+        /// <param name="resourceCodes">The resource codes to evaluate.</param>
+        /// <param name="adminUserInfoId">The administrator account identifier.</param>
+        /// <returns>A task containing <see langword="true"/> when permission is granted.</returns>
         Task<bool> HasPermissionAsync(string[] resourceCodes, int adminUserInfoId);
     }
 }

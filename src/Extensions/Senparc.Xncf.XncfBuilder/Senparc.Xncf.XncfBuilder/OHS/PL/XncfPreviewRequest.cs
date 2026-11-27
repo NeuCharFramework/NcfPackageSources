@@ -10,6 +10,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.42.0.0 add MCP endpoint gateway and tool invocation contracts
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -76,6 +79,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
             }
         }
 
+        /// <summary>
+        /// Searches upward from the application base directory and returns the
+        /// shortest deterministically selected solution path.
+        /// </summary>
+        /// <returns>The nearest solution file path, or an empty string when none is found.</returns>
         private static string FindSolutionFilePath()
         {
             var currentDirectory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);

@@ -46,6 +46,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.4.8 Enhanced workflow chat tools, editing commands, navigation, and localization behavior.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.0.0 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -75,43 +78,57 @@ namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 
 public sealed class NeuCharWorkflowGraph
 {
+    /// <summary>Gets or sets the nodes in the workflow graph.</summary>
     public List<NeuCharWorkflowNode> Nodes { get; set; } = new();
+    /// <summary>Gets or sets the directed edges connecting workflow nodes.</summary>
     public List<NeuCharWorkflowEdge> Edges { get; set; } = new();
-    ///Legacy comment translated to English.
+    /// <summary>Gets or sets workflow-scoped variables.</summary>
     public List<NeuCharWorkflowVariable> Variables { get; set; } = new();
-    ///Legacy comment translated to English.
+    /// <summary>Gets or sets the visual designer layout metadata.</summary>
     public NeuCharWorkflowLayout Layout { get; set; } = new();
 }
 
 public sealed class NeuCharWorkflowVariable
 {
+    /// <summary>Gets or sets the variable name.</summary>
     public string Name { get; set; }
+    /// <summary>Gets or sets the JSON value assigned to the variable.</summary>
     public JsonNode? Value { get; set; }
 }
 
 public sealed class NeuCharWorkflowLayout
 {
-    ///Legacy comment translated to English.
+    /// <summary>Gets or sets the designer direction, such as <c>vertical</c>.</summary>
     public string Direction { get; set; } = "vertical";
 }
 
 public sealed class NeuCharWorkflowNode
 {
+    /// <summary>Gets or sets the stable node identifier.</summary>
     public string Id { get; set; }
+    /// <summary>Gets or sets the node type used by the execution engine.</summary>
     public string Type { get; set; }
+    /// <summary>Gets or sets the designer-facing node name.</summary>
     public string Name { get; set; }
+    /// <summary>Gets or sets the horizontal designer coordinate.</summary>
     public double X { get; set; }
+    /// <summary>Gets or sets the vertical designer coordinate.</summary>
     public double Y { get; set; }
+    /// <summary>Gets or sets node-specific configuration.</summary>
     public JsonObject Config { get; set; } = new();
 }
 
 public sealed class NeuCharWorkflowEdge
 {
+    /// <summary>Gets or sets the stable edge identifier.</summary>
     public string Id { get; set; }
+    /// <summary>Gets or sets the source node identifier.</summary>
     public string Source { get; set; }
+    /// <summary>Gets or sets the target node identifier.</summary>
     public string Target { get; set; }
+    /// <summary>Gets or sets the source handle identifier.</summary>
     public string SourceHandle { get; set; }
-    ///Legacy comment translated to English.
+    /// <summary>Gets or sets the target handle identifier.</summary>
     public string TargetHandle { get; set; }
 }
 
@@ -137,6 +154,9 @@ public sealed record NeuCharWorkflowProgress(
     string? OutputSchema = null,
     string? Input = null)
 {
+    /// <summary>
+    /// Gets or initializes an optional reference to a task or provider object created by the node.
+    /// </summary>
     public WorkflowObjectExecutionReference? ObjectReference { get; init; }
 }
 
@@ -220,6 +240,14 @@ public sealed class NeuCharWorkflowEngine
     /// </summary>
     private sealed class LoopExecutionState
     {
+        /// <summary>
+        /// Initializes runtime state for one explicit loop body.
+        /// </summary>
+        /// <param name="loopNodeId">The loop node identifier.</param>
+        /// <param name="boundaryNodeId">The loop-end boundary node identifier.</param>
+        /// <param name="bodyEntryNodeId">The first node executed for each iteration.</param>
+        /// <param name="iterationCount">The configured iteration count.</param>
+        /// <param name="parent">The optional enclosing loop state.</param>
         public LoopExecutionState(
             string loopNodeId,
             string boundaryNodeId,
@@ -4244,6 +4272,12 @@ public sealed class NeuCharWorkflowHostedService : BackgroundService
     private readonly ILogger<NeuCharWorkflowHostedService> _logger;
     private static DateTime _lastChatCleanupAt = DateTime.MinValue;
 
+    /// <summary>
+    /// Initializes the hosted Workflow scheduler and chat-cleanup service.
+    /// </summary>
+    /// <param name="scopeFactory">The scope factory used for scheduled work.</param>
+    /// <param name="logger">The hosted-service logger.</param>
+    /// <param name="tenantScopeFactory">Optional tenant scope factory for background execution.</param>
     public NeuCharWorkflowHostedService(
         IServiceScopeFactory scopeFactory,
         ILogger<NeuCharWorkflowHostedService> logger,
@@ -4263,8 +4297,8 @@ public sealed class NeuCharWorkflowHostedService : BackgroundService
             {
                 if (_tenantScopeFactory != null)
                 {
-                    //Legacy comment translated to English.
-                    //Legacy comment translated to English.
+                    // Restore each enabled tenant context before scanning its
+                    // tenant-filtered interval workflows.
                     await _tenantScopeFactory.ForEachEnabledTenantAsync(
                         (scopeServiceProvider, _) => ScanIntervalWorkflowsAsync(scopeServiceProvider),
                         stoppingToken).ConfigureAwait(false);
@@ -4285,7 +4319,7 @@ public sealed class NeuCharWorkflowHostedService : BackgroundService
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Scans due interval workflows in one tenant scope and schedules the bounded batch.
     /// </summary>
     private async Task ScanIntervalWorkflowsAsync(IServiceProvider scopeServiceProvider)
     {
@@ -4305,7 +4339,7 @@ public sealed class NeuCharWorkflowHostedService : BackgroundService
             OrderingType.Ascending).ConfigureAwait(false);
         foreach (var workflow in workflows.Take(10))
         {
-            //Legacy comment translated to English.
+            // Capture the current tenant so the run coordinator restores it when execution starts.
             var tenant = RequestTenantSnapshot.From(scopeServiceProvider.GetRequiredService<RequestTenantInfo>());
             if (!runCoordinator.TryStart(workflow.Id, workflow.AdminUserId, string.Empty, out _, out var error, "interval", tenant))
             {
@@ -4315,7 +4349,7 @@ public sealed class NeuCharWorkflowHostedService : BackgroundService
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Performs the daily bounded cleanup of expired Workflow chat messages.
     /// </summary>
     private async Task CleanupExpiredChatMessagesAsync(IServiceProvider serviceProvider)
     {

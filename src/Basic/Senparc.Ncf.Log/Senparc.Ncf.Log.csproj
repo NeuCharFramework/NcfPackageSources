@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.20.2.1-preview2</Version>
+    <Version>0.20.2.2-preview3</Version>
     <AssemblyName>Senparc.Ncf.Log</AssemblyName>
     <RootNamespace>Senparc.Ncf.Log</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -22,6 +22,9 @@
         [2026-11-19] v0.20.2-preview2 Updated module behavior, localization metadata, and English source comments
         1. Updated affected project files while preserving existing public integration behavior.
         2. Standardized related English source comments and package metadata for the current release.
+    
+        [2026-11-27] v0.20.2.2-preview3 Improve source documentation, headers, and module metadata consistency.
+        1. Applied standardized copyright headers, XML documentation, and localization metadata across touched sources.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

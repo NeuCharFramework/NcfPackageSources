@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.5 Localized file management and upload surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.5.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -38,10 +41,19 @@ namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.Dto
         public string ContentHash { get; set; }
         public string PublicUrl { get; set; }
         
-        //Legacy comment translated to English.
+        /// <summary>
+        /// Human-readable file size using byte, kilobyte, or megabyte units.
+        /// </summary>
         public string FileSizeDisplay => GetFileSizeDisplay();
+        /// <summary>
+        /// Gets the enum name of the stored file type.
+        /// </summary>
         public string FileTypeDisplay => FileType.ToString();
 
+        /// <summary>
+        /// Formats the numeric file size for administrative display.
+        /// </summary>
+        /// <returns>A byte, kilobyte, or megabyte formatted size.</returns>
         private string GetFileSizeDisplay()
         {
             if (FileSize < 1024) return $"{FileSize}B";

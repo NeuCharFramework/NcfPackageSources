@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -30,20 +33,22 @@ namespace Senparc.Ncf.Core.Models
     public interface ISenparcEntitiesDbContext : IDisposable /*, IInfrastructure<IServiceProvider>,*/ /*IDbContextDependencies,*/ /*IDbSetCache*/ /*IDbQueryCache, *//*,IDbContextPoolable*/
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the request tenant context used by the DbContext.
         /// </summary>
         MultiTenant.RequestTenantInfo TenantInfo { get; set; }
 
+        /// Applies the global query filter for an entity type.
+        /// <typeparam name="T">The entity type receiving the tenant/soft-delete filter.</typeparam>
+        /// <param name="builder">The EF Core model builder.</param>
         void SetGlobalQuery<T>(ModelBuilder builder) where T : EntityBase;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Resets the migration state before a retry.
         /// </summary>
         void ResetMigrate();
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Applies pending database migrations for the current context.
         /// </summary>
         void Migrate();
     }

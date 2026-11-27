@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -44,10 +47,24 @@ public sealed class WorkspaceDocumentReader : IDisposable
     private readonly SemaphoreSlim _parsing = new(2, 2);
     private readonly WorkspaceOptions _options;
 
+    /// <summary>
+    /// Initializes the bounded document reader and its in-memory extraction cache.
+    /// </summary>
+    /// <param name="options">Workspace read-size options.</param>
     public WorkspaceDocumentReader(IOptions<WorkspaceOptions> options) => _options = options.Value;
 
     public int ReadLimit => Math.Min(16 * 1024 * 1024, _options.MaxFileReadBytes);
 
+    /// <summary>
+    /// Reads file metadata and content with ETag consistency checks, returns a cached
+    /// extraction when possible, and parses supported local document formats.
+    /// </summary>
+    /// <param name="client">The workspace client used for metadata and content reads.</param>
+    /// <param name="path">The workspace-relative file path.</param>
+    /// <param name="expectedETag">Optional caller-observed ETag.</param>
+    /// <param name="cancellationToken">Token used to cancel reads and parsing.</param>
+    /// <returns>The parsed document and the stable ETag used for extraction.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the file changes during reading.</exception>
     public async Task<(WorkspaceDocument Document, string ETag)> ReadAsync(
         IWorkspaceClient client, string path, string expectedETag = "", CancellationToken cancellationToken = default)
     {
@@ -65,6 +82,13 @@ public sealed class WorkspaceDocumentReader : IDisposable
         return (document, file.Metadata.ETag);
     }
 
+    /// <summary>
+    /// Stores a parsed document in the bounded sliding-expiration cache.
+    /// </summary>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="path">The workspace-relative path.</param>
+    /// <param name="etag">The content fingerprint.</param>
+    /// <param name="document">The parsed document.</param>
     public void Remember(string workspaceId, string path, string etag, WorkspaceDocument document)
     {
         _cache.Set((workspaceId, path, etag), document, new MemoryCacheEntryOptions
@@ -73,6 +97,16 @@ public sealed class WorkspaceDocumentReader : IDisposable
         });
     }
 
+    /// <summary>
+    /// Parses PDF and supported text/Office formats into bounded text sections,
+    /// preserving explicit notices about unsupported visual/OCR content.
+    /// </summary>
+    /// <param name="bytes">The complete file bytes.</param>
+    /// <param name="extension">The normalized or raw file extension.</param>
+    /// <param name="cancellationToken">Token used to cancel parsing.</param>
+    /// <returns>The extracted document sections and interpretation notice.</returns>
+    /// <exception cref="InvalidDataException">Thrown when size, page count, or extraction limits are exceeded.</exception>
+    /// <exception cref="NotSupportedException">Thrown for formats without local text extraction support.</exception>
     public async Task<WorkspaceDocument> ParseAsync(byte[] bytes, string extension, CancellationToken cancellationToken)
     {
         if (bytes.Length > ReadLimit) throw new InvalidDataException("文件超过 Workspace 文档读取限制。");
@@ -116,6 +150,7 @@ public sealed class WorkspaceDocumentReader : IDisposable
         finally { _parsing.Release(); }
     }
 
+    /// <inheritdoc/>
     public void Dispose()
     {
         _cache.Dispose();

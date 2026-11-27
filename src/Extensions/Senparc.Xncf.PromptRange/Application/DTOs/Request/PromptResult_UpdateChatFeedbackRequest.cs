@@ -13,26 +13,23 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel.DataAnnotations;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 {
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Requests an update to user feedback for a prompt-result chat.</summary>
     public class PromptResult_UpdateChatFeedbackRequest
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the chat message identifier.</summary>
         [Required]
         public int ChatId { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the optional positive/negative feedback value.</summary>
         public bool? Feedback { get; set; }
     }
 }

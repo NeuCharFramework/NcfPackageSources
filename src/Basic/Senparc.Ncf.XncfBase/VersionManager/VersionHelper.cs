@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.29.1 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.29.1.2 Extend shared chat-tool contracts for admin task initiation.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -52,11 +55,13 @@ namespace Senparc.Ncf.XncfBase.VersionManager
         //private const string VersionInCodeRegex = @"Version\s*=>\s*""(\d+)\.(\d+)\.(\d+)(?:\.(\d+))?(?:-([a-zA-Z\d\-]+(\.\d+)?))?(?:\+([a-zA-Z\d\-.]+))?""";
         private const string VersionInCodeRegex = @"Version\s*=>\s*""(\d+)\.(\d+)(?:\.(\d+))?(?:\.(\d+))?(?:-([a-zA-Z\d\-]+(\.\d+)?))?(?:\+([a-zA-Z\d\-.]+))?""";
 
-        /// <summary>  
-        ///Legacy comment translated to English.
-        /// </summary>  
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// <summary>
+        /// Parses a semantic version string supporting optional patch/build, prerelease,
+        /// and metadata components.
+        /// </summary>
+        /// <param name="versionString">The version string to parse.</param>
+        /// <returns>The parsed version information.</returns>
+        /// <exception cref="ArgumentException">Thrown when the input does not match the supported format.</exception>
         public static VersionInfo Parse(string versionString)
         {
             var regex = new Regex(VersionRegex);
@@ -82,11 +87,11 @@ namespace Senparc.Ncf.XncfBase.VersionManager
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Extracts and parses the Version property expression from C# source code.
         /// </summary>
-        /// <param name="code"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
+        /// <param name="code">The source code containing a Version property.</param>
+        /// <returns>The parsed version and raw version expression.</returns>
+        /// <exception cref="ArgumentException">Thrown when no supported Version expression is found.</exception>
         public static (VersionInfo VersionInfo, string RawVersionString) ParseFromCode(string code)
         {
             var regex = new Regex(VersionInCodeRegex);
@@ -123,12 +128,12 @@ namespace Senparc.Ncf.XncfBase.VersionManager
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Replaces a raw version expression in source code with a formatted Version property expression.
         /// </summary>
-        /// <param name="code"></param>
-        ///Legacy comment translated to English.
-        /// <param name="newVersionInfo"></param>
-        /// <returns></returns>
+        /// <param name="code">The source code to update.</param>
+        /// <param name="rawVersionString">The exact raw version text to replace.</param>
+        /// <param name="newVersionInfo">The replacement version.</param>
+        /// <returns>The updated source code.</returns>
         public static string ReplaceVersionInCode(string code, string rawVersionString, VersionInfo newVersionInfo)
         {
             var newVersionString = newVersionInfo.ToString();
@@ -140,6 +145,13 @@ namespace Senparc.Ncf.XncfBase.VersionManager
         }
 
 
+        /// <summary>
+        /// Updates a C# Version property using Roslyn syntax nodes and the requested version increment.
+        /// </summary>
+        /// <param name="fileContent">The source code containing the Version property.</param>
+        /// <param name="updateType">The major/minor/patch update mode.</param>
+        /// <returns>The source code with the updated Version expression.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when <paramref name="updateType"/> is unsupported.</exception>
         public static string UpdateVersionInCodeWithRoslyn(string fileContent, UpdateVersionType updateType)
         {
             //Legacy comment translated to English.

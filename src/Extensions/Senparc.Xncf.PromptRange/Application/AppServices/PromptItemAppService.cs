@@ -28,6 +28,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -69,6 +72,13 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         private readonly PromptResultStreamHub _promptResultStreamHub;
 
         /// <inheritdoc />
+        /// <summary>
+        /// Initializes prompt-item, result, and streaming application services.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider.</param>
+        /// <param name="promptItemService">The prompt-item service.</param>
+        /// <param name="promptResultService">The prompt-result service.</param>
+        /// <param name="promptResultStreamHub">The prompt result stream hub.</param>
         public PromptItemAppService(IServiceProvider serviceProvider,
             PromptItemService promptItemService,
             PromptResultService promptResultService,
@@ -80,6 +90,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        /// <summary>
+        /// Returns distinct prompt selector options.
+        /// </summary>
+        /// <returns>The selector option response.</returns>
         public Task<AppResponseBase<List<PromptSelectorOption>>> GetSelectorOptionsAsync()
         {
             return this.GetResponseAsync<List<PromptSelectorOption>>(
@@ -87,6 +101,16 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        /// <summary>
+        /// Searches prompt selector items with range/tactic/keyword filters and paging.
+        /// </summary>
+        /// <param name="rangeId">Optional range identifier.</param>
+        /// <param name="tactic">Optional tactic filter.</param>
+        /// <param name="keyword">Optional keyword.</param>
+        /// <param name="pageIndex">The page index.</param>
+        /// <param name="pageSize">The page size.</param>
+        /// <param name="sortBy">The supported sort mode.</param>
+        /// <returns>The selector search response.</returns>
         public Task<AppResponseBase<PromptSelectorSearchResponse>> SearchSelectorAsync(
             int rangeId = 0, string tactic = null, string keyword = null, int pageIndex = 1, int pageSize = 10,
             string sortBy = "score")
@@ -97,6 +121,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        /// <summary>
+        /// Returns score summaries for the selected prompt's range.
+        /// </summary>
+        /// <param name="id">The prompt item identifier.</param>
+        /// <returns>The range score response.</returns>
         public Task<AppResponseBase<List<PromptSelectorScoreItem>>> GetSelectorRangeScoresAsync(int id)
         {
             return this.GetResponseAsync<List<PromptSelectorScoreItem>>(
@@ -104,6 +133,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        /// <summary>
+        /// Returns reference metadata and score information for one prompt item.
+        /// </summary>
+        /// <param name="id">The prompt item identifier.</param>
+        /// <returns>The reference information response.</returns>
         public Task<AppResponseBase<PromptReferenceInfo>> GetReferenceInfoAsync(int id)
         {
             return this.GetResponseAsync<PromptReferenceInfo>(
@@ -111,6 +145,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        /// <summary>
+        /// Applies a reference score to a prompt item.
+        /// </summary>
+        /// <param name="request">The prompt identifier and score request.</param>
+        /// <returns>The updated reference information response.</returns>
         public Task<AppResponseBase<PromptReferenceInfo>> ScoreReferenceAsync(PromptReferenceScoreRequest request)
         {
             return this.GetResponseAsync<PromptReferenceInfo>(
@@ -118,6 +157,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        /// <summary>
+        /// Returns one prompt selector item by identifier.
+        /// </summary>
+        /// <param name="id">The prompt item identifier.</param>
+        /// <returns>The selector item response.</returns>
         public Task<AppResponseBase<PromptSelectorItem>> GetSelectorPromptAsync(int id)
         {
             return this.GetResponseAsync<PromptSelectorItem>(
@@ -125,11 +169,22 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates a prompt-item version and, unless the request is marked as a draft,
+        /// executes the requested number of generations, publishes optional stream events,
+        /// and recalculates the prompt item's aggregate evaluation score.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        /// <exception cref="NcfExceptionBase"></exception>
+        /// <param name="request">
+        /// The prompt definition, versioning information, generation count, optional user message,
+        /// chat history, stream identifier, and execution options.
+        /// </param>
+        /// <returns>
+        /// A response containing the saved prompt-item metadata and any generated results.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is <see langword="null"/>.</exception>
+        /// <exception cref="NcfExceptionBase">
+        /// Thrown when the prompt cannot be saved, its generation configuration is invalid,
+        /// or one of the requested generations fails.
+        /// </exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PromptItem_AddResponse>> Add(PromptItem_AddRequest request)
         {
@@ -245,10 +300,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the prompt-item identifiers and display names belonging to a named prompt range.
+        /// The items are returned in ascending identifier order.
         /// </summary>
-        /// <param name="rangeName">rangename（must）</param>
-        /// <returns></returns>
+        /// <param name="rangeName">The exact prompt-range name used to filter prompt items.</param>
+        /// <returns>A response containing prompt-item identifier/name pairs.</returns>
         [ApiBind]
         public async Task<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>> GetIdAndName(string rangeName)
         {
@@ -268,10 +324,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the prompt-item identifiers and display names belonging to a prompt range.
+        /// The items are returned in ascending identifier order.
         /// </summary>
-        /// <param name="rangeId">range ID（must）</param>
-        /// <returns></returns>
+        /// <param name="rangeId">The prompt-range identifier used to filter prompt items.</param>
+        /// <returns>A response containing prompt-item identifier/name pairs.</returns>
         public async Task<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>> GetIdAndName(int rangeId)
         {
             return await
@@ -289,9 +346,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns the distinct prompt-range names currently represented by prompt items.
+        /// The response preserves the first item's identifier for each distinct range name.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A response containing the available range-name entries.</returns>
         // [ApiBind]
         public async Task<AppResponseBase<List<PromptItem_GetRangeNameListResponse>>> GetRangeNameList()
         {
@@ -332,10 +390,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         // }
 
         /// <summary>
-        /// according toprimary key ID　get PromptItem allinformation
+        /// Loads a prompt item together with its persisted generation results.
         /// </summary>
-        /// <param name="id">primary key ID </param>
-        /// <returns></returns>
+        /// <param name="id">The prompt-item identifier.</param>
+        /// <returns>A response containing the prompt-item DTO and its result history.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the prompt item cannot be found.</exception>
         [ApiBind]
         public async Task<AppResponseBase<PromptItem_GetResponse>> Get(int id)
         {
@@ -379,10 +438,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         // }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Builds the tactic tree for all prompt items in a named prompt range.
         /// </summary>
-        /// <param name="rangeName">rangename</param>
-        /// <returns></returns>
+        /// <param name="rangeName">The prompt-range name whose tactics should be grouped.</param>
+        /// <returns>A response containing the hierarchical tactic tree.</returns>
         [ApiBind]
         public async Task<AppResponseBase<TacticTree_GetResponse>> GetTacticTree(string rangeName)
         {
@@ -396,6 +455,13 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 });
         }
 
+        /// <summary>
+        /// Updates the editable nickname and note fields of an existing prompt item.
+        /// A non-empty nickname replaces any conflicting nickname in the same range.
+        /// </summary>
+        /// <param name="request">The prompt-item identifier and editable field values.</param>
+        /// <returns>A string response indicating whether the update completed.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the target prompt item cannot be found.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> Modify(PromptItem_ModifyRequest request)
         {
@@ -434,6 +500,13 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Replaces the contents of an existing draft prompt item without changing its draft status.
+        /// </summary>
+        /// <param name="promptItemId">The identifier of the draft prompt item.</param>
+        /// <param name="dto">The draft values to persist.</param>
+        /// <returns>A string response indicating whether the draft was updated.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the identifier does not refer to an existing draft.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> UpdateDraftAsync(int promptItemId, PromptItemDto dto)
         {
@@ -451,11 +524,17 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// according toprimary key ID　delete PromptItem allinformation
+        /// Deletes the selected prompt item, its tactic-related items, and their
+        /// generated results.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <param name="id">The identifier of the prompt item to delete.</param>
+        /// <returns>
+        /// A string response containing <c>ok</c> when all selected records and
+        /// dependent results have been removed.
+        /// </returns>
+        /// <exception cref="Exception">
+        /// Thrown when <paramref name="id"/> does not identify an existing prompt item.
+        /// </exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Delete)]
         public async Task<StringAppResponse> DeleteAsync(int id)
         {
@@ -469,7 +548,6 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
                 await _promptItemService.DeleteAllAsync(toDeleteItemList);
 
-                //Legacy comment translated to English.
                 var toDeleteIdList = toDeleteItemList.Select(p => p.Id).ToList();
                 await _promptResultService.BatchDeleteWithItemId(toDeleteIdList);
 
@@ -478,11 +556,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Replaces the expected-result definition used by automated and reference scoring.
         /// </summary>
-        /// <param name="promptItemId"></param>
-        /// <param name="expectedResults"></param>
-        /// <returns></returns>
+        /// <param name="promptItemId">The prompt-item identifier.</param>
+        /// <param name="expectedResults">The serialized expected-result definition.</param>
+        /// <returns>A response containing the updated prompt-item DTO.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the prompt item or expected-result definition is invalid.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PromptItemDto>> UpdateExpectedResults(int promptItemId, string expectedResults)
         {
@@ -506,10 +585,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         // }
 
         /// <summary>
-        /// uploadplugininterface
+        /// Uploads a PromptRange plugin package for later extraction and use by prompt items.
         /// </summary>
-        /// <param name="zipFile"></param>
-        /// <returns></returns>
+        /// <param name="zipFile">The uploaded ZIP package.</param>
+        /// <returns>A string response indicating whether the upload completed.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the package is missing, invalid, or cannot be stored.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> UploadPluginsAsync(IFormFile zipFile)
         {
@@ -522,10 +602,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Exports the selected prompt-range/plugin files into a downloadable ZIP archive.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">The range and prompt-item identifiers to export.</param>
+        /// <returns>A file result containing the generated ZIP archive.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when no exportable files are found or the archive cannot be created.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<FileContentResult> ExportPluginsAsync(PromptItem_ExportRequest request)
         {
@@ -548,6 +629,13 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         //     return await BuildZipStream(rangePath);
         // }
 
+        /// <summary>
+        /// Creates a ZIP archive from every file below the supplied export directory and loads
+        /// the archive into an HTTP file result for the caller.
+        /// </summary>
+        /// <param name="dirPath">The directory containing the files to archive.</param>
+        /// <returns>A file result containing the generated archive bytes.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the directory, parent directory, or archive input is invalid.</exception>
         private static async Task<FileContentResult> BuildZipStreamAsync(string dirPath)
         {
             try

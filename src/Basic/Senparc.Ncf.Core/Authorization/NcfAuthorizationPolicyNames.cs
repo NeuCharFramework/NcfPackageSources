@@ -11,23 +11,25 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Ncf.Core.Authorization
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Contains the policy names used by NCF authorization configuration.
     /// </summary>
     public static class NcfAuthorizationPolicyNames
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Requires an authenticated administrator.
         /// </summary>
         public const string AdminOnly = "AdminOnly";
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Requires the administrator member claim.
         /// </summary>
         public const string AdminMemberClaim = "AdminMember";
     }

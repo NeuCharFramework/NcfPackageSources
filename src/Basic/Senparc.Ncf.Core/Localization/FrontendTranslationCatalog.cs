@@ -12,6 +12,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.31.1-preview12 Improved frontend localization catalog filtering and fallback behavior.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -94,6 +97,13 @@ public static class FrontendTranslationCatalog
         return result;
     }
 
+    /// <summary>
+    /// Reads localized resource strings under a temporary UI culture and restores the original culture.
+    /// </summary>
+    /// <param name="factory">The localizer factory.</param>
+    /// <param name="resourceType">The resource type to inspect.</param>
+    /// <param name="culture">The culture used for lookup.</param>
+    /// <returns>The strings available for the requested culture.</returns>
     private static IReadOnlyList<LocalizedString> GetStrings(
         IStringLocalizerFactory factory,
         Type resourceType,
@@ -113,21 +123,41 @@ public static class FrontendTranslationCatalog
         }
     }
 
+    /// <summary>
+    /// Extracts the neutral/source side of a legacy <c>source||localized</c> value.
+    /// </summary>
+    /// <param name="value">The legacy combined value.</param>
+    /// <returns>The neutral text.</returns>
     private static string LegacyNeutralSource(string value)
     {
         var parts = SplitLegacy(value);
         return parts.Length == 2 ? parts[0] : value ?? string.Empty;
     }
 
+    /// <summary>
+    /// Extracts the localized/target side of a legacy <c>source||localized</c> value.
+    /// </summary>
+    /// <param name="value">The legacy combined value.</param>
+    /// <returns>The localized text.</returns>
     private static string LegacyLocalizedTarget(string value)
     {
         var parts = SplitLegacy(value);
         return parts.Length == 2 ? parts[1] : value ?? string.Empty;
     }
 
+    /// <summary>
+    /// Splits a legacy source/localized string at its first <c>||</c> separator.
+    /// </summary>
+    /// <param name="value">The legacy combined string.</param>
+    /// <returns>Up to two string parts.</returns>
     private static string[] SplitLegacy(string value) =>
         (value ?? string.Empty).Split(new[] { "||" }, 2, StringSplitOptions.None);
 
+    /// <summary>
+    /// Determines whether a localized resource key belongs to the frontend/global catalog.
+    /// </summary>
+    /// <param name="item">The localized string metadata.</param>
+    /// <returns><see langword="true"/> for Frontend or Global keys.</returns>
     private static bool IsFrontendKey(LocalizedString item) =>
         item.Name.StartsWith("Frontend.", StringComparison.Ordinal)
         || item.Name.StartsWith("Global.", StringComparison.Ordinal);

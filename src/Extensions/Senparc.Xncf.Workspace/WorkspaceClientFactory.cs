@@ -141,6 +141,15 @@ public sealed class WorkspaceClientFactory : IWorkspaceClientFactory
         }
 
         /// <inheritdoc />
+        public Task CopyEntryAsync(
+            WorkspaceCopyEntryRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            EnsureWrite();
+            return _storage.CopyEntryAsync(WorkspaceId, request, cancellationToken);
+        }
+
+        /// <inheritdoc />
         public Task<IReadOnlyList<WorkspaceSearchResult>> SearchAsync(
             WorkspaceSearchRequest request,
             CancellationToken cancellationToken = default)

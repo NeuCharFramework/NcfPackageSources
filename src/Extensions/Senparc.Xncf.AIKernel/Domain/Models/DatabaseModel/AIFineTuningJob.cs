@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -58,6 +61,20 @@ public class AIFineTuningJob : EntityBase<int>
     [Required]
     public long LastEventSequence { get; private set; }
 
+    /// <summary>
+    /// Creates a persisted fine-tuning job snapshot.
+    /// </summary>
+    /// <param name="workerAlias">The Worker alias.</param>
+    /// <param name="externalId">The Worker-side job identifier.</param>
+    /// <param name="name">The job display name.</param>
+    /// <param name="state">The current job state.</param>
+    /// <param name="createdUtc">The creation timestamp.</param>
+    /// <param name="startedUtc">The optional start timestamp.</param>
+    /// <param name="finishedUtc">The optional completion timestamp.</param>
+    /// <param name="requestJson">The serialized job request.</param>
+    /// <param name="error">The latest error message.</param>
+    /// <param name="latestMetricsJson">The latest metrics JSON.</param>
+    /// <param name="lastEventSequence">The latest Worker event sequence.</param>
     public AIFineTuningJob(string workerAlias, string externalId, string name, string state, DateTime createdUtc,
         DateTime? startedUtc, DateTime? finishedUtc, string requestJson, string error, string latestMetricsJson,
         long lastEventSequence)
@@ -66,6 +83,21 @@ public class AIFineTuningJob : EntityBase<int>
             latestMetricsJson, lastEventSequence);
     }
 
+    /// <summary>
+    /// Updates the persisted job snapshot from Worker state.
+    /// </summary>
+    /// <param name="workerAlias">The Worker alias.</param>
+    /// <param name="externalId">The Worker-side job identifier.</param>
+    /// <param name="name">The job display name.</param>
+    /// <param name="state">The current job state.</param>
+    /// <param name="createdUtc">The creation timestamp.</param>
+    /// <param name="startedUtc">The optional start timestamp.</param>
+    /// <param name="finishedUtc">The optional completion timestamp.</param>
+    /// <param name="requestJson">The serialized job request.</param>
+    /// <param name="error">The latest error message.</param>
+    /// <param name="latestMetricsJson">The latest metrics JSON.</param>
+    /// <param name="lastEventSequence">The latest Worker event sequence.</param>
+    /// <returns>This job entity.</returns>
     public AIFineTuningJob Update(string workerAlias, string externalId, string name, string state, DateTime createdUtc,
         DateTime? startedUtc, DateTime? finishedUtc, string requestJson, string error, string latestMetricsJson,
         long lastEventSequence)

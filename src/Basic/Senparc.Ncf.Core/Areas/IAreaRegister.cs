@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Hosting;
@@ -24,16 +27,16 @@ using System.Text;
 namespace Senparc.Ncf.Core.Areas
 {
     /// <summary>
-    /// Register interface of Area
+    /// Defines the registration contract for an XNCF administration area.
     /// </summary>
     public interface IAreaRegister
     {
         /// <summary>
-        /// Authorization configuration
+        /// Applies authorization and Razor Pages configuration for the area.
         /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="env"></param>
-        /// <returns></returns>
+        /// <param name="builder">The MVC builder being configured.</param>
+        /// <param name="env">The hosting environment.</param>
+        /// <returns>The configured MVC builder.</returns>
         IMvcBuilder AuthorizeConfig(IMvcBuilder builder, Microsoft.Extensions.Hosting.IHostEnvironment/*IWebHostEnvironment*/ env);
 
         /// <summary>
@@ -43,7 +46,7 @@ namespace Senparc.Ncf.Core.Areas
         string HomeUrl { get; }
 
         /// <summary>
-        ///MenuItems
+        /// Gets the navigation items exposed by the area.
         /// </summary>
         List<AreaPageMenuItem> AreaPageMenuItems { get; }
     }

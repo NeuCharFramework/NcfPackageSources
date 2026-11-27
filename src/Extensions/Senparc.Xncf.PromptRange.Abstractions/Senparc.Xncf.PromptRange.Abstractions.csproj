@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.3.3.1-preview8</Version>
+    <Version>0.3.3.2-preview9</Version>
     <AssemblyName>Senparc.Xncf.PromptRange.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Xncf.PromptRange.Abstractions</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -37,7 +37,10 @@
         2. Standardized related English source comments and package metadata for the current release.
         [2026-11-24] v0.3.3-preview8 Improved PromptRange localization consistency and prompt tooling behavior.
         1. Updated functional behavior and package metadata for the current module changes.
-        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.
+        [2026-11-27] v0.3.3.2-preview9 Improve source documentation, headers, and module metadata consistency.
+        1. Applied standardized copyright headers, XML documentation, and localization metadata across touched sources.
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

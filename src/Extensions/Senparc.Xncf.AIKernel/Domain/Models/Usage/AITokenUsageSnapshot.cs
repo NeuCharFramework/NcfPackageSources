@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -20,7 +23,7 @@ using System;
 namespace Senparc.Xncf.AIKernel.Domain.Models.Usage
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Represents token usage accumulated for one operation or aggregation window.
     /// </summary>
     [Serializable]
     public class AITokenUsageSnapshot
@@ -46,24 +49,24 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.Usage
         public long CachedInputTokens { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the reasoning-token count reported by the provider.
         /// </summary>
         public long ReasoningTokens { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets an empty usage snapshot.
         /// </summary>
         public static AITokenUsageSnapshot Empty => new AITokenUsageSnapshot();
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets whether all tracked token counters are zero.
         /// </summary>
         public bool IsEmpty =>
             InputTokens == 0 && OutputTokens == 0 && TotalTokens == 0
             && CachedInputTokens == 0 && ReasoningTokens == 0;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Clamps negative counters to zero and derives total tokens when absent.
         /// </summary>
         public void Normalize()
         {

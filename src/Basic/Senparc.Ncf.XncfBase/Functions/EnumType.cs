@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.29.1 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.29.1.2 Extend shared chat-tool contracts for admin task initiation.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -22,14 +25,19 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase.Functions
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Wraps an enum-like value for function parameter binding.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The value type, normally an enum.</typeparam>
     public class EnumType<T> where T : struct
     {
         public T Value { get; set; }
+        /// <summary>Initializes the wrapper with the default value of <typeparamref name="T"/>.</summary>
         public EnumType() { }
 
+        /// <summary>
+        /// Initializes the wrapper with an explicit value.
+        /// </summary>
+        /// <param name="value">The value to wrap.</param>
         public EnumType(T value)
         {
             Value = value;

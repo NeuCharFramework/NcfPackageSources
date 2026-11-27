@@ -49,6 +49,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
@@ -286,12 +289,6 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// runmodel
-        /// </summary>
-        /// <param name="senparcAiSetting"></param>
-        /// <param name="prompt"></param>
-        /// <returns></returns>
-        /// <summary>
         /// Runs a model request using the supplied runtime setting and optional prompt/session parameters.
         /// </summary>
         /// <param name="senparcAiSetting">The runtime AI model setting.</param>
@@ -359,12 +356,17 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        /// <para>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// </para>
+        /// Runs a chat request and records normalized token usage for the invocation.
         /// </summary>
+        /// <param name="runner">The AgentKernel runner used to execute the request.</param>
+        /// <param name="prompt">The user prompt to send.</param>
+        /// <param name="agentSession">Optional AgentKernel session context.</param>
+        /// <param name="onUpdate">Optional callback for streamed response updates.</param>
+        /// <param name="model">Optional persisted model metadata used for usage recording.</param>
+        /// <param name="source">Optional diagnostic source label.</param>
+        /// <param name="modelAlias">Optional model alias override for usage recording.</param>
+        /// <returns>The AgentKernel response with normalized usage details.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="runner"/> is <see langword="null"/>.</exception>
         public Task<SenparcKernelAiResult<string>> RunChatWithUsageAsync(
             IWantToRun runner,
             string prompt,
@@ -390,8 +392,16 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Runs a structured AI request and records normalized token usage for the invocation.
         /// </summary>
+        /// <param name="runner">The AgentKernel runner used to execute the request.</param>
+        /// <param name="request">The structured AI request.</param>
+        /// <param name="onUpdate">Optional callback for streamed response updates.</param>
+        /// <param name="model">Optional persisted model metadata used for usage recording.</param>
+        /// <param name="source">Optional diagnostic source label.</param>
+        /// <param name="modelAlias">Optional model alias override for usage recording.</param>
+        /// <returns>The AgentKernel response with normalized usage details.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="runner"/> or <paramref name="request"/> is <see langword="null"/>.</exception>
         public Task<SenparcKernelAiResult<string>> RunChatWithUsageAsync(
             IWantToRun runner,
             SenparcAiRequest request,
@@ -419,9 +429,6 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 modelAlias);
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
         /// <summary>
         /// Runs a ChatClientAgent request and returns the full agent response with usage data.
         /// </summary>
@@ -479,9 +486,6 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             }
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
         /// <summary>
         /// Streams an AgentKernel runner response and returns all captured updates.
         /// </summary>
@@ -549,9 +553,6 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             }
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
         /// <summary>
         /// Streams a ChatClientAgent response and returns all captured updates.
         /// </summary>
@@ -622,16 +623,15 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <summary>
         /// Records usage data in the token monitor when usage is available.
         /// </summary>
-        /// <param name="modelAlias">The model alias.</param>
-        /// <param name="usage">Usage details.</param>
+        /// <param name="model">Optional persisted model metadata.</param>
+        /// <param name="modelAlias">The model alias used for the invocation.</param>
+        /// <param name="snapshot">Normalized token usage details.</param>
         /// <param name="durationMs">Call duration in milliseconds.</param>
         /// <param name="success">Whether the call succeeded.</param>
-        /// <param name="tenantId">The tenant bucket.</param>
+        /// <param name="source">The logical source of the invocation.</param>
+        /// <param name="errorNote">Optional bounded error text.</param>
         public void RecordUsage(
             AIModelDto model,
             string modelAlias,
@@ -777,23 +777,6 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        /// <para>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// </para>
-        /// </summary>
-        ///Legacy comment translated to English.
-        /// <param name="prompt">userPrompt</param>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <summary>
         /// Runs a model request with token-monitor progress and optional AgentSession context.
         /// </summary>
         /// <param name="aiModel">The model DTO to execute.</param>
@@ -889,7 +872,8 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 }
                 catch
                 {
-                    //Legacy comment translated to English.
+                    // Progress callbacks are diagnostic observers and must not
+                    // change the model result when a consumer callback fails.
                 }
             }
 
@@ -936,7 +920,8 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             {
                 stopwatch.Stop();
 
-                //Legacy comment translated to English.
+                // Infer a more specific local capability when the remote catalog
+                // does not provide a usable model category.
                 var finalUsage = BuildUsageSnapshot(aiResult?.Result?.Usage);
                 if (finalUsage.IsEmpty && !lastUsage.IsEmpty)
                 {
@@ -973,9 +958,6 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             return aiResult;
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
         /// <summary>
         /// Converts provider usage details into the AIKernel token usage snapshot.
         /// </summary>
@@ -1084,12 +1066,6 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             return $"已成功添加 {addCount} 个模型，更新 {updateCount} 个模型信息。";
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="llModel"></param>
-        /// <returns></returns>
-        /// <exception cref="NcfExceptionBase"></exception>
         /// <summary>
         /// Converts an AI model DTO into runtime settings without vector configuration.
         /// </summary>
@@ -1276,7 +1252,8 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 }
             }
 
-            //Legacy comment translated to English.
+            // A non-chat model cannot be used for automatic chat grading, so select
+            // the first persisted chat model as the fallback runtime configuration.
             return aiModel.ConfigModelType == ConfigModelType.TextEmbedding ? 1536 : 0;
         }
 
@@ -1343,12 +1320,6 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             return string.IsNullOrWhiteSpace(apiVersion) ? "2022-12-01" : apiVersion.Trim();
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="currentModelDto"></param>
-        /// <returns></returns>
-        /// <exception cref="NcfExceptionBase"></exception>
         /// <summary>
         /// Resolves a usable Chat model, applying the configured fallback policy when the current model is unavailable.
         /// </summary>

@@ -22,6 +22,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.5 Localized file management and upload surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.5.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET;
@@ -50,24 +53,23 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
     {
         private readonly NcfFileService fileService;
 
+        /// <summary>
+        /// Initializes the administrative FileManager template service.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
+        /// <param name="fileService">The file service used for listing and deletion.</param>
         public FileTemplateAppService(IServiceProvider serviceProvider, NcfFileService fileService) : base(serviceProvider)
         {
             this.fileService = fileService;
         }
 
-        /*
-         * Legacy comment translated to English.
-
-         * Legacy comment translated to English.
-
-         * Legacy comment translated to English.
-
-         */
+        // The sample endpoints below are retained as compatibility examples for
+        // hosts that use the generated FileManager application-service surface.
 
         /// <summary>
-        /// expose AppService as a Web API
+        /// Returns the fixed sample status value through the API response pipeline.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An application response containing <c>200</c>.</returns>
         [ApiBind]
         public async Task<AppResponseBase<int>> MyApi()
         {
@@ -79,9 +81,11 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// custom Post types and complex parameters while testing exception throwing and custom status codes
+        /// Exercises complex POST binding and custom exception/status handling.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="request">The request values included in the diagnostic exception.</param>
+        /// <returns>A string application response produced by the response pipeline.</returns>
+        /// <exception cref="NcfExceptionBase">Intentionally thrown to exercise exception handling.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> MyCustomApi(Api_MyCustomApiRequest request)
         {
@@ -105,11 +109,12 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Lists knowledge-base files with optional name filtering and paging.
         /// </summary>
-        /// <param name="pageSize"></param>
-        /// <param name="pageIndex"></param>
-        /// <returns></returns>
+        /// <param name="pageIndex">The requested page index.</param>
+        /// <param name="pageSize">The requested page size.</param>
+        /// <param name="filter">Optional file-name filter.</param>
+        /// <returns>An application response containing the mapped file page.</returns>
         [ApiBind]
         public async Task<AppResponseBase<FileTemplate_GetListResponse>> GetList(int pageIndex = 0, int pageSize = 0, string filter = "")
         {
@@ -140,8 +145,10 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Deletes one FileManager file identified by the request.
         /// </summary>
+        /// <param name="request">The file identifier request.</param>
+        /// <returns>An application response indicating whether deletion completed.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<bool>> DeleteFile(DeleteFileRequest request)
         {

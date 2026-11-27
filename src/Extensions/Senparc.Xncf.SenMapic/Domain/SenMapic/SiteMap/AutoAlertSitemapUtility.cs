@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.13 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.13.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -463,9 +466,9 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         // }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Legacy alert-check implementation retained as disabled historical reference.
         /// </summary>
-        /// <param name="order"></param>
+        /// <param name="order">The sitemap order that would have been inspected.</param>
         // private void CheckLoginAndAlert(SiteMapOrder order)
         // {
           // DateTime currentLoginTime = order.UserInfo.CurrentLoginTime;

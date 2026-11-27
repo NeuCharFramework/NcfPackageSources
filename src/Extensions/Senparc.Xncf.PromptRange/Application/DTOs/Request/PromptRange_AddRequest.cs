@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel.DataAnnotations;
@@ -26,14 +29,10 @@ public class PromptRange_AddRequest
     /// </summary>
     public string Alias { get; set; }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Gets or sets the required display name of the PromptRange.</summary>
     [Required]
     public string RangeName { get; set; }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Gets or sets optional serialized expected results for evaluation.</summary>
     public string ExpectedResultsJson { get; set; }
 }

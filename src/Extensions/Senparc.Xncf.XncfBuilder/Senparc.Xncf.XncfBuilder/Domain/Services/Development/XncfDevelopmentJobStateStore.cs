@@ -22,6 +22,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.42.0.0 add MCP endpoint gateway and tool invocation contracts
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -40,9 +43,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
     public sealed class XncfDevelopmentJobSnapshot
     {
         public string JobId { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the tenant owning the development job.</summary>
         public int TenantId { get; set; }
         public int OwnerAdminUserId { get; set; }
         public XncfDevelopmentJobMode Mode { get; set; }
@@ -70,9 +71,32 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
 
     public interface IXncfDevelopmentJobStateStore
     {
+        /// <summary>
+        /// Persists a development-job snapshot for its owning tenant.
+        /// </summary>
+        /// <param name="snapshot">The job state to persist.</param>
+        /// <param name="cancellationToken">Token used to cancel persistence.</param>
         Task SaveAsync(XncfDevelopmentJobSnapshot snapshot, CancellationToken cancellationToken = default);
+        /// <summary>
+        /// Loads one non-deleted development job for a tenant.
+        /// </summary>
+        /// <param name="jobId">The development job identifier.</param>
+        /// <param name="tenantId">The tenant identifier.</param>
+        /// <param name="cancellationToken">Token used to cancel lookup.</param>
+        /// <returns>The snapshot, or <see langword="null"/> when absent.</returns>
         Task<XncfDevelopmentJobSnapshot> GetAsync(string jobId, int tenantId, CancellationToken cancellationToken = default);
+        /// <summary>
+        /// Loads recent non-deleted development jobs for a tenant.
+        /// </summary>
+        /// <param name="maxCount">The maximum number of snapshots to return.</param>
+        /// <param name="tenantId">The tenant identifier.</param>
+        /// <param name="cancellationToken">Token used to cancel lookup.</param>
+        /// <returns>The recent snapshots ordered by update time.</returns>
         Task<IReadOnlyList<XncfDevelopmentJobSnapshot>> GetRecentAsync(int maxCount, int tenantId, CancellationToken cancellationToken = default);
+        /// <summary>
+        /// Gets the current persistence availability and diagnostic status.
+        /// </summary>
+        /// <returns>The persistence status snapshot.</returns>
         XncfDevelopmentPersistenceInfo GetPersistenceStatus();
     }
 
@@ -98,6 +122,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             _serviceScopeFactory = serviceScopeFactory;
         }
 
+        /// <inheritdoc />
         public async Task SaveAsync(XncfDevelopmentJobSnapshot snapshot, CancellationToken cancellationToken = default)
         {
             ArgumentNullException.ThrowIfNull(snapshot);
@@ -134,6 +159,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }
         }
 
+        /// <summary>
+        /// Loads one non-deleted development job under the supplied tenant scope.
+        /// </summary>
+        /// <param name="jobId">The development job identifier.</param>
+        /// <param name="tenantId">The tenant identifier.</param>
+        /// <param name="cancellationToken">Token used to cancel database access.</param>
+        /// <returns>The snapshot, or <see langword="null"/> when absent.</returns>
         public async Task<XncfDevelopmentJobSnapshot> GetAsync(string jobId, int tenantId, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(jobId))
@@ -159,6 +191,14 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }
         }
 
+        /// <summary>
+        /// Loads recent non-deleted development jobs ordered by update time.
+        /// </summary>
+        /// <param name="maxCount">The maximum number of jobs to return.</param>
+        /// <param name="tenantId">The tenant identifier.</param>
+        /// <param name="cancellationToken">Token used to cancel database access.</param>
+        /// <returns>The recent job snapshots.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="maxCount"/> is not positive.</exception>
         public async Task<IReadOnlyList<XncfDevelopmentJobSnapshot>> GetRecentAsync(
             int maxCount,
             int tenantId,
@@ -191,6 +231,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }
         }
 
+        /// <summary>
+        /// Returns the last known state of development-job persistence.
+        /// </summary>
+        /// <returns>A thread-safe persistence status snapshot.</returns>
         public XncfDevelopmentPersistenceInfo GetPersistenceStatus()
         {
             lock (_persistenceStatusLock)
@@ -206,6 +250,9 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }
         }
 
+        /// <summary>
+        /// Records a successful persistence operation and clears retry state.
+        /// </summary>
         private void MarkPersistenceAvailable()
         {
             lock (_persistenceStatusLock)
@@ -218,6 +265,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }
         }
 
+        /// <summary>
+        /// Records a persistence failure and schedules a bounded retry time.
+        /// </summary>
+        /// <param name="exception">The persistence exception.</param>
         private void MarkPersistenceUnavailable(Exception exception)
         {
             lock (_persistenceStatusLock)
@@ -230,6 +281,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }
         }
 
+        /// <summary>
+        /// Converts a persisted development job entity to its immutable snapshot contract.
+        /// </summary>
+        /// <param name="job">The persisted job entity.</param>
+        /// <returns>The snapshot contract.</returns>
         private static XncfDevelopmentJobSnapshot ToSnapshot(XncfDevelopmentJob job)
         {
             return new XncfDevelopmentJobSnapshot
@@ -261,17 +317,27 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             };
         }
 
+        /// <summary>
+        /// Converts a stored DateTime to a UTC DateTimeOffset.
+        /// </summary>
+        /// <param name="value">The stored timestamp.</param>
+        /// <returns>The UTC offset timestamp.</returns>
         private static DateTimeOffset ToUtcOffset(DateTime value) =>
             new(DateTime.SpecifyKind(value, DateTimeKind.Utc));
 
+        /// <summary>
+        /// Converts an optional stored DateTime to an optional UTC DateTimeOffset.
+        /// </summary>
+        /// <param name="value">The optional stored timestamp.</param>
+        /// <returns>The UTC offset timestamp or <see langword="null"/>.</returns>
         private static DateTimeOffset? ToUtcOffset(DateTime? value) =>
             value.HasValue ? ToUtcOffset(value.Value) : null;
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Restores the tenant context in a persistence scope when multi-tenancy is enabled.
         /// </summary>
+        /// <param name="scope">The tenant-scoped service scope.</param>
+        /// <param name="tenantId">The tenant identifier to match.</param>
         private static void ApplyTenantContext(IServiceScope scope, int tenantId)
         {
             if (!SiteConfig.SenparcCoreSetting.EnableMultiTenant)

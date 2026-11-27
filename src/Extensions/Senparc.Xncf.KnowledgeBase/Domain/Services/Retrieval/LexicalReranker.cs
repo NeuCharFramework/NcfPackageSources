@@ -14,6 +14,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -25,7 +28,7 @@ using System.Text.RegularExpressions;
 namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides token-based lexical scoring and fusion helpers for vector retrieval results.
     /// </summary>
     public static class LexicalReranker
     {
@@ -34,8 +37,11 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
             RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Scores query/text lexical overlap using token coverage and CJK bigram similarity.
         /// </summary>
+        /// <param name="query">The user query.</param>
+        /// <param name="text">The candidate text.</param>
+        /// <returns>A normalized lexical score from 0 through 1.</returns>
         public static double Score(string query, string text)
         {
             if (string.IsNullOrWhiteSpace(query) || string.IsNullOrWhiteSpace(text))
@@ -69,8 +75,12 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Combines a normalized vector score and lexical score with a bounded lexical weight.
         /// </summary>
+        /// <param name="normalizedVectorScore">The normalized vector score.</param>
+        /// <param name="lexicalScore">The normalized lexical score.</param>
+        /// <param name="lexicalWeight">The lexical contribution, clamped to 0 through 1.</param>
+        /// <returns>The fused score from 0 through 1.</returns>
         public static double Fuse(double normalizedVectorScore, double lexicalScore, double lexicalWeight)
         {
             var weight = Math.Clamp(lexicalWeight, 0d, 1d);
@@ -78,8 +88,10 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Min-max normalizes a score array; equal scores become 1.
         /// </summary>
+        /// <param name="scores">The scores to normalize.</param>
+        /// <returns>A new normalized score array.</returns>
         public static double[] NormalizeScores(double[] scores)
         {
             var normalized = new double[scores.Length];
@@ -103,8 +115,10 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Extracts case-insensitive Latin/numeric tokens and CJK bigrams.
         /// </summary>
+        /// <param name="text">The text to tokenize.</param>
+        /// <returns>The distinct lexical tokens.</returns>
         public static HashSet<string> Tokenize(string text)
         {
             var tokens = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -134,8 +148,10 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Extracts distinct adjacent CJK character pairs.
         /// </summary>
+        /// <param name="text">The text to tokenize.</param>
+        /// <returns>The distinct CJK bigrams.</returns>
         public static HashSet<string> TokenizeBigrams(string text)
         {
             var bigrams = new HashSet<string>(StringComparer.Ordinal);
@@ -149,6 +165,12 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
             return bigrams;
         }
 
+        /// <summary>
+        /// Calculates the Sørensen-Dice coefficient for two token sets.
+        /// </summary>
+        /// <param name="left">The first token set.</param>
+        /// <param name="right">The second token set.</param>
+        /// <returns>A similarity value from 0 through 1.</returns>
         private static double DiceCoefficient(HashSet<string> left, HashSet<string> right)
         {
             if (left.Count == 0 || right.Count == 0)
@@ -167,6 +189,11 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
             return 2.0 * intersection / (left.Count + right.Count);
         }
 
+        /// <summary>
+        /// Extracts contiguous runs of CJK characters from text.
+        /// </summary>
+        /// <param name="text">The text to inspect.</param>
+        /// <returns>The contiguous CJK runs.</returns>
         private static IEnumerable<string> ExtractCjkRuns(string text)
         {
             var buffer = new StringBuilder(16);
@@ -189,6 +216,11 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
             }
         }
 
+        /// <summary>
+        /// Determines whether a character belongs to one of the supported CJK ranges.
+        /// </summary>
+        /// <param name="ch">The character to inspect.</param>
+        /// <returns><see langword="true"/> when the character is CJK.</returns>
         private static bool IsCjk(char ch)
         {
             return (ch >= 0x4E00 && ch <= 0x9FFF)     //Legacy comment translated to English.

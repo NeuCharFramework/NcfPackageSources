@@ -1,4 +1,18 @@
-﻿using System;
+/*----------------------------------------------------------------
+
+    Copyright (C) 2026 Senparc
+
+    File name: AuthorizationMenuTagHelper.cs
+    File description: Senparc.Areas.Admin.TagHelpers related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
+----------------------------------------------------------------*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,6 +43,7 @@ namespace Senparc.Areas.Admin.TagHelpers
             //_httpContextAccessor = _serviceProvider.GetService<Microsoft.AspNetCore.Http.IHttpContextAccessor>();
         }
 
+        /// <inheritdoc/>
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             bool hasPageRoute = _actionContextAccessor.ActionContext.RouteData.Values.TryGetValue("page", out object page);

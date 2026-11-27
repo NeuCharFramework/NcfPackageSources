@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
@@ -28,8 +31,11 @@ public interface IAdminChatSessionWorkflowRepository : IClientRepositoryBase<Adm
 public sealed class AdminChatSessionWorkflowRepository
     : ClientRepositoryBase<AdminChatSessionWorkflow>, IAdminChatSessionWorkflowRepository
 {
+    /// <summary>Reserved parameterless constructor for repository infrastructure.</summary>
     private AdminChatSessionWorkflowRepository() : base(null!) { }
 
+    /// <summary>Initializes the session-workflow repository with the NCF database provider.</summary>
+    /// <param name="ncfDbData">The database data provider used by the base repository.</param>
     public AdminChatSessionWorkflowRepository(INcfDbData ncfDbData) : base(ncfDbData)
     {
     }

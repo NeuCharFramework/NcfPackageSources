@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -25,11 +28,19 @@ namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBase
 {
     public class RecallTestModel : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
     {
+        /// <summary>
+        /// Initializes the KnowledgeBase recall-test page model.
+        /// </summary>
+        /// <param name="xncfModuleService">The lazy module service required by the base page.</param>
         public RecallTestModel(Lazy<XncfModuleService> xncfModuleService) : base(xncfModuleService)
         {
             CurrentMenu = "RecallTest";
         }
 
+        /// <summary>
+        /// Handles the initial recall-test page request; test data is loaded by
+        /// client-side calls after the page has rendered.
+        /// </summary>
         public Task OnGetAsync()
         {
             return Task.CompletedTask;

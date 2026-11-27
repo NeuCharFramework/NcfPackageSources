@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.42.0.0 add MCP endpoint gateway and tool invocation contracts
+
 ----------------------------------------------------------------*/
 
 using Microsoft.SemanticKernel;
@@ -33,20 +36,35 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
 {
     public class FilePlugin
     {
+        /// <summary>
+        /// Represents the files written by a builder file-generation operation.
+        /// </summary>
         public class FileSaveResult
         {
+            /// <summary>Gets the written file contents keyed by physical path.</summary>
             public Dictionary<string, string> FileContents { get; set; } = new Dictionary<string, string>();
+            /// <summary>Gets the human-readable operation log.</summary>
             public string Log { get; set; }
         }
 
         private readonly IWantToRun _iWantToRun;
 
+        /// <summary>
+        /// Initializes the AI file-generation plugin.
+        /// </summary>
+        /// <param name="iWantToRun">The agent runner used by the plugin host.</param>
         public FilePlugin(IWantToRun iWantToRun)
         {
             this._iWantToRun = iWantToRun;
         }
 
         [KernelFunction, LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.Plugin.CreateEntity")]
+        /// <summary>
+        /// Writes generated file results beneath a supplied base path and returns saved contents.
+        /// </summary>
+        /// <param name="fileBasePath">The base directory for generated files.</param>
+        /// <param name="fileGenerateResult">The serialized generated-file results.</param>
+        /// <returns>A result containing saved file contents and log text.</returns>
         public async Task<FileSaveResult> CreateFile(
              [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.Plugin.FilePath")]
             string fileBasePath,
@@ -86,6 +104,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
         //Legacy comment translated to English.
 
         [KernelFunction, LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.Plugin.ReadDbContext")]
+        /// <summary>
+        /// Inserts a generated DbSet declaration into the designated Senparc entities file.
+        /// </summary>
+        /// <param name="projectPath">The project root containing the database model.</param>
+        /// <param name="entityName">The entity type name.</param>
+        /// <param name="pluralEntityName">The DbSet property name.</param>
+        /// <returns>A result describing the file update.</returns>
         public async Task<FileSaveResult> UpdateSenparcEntities(
             [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.Plugin.ProjectPath")]
             string projectPath,

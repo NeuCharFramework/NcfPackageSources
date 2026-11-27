@@ -28,12 +28,15 @@
     Modified by: Senparc - 20261119
     Change description: v0.3.2 Localized sandbox setup and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.3.2.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Sandbox.Abstractions;
 
 /// <summary>
-///Legacy comment translated to English.
+/// Read-only session snapshot returned by Sandbox orchestration APIs.
 /// </summary>
 public sealed class SandboxSessionInfo
 {
@@ -49,12 +52,8 @@ public sealed class SandboxSessionInfo
     public DateTimeOffset ExpiresAtUtc { get; init; }
     public bool IsTtlUnlimited { get; init; }
     public DateTimeOffset LastActivityAtUtc { get; init; }
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Optional administrator-facing session alias.</summary>
     public string? Alias { get; init; }
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Normalized additional port mappings requested for the session.</summary>
     public string? ExtraPorts { get; init; }
 }

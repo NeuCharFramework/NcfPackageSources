@@ -10,6 +10,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -35,12 +38,22 @@ public sealed class AdminChatSystemMessagePromptProvider : IAdminChatSystemMessa
     public static string DefaultPrompt =>
         PromptRangeResource.Get("AdminChat.SystemPrompt.Default");
 
+    /// <summary>
+    /// Initializes the AdminChat system-message prompt provider.
+    /// </summary>
+    /// <param name="ranges">The prompt-range service.</param>
+    /// <param name="items">The prompt-item service.</param>
     public AdminChatSystemMessagePromptProvider(PromptRangeService ranges, PromptItemService items)
     {
         _ranges = ranges;
         _items = items;
     }
 
+    /// <summary>
+    /// Loads or initializes the published AdminChat system prompt.
+    /// </summary>
+    /// <param name="cancellationToken">Token used to cancel initialization.</param>
+    /// <returns>The selected system prompt and version.</returns>
     public async Task<AdminChatSystemMessagePrompt> GetAsync(CancellationToken cancellationToken = default)
     {
         await Initialization.WaitAsync(cancellationToken).ConfigureAwait(false);
@@ -76,6 +89,12 @@ public sealed class AdminChatSystemMessagePromptProvider : IAdminChatSystemMessa
         }
     }
 
+    /// <summary>
+    /// Creates the default AdminChat system prompt item.
+    /// </summary>
+    /// <param name="rangeId">The prompt-range identifier.</param>
+    /// <param name="rangeName">The prompt-range name.</param>
+    /// <returns>A non-draft default prompt item.</returns>
     public static PromptItem CreateDefaultPrompt(int rangeId, string rangeName) =>
         new(rangeId, rangeName, "1", 1, string.Empty, new PromptItem_AddRequest
         {
@@ -91,6 +110,12 @@ public sealed class AdminChatSystemMessagePromptProvider : IAdminChatSystemMessa
             Note = "AdminChat.System"
         });
 
+    /// <summary>
+    /// Selects the highest-scoring valid published prompt, falling back to the oldest published item.
+    /// </summary>
+    /// <param name="items">The candidate prompt items.</param>
+    /// <returns>The selected prompt.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when no valid published prompt exists.</exception>
     public static PromptItem SelectPublishedPrompt(IEnumerable<PromptItem> items)
     {
         var published = (items ?? Array.Empty<PromptItem>())
@@ -118,6 +143,11 @@ public sealed class AdminChatSystemMessagePromptProvider : IAdminChatSystemMessa
         return selected;
     }
 
+    /// <summary>
+    /// Resolves the effective score used for published-prompt selection.
+    /// </summary>
+    /// <param name="item">The prompt item.</param>
+    /// <returns>The final/average score, or <see langword="null"/> when unscored.</returns>
     private static decimal? CurrentScore(PromptItem item)
     {
         if (item.FinalScore.HasValue)

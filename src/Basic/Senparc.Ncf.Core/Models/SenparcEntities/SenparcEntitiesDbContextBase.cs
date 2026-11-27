@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -36,7 +39,8 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Base EF Core DbContext implementation providing NCF tenant-aware and soft-delete-aware
+    /// query filters, migration helpers, and tenant stamping for new entities.
     /// </summary>
     public abstract class SenparcEntitiesDbContextBase : DbContext, ISenparcEntitiesDbContext
     {
@@ -46,7 +50,7 @@ namespace Senparc.Ncf.Core.Models
         private RequestTenantInfo _tenantInfo;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the service provider used to resolve tenant and database services.
         /// </summary>
         protected virtual IServiceProvider ServiceProvider
         {
@@ -66,7 +70,7 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the current request tenant context.
         /// </summary>
         public RequestTenantInfo TenantInfo
         {
@@ -85,7 +89,7 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Stamps newly added multi-tenant entities with the current request tenant identifier.
         /// </summary>
         private void AddTenandId()
         {
@@ -114,7 +118,7 @@ namespace Senparc.Ncf.Core.Models
         public bool? _enableMultiTenant;
 
         /// <summary>
-        /// whether enabledmulti-tenancy，defaultread SiteConfig.SenparcCoreSetting.EnableMultiTenant
+        /// Gets whether multi-tenant behavior is enabled for this context.
         /// </summary>
         public bool EnableMultiTenant
         {
@@ -135,6 +139,12 @@ namespace Senparc.Ncf.Core.Models
 
 
 
+        /// <summary>
+        /// Initializes a tenant-aware NCF database context with EF Core options and
+        /// the service provider used to resolve request-scoped infrastructure.
+        /// </summary>
+        /// <param name="options">The EF Core options configured for this context.</param>
+        /// <param name="serviceProvider">The provider used for tenant and database services.</param>
         public SenparcEntitiesDbContextBase(DbContextOptions options, IServiceProvider serviceProvider) : base(options)
         {
             _serviceProvider = serviceProvider;
@@ -148,8 +158,7 @@ namespace Senparc.Ncf.Core.Models
         #region Legacy section
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Applies all pending EF Core migrations once for the current process.
         /// </summary>
         public virtual void Migrate()
         {
@@ -167,7 +176,7 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Resets the process-level migration guard so the next call can migrate again.
         /// </summary>
         public virtual void ResetMigrate()
         {
@@ -177,9 +186,9 @@ namespace Senparc.Ncf.Core.Models
         #endregion
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Configures global soft-delete and tenant query filters for mapped entity types.
         /// </summary>
-        /// <param name="modelBuilder"></param>
+        /// <param name="modelBuilder">The EF Core model builder.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             var dt1 = SystemTime.Now;
@@ -218,10 +227,10 @@ namespace Senparc.Ncf.Core.Models
             .Single(t => t.IsGenericMethod && t.Name == nameof(SetGlobalQuery) /*"SetGlobalQuery"*/);
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Configures the global query filter for one entity type.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="builder"></param>
+        /// <typeparam name="T">The entity type receiving the filter.</typeparam>
+        /// <param name="builder">The EF Core model builder.</param>
         public virtual void SetGlobalQuery<T>(ModelBuilder builder) where T : EntityBase
         {
             var entityBuilder = builder.Entity<T>();//.HasQueryFilter(z => !z.Flag);
@@ -241,9 +250,9 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Overrides the context's multi-tenant enablement for the current instance.
         /// </summary>
-        /// <param name="enable"></param>
+        /// <param name="enable">Whether tenant filtering and stamping should be enabled.</param>
         public void SetMultiTenantEnable(bool enable)
         {
             //Console.WriteLine($"\t {this.GetHashCode()}\tset EnableMultiTenant to:" + enable);
@@ -251,7 +260,7 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Restores multi-tenant enablement from the global NCF setting.
         /// </summary>
         public void ResetMultiTenantEnable()
         {
@@ -260,6 +269,11 @@ namespace Senparc.Ncf.Core.Models
         }
 
 
+        /// <inheritdoc/>
+        /// <remarks>
+        /// Before delegating to EF Core, this override stamps added multi-tenant entities
+        /// with the current request tenant identifier.
+        /// </remarks>
         public override int SaveChanges()
         {
             //handlingmulti-tenancy
@@ -267,6 +281,11 @@ namespace Senparc.Ncf.Core.Models
             return base.SaveChanges();
         }
 
+        /// <inheritdoc/>
+        /// <remarks>
+        /// Before delegating to EF Core, this override stamps added multi-tenant entities
+        /// with the current request tenant identifier.
+        /// </remarks>
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
             //handlingmulti-tenancy

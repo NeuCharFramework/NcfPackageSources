@@ -9,40 +9,44 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Areas.Admin
 {
+    /// <summary>Contains configuration values used to issue and validate backend JWTs.</summary>
     public class JwtSettings
     {
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Configuration section name for MiniProgram JWT settings.
         /// </summary>
         public const string Position_MiniPro = "MiniProJwt";
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Configuration section name for backend JWT settings.
         /// </summary>
         public const string Position_Backend = "BackendJwt";
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the token issuer.
         /// </summary>
         public string Issuer { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the token audience.
         /// </summary>
         public string Audience { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the signing secret.
         /// </summary>
         public string SecretKey { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the token lifetime value configured by the host.
         /// </summary>
         public double Expires { get; set; }
     }

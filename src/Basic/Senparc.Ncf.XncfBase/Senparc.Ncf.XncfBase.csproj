@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <!--<TargetFrameworks>netcoreapp3.1;net8.0</TargetFrameworks>-->
-    <Version>0.29.1.1</Version>
+    <Version>0.29.1.2</Version>
     <LangVersion>10.0</LangVersion>
     <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
@@ -114,7 +114,11 @@
         2. Preserved existing public APIs and runtime integration while incorporating the related improvements.
         [2026-11-25] v0.29.1 Expanded chat-tool contracts with dynamic parameter definitions and option providers.
         1. Added reusable parameter metadata and asynchronous option-provider contracts for chat integrations.
-        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.
+        [2026-11-27] v0.29.1.2 Extend shared chat-tool contracts for admin task initiation.
+        1. Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring.
+        2. Applied standardized copyright headers, XML documentation, and localization metadata across touched sources.
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

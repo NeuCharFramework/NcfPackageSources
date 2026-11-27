@@ -6,6 +6,9 @@
 
     Created by: Senparc - 20261125
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.0.0 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +21,10 @@ namespace Senparc.Xncf.NeuCharWorkflow;
 
 public partial class Register : IChatTool
 {
+    /// <summary>
+    /// Returns the AdminChat workflow run/edit command definitions and their callable functions.
+    /// </summary>
+    /// <returns>The workflow-related chat tools.</returns>
     public IReadOnlyCollection<ChatToolDefinition> GetChatTools()
     {
         return new[]
@@ -84,7 +91,7 @@ The user asked to start an existing NeuChar Workflow owned by the current admini
 1. Parse an explicit --id value or use SearchWorkflows to find a semantic match by name and description.
 2. If more than one candidate is plausible, show the candidates and ask which one to use.
 3. Pass the user's remaining text as workflow input and call StartWorkflow exactly once.
-4. Report the workflow name and run ID; the workflow runs asynchronously, so do not claim it completed.
+4. StartWorkflow returns admin-chat action metadata. The user will see a live preview with Workflow status and native HIL interaction. Report it as running and do not claim completion.
 5. Do not create, edit, delete, or import a workflow in this command.
 """
             },
@@ -179,8 +186,13 @@ Help the user edit an existing NeuChar Workflow. Only this command's explicit to
         };
     }
 
+    /// <summary>
+    /// Registers dynamic workflow chat-tool option providers.
+    /// </summary>
+    /// <param name="services">The dependency injection service collection.</param>
     private static void AddChatToolServices(IServiceCollection services)
     {
         services.AddScoped<WorkflowChatToolParameterOptionsProvider>();
+        services.AddScoped<IChatToolAsyncActionMonitor, WorkflowRunChatToolAsyncActionMonitor>();
     }
 }

@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.25.1 Localized Weixin account and administration surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.25.1.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -29,15 +32,21 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel
     [Serializable]
     public class UserTag : EntityBase<int>
     {
+        /// <summary>Gets the owning public-account identifier.</summary>
         public int MpAccountId { get; private set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the provider tag identifier.
         /// </summary>
         public int TagId { get; private set; }
+        /// <summary>Gets the tag display name.</summary>
         [Required]
         public string Name { get; private set; }
+        /// <summary>Gets the number of users assigned to the tag.</summary>
         public int Count { get; private set; }
 
+        /// <summary>
+        /// Reserved for EF Core materialization.
+        /// </summary>
         private UserTag() { }
 
         //public UserTag(int mpAccountId, int tagId, string name, int count)
@@ -48,10 +57,17 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel
         //    Count = count;
         //}
 
+        /// <summary>Gets the owning public-account entity.</summary>
         public MpAccount MpAccount { get; private set; }
 
+        /// <summary>Gets the user relationships associated with this tag.</summary>
         public IList<UserTag_WeixinUser> UserTags_WeixinUsers { get; private set; }
 
+        /// <summary>
+        /// Applies editable tag values and updates the entity timestamp when a value changes.
+        /// </summary>
+        /// <param name="dto">The replacement tag values.</param>
+        /// <returns><see langword="true"/> when at least one value changed.</returns>
         public bool Update(UserTag_CreateOrUpdateDto dto)
         {
             var changed = false;

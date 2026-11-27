@@ -9,6 +9,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.3.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.3.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Xncf.Accounts.Domain.OperationQueue;
@@ -17,41 +20,27 @@ using System.Collections.Generic;
 
 namespace Senparc.Xncf.Accounts.Domain.OperationQueue
 {
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Represents one deferred account operation and its arguments.</summary>
     public class OperationQueueItem
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the composite queue key.</summary>
         public string Key { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the operation dispatcher type.</summary>
         public OperationQueueType OperationQueueType { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the enqueue timestamp.</summary>
         public DateTime AddTime { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the dispatcher arguments.</summary>
         public List<object> Data { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets optional diagnostic text.</summary>
         public string Description { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="data"></param>
-        /// <param name="description"></param>
-        /// <param name="operationQueueType"></param>
+        /// <summary>Initializes a queued operation and records its creation time.</summary>
+        /// <param name="key">The composite queue key.</param>
+        /// <param name="operationQueueType">The operation type.</param>
+        /// <param name="data">The dispatcher arguments.</param>
+        /// <param name="description">Optional diagnostic text.</param>
         public OperationQueueItem(string key, OperationQueueType operationQueueType, List<object> data, string description = null)
         {
             Key = key;

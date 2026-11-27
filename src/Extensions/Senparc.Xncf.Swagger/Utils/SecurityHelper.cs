@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.12 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -25,11 +28,11 @@ namespace Senparc.Xncf.Swagger.Utils
     {
         #region HMACSHA256
         /// <summary>
-        /// HMAC_SHA256 
+        /// Computes an uppercase hexadecimal HMAC-SHA256 signature for the supplied text.
         /// </summary>
-        /// <param name="srcString">The string to be encrypted</param>
-        /// <param name="key">encrypte key</param>
-        /// <returns></returns>
+        /// <param name="srcString">The UTF-8 text to sign.</param>
+        /// <param name="key">The UTF-8 HMAC key.</param>
+        /// <returns>The uppercase hexadecimal signature.</returns>
         public static string HMACSHA256(string srcString, string key = "Qidq_123_abc")
         {
             byte[] secrectKey = Encoding.UTF8.GetBytes(key);

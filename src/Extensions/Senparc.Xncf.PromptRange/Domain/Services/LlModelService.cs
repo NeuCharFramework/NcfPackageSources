@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Exceptions;
@@ -32,10 +35,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 {
     public class LlModelService : ServiceBase<LlModel>
     {
+        /// <summary>Initializes LLM model persistence.</summary>
+        /// <param name="repo">The LLM repository.</param>
+        /// <param name="serviceProvider">The dependency provider.</param>
         public LlModelService(IRepositoryBase<LlModel> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
         }
 
+        /// <summary>Loads one LLM model DTO by identifier.</summary>
+        /// <param name="llmId">The model identifier.</param>
+        /// <returns>The model DTO.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the model is missing.</exception>
         public async Task<LlModelDto> GetLlmModelById(int llmId)
         {
             var model = await base.GetObjectAsync(n => n.Id == llmId) ??
@@ -44,6 +54,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return this.Mapper.Map<LlModelDto>(model);
         }
 
+        /// <summary>Validates and creates an enabled LLM model.</summary>
+        /// <param name="request">The model creation request.</param>
+        /// <returns>The created model DTO.</returns>
         public async Task<LlModelDto> AddAsync(LlModel_AddRequest request)
         {
             #region validate
@@ -77,6 +90,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return this.Mapper.Map<LlModelDto>(model);
         }
 
+        /// <summary>Updates an existing LLM model's editable fields.</summary>
+        /// <param name="request">The model update request.</param>
+        /// <returns>The updated model DTO.</returns>
         public async Task<LlModelDto> UpdateAsync(LlmModel_ModifyRequest request)
         {
             var model = await this.GetObjectAsync(m => m.Id == request.Id) ??
@@ -89,6 +105,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return this.Mapper.Map<LlModelDto>(model);
         }
 
+        /// <summary>Maps a PromptRange configuration-model type to an AI platform model type.</summary>
+        /// <param name="configModelType">The PromptRange model type.</param>
+        /// <returns>The mapped configuration model.</returns>
         public ConfigModel ConvertToConfigModel(ConfigModelType configModelType)
         {
             ConfigModel configModel;

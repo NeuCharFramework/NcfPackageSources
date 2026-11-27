@@ -14,19 +14,23 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.KnowledgeBase.Domain.Services
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Identifies the lifecycle state of a knowledge-base chunk embedding.
     /// </summary>
     public enum KnowledgeBaseEmbeddingStatus
     {
+        /// <summary>The chunk is awaiting embedding generation.</summary>
         Pending,
+        /// <summary>The chunk uses a legacy or not-yet-migrated embedding representation.</summary>
         Legacy,
+        /// <summary>The chunk has a current published embedding.</summary>
         Published
     }
 }

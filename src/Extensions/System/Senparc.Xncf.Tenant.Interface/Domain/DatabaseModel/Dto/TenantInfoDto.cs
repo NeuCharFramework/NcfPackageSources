@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.10.13-preview13 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.10.13.2-preview14 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -23,12 +26,11 @@ using System.Text;
 
 namespace Senparc.Xncf.Tenant.Domain.DataBaseModel
 {
+    /// <summary>Transfers tenant identity and enablement settings between administration layers.</summary>
     public class TenantInfoDto : DtoBase
     {
         public int Id { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the stable tenant GUID.</summary>
         [Required]
         public Guid Guid { get; set; }
         /// <summary>
@@ -41,12 +43,11 @@ namespace Senparc.Xncf.Tenant.Domain.DataBaseModel
         /// </summary>
         [Required]
         public bool Enable { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the normalized tenant lookup key.</summary>
         public string TenantKey { get; set; }
     }
 
+    /// <summary>Contains tenant values used to create or update a tenant record.</summary>
     public class CreateOrUpdate_TenantInfoDto : TenantInfoDto
     {
         public CreateOrUpdate_TenantInfoDto(int id, string name, string tenantKey, bool enable, string adminRemark)

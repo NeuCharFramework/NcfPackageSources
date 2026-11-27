@@ -46,6 +46,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.Domain.Dto;
@@ -76,6 +79,10 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.OHS.Local.AppService
 {
     [BackendJwtAuthorize(BackendJwtAuthorizeAttribute.SuperAdminPolicyName)]
+    /// <summary>
+    /// Provides super-administrator APIs and diagnostic functions for system
+    /// configuration, authentication expiry, NeuBell, and cache behavior.
+    /// </summary>
     public class SystemInfoAppService : LocalAppServiceBase
     {
         private readonly SystemConfigService _systemConfigService;
@@ -86,6 +93,17 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         private readonly INeuBellPublisher _neuBellPublisher;
         private readonly NeuBellWebHookDispatcher _neuBellWebHookDispatcher;
 
+        /// <summary>
+        /// Initializes the system-information application service.
+        /// </summary>
+        /// <param name="serviceProvider">The request service provider.</param>
+        /// <param name="systemConfigService">The persisted system configuration service.</param>
+        /// <param name="adminAuthConfigService">The authentication-expiry configuration service.</param>
+        /// <param name="cacheStrategy">The configured object-cache strategy.</param>
+        /// <param name="localizer">The localized administrator message provider.</param>
+        /// <param name="neuBellTestProvider">The in-memory NeuBell test provider.</param>
+        /// <param name="neuBellPublisher">The NeuBell change publisher.</param>
+        /// <param name="neuBellWebHookDispatcher">The optional WebHook dispatcher.</param>
         public SystemInfoAppService(
             IServiceProvider serviceProvider,
             SystemConfigService systemConfigService,
@@ -107,9 +125,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns all persisted system configuration records as DTOs.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A response containing the mapped system configuration list.</returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         public async Task<AppResponseBase<List<SystemConfigDto>>> GetListAsync()
         {
@@ -124,11 +142,14 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Updates an existing system configuration while preserving fields not
+        /// exposed by this request.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        /// <exception cref="Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        /// <param name="request">The editable system configuration values.</param>
+        /// <returns>A response containing the updated configuration DTO.</returns>
+        /// <exception cref="NcfExceptionBase">
+        /// Thrown when the requested configuration record does not exist.
+        /// </exception>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
         //[Permission(Codes = new string[] { "code" })]
         //[Ncf.Core.Authorization.Permission("role.add,role.update")]
@@ -155,12 +176,14 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Changes whether the module manager is hidden in an existing system configuration.
         /// </summary>
-        /// <param name="id"></param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
-        /// <exception cref="NcfExceptionBase"></exception>
+        /// <param name="id">The persisted system configuration identifier.</param>
+        /// <param name="hide">Whether the module manager should be hidden.</param>
+        /// <returns>A response containing the updated configuration DTO.</returns>
+        /// <exception cref="NcfExceptionBase">
+        /// Thrown when the requested configuration record does not exist.
+        /// </exception>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
         //[Permission(Codes = new string[] { "code" })]
         //[Ncf.Core.Authorization.Permission("role.add,role.update")]
@@ -190,6 +213,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             return response;
         }
 
+        /// <summary>
+        /// Reports the effective administrator web-login and backend-JWT expiry settings.
+        /// </summary>
+        /// <returns>A logged string response describing the effective values and source.</returns>
         [FunctionRender("查看登录过期配置", "查看 Admin 模块中的网页登录过期与 JWT 过期配置", typeof(Register))]
         public async Task<StringAppResponse> GetAuthExpireSettings()
         {
@@ -210,6 +237,11 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             return response;
         }
 
+        /// <summary>
+        /// Persists administrator web-login and backend-JWT expiry durations in minutes.
+        /// </summary>
+        /// <param name="request">The requested expiry durations.</param>
+        /// <returns>A logged string response describing the saved effective settings.</returns>
         [FunctionRender("设置登录过期配置", "设置网页登录持续时间与 JWT 过期时间（分钟）", typeof(Register))]
         public async Task<StringAppResponse> SetAuthExpireSettings(AdminAuthConfig_SetExpireSettingsRequest request)
         {
@@ -231,6 +263,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             return response;
         }
 
+        /// <summary>
+        /// Sends or consumes a visible NeuBell test reminder and optionally queues
+        /// a corresponding WebHook operation.
+        /// </summary>
+        /// <param name="request">The action and optional WebHook settings.</param>
+        /// <returns>A logged string response describing the performed action.</returns>
         [FunctionRender("纽铃可见提醒测试", "发送或消费可在 Admin Footer 弹窗与徽标中看到的纽铃测试提醒；发送提醒时可配置 WebHook 地址、请求方式和多行 Body 模板，创建成功后异步请求并记录请求数据与结果", typeof(Register))]
         public async Task<StringAppResponse> TriggerNeuBellTest(NeuBellTest_Request request)
         {
@@ -323,6 +361,11 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             }, saveLogAfterFinished: true, saveLogName: "纽铃可见提醒测试");
         }
 
+        /// <summary>
+        /// Exercises the configured cache strategy, expiration behavior, distributed
+        /// locking, and prefix-index lookup behavior.
+        /// </summary>
+        /// <returns>A logged string response containing cache test observations.</returns>
         [FunctionRender("缓存测试", "测试当前缓存类型及分布式锁", typeof(Register))]
         public async Task<StringAppResponse> CacheTest()
         {

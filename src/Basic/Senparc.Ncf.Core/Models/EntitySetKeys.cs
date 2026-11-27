@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -30,7 +33,7 @@ using System.Reflection;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Discovers and indexes DbSet-to-entity mappings for registered EF Core contexts.
     /// </summary>
     public static class EntitySetKeys
     {
@@ -41,11 +44,12 @@ namespace Senparc.Ncf.Core.Models
         internal static object DbContextStoreLock = new object();
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Discovers entity sets exposed by a DbContext type.
         /// </summary>
-        /// <param name="tryLoadDbContextType"></param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="tryLoadDbContextType">The DbContext type to inspect.</param>
+        /// <param name="forceLoad">Whether to rescan a context already discovered.</param>
+        /// <returns>The accumulated entity-set mapping dictionary.</returns>
+        /// <exception cref="ArgumentException">Thrown when the type is not a DbContext.</exception>
         public static EntitySetKeysDictionary TryLoadSetInfo(Type tryLoadDbContextType, bool forceLoad = false)
         {
             lock (EntitySetKeys.DbContextStoreLock)
@@ -110,10 +114,10 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns mappings associated with a specific DbContext type.
         /// </summary>
-        /// <param name="dbContextType">DbContext type</param>
-        /// <returns></returns>
+        /// <param name="dbContextType">The DbContext type to inspect.</param>
+        /// <returns>The entity-set mappings associated with the context.</returns>
         public static EntitySetKeysDictionary GetEntitySetInfo(Type dbContextType)
         {
             EntitySetKeysDictionary dic = new EntitySetKeysDictionary();
@@ -132,9 +136,9 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets all mappings discovered across registered DbContext types.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The shared entity-set mapping dictionary.</returns>
         public static EntitySetKeysDictionary GetAllEntitySetInfo()
         {
             return AllKeys;
@@ -145,18 +149,24 @@ namespace Senparc.Ncf.Core.Models
     public class SetKeyInfo
     {
         /// <summary>
-        /// SetKey propertyname
+        /// Gets or sets the DbSet property name.
         /// </summary>
         public string SetName { get; set; }
         /// <summary>
-        /// DbSet propertytype
+        /// Gets or sets the entity type represented by the DbSet.
         /// </summary>
         public Type DbSetType { get; set; }
         /// <summary>
-        /// SenparcEntity type
+        /// Gets the DbContext types that expose this entity.
         /// </summary>
         public List<Type> SenparcEntityTypes { get; set; }
 
+        /// <summary>
+        /// Initializes an entity-set mapping record.
+        /// </summary>
+        /// <param name="setName">The DbSet property name.</param>
+        /// <param name="dbSetType">The entity type represented by the DbSet.</param>
+        /// <param name="senparcEntityType">The initial DbContext type exposing the entity.</param>
         public SetKeyInfo(string setName, Type dbSetType, Type senparcEntityType)
         {
             SetName = setName;
@@ -166,7 +176,7 @@ namespace Senparc.Ncf.Core.Models
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides typed lookup behavior for discovered entity-set mappings.
     /// </summary>
     public class EntitySetKeysDictionary : ConcurrentDictionary<Type, SetKeyInfo>
     {

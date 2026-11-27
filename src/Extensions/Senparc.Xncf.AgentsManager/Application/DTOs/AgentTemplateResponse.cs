@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -57,9 +60,7 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
         public int Id { get; set; }
         public string Name { get; set; }
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Gets the current embedding status displayed for the knowledge-base option.
         /// </summary>
         public string EmbeddingStatus { get; set; }
         public bool IsEmbedded { get; set; }

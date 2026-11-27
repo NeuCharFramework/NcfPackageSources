@@ -9,6 +9,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -23,31 +26,28 @@ using System.Threading.Tasks;
 
 namespace Senparc.Areas.Admin.ACL.Repository
 {
+    /// <summary>Defines account-to-role permission projection queries.</summary>
     public interface ISysRolePermissionRepository: IClientRepositoryBase<SysRolePermission>
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="adminUserInfoId"></param>
-        /// <returns></returns>
+        /// <summary>Gets distinct resource codes granted to an administrator account.</summary>
+        /// <param name="adminUserInfoId">The administrator account identifier.</param>
+        /// <returns>The non-empty resource-code sequence.</returns>
         Task<IEnumerable<string>> GetAllResouceCodesByAccountIdAsync(int adminUserInfoId);
     }
 
     public class SysRolePermissionRepository : ClientRepositoryBase<SysRolePermission>, ISysRolePermissionRepository
     {
+        /// <summary>Initializes the role-permission repository.</summary>
+        /// <param name="db">The NCF database abstraction.</param>
         public SysRolePermissionRepository(INcfDbData db) : base(db)
         {
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="adminUserInfoId"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public async Task<IEnumerable<string>> GetAllResouceCodesByAccountIdAsync(int adminUserInfoId)
         {
-            IQueryable<string> roleIdQuery = BaseDB.BaseDataContext.Set<SysRoleAdminUserInfo>().Where(sra => sra.AccountId == adminUserInfoId).Select(_ => _.RoleId); //Legacy comment translated to English.
-            var menuIdQuery = BaseDB.BaseDataContext.Set<SysRolePermission>().Where(srp => roleIdQuery.Contains(srp.RoleId)).Select(srp => srp.PermissionId); //Legacy comment translated to English.
+            IQueryable<string> roleIdQuery = BaseDB.BaseDataContext.Set<SysRoleAdminUserInfo>().Where(sra => sra.AccountId == adminUserInfoId).Select(_ => _.RoleId);
+            var menuIdQuery = BaseDB.BaseDataContext.Set<SysRolePermission>().Where(srp => roleIdQuery.Contains(srp.RoleId)).Select(srp => srp.PermissionId);
             var resourceCodes = await BaseDB.BaseDataContext.Set<SysMenu>().Where(menu => menuIdQuery.Contains(menu.Id))
                 .Select(menu => menu.ResourceCode)
                 .ToListAsync();

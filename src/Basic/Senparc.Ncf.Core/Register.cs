@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using log4net;
@@ -31,16 +34,18 @@ using System.Reflection;
 namespace Senparc.Ncf.Core
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides minimal dependency-injection and Senparc global-service registration helpers.
     /// </summary>
     public static class Register
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Scans loaded assemblies for <see cref="IAutoDI"/> implementations and registers
+        /// them using their declared lifecycle.
         /// </summary>
+        /// <param name="services">The service collection receiving discovered registrations.</param>
+        /// <returns>The same service collection.</returns>
         public static IServiceCollection ScanAssamblesForAutoDI(this IServiceCollection services)
         {
-            //Legacy comment translated to English.
             Action<Assembly> action = assembly =>
             {
                 var areaRegisterTypes = assembly.GetTypes() //.GetExportedTypes()
@@ -53,15 +58,13 @@ namespace Senparc.Ncf.Core
                 {
                     try
                     {
-                        //Legacy comment translated to English.
                         var attrs = System.Attribute.GetCustomAttributes(registerType, false).Where(z => z is AutoDITypeAttribute);
                         if (attrs.Count() > 0)
                         {
                             var attr = attrs.First() as AutoDITypeAttribute;
-                            dILifecycleType = attr.DILifecycleType;//Legacy comment translated to English.
+                            dILifecycleType = attr.DILifecycleType;
                         }
 
-                        //Legacy comment translated to English.
                         switch (dILifecycleType)
                         {
                             case DILifecycleType.Scoped:
@@ -92,12 +95,14 @@ namespace Senparc.Ncf.Core
 
         #region TryRegisterMiniCore
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Registers a lightweight Senparc service provider and optionally applies caller
+        /// service/application configuration actions.
         /// </summary>
+        /// <param name="servicesAction">Optional service-registration callback.</param>
+        /// <param name="appAction">Optional application-builder callback.</param>
+        /// <returns>The started registration service, or <see langword="null"/> when global services were already registered.</returns>
         public static IRegisterService TryRegisterMiniCore(Action<IServiceCollection> servicesAction = null, Action<IApplicationBuilder> appAction = null)
         {
-            //Legacy comment translated to English.
             if (!Senparc.CO2NET.RegisterServices.RegisterServiceExtension.SenparcGlobalServicesRegistered)
             {
                 try
@@ -109,7 +114,6 @@ namespace Senparc.Ncf.Core
                 {
                     Console.WriteLine("NETCoreRepository 已进行过配置，无需重复配置");
                 }
-                //Legacy comment translated to English.
                 var services = RegisterServiceCollection();
 
                 Console.WriteLine("[TryRegisterMiniCore] RegisterServiceCollection() 完成");
@@ -117,7 +121,6 @@ namespace Senparc.Ncf.Core
                 servicesAction?.Invoke(services);
                 Console.WriteLine("[TryRegisterMiniCore] servicesAction?.Invoke(services) 完成");
 
-                //Legacy comment translated to English.
                 var serviceProvider = services.BuildServiceProvider();
                 Console.WriteLine("[TryRegisterMiniCore] services.BuildServiceProvider() 完成");
 
@@ -131,33 +134,38 @@ namespace Senparc.Ncf.Core
             return null;
         }
 
+        /// <summary>
+        /// Creates the default Senparc setting used by the minimal registration path.
+        /// </summary>
+        /// <returns>A debug-enabled default setting.</returns>
         private static SenparcSetting CreateSenparcSetting()
         {
             return new SenparcSetting() { IsDebug = true };
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Creates a minimal service collection with global services and memory caching.</summary>
         private static IServiceCollection RegisterServiceCollection()
         {
             var serviceCollection = new ServiceCollection();
             var configBuilder = new ConfigurationBuilder();
             var config = configBuilder.Build();
             serviceCollection.AddSenparcGlobalServices(config);
-            serviceCollection.AddMemoryCache();//Legacy comment translated to English.
+            serviceCollection.AddMemoryCache();
             return serviceCollection;
         }
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Starts Senparc global services using the minimal registration setting.
         /// </summary>
+        /// <param name="autoScanExtensionCacheStrategies">
+        /// Whether cache-strategy implementations should be discovered automatically.
+        /// </param>
+        /// <returns>The started global registration service.</returns>
         private static IRegisterService RegisterServiceStart(bool autoScanExtensionCacheStrategies = false)
         {
             Console.WriteLine("[TryRegisterMiniCore] RegisterServiceStart() 开始");
 
-            //Legacy comment translated to English.
             var senparcSetting = CreateSenparcSetting();
             return Senparc.CO2NET.Register.UseSenparcGlobal(senparcSetting, reg => { }, autoScanExtensionCacheStrategies);
         }

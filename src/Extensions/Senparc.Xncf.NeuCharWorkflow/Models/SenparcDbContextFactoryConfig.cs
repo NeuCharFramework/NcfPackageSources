@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.0.0 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -27,6 +30,10 @@ public static class SenparcDbContextFactoryConfig
 
     public static string RootDirectoryPath => _rootDirectoryPath ??= ResolveRootDirectoryPath();
 
+    /// <summary>
+    /// Searches the application base and current directory ancestry for the host web root.
+    /// </summary>
+    /// <returns>The discovered host directory, or the current directory as fallback.</returns>
     private static string ResolveRootDirectoryPath()
     {
         foreach (var start in new[] { AppContext.BaseDirectory, Directory.GetCurrentDirectory() })

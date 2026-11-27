@@ -9,6 +9,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.0.1 Updated legacy MVC integration metadata and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.0.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -31,19 +34,20 @@ namespace Senparc.Areas.User.Controllers
         private readonly FeedBackService _feedBackService;
 
         /// <summary>
-        /// 
+        /// Initializes the legacy feedback controller with its persistence service.
         /// </summary>
-        /// <param name="feedBackService"></param>
+        /// <param name="feedBackService">The feedback service used by the controller actions.</param>
         public FeedBackController(FeedBackService feedBackService)
         {
             _feedBackService = feedBackService;
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Renders the legacy feedback list page. The page index is retained for
+        /// compatibility with the original route and client workflow.
         /// </summary>
-        /// <param name="pageIndex"></param>
-        /// <returns></returns>
+        /// <param name="pageIndex">The requested one-based page number.</param>
+        /// <returns>The feedback list view.</returns>
         public ActionResult Index(int pageIndex = 1)
         {
             var vd = new FeedBack_IndexVD()
@@ -53,11 +57,11 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns a descending-by-time page of feedback records with account summary data.
         /// </summary>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <returns></returns>
+        /// <param name="pageIndex">The one-based page number.</param>
+        /// <param name="pageSize">The maximum number of feedback records per page.</param>
+        /// <returns>A JSON success envelope containing the projected feedback page.</returns>
         [HttpGet, Route("api/[controller]/get")]
         public IActionResult Get(int pageIndex = 1, int pageSize = 20)
         {
@@ -78,10 +82,10 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns one feedback record with its account summary data.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The feedback identifier.</param>
+        /// <returns>A JSON success envelope, or a failure envelope when the record is missing.</returns>
         [HttpGet, Route("api/[controller]/get/{id}")]
         public IActionResult Get(int id)
         {
@@ -106,10 +110,10 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        /// editpage
+        /// Renders the legacy feedback editor page.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The optional feedback identifier being edited.</param>
+        /// <returns>The feedback editor view.</returns>
         public ActionResult Edit(int id = 0)
         {
             var vd = new FeedBack_EditVD();
@@ -118,10 +122,11 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates or updates feedback for the current account after model validation.
+        /// Persistence failures are logged and returned in the JSON failure envelope.
         /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
+        /// <param name="model">The feedback content and optional identifier.</param>
+        /// <returns>A JSON success or failure envelope.</returns>
         [HttpPost]
         public IActionResult Edit([FromBody]FeedBack model)
         {
@@ -151,10 +156,10 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Deletes one feedback record owned by the current account.
         /// </summary>
-        /// <param name="ids"></param>
-        /// <returns></returns>
+        /// <param name="id">The feedback identifier to delete.</param>
+        /// <returns>A JSON success or failure envelope.</returns>
         [HttpGet]
         public ActionResult Delete(int id)
         {

@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.0.0 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.XncfBase;
@@ -37,11 +40,17 @@ using System.Text.Json.Nodes;
 namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 
 /// <summary>
-///Legacy comment translated to English.
-///Legacy comment translated to English.
+/// Converts runtime Function metadata into the stable schema consumed by the Workflow designer.
 /// </summary>
 public static class WorkflowFunctionSchemaBuilder
 {
+    /// <summary>
+    /// Builds editable parameter schemas, assigning synthetic names when a malformed descriptor
+    /// does not provide a persisted field name.
+    /// </summary>
+    /// <param name="descriptor">The runtime Function descriptor.</param>
+    /// <returns>The ordered parameter schemas.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="descriptor"/> is <see langword="null"/>.</exception>
     public static List<WorkflowFunctionParameterSchema> Build(NeuCharFunctionDescriptor descriptor) =>
         descriptor.Parameters.Select((z, index) =>
         {
@@ -76,6 +85,11 @@ public static class WorkflowFunctionSchemaBuilder
             };
         }).ToList();
 
+    /// <summary>
+    /// Builds default parameter values from a set of designer parameter schemas.
+    /// </summary>
+    /// <param name="parameters">The parameter schemas to inspect.</param>
+    /// <returns>A case-insensitive dictionary keyed by persisted parameter name.</returns>
     public static Dictionary<string, object?> BuildDefaults(IEnumerable<WorkflowFunctionParameterSchema> parameters)
     {
         var result = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
@@ -89,8 +103,8 @@ public static class WorkflowFunctionSchemaBuilder
             }
             else if (parameter.ParameterType == (int)ParameterType.DropDownList && IsBlank(value))
             {
-                //Legacy comment translated to English.
-                //Legacy comment translated to English.
+                // Prefer an explicitly selected option. For a required single-option
+                // selector, use that option even when metadata omitted its default flag.
                 value = options.FirstOrDefault(z => z.DefaultSelected)?.Value;
                 if (value == null && parameter.Required && options.Count == 1)
                 {
@@ -111,8 +125,12 @@ public static class WorkflowFunctionSchemaBuilder
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Adds missing runtime-safe defaults to a persisted parameter JSON object without
+    /// overwriting values already supplied by the caller.
     /// </summary>
+    /// <param name="parametersJson">The persisted parameter JSON object.</param>
+    /// <param name="parameters">The runtime parameter metadata.</param>
+    /// <returns>The updated JSON, or the original text when parsing fails.</returns>
     public static string MergeMissingDefaults(string parametersJson, IReadOnlyList<FunctionParameterInfo> parameters)
     {
         JsonNode? parsed;
@@ -160,9 +178,19 @@ public static class WorkflowFunctionSchemaBuilder
         return obj.ToJsonString();
     }
 
+    /// <summary>
+    /// Determines whether a runtime parameter value is null or blank text.
+    /// </summary>
+    /// <param name="value">The value to inspect.</param>
+    /// <returns><see langword="true"/> when no usable scalar value is present.</returns>
     private static bool IsBlank(object? value) =>
         value == null || (value is string text && string.IsNullOrWhiteSpace(text));
 
+    /// <summary>
+    /// Determines whether a value contains usable runtime content, including enumerable items.
+    /// </summary>
+    /// <param name="value">The value to inspect.</param>
+    /// <returns><see langword="true"/> when the value can be passed as a runtime default.</returns>
     private static bool HasRuntimeValue(object? value)
     {
         switch (value)
@@ -183,6 +211,12 @@ public static class WorkflowFunctionSchemaBuilder
         }
     }
 
+    /// <summary>
+    /// Determines whether a JSON object contains a non-blank value for a property name.
+    /// </summary>
+    /// <param name="obj">The JSON object to inspect.</param>
+    /// <param name="name">The property name to find case-insensitively.</param>
+    /// <returns><see langword="true"/> when a usable value exists.</returns>
     private static bool HasUsableValue(JsonObject obj, string name)
     {
         if (!TryGetPropertyIgnoreCase(obj, name, out _, out var node) || node == null)
@@ -198,6 +232,14 @@ public static class WorkflowFunctionSchemaBuilder
         return true;
     }
 
+    /// <summary>
+    /// Finds a JSON property without regard to case and returns its original key and node.
+    /// </summary>
+    /// <param name="obj">The JSON object to inspect.</param>
+    /// <param name="name">The property name to find.</param>
+    /// <param name="key">Receives the original property key.</param>
+    /// <param name="node">Receives the property value node.</param>
+    /// <returns><see langword="true"/> when a matching property exists.</returns>
     private static bool TryGetPropertyIgnoreCase(JsonObject obj, string name, out string? key, out JsonNode? node)
     {
         foreach (var property in obj)
@@ -215,6 +257,11 @@ public static class WorkflowFunctionSchemaBuilder
         return false;
     }
 
+    /// <summary>
+    /// Removes all case-insensitive matches for a property name from a JSON object.
+    /// </summary>
+    /// <param name="obj">The JSON object to update.</param>
+    /// <param name="name">The property name to remove.</param>
     private static void RemoveIgnoreCase(JsonObject obj, string name)
     {
         var keys = obj.Select(property => property.Key)

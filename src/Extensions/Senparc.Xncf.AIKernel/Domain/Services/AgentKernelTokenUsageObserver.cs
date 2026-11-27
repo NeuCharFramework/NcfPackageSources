@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.AI.AgentKernel.Usage;
@@ -31,6 +34,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Services;
 /// </summary>
 public sealed class AgentKernelTokenUsageObserver : IAIUsageObserver
 {
+    /// <summary>
+    /// Converts one AgentKernel usage event into an NCF token-usage record.
+    /// Missing recorder services are ignored so provider completion is never blocked by telemetry.
+    /// </summary>
+    /// <param name="usageEvent">The completed or failed provider usage event.</param>
     public void Observe(AIUsageEvent usageEvent)
     {
         var serviceProvider = SenparcDI.GetServiceProvider(true);

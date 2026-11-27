@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.23.12.1</Version>
+    <Version>0.23.12.2</Version>
     <AssemblyName>Senparc.Ncf.AreaBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.AreaBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -83,7 +83,8 @@
         2. Standardized related English source comments and package metadata for the current release.
         [2026-11-24] v0.23.12 Dependency compatibility update for affected Senparc modules.
         1. Aligned dependent package metadata with the current Senparc module versions.
-        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.
+        [2026-11-26] v0.23.12.2 Removed the unused Senparc.Ncf.Mvc.UI dependency.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
@@ -110,7 +111,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Senparc.Ncf.Log\Senparc.Ncf.Log.csproj" />
-    <ProjectReference Include="..\Senparc.Ncf.Mvc.UI\Senparc.Ncf.Mvc.UI.csproj" />
     <ProjectReference Include="..\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
     <ProjectReference Include="..\Senparc.Ncf.SMS\Senparc.Ncf.SMS.csproj" />
     <ProjectReference Include="..\Senparc.Ncf.Utility\Senparc.Ncf.Utility.csproj" />

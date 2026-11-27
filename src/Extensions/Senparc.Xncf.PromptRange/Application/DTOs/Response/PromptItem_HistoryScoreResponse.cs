@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System.Collections.Generic;
@@ -27,11 +30,17 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 
         public List<decimal> ZList { get; set; }
 
+        /// <summary>Initializes a score response containing only score values.</summary>
+        /// <param name="zList">The score values.</param>
         public PromptItem_HistoryScoreResponse(List<decimal> zList)
         {
             ZList = zList;
         }
 
+        /// <summary>Initializes a complete history score response.</summary>
+        /// <param name="xList">The x-axis labels.</param>
+        /// <param name="yList">The average/secondary values.</param>
+        /// <param name="zList">The primary score values.</param>
         public PromptItem_HistoryScoreResponse(List<string> xList, List<decimal> yList, List<decimal> zList)
         {
             XList = xList;

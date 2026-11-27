@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.1.1-preview2 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.1.1.2-preview3 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel;
@@ -29,6 +32,11 @@ public sealed class DockerIsolatedRuntimeProvider : IIsolatedRuntimeProvider
     private readonly DockerIsolatedRuntimeOptions _options;
     private readonly ILogger<DockerIsolatedRuntimeProvider> _logger;
 
+    /// <summary>
+    /// Initializes the Docker isolated-runtime provider.
+    /// </summary>
+    /// <param name="options">The Docker runtime options.</param>
+    /// <param name="logger">The provider logger.</param>
     public DockerIsolatedRuntimeProvider(
         IOptions<DockerIsolatedRuntimeOptions> options,
         ILogger<DockerIsolatedRuntimeProvider> logger)

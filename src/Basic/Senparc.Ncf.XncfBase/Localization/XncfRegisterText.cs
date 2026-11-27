@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.29.1 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.29.1.2 Extend shared chat-tool contracts for admin task initiation.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -32,6 +35,13 @@ public sealed class XncfRegisterText
     private readonly string _menuNameFallback;
     private readonly string _descriptionFallback;
 
+    /// <summary>
+    /// Initializes localized register metadata and its fallback display values.
+    /// </summary>
+    /// <param name="resourceType">The resource type used for localized lookup.</param>
+    /// <param name="keyPrefix">The resource-key prefix.</param>
+    /// <param name="menuNameFallback">The fallback menu name.</param>
+    /// <param name="descriptionFallback">The fallback description.</param>
     private XncfRegisterText(
         Type resourceType,
         string keyPrefix,
@@ -54,6 +64,15 @@ public sealed class XncfRegisterText
         $"{_keyPrefix}.Description",
         _descriptionFallback);
 
+    /// <summary>
+    /// Creates localized register metadata for a resource type.
+    /// </summary>
+    /// <typeparam name="TResource">The resource type containing localized strings.</typeparam>
+    /// <param name="keyPrefix">The resource-key prefix.</param>
+    /// <param name="menuNameFallback">The fallback menu name.</param>
+    /// <param name="descriptionFallback">The fallback description.</param>
+    /// <returns>The localized register metadata object.</returns>
+    /// <exception cref="ArgumentException">Thrown when any key or fallback is blank.</exception>
     public static XncfRegisterText Create<TResource>(
         string keyPrefix,
         string menuNameFallback,

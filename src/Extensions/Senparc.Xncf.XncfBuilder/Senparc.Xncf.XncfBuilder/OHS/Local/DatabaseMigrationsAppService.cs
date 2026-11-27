@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.42.0.0 add MCP endpoint gateway and tool invocation contracts
+
 ----------------------------------------------------------------*/
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
@@ -60,6 +63,13 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             public Exception StartException { get; set; }
         }
 
+        /// <summary>
+        /// Executes a tokenized <c>dotnet ef</c> command without shell interpretation
+        /// and captures process startup, exit code, standard output, and standard error.
+        /// </summary>
+        /// <param name="workingDirectory">The directory from which the command runs.</param>
+        /// <param name="args">The tokenized command arguments.</param>
+        /// <returns>The captured command execution result.</returns>
         private static async Task<CommandExecutionResult> ExecuteDotNetEfCommandAsync(string workingDirectory, IEnumerable<string> args)
         {
             var startInfo = new ProcessStartInfo
@@ -117,6 +127,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             };
         }
 
+        /// <summary>
+        /// Formats tokenized migration-command arguments for administrator logs.
+        /// </summary>
+        /// <param name="args">The command arguments to format.</param>
+        /// <returns>A human-readable command preview.</returns>
         private static string BuildCommandPreview(IEnumerable<string> args)
         {
             return "dotnet " + string.Join(" ", args.Select(arg =>
@@ -130,6 +145,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             }));
         }
 
+        /// <summary>
+        /// Appends sanitized command output and exit status to the application log.
+        /// </summary>
+        /// <param name="logger">The application logger.</param>
+        /// <param name="result">The command result to record.</param>
         private static void AppendCommandOutput(Senparc.Ncf.Core.AppServices.AppServiceLogger logger, CommandExecutionResult result)
         {
             var stdOut = StripAnsiEscapeSequences(result.StandardOutput);
@@ -148,6 +168,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             logger.Append($"命令退出码：{result.ExitCode}");
         }
 
+        /// <summary>
+        /// Removes terminal color/control escape sequences before output is persisted
+        /// in the administrator log.
+        /// </summary>
+        /// <param name="content">The raw process output.</param>
+        /// <returns>Output without ANSI escape sequences.</returns>
         private static string StripAnsiEscapeSequences(string content)
         {
             if (string.IsNullOrEmpty(content))
@@ -159,16 +185,23 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Resolves the provider-specific migration directory for a project.
         /// </summary>
-        /// <param name="request"></param>
-        /// <param name="dbType"></param>
-        /// <returns></returns>
+        /// <param name="projectPath">The project root path.</param>
+        /// <param name="dbType">The database provider name.</param>
+        /// <returns>The migration directory path.</returns>
         private static string GetMigrationDir(string projectPath, string dbType)
         {
             return MigrationFileLayoutHelper.GetMigrationDirectory(projectPath, dbType);
         }
 
+        /// <summary>
+        /// Writes snapshot relocation, namespace-normalization, and duplicate-removal
+        /// details to the migration operation log.
+        /// </summary>
+        /// <param name="logger">The application logger.</param>
+        /// <param name="alignment">The snapshot alignment result.</param>
+        /// <param name="dbContextName">The database context name.</param>
         private static void AppendSnapshotAlignment(
             Senparc.Ncf.Core.AppServices.AppServiceLogger logger,
             MigrationSnapshotAlignmentResult alignment,
@@ -196,12 +229,22 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             }
         }
 
+        /// <summary>
+        /// Initializes the database migration application service.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
         public DatabaseMigrationsAppService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
         // Migration generation writes project files and migration sources directly. It remains an
         // administrator UI operation, not an automatically imported AI chat function.
+        /// <summary>
+        /// Generates provider-specific EF Core migration files, aligns the matching
+        /// model snapshot, and reports each command through the administrator response pipeline.
+        /// </summary>
+        /// <param name="request">The target project, DbContext, migration name, and providers.</param>
+        /// <returns>A response containing migration-generation results and diagnostics.</returns>
         [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.AddMigration.Name", "Function.XncfBuilder.AddMigration.Description", typeof(Register), AllowAiInvocation = false)]
         public async Task<StringAppResponse> AddMigration(DatabaseMigrations_MigrationRequest request)
         {
@@ -356,11 +399,13 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                     //Legacy comment translated to English.
                 }
 
-                ///Legacy comment translated to English.
+                // Project-reference cleanup is intentionally retained as disabled
+                // compatibility code while migration generation owns the solution state.
                 //commandTexts.Add($"dotnet remove {request.DatabasePlantPath} reference {request.ProjectPath}");
                 //commandTexts.Add($"dotnet sln {slnFilePath} remove {request.ProjectPath}");
 
-                ///Legacy comment translated to English.
+                // Provider-specific snapshot reconciliation remains a disabled legacy
+                // path; current alignment is handled by MigrationFileLayoutHelper.
                 //if (request.DatabaseTypes.SelectedValues.Contains(MultipleDatabaseType.MySql.ToString()))
                 //{
                 //    string migrationDir = GetMigrationDir(request, MultipleDatabaseType.MySql.ToString());

@@ -8,6 +8,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.0.0 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -44,6 +47,13 @@ public sealed class NeuCharWorkflowCreationProvider : IWorkflowCreationProvider
     private readonly NeuCharWorkflowEngine _workflowEngine;
     private readonly XncfModuleService _moduleService;
 
+    /// <summary>
+    /// Initializes the controlled AI Workflow creation provider.
+    /// </summary>
+    /// <param name="workflowAppService">The service used to persist validated workflows.</param>
+    /// <param name="functionService">The service used to discover callable functions.</param>
+    /// <param name="workflowEngine">The engine used for validation or execution checks.</param>
+    /// <param name="moduleService">The module service used to verify Workflow availability.</param>
     public NeuCharWorkflowCreationProvider(
         NeuCharWorkflowAppService workflowAppService,
         NeuCharWorkflowFunctionService functionService,

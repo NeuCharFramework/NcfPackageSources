@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.13 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.13.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -42,12 +45,22 @@ namespace Senparc.Xncf.SenMapic
         /// </summary>
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
+        /// <summary>
+        /// Applies SenMapic entity mappings to the module database model.
+        /// The current module relies on convention-based and automatic mappings.
+        /// </summary>
+        /// <param name="modelBuilder">The Entity Framework Core model builder.</param>
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
             //after implementing the [XncfAutoConfigurationMapping] attribute, this runs automatically and no manual registration is needed
             //modelBuilder.ApplyConfiguration(new AreaTemplate_ColorConfigurationMapping());
         }
 
+        /// <summary>
+        /// Registers SenMapic database services.
+        /// The current module has no additional registrations beyond shared infrastructure.
+        /// </summary>
+        /// <param name="services">The application dependency-injection service collection.</param>
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
             //DOT REMOVE OR MODIFY THIS LINE - Entities Point

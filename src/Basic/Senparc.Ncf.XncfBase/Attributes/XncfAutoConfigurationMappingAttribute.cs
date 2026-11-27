@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.29.1 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.29.1.2 Extend shared chat-tool contracts for admin task initiation.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -22,9 +25,8 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase.Attributes
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Marks an Entity Framework Core configuration class for automatic discovery
+    /// by the XNCF database registration pipeline.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class XncfAutoConfigurationMappingAttribute : Attribute

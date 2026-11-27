@@ -38,6 +38,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.4.4 Updated sandbox request handling and localized runtime surfaces.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel;
@@ -62,7 +65,7 @@ public class Sandbox_CreateRequest : FunctionAppRequestBase
     public string TemplateKey { get; set; } = string.Empty;
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Gets the template choices presented by the sandbox creation Function.
     /// </summary>
     [JsonIgnore]
     [Newtonsoft.Json.JsonIgnore]

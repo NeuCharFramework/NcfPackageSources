@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 
@@ -31,6 +34,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
 {
+    /// <summary>Transfers editable knowledge-base configuration to application services.</summary>
     public class KnowledgeBaseDto : DtoBase
     {
         public KnowledgeBaseDto()
@@ -48,17 +52,11 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
         }
 
         public int Id { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the embedding model identifier.</summary>
         public int EmbeddingModelId { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the vector database configuration identifier.</summary>
         public int VectorDBId { get; set; }
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the chat model identifier.</summary>
         public int ChatModelId { get; set; }
         /// <summary>
         /// name
@@ -74,18 +72,15 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
 
         public DateTime? EmbeddedTime { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the retrieval chunking and reranking configuration.</summary>
         public KnowledgeBaseRetrievalConfig RetrievalConfig { get; set; }
 
     }
 
+    /// <summary>Extends knowledge-base configuration with managed source-file identifiers.</summary>
     public class KnowledgeBase_InsertDto : KnowledgeBaseDto
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets FileManager file identifiers to import.</summary>
         public List<int> NcfFileIds { get; set; }
     }
 }

@@ -106,7 +106,7 @@
                     name: [{ required: true, message: ncfST('Frontend.Mcp.EndpointNameCannotBeEmpty'), trigger: 'blur' }],
                     endpoint: [{ required: true, message: ncfST('Frontend.Mcp.EndpointAddressCannotBeEmpty'), trigger: 'blur' }]
                 },
-                endpointTypeOptions: ['sse', 'http', 'stdio', 'websocket'],
+                endpointTypeOptions: ['sse', 'http'],
 
                 //Legacy comment translated to English.
                 preTestLoading: false,
@@ -202,7 +202,7 @@
                         throw new Error(ncfST('Frontend.Mcp.TheServerReturnedAnInvalidEndpointListFormat'));
                     }
                     this.tableData = body.data.map(z => Object.assign({}, z, {
-                        bearerToken: this.extractBearerToken(z.authConfig)
+                        bearerToken: ''
                     }));
                 } catch (error) {
                     console.error(error);
@@ -236,7 +236,7 @@
                 this.dialogTitle = ncfST('Frontend.Mcp.EditMCPEndpoint');
                 this.form = Object.assign({}, row);
                 if (!this.form.id) this.form.id = 0;
-                this.form.bearerToken = this.extractBearerToken(row.authConfig);
+                this.form.bearerToken = '';
                 this.preTestResult = null;
                 this.dialogVisible = true;
                 this.$nextTick(() => {
@@ -245,9 +245,6 @@
             },
             buildAuthConfig() {
                 var token = (this.form.bearerToken || '').trim();
-                if (this.form.authConfig && token === this.extractBearerToken(this.form.authConfig)) {
-                    return this.form.authConfig;
-                }
                 if (!token) return '';
                 return JSON.stringify({ token: token });
             },
@@ -256,6 +253,7 @@
                 this.preTestResult = null;
                 try {
                     var res = await request(apiBase + '.TestConnection', {
+                        endpointId: this.form.id,
                         name: this.form.name,
                         endpoint: this.form.endpoint,
                         endpointType: this.form.endpointType,
@@ -299,7 +297,7 @@
                 if (row.saving) return;
                 this.$set(row, 'saving', true);
                 try {
-                    var payload = endpointPayload(row, row.authConfig || '');
+                    var payload = endpointPayload(row, '');
                     await request(apiBase + '.SaveEndpoint', payload);
                 } catch (error) {
                     row.enabled = !row.enabled;

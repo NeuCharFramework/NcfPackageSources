@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -20,17 +23,13 @@ using System;
 namespace Senparc.Xncf.AIKernel.Domain.Models.Usage
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Identifies the lifecycle state of a monitored AI invocation.
     /// </summary>
     public enum AITokenProgressStatus
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>The invocation is still running.</summary>
         Running = 0,
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>The invocation completed successfully.</summary>
         Completed = 1,
         /// <summary>
         /// failure
@@ -39,74 +38,45 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.Usage
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    /// <para>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    /// </para>
+    /// Carries the latest token and timing progress for one monitored AI invocation.
     /// </summary>
     [Serializable]
     public class AITokenProgressEvent
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the monitored invocation identifier.</summary>
         public Guid RunId { get; set; }
 
-        /// <summary>
-        /// model code
-        /// </summary>
+        /// <summary>Gets or sets the configured model alias.</summary>
         public string ModelAlias { get; set; }
 
-        /// <summary>
-        /// model name
-        /// </summary>
+        /// <summary>Gets or sets the provider model identifier.</summary>
         public string ModelId { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the current invocation status.</summary>
         public AITokenProgressStatus Status { get; set; } = AITokenProgressStatus.Running;
 
-        /// <summary>
-        /// input (Prompt) token count
-        /// </summary>
+        /// <summary>Gets or sets the number of input/prompt tokens observed.</summary>
         public long InputTokens { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the number of output/completion tokens observed.</summary>
         public long OutputTokens { get; set; }
 
-        /// <summary>
-        /// total token count
-        /// </summary>
+        /// <summary>Gets or sets the total token count observed.</summary>
         public long TotalTokens { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets a bounded preview of generated output.</summary>
         public string OutputPreview { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets elapsed invocation time in milliseconds.</summary>
         public int ElapsedMs { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets a value indicating whether the invocation is terminal.</summary>
         public bool IsComplete => Status == AITokenProgressStatus.Completed || Status == AITokenProgressStatus.Failed;
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the failure message, when the invocation failed.</summary>
         public string Error { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the local timestamp at which this progress was observed.</summary>
         public DateTime Timestamp { get; set; } = DateTime.Now;
     }
 }

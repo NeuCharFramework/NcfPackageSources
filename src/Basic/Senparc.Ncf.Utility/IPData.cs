@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.21.3-preview5 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.21.3.2-preview6 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -124,44 +127,6 @@ namespace Senparc.Ncf.Utility
         #endregion
         private byte[] b4;
 
-        //#region singleton mode - TNT2
-
-        //private static GLJK.Common.QQWry qq = new QQWry();
-
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///// </summary>
-        //private static readonly object objLock = new object();
-
-        //public static QQWry GetInstance()
-        //{
-        //    if (qq == null)
-        //    {
-        //        lock (objLock)
-        //        {
-        //            if (qq == null)
-        //            {
-        //                qq = new QQWry();
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        qq.Dispose();
-        //    }
-        //    return qq;
-        //}
-        //#endregion
-
-
-        //constructor
-        #region Legacy section
-        /**/
-        /// <summary>
-        /// constructor
-        /// </summary>
-        ///Legacy comment translated to English.
-        #endregion
         /// <summary>
         /// Opens a QQWry database file and reads its index boundaries.
         /// </summary>
@@ -277,7 +242,7 @@ namespace Senparc.Ncf.Utility
             {
                 long countryOffset = readLong3();
                 ipFile.Position = countryOffset;
-                //Legacy comment translated to English.
+                // A second-level redirect stores the country text at another offset.
                 byte b = (byte)ipFile.ReadByte();
                 if (b == REDIRECT_MODE_2)
                 {

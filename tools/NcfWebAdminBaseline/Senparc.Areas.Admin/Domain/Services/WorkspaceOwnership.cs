@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -24,6 +27,12 @@ namespace Senparc.Areas.Admin.Domain.Services;
 
 public static class WorkspaceOwnership
 {
+    /// <summary>
+    /// Filters workspace descriptors to those owned by a positive administrator identifier.
+    /// </summary>
+    /// <param name="workspaces">The candidate workspace descriptors.</param>
+    /// <param name="ownerId">The administrator owner identifier.</param>
+    /// <returns>Owned workspace descriptors, or an empty list for invalid input.</returns>
     public static IReadOnlyList<WorkspaceDescriptor> SelectOwned(
         IEnumerable<WorkspaceDescriptor> workspaces,
         int ownerId)
@@ -38,6 +47,12 @@ public static class WorkspaceOwnership
             .ToArray();
     }
 
+    /// <summary>
+    /// Determines whether a workspace has a valid identifier and belongs to the owner.
+    /// </summary>
+    /// <param name="workspace">The workspace descriptor.</param>
+    /// <param name="ownerId">The expected owner identifier.</param>
+    /// <returns><see langword="true"/> when ownership is valid.</returns>
     public static bool IsOwnedBy(WorkspaceDescriptor workspace, int ownerId) =>
         workspace != null
         && ownerId > 0

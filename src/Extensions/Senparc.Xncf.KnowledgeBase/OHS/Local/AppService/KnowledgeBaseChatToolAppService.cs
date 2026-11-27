@@ -9,6 +9,9 @@
     Modified by: Senparc - 20261125
     Change description: v0.8.4 Added chat-tool parameter option integration.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -28,6 +31,12 @@ public sealed class KnowledgeBaseChatToolAppService(
     IServiceProvider serviceProvider,
     KnowledgeBaseService knowledgeBaseService) : AppServiceBase(serviceProvider)
 {
+    /// <summary>
+    /// Searches indexed knowledge bases by name or inline content and returns a bounded
+    /// machine-readable list for AdminChat selection.
+    /// </summary>
+    /// <param name="request">The optional knowledge-base search query.</param>
+    /// <returns>A function response containing matching indexed knowledge bases.</returns>
     [FunctionRender(
         typeof(KnowledgeBaseResource),
         "AdminChat.Function.SearchKnowledgeBases",
@@ -59,6 +68,12 @@ public sealed class KnowledgeBaseChatToolAppService(
         });
     }
 
+    /// <summary>
+    /// Recalls passages from one indexed knowledge base for the supplied question.
+    /// Validation failures are returned as function text so the chat workflow can recover.
+    /// </summary>
+    /// <param name="request">The knowledge-base identifier, query text, and requested result count.</param>
+    /// <returns>A function response containing ranked recall evidence.</returns>
     [FunctionRender(
         typeof(KnowledgeBaseResource),
         "AdminChat.Function.RecallKnowledgeBase",

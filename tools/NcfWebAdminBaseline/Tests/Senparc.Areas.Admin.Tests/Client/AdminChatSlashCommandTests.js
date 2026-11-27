@@ -11,12 +11,14 @@ const scriptPath = path.resolve(
 let options;
 let openedAdminPage = '';
 const sandbox = {
+    URLSearchParams,
     Vue: function (value) { options = value; },
     window: {
         ChatLauncherMixin: {},
         INITIAL_DATA: {},
         innerWidth: 1440,
         innerHeight: 500,
+        URLSearchParams,
         parent: {
             ncfOpenAdminPage(url) {
                 openedAdminPage = url;
@@ -155,6 +157,11 @@ assert.deepStrictEqual(
 assert.strictEqual(app.workspaceArtifactsExpanded(changedMessage), false);
 app.toggleWorkspaceArtifacts(changedMessage);
 assert.strictEqual(app.workspaceArtifactsExpanded(changedMessage), true);
+assert.deepStrictEqual(
+    JSON.parse(JSON.stringify(app.workspaceArtifactStats({
+        attachments: [{ relativePath: 'src/legacy.cs', changeType: 'added', isWorkspaceArtifact: true }]
+    }))),
+    { total: 1, created: 1, changed: 0, deleted: 0 });
 app.openMessageAttachmentAction({
     actionType: 'agents-task',
     actionTargetId: 42,
@@ -166,7 +173,63 @@ app.openAgentTaskPreview(previewAction);
 assert.strictEqual(app.agentTaskPreviewVisible, true);
 assert.strictEqual(app.agentTaskPreviewAction, previewAction);
 assert.ok(
-    app.agentTaskUrl(previewAction, true).includes('?embedded=1&ncfTab=1#tab=third&taskId=42'),
+    app.agentTaskUrl(previewAction, true).includes('?embedded=1&ncfTab=1&preview=1#tab=third&taskId=42'),
     'Live preview must embed the real Agents Manager task page so stream and HIL UI remain available.');
+const workflowAction = {
+    actionType: 'workflow-run',
+    actionOwnerId: 1027,
+    actionTarget: '00112233445566778899aabbccddeeff',
+    name: 'Release Workflow'
+};
+assert.ok(
+    app.agentTaskUrl(workflowAction, true).includes(
+        '/Admin/NeuCharWorkflow/Index?workflowId=1027&runId=00112233445566778899aabbccddeeff&embedded=1&ncfTab=1&preview=1'),
+    'Workflow runs must open the live Workflow execution page with native HIL UI.');
+
+const agentsEntry = fs.readFileSync(path.resolve(
+    __dirname,
+    '../../../../../src/Extensions/Senparc.Xncf.AgentsManager/wwwroot/js/AgentsManager/index.js'),
+'utf8');
+assert.ok(agentsEntry.includes("agents-manager-chat-preview"),
+    'Agents task preview must tag the embedded page so unrelated navigation can be hidden.');
+
+app.currentSessionId = 7;
+app.chatCommandMenuOpen = false;
+app.agentTaskPreviewVisible = false;
+app.agentTaskPreviewAction = null;
+const liveMessages = [];
+app.sessionRuns[7] = {
+    messages: liveMessages,
+    liveTrajectoryId: 0,
+    liveTrajectoryEvents: [],
+    livePendingApprovals: []
+};
+app.handleLiveStreamEvent('async-action', {
+    action: {
+        actionType: 'agents-task',
+        target: '42',
+        ownerId: 0,
+        name: 'Support Group'
+    },
+    actionState: {
+        status: 'running',
+        message: 'Task is running',
+        isTerminal: false
+    }
+}, 'temp-1', 7);
+assert.strictEqual(app.agentTaskPreviewVisible, true,
+    'An async action must open preview before the assistant turn finishes.');
+assert.strictEqual(app.sessionRuns[7].liveStatusText, '后台任务运行中…',
+    'The chat stream must remain visibly active while the external task runs.');
+
+app.finishActiveTask = () => {};
+app.handleLiveStreamEvent('assistant-message', {
+    id: 123,
+    roleType: 1,
+    content: '任务已创建。',
+    attachments: [previewAction]
+}, 'temp-1', 7);
+assert.strictEqual(app.agentTaskPreviewVisible, true,
+    'A completed chat tool response containing an Agent task must automatically open live preview.');
 
 console.log('AdminChat slash command tests passed.');

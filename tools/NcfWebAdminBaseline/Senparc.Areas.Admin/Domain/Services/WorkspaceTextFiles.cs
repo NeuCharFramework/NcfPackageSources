@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.12.29 Improved AdminChat, system log analysis, workflow commands, and workspace asset operations.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 
@@ -182,6 +185,13 @@ public static class WorkspaceTextFiles
 
 
 
+    /// <summary>
+    /// Resolves a content type from a workspace file name or extension.
+    /// Known file names take precedence over extensions, and unknown extensions
+    /// fall back to either plain text or binary content.
+    /// </summary>
+    /// <param name="relativePath">The workspace-relative path to inspect.</param>
+    /// <returns>The content type used for preview and download behavior.</returns>
     public static string ResolveContentType(string relativePath)
 
     {
@@ -206,6 +216,12 @@ public static class WorkspaceTextFiles
 
 
 
+    /// <summary>
+    /// Determines whether a content type can be safely treated as textual data
+    /// by preview and editing surfaces.
+    /// </summary>
+    /// <param name="contentType">The content type to classify.</param>
+    /// <returns><see langword="true"/> when the type is supported as text.</returns>
     public static bool IsText(string contentType) =>
 
         contentType.StartsWith("text/", StringComparison.OrdinalIgnoreCase)
@@ -214,6 +230,12 @@ public static class WorkspaceTextFiles
 
 
 
+    /// <summary>
+    /// Determines whether a relative workspace path is editable, rejecting
+    /// protected metadata paths and non-text content types.
+    /// </summary>
+    /// <param name="relativePath">The workspace-relative path.</param>
+    /// <returns><see langword="true"/> when the path is eligible for editing.</returns>
     public static bool CanEdit(string relativePath)
 
     {
@@ -224,12 +246,28 @@ public static class WorkspaceTextFiles
 
     }
 
+    /// <summary>
+    /// Determines whether a path identifies one of the supported 3D model formats.
+    /// </summary>
+    /// <param name="relativePath">The workspace-relative model path.</param>
+    /// <returns><see langword="true"/> for supported GLB, GLTF, OBJ, STL, or PLY files.</returns>
     public static bool Is3D(string relativePath) =>
         new[] { ".glb", ".gltf", ".obj", ".stl", ".ply" }
             .Contains(Path.GetExtension(relativePath ?? string.Empty), StringComparer.OrdinalIgnoreCase);
 
 
 
+    /// <summary>
+    /// Normalizes and validates a proposed workspace text edit, rejects binary or
+    /// protected content, and encodes the accepted content as UTF-8 bytes.
+    /// </summary>
+    /// <param name="relativePath">The workspace-relative target path.</param>
+    /// <param name="content">The replacement text.</param>
+    /// <returns>The normalized path and UTF-8 content bytes.</returns>
+    /// <exception cref="ArgumentException">
+    /// Thrown when content is null, contains NUL bytes, targets a blocked path,
+    /// uses an unsupported type, or exceeds <see cref="MaxEditableBytes"/>.
+    /// </exception>
     public static WorkspaceTextEdit PrepareEdit(string relativePath, string content)
 
     {
@@ -252,6 +290,12 @@ public static class WorkspaceTextFiles
 
 
 
+    /// <summary>
+    /// Determines whether a workspace-relative path targets repository or internal
+    /// workspace metadata that must not be edited through the text surface.
+    /// </summary>
+    /// <param name="relativePath">The normalized workspace-relative path.</param>
+    /// <returns><see langword="true"/> when the path is protected.</returns>
     private static bool IsBlocked(string relativePath)
 
     {

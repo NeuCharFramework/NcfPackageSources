@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.15.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.15.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -23,13 +26,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Stores feedback submitted by an administrator or account.
     /// </summary>
     [Table("FeedBacks")]
     public class FeedBack : EntityBase<int>
     {
+        /// Gets or sets the submitting account identifier.
         public int AccountId { get; set; }
 
+        /// Gets or sets the feedback content.
         public string Content { get; set; }
 
         ///// <summary>

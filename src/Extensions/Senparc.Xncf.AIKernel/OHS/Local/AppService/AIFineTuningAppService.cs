@@ -28,6 +28,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.17.4 Integrated localization, tooling, and runtime improvements across the module.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 #nullable enable
@@ -264,6 +267,7 @@ public class AIFineTuningAppService : AppServiceBase
     /// <param name="workerAlias">The configured worker alias.</param>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     // The dynamic API binds subsequent parameters from query; keep the body DTO first.
+    /// <returns>A response containing the persisted and worker-uploaded dataset.</returns>
     public Task<AppResponseBase<FineTuningDataset>> UploadDatasetAsync([FromBody] FineTuningDatasetRequest request, string workerAlias) =>
         this.GetResponseAsync<FineTuningDataset>(async (response, logger) =>
         {
@@ -313,6 +317,18 @@ public class AIFineTuningAppService : AppServiceBase
                 string.IsNullOrWhiteSpace(file.ContentType) ? "application/x-ndjson" : file.ContentType);
         });
 
+    /// <summary>
+    /// Imports a dataset into FileManager and creates the corresponding Worker dataset.
+    /// </summary>
+    /// <param name="workerAlias">The fine-tuning Worker alias.</param>
+    /// <param name="name">The dataset display name.</param>
+    /// <param name="fileName">The original file name.</param>
+    /// <param name="source">The readable dataset stream.</param>
+    /// <param name="length">The declared byte length.</param>
+    /// <param name="contentType">The content type passed to FileManager.</param>
+    /// <returns>The created Worker dataset.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="source"/> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when dataset name or size is invalid.</exception>
     private async Task<FineTuningDataset> UploadDatasetAndStoreAsync(
         string workerAlias,
         string name,
@@ -534,6 +550,7 @@ public class AIFineTuningAppService : AppServiceBase
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     [FunctionRender(typeof(AIKernelResource), "Function.FineTuning.ValidateAdapter.Name", "Function.FineTuning.ValidateAdapter.Description",
         typeof(Register), "Validate fine-tuning adapter", "Run a bounded offline test prompt for a successful fine-tuning job on the selected backend.", AllowAiInvocation = true)]
+    /// <returns>A response containing the validation result.</returns>
     public Task<AppResponseBase<FineTuningValidation>> StartValidationAsync(
         [FromBody] FineTuningValidationRequest request, string workerAlias, string id) =>
         this.GetResponseAsync<FineTuningValidation>(async (response, logger) =>
@@ -737,6 +754,11 @@ public class AIFineTuningAppService : AppServiceBase
             return worker;
         });
 
+    /// <summary>
+    /// Writes an audit log entry containing the current actor and trace identifier.
+    /// </summary>
+    /// <param name="operation">The administrative operation name.</param>
+    /// <param name="id">The affected resource identifier.</param>
     private void Audit(string operation, string id)
     {
         var user = _context.HttpContext?.User;
@@ -745,6 +767,12 @@ public class AIFineTuningAppService : AppServiceBase
             _context.HttpContext?.TraceIdentifier);
     }
 
+    /// <summary>
+    /// Mirrors a Worker job and its artifacts into the local control-plane store.
+    /// </summary>
+    /// <param name="workerAlias">The Worker alias.</param>
+    /// <param name="job">The Worker job snapshot.</param>
+    /// <returns>A task that completes after job and artifact persistence.</returns>
     private async Task MirrorJobAsync(string workerAlias, FineTuningJob job)
     {
         await _controlPlane.UpsertJobAsync(new AIFineTuningJob(workerAlias, job.Id, job.Name, job.State,

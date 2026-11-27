@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.7.12 Localized DynamicData configuration and layout surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.7.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -28,24 +31,24 @@ namespace Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Dto
     public class TableMetadataDto : DtoBase<int>
     {
         /// <summary>  
-        ///Legacy comment translated to English.
+        /// Gets or sets the database table name.
         /// </summary>  
         [Required]
         [MaxLength(255)]
         public string TableName { get; set; }
 
         /// <summary>  
-        ///Legacy comment translated to English.
+        /// Gets or sets the table description.
         /// </summary>  
         public string Description { get; set; }
 
         /// <summary>  
-        ///Legacy comment translated to English.
+        /// Gets or sets the columns belonging to the table.
         /// </summary>  
         public ICollection<ColumnMetadataDto> ColumnMetadatas { get; set; }
 
         /// <summary>  
-        ///Legacy comment translated to English.
+        /// Gets or sets the cell records belonging to the table.
         /// </summary>  
         public ICollection<TableDataDto> TableDatas { get; set; }
 

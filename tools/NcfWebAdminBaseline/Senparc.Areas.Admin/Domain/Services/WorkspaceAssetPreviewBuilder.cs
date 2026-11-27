@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.12.29 Improved AdminChat, system log analysis, workflow commands, and workspace asset operations.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -62,11 +65,27 @@ public sealed class WorkspaceAssetPreviewBuilder
             [".cjs"] = "text/javascript"
         };
 
+    /// <summary>
+    /// Determines whether a path has an extension supported by the preview asset inliner.
+    /// </summary>
+    /// <param name="path">The workspace-relative asset path.</param>
+    /// <returns><see langword="true"/> when the extension is recognized.</returns>
     public static bool IsPreviewAsset(string path) =>
         AssetTypes.ContainsKey(Path.GetExtension(path))
         || new[] { ".bin", ".gltf", ".glb", ".obj", ".stl", ".ply", ".mtl", ".json" }
             .Contains(Path.GetExtension(path), StringComparer.OrdinalIgnoreCase);
 
+    /// <summary>
+    /// Reads an HTML workspace file, inlines allowed local assets, removes navigation/form
+    /// capabilities, and applies a restrictive content-security policy for sandbox preview.
+    /// </summary>
+    /// <param name="storage">The workspace storage implementation.</param>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="filePath">The relative HTML file path.</param>
+    /// <param name="cancellationToken">Token used to cancel reads and rewriting.</param>
+    /// <returns>The sanitized HTML and warnings generated during rewriting.</returns>
+    /// <exception cref="ArgumentException">Thrown when the path, resource type, or resource scope is invalid.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when resource depth, count, or size limits are exceeded.</exception>
     public async Task<WorkspaceHtmlPreview> BuildAsync(
         IWorkspaceStorage storage, string workspaceId, string filePath,
         CancellationToken cancellationToken = default)
@@ -84,6 +103,8 @@ public sealed class WorkspaceAssetPreviewBuilder
         long totalBytes = source.Content.Length;
         var resourceCount = 0;
 
+        // Resolve local HTML/CSS assets into data URLs while enforcing workspace,
+        // recursion, resource-count, and aggregate-size boundaries.
         async Task<string> AssetAsync(string reference, string sourcePath, int depth = 0)
         {
             if (string.IsNullOrWhiteSpace(reference) || reference.StartsWith('#')) return reference;
@@ -126,6 +147,8 @@ public sealed class WorkspaceAssetPreviewBuilder
             finally { reading.Remove(path); }
         }
 
+        // Rewrite @import and url(...) references through the same constrained
+        // asset resolver so CSS cannot escape the selected workspace directory.
         async Task<string> RewriteCssAsync(string css, string path, int depth = 0)
         {
             foreach (var match in CssImport.Matches(css).Cast<Match>().ToArray())
@@ -220,6 +243,12 @@ public sealed class WorkspaceAssetPreviewBuilder
         return new WorkspaceHtmlPreview(html, warnings.ToArray());
     }
 
+    /// <summary>
+    /// Determines whether a script type is an executable JavaScript variant
+    /// permitted inside the isolated preview sandbox.
+    /// </summary>
+    /// <param name="type">The script MIME/type attribute.</param>
+    /// <returns><see langword="true"/> for supported JavaScript or module types.</returns>
     private static bool IsExecutableScriptType(string type)
     {
         var normalized = (type ?? string.Empty).Split(';', 2)[0].Trim();
@@ -231,9 +260,23 @@ public sealed class WorkspaceAssetPreviewBuilder
             || normalized.Equals("application/ecmascript", StringComparison.OrdinalIgnoreCase);
     }
 
+    /// <summary>
+    /// Encodes text content as a UTF-8 base64 data URI.
+    /// </summary>
+    /// <param name="type">The data URI media type.</param>
+    /// <param name="content">The content to encode.</param>
+    /// <returns>The generated data URI.</returns>
     private static string ToDataUri(string type, string content) =>
         $"data:{type};base64,{Convert.ToBase64String(Encoding.UTF8.GetBytes(content ?? string.Empty))}";
 
+    /// <summary>
+    /// Validates a workspace-relative path and rejects rooted paths, separators,
+    /// control characters, empty segments, and parent traversal.
+    /// </summary>
+    /// <param name="path">The path to normalize.</param>
+    /// <param name="allowRoot">Whether an empty path represents the workspace root.</param>
+    /// <returns>The validated path unchanged.</returns>
+    /// <exception cref="ArgumentException">Thrown when the path violates workspace path rules.</exception>
     public static string NormalizePath(string path, bool allowRoot = false)
     {
         if (path == null || path.Contains('\\') || path.StartsWith('/') || path.Contains(':')

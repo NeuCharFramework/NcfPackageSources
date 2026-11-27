@@ -22,6 +22,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.42.0.0 add MCP endpoint gateway and tool invocation contracts
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -40,9 +43,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
 {
     public sealed class XncfPreviewPersistenceSnapshot
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or initializes the tenant owning the preview snapshot.</summary>
         public int TenantId { get; init; }
 
         public string SessionId { get; init; }
@@ -96,11 +97,23 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
 
     public interface IXncfPreviewStateStore
     {
+        /// <summary>
+        /// Loads recent preview records and marks unfinished records as interrupted after restart.
+        /// </summary>
+        /// <param name="maxCount">The maximum number of records to inspect.</param>
+        /// <param name="interruptedAt">The UTC timestamp assigned to interrupted records.</param>
+        /// <param name="cancellationToken">Token used to cancel loading.</param>
+        /// <returns>The recovered preview snapshots.</returns>
         Task<IReadOnlyList<XncfPreviewPersistenceSnapshot>> LoadRecentAndInterruptAsync(
             int maxCount,
             DateTimeOffset interruptedAt,
             CancellationToken cancellationToken = default);
 
+        /// <summary>
+        /// Persists one preview snapshot under its tenant context.
+        /// </summary>
+        /// <param name="snapshot">The preview state to persist.</param>
+        /// <param name="cancellationToken">Token used to cancel persistence.</param>
         Task SaveAsync(
             XncfPreviewPersistenceSnapshot snapshot,
             CancellationToken cancellationToken = default);
@@ -131,6 +144,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             _tenantScopeFactory = tenantScopeFactory;
         }
 
+        /// <inheritdoc />
         public async Task<IReadOnlyList<XncfPreviewPersistenceSnapshot>> LoadRecentAndInterruptAsync(
             int maxCount,
             DateTimeOffset interruptedAt,
@@ -198,6 +212,15 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             }
         }
 
+        /// <summary>
+        /// Loads recent persisted previews, marks unfinished tasks/hosts interrupted, and returns snapshots.
+        /// </summary>
+        /// <param name="tenantServiceProvider">The tenant-scoped service provider.</param>
+        /// <param name="tenantId">The tenant identifier.</param>
+        /// <param name="maxCount">The maximum number of recent tasks.</param>
+        /// <param name="interruptedAt">The interruption timestamp.</param>
+        /// <param name="cancellationToken">Token used to cancel database work.</param>
+        /// <returns>Recent persisted preview snapshots.</returns>
         private static async Task<IReadOnlyList<XncfPreviewPersistenceSnapshot>> LoadAndInterruptCoreAsync(
             IServiceProvider tenantServiceProvider,
             int tenantId,
@@ -277,6 +300,14 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
                 .ToArray();
         }
 
+        /// <summary>
+        /// Persists a preview snapshot and its optional host snapshot under the tenant scope.
+        /// </summary>
+        /// <param name="snapshot">The preview persistence snapshot.</param>
+        /// <param name="cancellationToken">Token used to cancel persistence.</param>
+        /// <returns>A task that completes after both snapshots are saved.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="snapshot"/> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when the snapshot lacks a session identifier.</exception>
         public async Task SaveAsync(
             XncfPreviewPersistenceSnapshot snapshot,
             CancellationToken cancellationToken = default)
@@ -318,6 +349,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             }
         }
 
+        /// <summary>
+        /// Converts persisted task/host entities into one preview persistence snapshot.
+        /// </summary>
+        /// <param name="task">The persisted preview task.</param>
+        /// <param name="host">The optional persisted host.</param>
+        /// <param name="tenantId">The tenant identifier.</param>
+        /// <returns>The combined snapshot.</returns>
         private static XncfPreviewPersistenceSnapshot ToSnapshot(
             XncfPreviewTask task,
             XncfPreviewHost host,
@@ -353,20 +391,28 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             };
         }
 
+        /// <summary>
+        /// Converts a UTC-kind or unspecified DateTime to a UTC DateTimeOffset.
+        /// </summary>
+        /// <param name="value">The stored timestamp.</param>
+        /// <returns>The UTC offset value.</returns>
         private static DateTimeOffset ToUtcOffset(DateTime value)
         {
             return new DateTimeOffset(DateTime.SpecifyKind(value, DateTimeKind.Utc));
         }
 
+        /// <summary>
+        /// Converts an optional stored DateTime to an optional UTC DateTimeOffset.
+        /// </summary>
+        /// <param name="value">The optional stored timestamp.</param>
+        /// <returns>The converted timestamp or <see langword="null"/>.</returns>
         private static DateTimeOffset? ToUtcOffset(DateTime? value)
         {
             return value.HasValue ? ToUtcOffset(value.Value) : null;
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Restores the tenant context in a scoped provider before tenant-filtered persistence operations.
         /// </summary>
         private static void ApplyTenantContext(IServiceScope scope, int tenantId)
         {

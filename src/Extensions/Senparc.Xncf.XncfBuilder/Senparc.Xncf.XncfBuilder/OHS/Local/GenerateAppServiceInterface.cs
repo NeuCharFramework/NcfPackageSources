@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.42.0.0 add MCP endpoint gateway and tool invocation contracts
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.AppServices;
@@ -35,10 +38,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         }
 
         /// <summary>
-        /// generate generate AppService interfacecode
+        /// Generates an application-service interface from the supplied builder request.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">The generation request.</param>
+        /// <returns>A response containing generation output or diagnostics.</returns>
         [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.GenerateInterface.Name", "Function.XncfBuilder.GenerateInterface.Description", typeof(Register))]
         public Task<StringAppResponse> Generate(GenerateAppServiceInterface_GenerateRequest request)
         {

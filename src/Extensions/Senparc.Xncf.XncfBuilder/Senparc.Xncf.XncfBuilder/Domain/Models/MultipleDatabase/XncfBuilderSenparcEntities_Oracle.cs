@@ -13,7 +13,7 @@ using System.Text;
 namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Oracle-specific XNCF Builder database context used by runtime registration and migrations.
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.Oracle, typeof(Register))]
     public class XncfBuilderSenparcEntities_Oracle : XncfBuilderSenparcEntities, IMultipleMigrationDbContext

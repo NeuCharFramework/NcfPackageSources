@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.16 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.16.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.XncfBase;
@@ -27,6 +30,10 @@ namespace Senparc.Xncf.EmailExtension
     public partial class Register : IXncfThread
     {
         private static AutoSendEmailThreadUtility EmailUtility = new AutoSendEmailThreadUtility();
+        /// <summary>
+        /// Registers the recurring email-sending worker that dispatches pending automatic email events.
+        /// </summary>
+        /// <param name="xncfThreadBuilder">The thread builder receiving the scheduled worker.</param>
         public void ThreadConfig(XncfThreadBuilder xncfThreadBuilder)
         {
             xncfThreadBuilder.AddThreadInfo(new ThreadInfo(

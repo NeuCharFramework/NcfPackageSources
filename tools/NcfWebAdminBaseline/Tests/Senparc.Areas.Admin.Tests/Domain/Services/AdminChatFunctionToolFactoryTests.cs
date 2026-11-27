@@ -101,19 +101,40 @@ public class AdminChatFunctionToolFactoryTests
         var write = CreateWorkspaceTools(client.Object, allowWrite: true)
             .Single(tool => tool.Name == "workspace_write");
 
-        var exception = await Assert.ThrowsExceptionAsync<ArgumentException>(
-            async () => await write.InvokeAsync(new AIFunctionArguments
-            {
-                ["relativePath"] = string.Empty,
-                ["content"] = "<html></html>"
-            }));
+        var result = await write.InvokeAsync(new AIFunctionArguments
+        {
+            ["relativePath"] = string.Empty,
+            ["content"] = "<html></html>"
+        });
 
-        StringAssert.Contains(exception.Message, "relativePath 不能为空");
+        using var document = JsonDocument.Parse(result!.ToString()!);
+        Assert.IsFalse(document.RootElement.GetProperty("success").GetBoolean());
+        StringAssert.Contains(document.RootElement.GetProperty("error").GetString(), "relativePath 不能为空");
         client.Verify(
             value => value.WriteFileAsync(
                 It.IsAny<WorkspaceWriteFileRequest>(),
                 It.IsAny<CancellationToken>()),
             Times.Never);
+    }
+
+    [TestMethod]
+    public async Task WorkspaceWrite_ReturnsRequiredArgumentsWhenInvocationOmitsThem()
+    {
+        var client = new Mock<IWorkspaceClient>();
+        client.SetupGet(value => value.WorkspaceId).Returns("ws-test");
+        var write = CreateWorkspaceTools(client.Object, allowWrite: true)
+            .Single(tool => tool.Name == "workspace_write");
+
+        var result = await write.InvokeAsync(new AIFunctionArguments());
+
+        using var document = JsonDocument.Parse(result!.ToString()!);
+        Assert.IsFalse(document.RootElement.GetProperty("success").GetBoolean());
+        CollectionAssert.AreEqual(
+            new[] { "relativePath", "content" },
+            document.RootElement.GetProperty("requiredArguments")
+                .EnumerateArray()
+                .Select(value => value.GetString())
+                .ToArray());
     }
 
     [TestMethod]
@@ -195,6 +216,18 @@ public class AdminChatFunctionToolFactoryTests
         StringAssert.Contains(prompt, "relativePath may be omitted or empty");
         StringAssert.Contains(prompt, "outputs/<short-task-name>/");
         StringAssert.Contains(prompt, "code execution is disabled");
+    }
+
+    [TestMethod]
+    public void AdminChatSamplingParameters_AreDisabledForReasoningModels()
+    {
+        var method = typeof(AdminChatAiService).GetMethod(
+            "SupportsSamplingParameters",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+
+        Assert.IsFalse((bool)method!.Invoke(null, ["gpt-5.6-luna"])!);
+        Assert.IsFalse((bool)method.Invoke(null, ["openai/o3"])!);
+        Assert.IsTrue((bool)method.Invoke(null, ["gpt-4.1-mini"])!);
     }
 
     [TestMethod]

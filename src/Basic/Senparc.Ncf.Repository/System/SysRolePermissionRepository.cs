@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.13-preview12 Updated repository infrastructure and related localization metadata
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.13.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -30,24 +33,30 @@ namespace Senparc.Respository
     public interface ISysRolePermissionRepository: IClientRepositoryBase<SysRolePermission>
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns the distinct resource codes granted to an administrator through
+        /// the roles and menu permissions assigned to the account.
         /// </summary>
-        /// <param name="adminUserInfoId"></param>
-        /// <returns></returns>
+        /// <param name="adminUserInfoId">The administrator account identifier.</param>
+        /// <returns>The non-empty resource codes granted to the account.</returns>
         Task<IEnumerable<string>> GetAllResouceCodesByAccountIdAsync(int adminUserInfoId);
     }
 
     public class SysRolePermissionRepository : ClientRepositoryBase<SysRolePermission>, ISysRolePermissionRepository
     {
+        /// <summary>
+        /// Initializes the role-permission repository with the NCF database provider.
+        /// </summary>
+        /// <param name="db">The client database data provider.</param>
         public SysRolePermissionRepository(INcfDbData db) : base(db)
         {
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns the distinct resource codes granted to an administrator through
+        /// the roles and menu permissions assigned to the account.
         /// </summary>
-        /// <param name="adminUserInfoId"></param>
-        /// <returns></returns>
+        /// <param name="adminUserInfoId">The administrator account identifier.</param>
+        /// <returns>The non-empty resource codes granted to the account.</returns>
         public async Task<IEnumerable<string>> GetAllResouceCodesByAccountIdAsync(int adminUserInfoId)
         {
             IQueryable<string> roleIdQuery = BaseDB.BaseDataContext.Set<SysRoleAdminUserInfo>().Where(sra => sra.AccountId == adminUserInfoId).Select(_ => _.RoleId); //Legacy comment translated to English.

@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.25.1 Localized Weixin account and administration surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.25.1.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -85,6 +88,11 @@ public class WeixinClawMessageReceiptService : ServiceBase<WeixinClawMessageRece
         }
     }
 
+    /// <summary>
+    /// Determines whether a database update exception represents a duplicate receipt.
+    /// </summary>
+    /// <param name="exception">The database update exception.</param>
+    /// <returns><see langword="true"/> when provider codes, constraints, or messages indicate duplication.</returns>
     private static bool IsDuplicateReceiptException(DbUpdateException exception)
     {
         for (Exception current = exception; current != null; current = current.InnerException)
@@ -100,6 +108,11 @@ public class WeixinClawMessageReceiptService : ServiceBase<WeixinClawMessageRece
         return false;
     }
 
+    /// <summary>
+    /// Detects a generic duplicate message mentioning the receipt entity.
+    /// </summary>
+    /// <param name="message">The provider exception message.</param>
+    /// <returns><see langword="true"/> when the message matches the duplicate pattern.</returns>
     private static bool HasGenericDuplicateReceiptMessage(string message)
     {
         return !string.IsNullOrWhiteSpace(message)
@@ -108,12 +121,22 @@ public class WeixinClawMessageReceiptService : ServiceBase<WeixinClawMessageRece
                 || message.Contains("unique", StringComparison.OrdinalIgnoreCase));
     }
 
+    /// <summary>
+    /// Checks whether an error message contains a known receipt uniqueness constraint.
+    /// </summary>
+    /// <param name="message">The provider exception message.</param>
+    /// <returns><see langword="true"/> when a known constraint name is present.</returns>
     private static bool HasDuplicateConstraintName(string message)
     {
         return !string.IsNullOrWhiteSpace(message) &&
                DuplicateConstraintNames.Any(name => message.Contains(name, StringComparison.OrdinalIgnoreCase));
     }
 
+    /// <summary>
+    /// Reads common provider-specific duplicate error codes from an exception.
+    /// </summary>
+    /// <param name="exception">The provider exception to inspect.</param>
+    /// <returns><see langword="true"/> when a known duplicate code is found.</returns>
     private static bool HasDuplicateErrorCode(Exception exception)
     {
         var number = GetIntProperty(exception, "Number");
@@ -132,6 +155,12 @@ public class WeixinClawMessageReceiptService : ServiceBase<WeixinClawMessageRece
         return string.Equals(sqlState, "23505", StringComparison.OrdinalIgnoreCase);
     }
 
+    /// <summary>
+    /// Reads a public numeric provider property and converts it to a nullable integer.
+    /// </summary>
+    /// <param name="instance">The provider exception object.</param>
+    /// <param name="propertyName">The property name to read.</param>
+    /// <returns>The converted value, or <see langword="null"/> when unavailable.</returns>
     private static int? GetIntProperty(object instance, string propertyName)
     {
         if (instance == null)
@@ -158,6 +187,12 @@ public class WeixinClawMessageReceiptService : ServiceBase<WeixinClawMessageRece
         };
     }
 
+    /// <summary>
+    /// Reads a public string provider property by reflection.
+    /// </summary>
+    /// <param name="instance">The provider exception object.</param>
+    /// <param name="propertyName">The property name to read.</param>
+    /// <returns>The property value, or <see langword="null"/> when unavailable.</returns>
     private static string GetStringProperty(object instance, string propertyName)
     {
         return instance?

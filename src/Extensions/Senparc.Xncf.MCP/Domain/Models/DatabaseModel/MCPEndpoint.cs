@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.5.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.14.2 Expand MCP endpoint gateway, credentials, and tool invocation support.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -29,86 +32,79 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.MCP.Models.DatabaseModel
 {
     /// <summary>
-    /// MCP Endpoint configuration
-    ///Legacy comment translated to English.
+    /// Persists one configured MCP endpoint and its last discovery result.
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(MCPEndpoint))]
     [Serializable]
     public class MCPEndpoint : EntityBase<int>
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
         [Required]
         [MaxLength(100)]
+        /// <summary>
+        /// Gets or sets the administrator-facing endpoint name.
+        /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        /// for example: "http://localhost:3001/mcp/endpoint"
-        ///Legacy comment translated to English.
+        /// Gets or sets the MCP endpoint address, such as an HTTP or local transport URL.
         /// </summary>
         [Required]
         [MaxLength(500)]
         public string Endpoint { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        /// for example: "http", "sse", "stdio", "websocket"
+        /// Gets or sets the transport type, such as <c>http</c>, <c>sse</c>, <c>stdio</c>, or <c>websocket</c>.
         /// </summary>
         [MaxLength(50)]
         public string EndpointType { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        /// for example: "1.0", "2.0"
+        /// Gets or sets the MCP protocol version expected by the endpoint.
         /// </summary>
         [MaxLength(20)]
         public string ProtocolVersion { get; set; }
 
         /// <summary>
-        /// descriptioninformation
+        /// Gets or sets the administrator-facing endpoint description.
         /// </summary>
         [MaxLength(500)]
         public string Description { get; set; }
 
         /// <summary>
-        /// whether enabled
+        /// Gets or sets a value indicating whether this endpoint is available for selection.
         /// </summary>
         public bool Enabled { get; set; } = true;
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Gets or sets the serialized authentication configuration used by the transport.
+        /// Secrets must be protected or otherwise handled according to the endpoint service contract.
         /// </summary>
         [MaxLength(1000)]
         public string AuthConfig { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Gets or sets serialized transport-specific configuration.
         /// </summary>
         [MaxLength(2000)]
         public string ExtraConfig { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the UTC timestamp of the most recent endpoint test.
         /// </summary>
         public DateTime? LastTestedTime { get; set; }
 
         /// <summary>
-        /// finallytestresult
-        /// true: success, false: failure
+        /// Gets or sets whether the most recent endpoint test succeeded.
         /// </summary>
         public bool? LastTestResult { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the serialized tool catalog returned by the most recent test.
         /// </summary>
         public string? LastToolsJson { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the number of tools returned by the most recent test.
         /// </summary>
         public int? LastToolCount { get; set; }
     }

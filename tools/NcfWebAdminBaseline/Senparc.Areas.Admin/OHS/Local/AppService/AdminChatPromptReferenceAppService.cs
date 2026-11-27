@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 using System;
 using System.Threading.Tasks;
@@ -29,8 +32,17 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService;
 [AdminOrJwtAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
 public sealed class AdminChatPromptReferenceAppService : LocalAppServiceBase
 {
+    /// <summary>
+    /// Initializes the PromptRange reference application service.
+    /// </summary>
+    /// <param name="serviceProvider">The request service provider used by the base service.</param>
     public AdminChatPromptReferenceAppService(IServiceProvider serviceProvider) : base(serviceProvider) { }
 
+    /// <summary>
+    /// Scores a persisted AdminChat message against a PromptRange item using AI.
+    /// </summary>
+    /// <param name="request">The message and PromptRange item identifiers.</param>
+    /// <returns>The scored prompt-reference response wrapped in an application response.</returns>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public Task<AppResponseBase<PromptReferenceInfo>> ScoreWithAIAsync(AdminChatPromptScoreRequest request)
     {

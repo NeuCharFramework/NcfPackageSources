@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.29.1 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.29.1.2 Extend shared chat-tool contracts for admin task initiation.
+
 ----------------------------------------------------------------*/
 
 using System.Security.Cryptography;
@@ -132,6 +135,12 @@ public sealed class LocalFunctionFileStore : IFunctionFileStore
     private readonly FunctionFileStoreOptions _options;
     private readonly RequestTenantInfo _requestTenantInfo;
 
+    /// <summary>
+    /// Initializes the default local function-file store and validates its storage limits.
+    /// </summary>
+    /// <param name="options">The file-store size, retention, and root-path options.</param>
+    /// <param name="requestTenantInfo">The optional request tenant context.</param>
+    /// <exception cref="InvalidOperationException">Thrown when the root path or limits are invalid.</exception>
     public LocalFunctionFileStore(
         IOptions<FunctionFileStoreOptions> options,
         RequestTenantInfo requestTenantInfo = null)

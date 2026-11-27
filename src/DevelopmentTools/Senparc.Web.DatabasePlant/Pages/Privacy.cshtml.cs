@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.0.24 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.0.25 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +32,9 @@ namespace Senparc.Web.DatabasePlant.Pages
             _logger = logger;
         }
 
+        /// <summary>
+        /// Handles the database-plant privacy page GET request.
+        /// </summary>
         public void OnGet()
         {
         }

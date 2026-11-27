@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.25.1 Localized Weixin account and administration surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.25.1.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;
@@ -33,6 +36,13 @@ public sealed class WeixinClawMessageService : IWeixinClawMessageSender
     private readonly WeixinClawApi _api;
     private readonly ILogger<WeixinClawMessageService> _logger;
 
+    /// <summary>
+    /// Initializes the text-message sender with account, record, protocol, and logging services.
+    /// </summary>
+    /// <param name="accountService">The account service used to resolve and unprotect credentials.</param>
+    /// <param name="recordService">The record service used for reply context and persistence.</param>
+    /// <param name="api">The protocol API client.</param>
+    /// <param name="logger">The sender logger.</param>
     public WeixinClawMessageService(
         WeixinClawAccountService accountService,
         WeixinClawMessageRecordService recordService,
@@ -45,6 +55,15 @@ public sealed class WeixinClawMessageService : IWeixinClawMessageSender
         _logger = logger;
     }
 
+    /// <summary>
+    /// Sends text through an account and discards the detailed send result.
+    /// </summary>
+    /// <param name="accountId">The account identifier.</param>
+    /// <param name="toUserId">The recipient, or blank to use the latest inbound user.</param>
+    /// <param name="text">The non-empty message text.</param>
+    /// <param name="contextToken">Optional conversation context token.</param>
+    /// <param name="runId">Optional workflow run identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel sending.</param>
     public async Task SendTextAsync(
         int accountId,
         string toUserId,
@@ -62,6 +81,19 @@ public sealed class WeixinClawMessageService : IWeixinClawMessageSender
             cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Sends text, optionally linked to an inbound record, and persists the outbound record.
+    /// </summary>
+    /// <param name="accountId">The account identifier.</param>
+    /// <param name="toUserId">The recipient, or blank to use the latest inbound user.</param>
+    /// <param name="text">The non-empty message text.</param>
+    /// <param name="contextToken">Optional conversation context token.</param>
+    /// <param name="replyToRecordId">Optional inbound record used to derive recipient/context.</param>
+    /// <param name="runId">Optional workflow run identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel sending.</param>
+    /// <returns>Identifiers and target information for the persisted outbound message.</returns>
+    /// <exception cref="ArgumentException">Thrown when text or recipient data is unavailable.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when account/token/reply-record state is invalid.</exception>
     public async Task<WeixinClawSendTextResult> SendTextWithResultAsync(
         int accountId,
         string toUserId,

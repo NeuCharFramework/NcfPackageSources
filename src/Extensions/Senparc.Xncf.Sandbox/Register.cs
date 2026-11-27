@@ -37,6 +37,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System.Net.Http;
@@ -73,7 +76,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Uid => "BDF12490-AA0B-41B4-ADB3-63155ED95A93";
 
-    public override string Version => "0.4.0";
+    public override string Version => "0.4.4.2";
 
     public override string MenuName => RegisterText.MenuName;
 
@@ -81,11 +84,13 @@ public partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Description => RegisterText.Description;
 
+    /// <inheritdoc/>
     public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
     {
         await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this).ConfigureAwait(false);
     }
 
+    /// <inheritdoc/>
     public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
     {
         var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
@@ -95,6 +100,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
         await unsinstallFunc().ConfigureAwait(false);
     }
 
+    /// <inheritdoc/>
     public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
     {
         services.Configure<SandboxImageOptions>(configuration.GetSection(SandboxImageOptions.SectionName));
@@ -130,6 +136,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
         return base.AddXncfModule(services, configuration, env);
     }
 
+    /// <inheritdoc/>
     public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
     {
         app.UseStaticFiles(new StaticFileOptions

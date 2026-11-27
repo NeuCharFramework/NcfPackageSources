@@ -29,6 +29,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Shared.Abstractions.NeuBell;
@@ -88,6 +91,11 @@ public sealed class NeuBellTestProvider : INeuBellProvider, INeuBellConsumablePr
         }
     }
 
+    /// <summary>
+    /// Adds one test reminder to the in-memory pending queue and returns the
+    /// resulting queue size.
+    /// </summary>
+    /// <returns>The number of pending reminders after enqueueing.</returns>
     public int Send()
     {
         lock (_syncRoot)
@@ -122,11 +130,19 @@ public sealed class NeuBellTestProvider : INeuBellProvider, INeuBellConsumablePr
         return ToNeuBellItem(reminder);
     }
 
+    /// <summary>
+    /// Removes the newest pending reminder, if any.
+    /// </summary>
+    /// <returns>One when a reminder was consumed; otherwise zero.</returns>
     public int ConsumeLatest()
     {
         return ConsumeLatestAndGetItem() == null ? 0 : 1;
     }
 
+    /// <summary>
+    /// Removes and maps the newest pending reminder.
+    /// </summary>
+    /// <returns>The consumed item, or <see langword="null"/> when the queue is empty.</returns>
     public NeuBellItem ConsumeLatestAndGetItem()
     {
         Reminder reminder;
@@ -143,11 +159,19 @@ public sealed class NeuBellTestProvider : INeuBellProvider, INeuBellConsumablePr
         return ToNeuBellItem(reminder);
     }
 
+    /// <summary>
+    /// Removes every pending reminder.
+    /// </summary>
+    /// <returns>The number of reminders removed.</returns>
     public int ConsumeAll()
     {
         return ConsumeAllAndGetItems().Count;
     }
 
+    /// <summary>
+    /// Removes all pending reminders and maps them newest first.
+    /// </summary>
+    /// <returns>The consumed reminder items.</returns>
     public IReadOnlyList<NeuBellItem> ConsumeAllAndGetItems()
     {
         Reminder[] reminders;
@@ -162,6 +186,13 @@ public sealed class NeuBellTestProvider : INeuBellProvider, INeuBellConsumablePr
             .ToArray();
     }
 
+    /// <summary>
+    /// Removes one pending reminder by exact item identifier.
+    /// </summary>
+    /// <param name="context">The NeuBell request context.</param>
+    /// <param name="itemId">The reminder identifier to consume.</param>
+    /// <param name="cancellationToken">Token checked before consumption.</param>
+    /// <returns>One when a reminder was removed; otherwise zero.</returns>
     public ValueTask<int> ConsumeItemAsync(
         NeuBellRequestContext context,
         string itemId,
@@ -184,6 +215,12 @@ public sealed class NeuBellTestProvider : INeuBellProvider, INeuBellConsumablePr
         NeuBellRequestContext context,
         CancellationToken cancellationToken) => ValueTask.FromResult(ConsumeAll());
 
+    /// <summary>
+    /// Captures the current pending reminder queue as a NeuBell provider snapshot.
+    /// </summary>
+    /// <param name="context">The NeuBell request context.</param>
+    /// <param name="cancellationToken">Token checked before snapshot creation.</param>
+    /// <returns>The provider snapshot and current pending items.</returns>
     public ValueTask<NeuBellSnapshot> GetSnapshotAsync(
         NeuBellRequestContext context,
         CancellationToken cancellationToken = default)

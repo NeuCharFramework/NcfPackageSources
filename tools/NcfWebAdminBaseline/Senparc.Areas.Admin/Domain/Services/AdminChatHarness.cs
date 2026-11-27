@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -37,6 +40,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AIKernel.Domain.Models.Usage;
+using Senparc.Ncf.XncfBase.ChatTools;
 
 namespace Senparc.Areas.Admin.Domain.Services
 {
@@ -286,6 +290,12 @@ namespace Senparc.Areas.Admin.Domain.Services
             return result;
         }
 
+        /// <summary>
+        /// Determines whether an event is the legacy standalone TextContent form
+        /// that should not be duplicated during replay normalization.
+        /// </summary>
+        /// <param name="item">The trajectory event.</param>
+        /// <returns><see langword="true"/> for recognized legacy text event types.</returns>
         private static bool IsLegacyTextContentEvent(AdminChatTrajectoryEventDto item)
         {
             return item != null
@@ -294,6 +304,12 @@ namespace Senparc.Areas.Admin.Domain.Services
                     || string.Equals(item.EventType, "text", StringComparison.OrdinalIgnoreCase));
         }
 
+        /// <summary>
+        /// Determines whether an event belongs to an assistant text/reasoning phase
+        /// that can be coalesced during replay.
+        /// </summary>
+        /// <param name="item">The trajectory event.</param>
+        /// <returns><see langword="true"/> for recognized phase event types.</returns>
         private static bool IsTextPhaseEvent(AdminChatTrajectoryEventDto item)
         {
             return item != null
@@ -302,6 +318,12 @@ namespace Senparc.Areas.Admin.Domain.Services
                     || string.Equals(item.EventType, "Microsoft.Extensions.AI.TextReasoningContent", StringComparison.OrdinalIgnoreCase));
         }
 
+        /// <summary>
+        /// Extracts text from event content or compatible legacy payload JSON.
+        /// Malformed payloads produce an empty string.
+        /// </summary>
+        /// <param name="item">The trajectory event.</param>
+        /// <returns>The extracted text.</returns>
         private static string GetText(AdminChatTrajectoryEventDto item)
         {
             if (!string.IsNullOrEmpty(item?.Content))
@@ -352,6 +374,8 @@ namespace Senparc.Areas.Admin.Domain.Services
         public string Text { get; set; }
         public AITokenUsageSnapshot Usage { get; set; }
         public AdminChatTrajectoryEventDto TrajectoryEvent { get; set; }
+        public ChatToolAsyncAction Action { get; set; }
+        public ChatToolAsyncActionState ActionState { get; set; }
         public IReadOnlyList<AdminChatApprovalRequestDto> PendingApprovals { get; set; } = Array.Empty<AdminChatApprovalRequestDto>();
     }
 

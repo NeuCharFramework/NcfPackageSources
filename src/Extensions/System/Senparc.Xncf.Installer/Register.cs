@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261111
     Change description: v0.5.14 unify XNCF Register display metadata and localization resource keys
 
+    Modified by: Senparc - 20261127
+    Change description: v0.6.0.1 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -53,7 +56,7 @@ namespace Senparc.Xncf.Installer
 
         public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_INSTALLER_UID;
 
-        public override string Version => "0.6.0";//the version number is required
+        public override string Version => "0.6.0.1";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -65,18 +68,21 @@ namespace Senparc.Xncf.Installer
 
         public Type TryGetXncfDatabaseDbContextType => throw new NotImplementedException();
 
-        public override Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
+    /// <inheritdoc/>
+    public override Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             return Task.CompletedTask;
         }
 
-        public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
+    /// <inheritdoc/>
+    public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             await unsinstallFunc().ConfigureAwait(false);
         }
         #endregion
 
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+    /// <inheritdoc/>
+    public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddScoped<InstallerService>();
             services.AddScoped<InstallAppService>();
@@ -84,7 +90,8 @@ namespace Senparc.Xncf.Installer
             return base.AddXncfModule(services, configuration, env);
         }
 
-        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+    /// <inheritdoc/>
+    public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             app.UseStaticFiles(new StaticFileOptions
             {

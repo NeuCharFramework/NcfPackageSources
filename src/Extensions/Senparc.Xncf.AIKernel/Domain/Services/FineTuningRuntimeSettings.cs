@@ -10,6 +10,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 #nullable enable
@@ -132,6 +135,10 @@ public sealed class FineTuningRuntimeSettings
             return StatusUnlocked();
     }
 
+    /// <summary>
+    /// Creates a runtime status snapshot while the caller holds the settings lock.
+    /// </summary>
+    /// <returns>The current fine-tuning runtime status.</returns>
     private FineTuningRuntimeStatus StatusUnlocked() => new()
     {
         Enabled = _options.Enabled,
@@ -142,12 +149,20 @@ public sealed class FineTuningRuntimeSettings
         DefaultDataRoot = FineTuningWorkerLaunch.DefaultDataRoot(_environment.ContentRootPath, "{alias}")
     };
 
+    /// <summary>
+    /// Loads current persisted runtime state or creates state from environment defaults.
+    /// </summary>
+    /// <returns>The current runtime state.</returns>
     private RuntimeState Current() => File.Exists(_path) ? Read() : new RuntimeState
     {
         Enabled = _environmentEnabled,
         AllowedHosts = []
     };
 
+    /// <summary>
+    /// Reads runtime settings from disk, falling back to environment defaults on read/JSON errors.
+    /// </summary>
+    /// <returns>The loaded or fallback runtime state.</returns>
     private RuntimeState Read()
     {
         try
@@ -163,6 +178,10 @@ public sealed class FineTuningRuntimeSettings
         }
     }
 
+    /// <summary>
+    /// Persists a normalized runtime state atomically.
+    /// </summary>
+    /// <param name="state">The state to persist.</param>
     private void Write(RuntimeState state)
     {
         Directory.CreateDirectory(Path.GetDirectoryName(_path)!);
@@ -181,6 +200,10 @@ public sealed class FineTuningRuntimeSettings
         File.Move(temporary, _path, overwrite: true);
     }
 
+    /// <summary>
+    /// Applies persisted enablement and allowlisted hosts to live options.
+    /// </summary>
+    /// <param name="state">The normalized runtime state.</param>
     private void Apply(RuntimeState state)
     {
         _options.Enabled = state.Enabled;

@@ -124,7 +124,7 @@ Object.entries(options.methods).forEach(([name, method]) => { app[name] = method
 Object.entries(options.computed).forEach(([name, getter]) => {
     Object.defineProperty(app, name, { get: getter.bind(app) });
 });
-app.$nextTick = callback => callback();
+app.$nextTick = callback => callback ? callback() : Promise.resolve();
 app.$refs = { workspaceContainer: { $el: container } };
 app.$notify = notification => { throw new Error(notification.message); };
 app.currentSessionId = 42;
@@ -257,6 +257,14 @@ async function run() {
     assert.ok(template.includes('beginWorkspacePreviewEdit'));
     assert.ok(template.includes('chat-workspace-text-editor'));
     assert.ok(styles.includes('.chat-workspace-text-editor'));
+    await app.openWorkspaceArtifact({
+        relativePath: 'output/readme.txt',
+        isWorkspaceArtifact: true,
+        changeType: 'modified'
+    });
+    assert.strictEqual(app.workspacePreviewOpen, true, 'Clicking a changed file must open the Workspace panel.');
+    assert.strictEqual(app.workspacePreviewFilePath, 'output/readme.txt',
+        'Clicking a changed file must navigate to and preview that file.');
     app.workspacePreviewSource = true;
     app.resetWorkspacePreview();
     assert.strictEqual(app.workspaceEntries.length, 0);

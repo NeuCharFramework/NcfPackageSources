@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.AI;
@@ -36,6 +39,13 @@ internal sealed class AgentTemplateWorkflowAIFunction : AIFunction
     private readonly WorkflowFunctionCallingDescriptor _workflow;
     private readonly JsonElement _jsonSchema;
 
+    /// <summary>
+    /// Initializes an AI function wrapper for one owner-scoped workflow.
+    /// </summary>
+    /// <param name="provider">The provider used to execute the workflow.</param>
+    /// <param name="adminUserId">The administrator owner identifier.</param>
+    /// <param name="workflow">The callable workflow descriptor.</param>
+    /// <exception cref="ArgumentNullException">Thrown when the provider or workflow descriptor is null.</exception>
     public AgentTemplateWorkflowAIFunction(
         IWorkflowFunctionCallingProvider provider,
         int adminUserId,
@@ -66,6 +76,11 @@ internal sealed class AgentTemplateWorkflowAIFunction : AIFunction
     public override JsonElement? ReturnJsonSchema =>
         JsonDocument.Parse("{\"type\":\"string\"}").RootElement.Clone();
 
+    /// <inheritdoc/>
+    /// <remarks>
+    /// Converts the required input and optional named arguments into a workflow invocation;
+    /// empty input is rejected before execution.
+    /// </remarks>
     protected override async ValueTask<object?> InvokeCoreAsync(
         AIFunctionArguments arguments,
         CancellationToken cancellationToken)
@@ -100,6 +115,12 @@ internal sealed class AgentTemplateWorkflowAIFunction : AIFunction
                     "Unknown error"));
     }
 
+    /// <summary>
+    /// Builds the JSON Schema exposed to the model for workflow invocation arguments.
+    /// The primary input is required and descriptor parameters are optional string properties.
+    /// </summary>
+    /// <param name="workflow">The callable workflow descriptor.</param>
+    /// <returns>A cloned JSON Schema element.</returns>
     private static JsonElement BuildJsonSchema(WorkflowFunctionCallingDescriptor workflow)
     {
         var properties = new Dictionary<string, object?>
@@ -148,6 +169,12 @@ internal sealed class AgentTemplateWorkflowAIFunction : AIFunction
         return document.RootElement.Clone();
     }
 
+    /// <summary>
+    /// Converts supported AI-function argument values to invariant text.
+    /// JSON elements retain their raw JSON representation except for string values.
+    /// </summary>
+    /// <param name="value">The argument value to convert.</param>
+    /// <returns>The invariant string representation.</returns>
     private static string ConvertToString(object value)
         => value switch
         {

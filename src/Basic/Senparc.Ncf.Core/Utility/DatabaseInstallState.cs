@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -76,8 +79,8 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Determines whether a database exception indicates that the database or schema
+        /// is not available yet for installation.
         /// </summary>
         public static bool IsSchemaUpgradeRequired(Exception exception)
         {

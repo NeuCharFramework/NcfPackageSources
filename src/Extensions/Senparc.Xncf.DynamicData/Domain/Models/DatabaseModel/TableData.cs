@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.7.12 Localized DynamicData configuration and layout surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.7.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -23,27 +26,27 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.DynamicData
 {
     /// <summary>  
-    ///Legacy comment translated to English.
+    /// Stores one cell value associated with a DynamicData table and column.
     /// </summary>  
     [Table(Register.DATABASE_PREFIX + nameof(TableData))]
     [Serializable]
     public class TableData : EntityBase<int>
     {
         /// <summary>  
-        ///Legacy comment translated to English.
+        /// Gets the parent table identifier.
         /// </summary>  
         //[ForeignKey(nameof(TableMetadata))]
         //public int TableMetadataId { get; set; }
         public int TableId { get; private set; }
 
         /// <summary>  
-        ///Legacy comment translated to English.
+        /// Gets the column metadata identifier.
         /// </summary>  
         //[ForeignKey(nameof(ColumnMetadata))]
         public int ColumnMetadataId { get; private set; }
 
         /// <summary>  
-        ///Legacy comment translated to English.
+        /// Gets the serialized cell value.
         /// </summary>  
         public string CellValue { get; private set; }
 
@@ -55,12 +58,18 @@ namespace Senparc.Xncf.DynamicData
         //public TableMetadata TableMetadata { get; set; }
 
         /// <summary>  
-        ///Legacy comment translated to English.
+        /// Gets or sets the associated column metadata.
         /// </summary>  
         //[InverseProperty(nameof(ColumnMetadata.TableDatas))]
         public ColumnMetadata ColumnMetadata { get; set; }
 
         private TableData() { }
+        /// <summary>
+        /// Initializes one table cell value.
+        /// </summary>
+        /// <param name="tableId">The parent table identifier.</param>
+        /// <param name="columnMetadataId">The column metadata identifier.</param>
+        /// <param name="cellValue">The serialized value stored in the cell.</param>
         public TableData(int tableId, int columnMetadataId, string cellValue)
         {
             TableId = tableId;

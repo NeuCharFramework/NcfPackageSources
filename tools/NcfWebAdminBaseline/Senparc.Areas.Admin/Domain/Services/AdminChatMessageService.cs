@@ -37,6 +37,9 @@
     Modified by: Senparc - 20261125
     Change description: v0.12.29 Improved AdminChat conversation loading and command parameter feedback.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 using Microsoft.EntityFrameworkCore;
 using Senparc.Areas.Admin.ACL;
@@ -145,6 +148,13 @@ namespace Senparc.Areas.Admin.Domain.Services
             return message;
         }
 
+        /// <summary>
+        /// Associates a message with an optional trajectory and sequence position.
+        /// </summary>
+        /// <param name="messageId">The message identifier.</param>
+        /// <param name="trajectoryId">The trajectory identifier, or <see langword="null"/> to clear it.</param>
+        /// <param name="trajectorySequence">The trajectory sequence, or <see langword="null"/> to clear it.</param>
+        /// <returns><see langword="true"/> when the message was found and updated.</returns>
         public async Task<bool> SetTrajectoryAsync(int messageId, int? trajectoryId, int? trajectorySequence)
         {
             var message = await base.GetObjectAsync(m => m.Id == messageId);
@@ -158,6 +168,15 @@ namespace Senparc.Areas.Admin.Domain.Services
             return true;
         }
 
+        /// <summary>
+        /// Scores a prompt reference with the next completed assistant response,
+        /// after verifying user ownership and reference membership.
+        /// </summary>
+        /// <param name="userId">The administrator requesting the score.</param>
+        /// <param name="messageId">The user message containing the reference.</param>
+        /// <param name="promptItemId">The referenced prompt-item identifier.</param>
+        /// <returns>The AI-generated prompt reference score.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when authorization, message, reference, reply, or PromptRange validation fails.</exception>
         public async Task<PromptReferenceInfo> ScorePromptReferenceWithAIAsync(int userId, int messageId, int promptItemId)
         {
             if (userId <= 0) throw new NcfExceptionBase("Sign in to score a prompt.");
@@ -179,6 +198,15 @@ namespace Senparc.Areas.Admin.Domain.Services
             return await provider.ScoreWithAIAsync(promptItemId, message.Content, result.Content);
         }
 
+        /// <summary>
+        /// Replaces overlapping prompt references on an owner-scoped user message,
+        /// validates the resulting ranges, and persists the updated reference list.
+        /// </summary>
+        /// <param name="userId">The administrator requesting the update.</param>
+        /// <param name="messageId">The user message identifier.</param>
+        /// <param name="reference">The reference to add.</param>
+        /// <returns>The updated message DTO.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when access or PromptRange validation fails.</exception>
         public async Task<AdminChatMessageDto> AttachPromptReferenceAsync(
             int userId, int messageId, PromptReference reference)
         {
@@ -203,6 +231,13 @@ namespace Senparc.Areas.Admin.Domain.Services
             return AdminChatMessageDto.CreateFromEntity(message);
         }
 
+        /// <summary>
+        /// Converts workspace-change and agent-task trajectory events into bounded
+        /// attachment metadata for the completed chat response.
+        /// </summary>
+        /// <param name="sessionId">The chat session whose workspace was used.</param>
+        /// <param name="harness">The harness result containing trajectory events.</param>
+        /// <returns>Distinct task/action and workspace artifact attachments.</returns>
         public async Task<IReadOnlyList<AdminChatAttachment>> CollectWorkspaceArtifactsAsync(
             int sessionId, AdminChatHarnessResult harness)
         {
@@ -211,8 +246,6 @@ namespace Senparc.Areas.Admin.Domain.Services
             var session = await _serviceProvider.GetRequiredService<AdminChatSessionService>()
                 .GetObjectAsync(item => item.Id == sessionId);
             var storage = _serviceProvider.GetService<IWorkspaceStorage>();
-            if (session == null || storage == null || string.IsNullOrWhiteSpace(session.WorkspaceId))
-                return Array.Empty<AdminChatAttachment>();
             var changes = new Dictionary<string, string>(StringComparer.Ordinal);
             var actions = new List<AdminChatAttachment>();
             foreach (var trajectoryEvent in harness.TrajectoryEvents)
@@ -231,40 +264,31 @@ namespace Senparc.Areas.Admin.Domain.Services
                         SenparcTrace.SendCustomLog("AdminChat.ActionArtifact",
                             $"Ignored invalid action payload: {error.Message}");
                     }
-                    continue;
                 }
-                if (!string.Equals(trajectoryEvent.EventType, "workspace.change", StringComparison.OrdinalIgnoreCase))
+                if (!string.Equals(trajectoryEvent.EventType, "tool.result", StringComparison.OrdinalIgnoreCase)
+                    && !string.Equals(trajectoryEvent.EventType, "workspace.change", StringComparison.OrdinalIgnoreCase))
                     continue;
+
                 try
                 {
-                    using var document = JsonDocument.Parse(trajectoryEvent.PayloadJson);
-                    var change = document.RootElement.GetProperty("change");
-                    var changeType = change.GetProperty("changeType").GetString();
-                    var path = change.GetProperty("path").GetString();
-                    if (string.IsNullOrWhiteSpace(path))
-                        continue;
-                    changes[path] = string.IsNullOrWhiteSpace(changeType) ? "changed" : changeType;
-                    if (change.TryGetProperty("previousRelativePath", out var previousPathElement))
+                    if (TryReadWorkspaceChange(trajectoryEvent.PayloadJson, out var change))
                     {
-                        var previousPath = previousPathElement.GetString();
-                        if (!string.IsNullOrWhiteSpace(previousPath)
-                            && !string.Equals(previousPath, path, StringComparison.Ordinal))
-                        {
-                            changes[previousPath] = "deleted";
-                        }
+                        AddWorkspaceChange(changes, change);
                     }
                 }
-                catch (Exception error) when (error is JsonException or InvalidOperationException)
+                catch (JsonException error)
                 {
                     SenparcTrace.SendCustomLog("AdminChat.WorkspaceArtifact",
                         $"Ignored invalid trajectory payload: {error.Message}");
                 }
             }
             var result = actions
-                .GroupBy(action => action.ActionTargetId)
+                .GroupBy(action => $"{action.ActionType}:{action.ActionTarget}")
                 .Select(group => group.First())
                 .Take(20)
                 .ToList();
+            if (session == null || storage == null || string.IsNullOrWhiteSpace(session.WorkspaceId))
+                return result;
             foreach (var (path, changeType) in changes.Take(80))
             {
                 try
@@ -312,6 +336,108 @@ namespace Senparc.Areas.Admin.Domain.Services
             return result;
         }
 
+        private sealed record WorkspaceArtifactChange(
+            string Path,
+            string ChangeType,
+            string PreviousRelativePath);
+
+        private static void AddWorkspaceChange(
+            IDictionary<string, string> changes,
+            WorkspaceArtifactChange change)
+        {
+            if (change == null || string.IsNullOrWhiteSpace(change.Path))
+                return;
+
+            changes[change.Path] = NormalizeWorkspaceChangeType(change.ChangeType);
+            if (!string.IsNullOrWhiteSpace(change.PreviousRelativePath)
+                && !string.Equals(change.PreviousRelativePath, change.Path, StringComparison.Ordinal))
+            {
+                changes[change.PreviousRelativePath] = "deleted";
+            }
+        }
+
+        private static string NormalizeWorkspaceChangeType(string changeType) =>
+            changeType?.Trim().ToLowerInvariant() switch
+            {
+                "added" or "created" => "created",
+                "deleted" or "removed" => "deleted",
+                "modified" or "updated" or "changed" => "changed",
+                _ => "changed"
+            };
+
+        private static bool TryReadWorkspaceChange(
+            string payloadJson,
+            out WorkspaceArtifactChange change)
+        {
+            change = null;
+            using var document = JsonDocument.Parse(payloadJson);
+            return TryReadWorkspaceChange(document.RootElement, out change);
+        }
+
+        private static bool TryReadWorkspaceChange(
+            JsonElement element,
+            out WorkspaceArtifactChange change)
+        {
+            change = null;
+            if (element.ValueKind == JsonValueKind.String)
+            {
+                var nestedJson = element.GetString();
+                if (string.IsNullOrWhiteSpace(nestedJson))
+                    return false;
+
+                using var nested = JsonDocument.Parse(nestedJson);
+                return TryReadWorkspaceChange(nested.RootElement, out change);
+            }
+
+            if (element.ValueKind != JsonValueKind.Object)
+                return false;
+
+            if (TryGetPropertyIgnoreCase(element, "change", out var changeElement)
+                && changeElement.ValueKind == JsonValueKind.Object)
+            {
+                var path = GetStringProperty(changeElement, "path");
+                if (string.IsNullOrWhiteSpace(path))
+                    return false;
+
+                change = new WorkspaceArtifactChange(
+                    path,
+                    GetStringProperty(changeElement, "changeType"),
+                    GetStringProperty(changeElement, "previousRelativePath"));
+                return true;
+            }
+
+            return TryGetPropertyIgnoreCase(element, "result", out var resultElement)
+                && TryReadWorkspaceChange(resultElement, out change);
+        }
+
+        private static bool TryGetPropertyIgnoreCase(
+            JsonElement element,
+            string name,
+            out JsonElement value)
+        {
+            foreach (var property in element.EnumerateObject())
+            {
+                if (string.Equals(property.Name, name, StringComparison.OrdinalIgnoreCase))
+                {
+                    value = property.Value;
+                    return true;
+                }
+            }
+
+            value = default;
+            return false;
+        }
+
+        private static string GetStringProperty(JsonElement element, string name) =>
+            TryGetPropertyIgnoreCase(element, name, out var value)
+                ? value.ValueKind == JsonValueKind.String ? value.GetString() : value.ToString()
+                : null;
+
+        /// <summary>
+        /// Recursively extracts agent-task action descriptors from arbitrary JSON payloads.
+        /// </summary>
+        /// <param name="element">The JSON element to inspect.</param>
+        /// <param name="actions">The output action attachment list.</param>
         private static void CollectChatTaskActions(
             JsonElement element,
             List<AdminChatAttachment> actions)
@@ -356,22 +482,48 @@ namespace Senparc.Areas.Admin.Domain.Services
                     break;
                 case JsonValueKind.Object:
                     if (element.TryGetProperty("task", out var task)
-                        && task.ValueKind == JsonValueKind.Object
-                        && TryGetInt32(task, "ChatTaskId", out var taskId)
-                        && taskId > 0)
+                        && task.ValueKind == JsonValueKind.Object)
                     {
-                        var groupName = TryGetString(task, "ChatGroupName");
-                        actions.Add(new AdminChatAttachment
+                        var actionType = TryGetString(element, "type");
+                        if (string.Equals(actionType, "agents-task", StringComparison.OrdinalIgnoreCase)
+                            && TryGetInt32(task, "ChatTaskId", out var taskId)
+                            && taskId > 0)
                         {
-                            Name = string.IsNullOrWhiteSpace(groupName)
-                                ? $"ChatTask #{taskId}"
-                                : groupName,
-                            ActionType = "agents-task",
-                            ActionTargetId = taskId,
-                            PreviewKind = "action",
-                            Notice = "Open the Agent task session",
-                            CreatedAt = DateTimeOffset.UtcNow
-                        });
+                            var groupName = TryGetString(task, "ChatGroupName");
+                            actions.Add(new AdminChatAttachment
+                            {
+                                Name = string.IsNullOrWhiteSpace(groupName)
+                                    ? $"ChatTask #{taskId}"
+                                    : groupName,
+                                ActionType = "agents-task",
+                                ActionTargetId = taskId,
+                                ActionTarget = taskId.ToString(),
+                                PreviewKind = "action",
+                                Notice = "Open the Agent task session",
+                                CreatedAt = DateTimeOffset.UtcNow
+                            });
+                        }
+                        else if (string.Equals(actionType, "workflow-run", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var runId = TryGetString(task, "RunId");
+                            var workflowId = TryGetInt32(task, "WorkflowId", out var ownerId) ? ownerId : 0;
+                            if (!string.IsNullOrWhiteSpace(runId))
+                            {
+                                var workflowName = TryGetString(task, "WorkflowName");
+                                actions.Add(new AdminChatAttachment
+                                {
+                                    Name = string.IsNullOrWhiteSpace(workflowName)
+                                        ? $"Workflow #{workflowId}"
+                                        : workflowName,
+                                    ActionType = "workflow-run",
+                                    ActionOwnerId = workflowId,
+                                    ActionTarget = runId,
+                                    PreviewKind = "action",
+                                    Notice = "Open the Workflow run session",
+                                    CreatedAt = DateTimeOffset.UtcNow
+                                });
+                            }
+                        }
                     }
                     foreach (var property in element.EnumerateObject())
                     {
@@ -384,6 +536,13 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
         }
 
+        /// <summary>
+        /// Reads an integer property from an object using case-insensitive property matching.
+        /// </summary>
+        /// <param name="element">The JSON object to inspect.</param>
+        /// <param name="name">The property name.</param>
+        /// <param name="value">Receives the parsed integer.</param>
+        /// <returns><see langword="true"/> when the property exists and is an integer.</returns>
         private static bool TryGetInt32(JsonElement element, string name, out int value)
         {
             value = 0;
@@ -396,6 +555,12 @@ namespace Senparc.Areas.Admin.Domain.Services
             return false;
         }
 
+        /// <summary>
+        /// Reads a string-like property from an object using case-insensitive matching.
+        /// </summary>
+        /// <param name="element">The JSON object to inspect.</param>
+        /// <param name="name">The property name.</param>
+        /// <returns>The string value, serialized value, or <see langword="null"/>.</returns>
         private static string TryGetString(JsonElement element, string name)
         {
             foreach (var property in element.EnumerateObject())
@@ -413,6 +578,12 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Sets feedback on a message without applying an owner check.
+        /// </summary>
+        /// <param name="messageId">The message identifier.</param>
+        /// <param name="feedback">The feedback value.</param>
+        /// <returns><see langword="true"/> when the message was found and updated.</returns>
         public async Task<bool> SetMessageFeedbackAsync(int messageId, MessageFeedbackType feedback)
         {
             var message = await base.GetObjectAsync(m => m.Id == messageId);
@@ -426,6 +597,12 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Replaces the persisted message content.
+        /// </summary>
+        /// <param name="messageId">The message identifier.</param>
+        /// <param name="newContent">The replacement content.</param>
+        /// <returns><see langword="true"/> when the message was found and updated.</returns>
         public async Task<bool> UpdateMessageContentAsync(int messageId, string newContent)
         {
             var message = await base.GetObjectAsync(m => m.Id == messageId);
@@ -439,6 +616,11 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Deletes every message associated with a chat session.
+        /// </summary>
+        /// <param name="sessionId">The chat session identifier.</param>
+        /// <returns>The number of messages deleted.</returns>
         public async Task<int> DeleteSessionMessagesAsync(int sessionId)
         {
             var messages = await base.GetFullListAsync(m => m.SessionId == sessionId);
@@ -454,6 +636,12 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Deletes the distinct message identifiers that belong to a session.
+        /// </summary>
+        /// <param name="sessionId">The chat session identifier.</param>
+        /// <param name="messageIds">The candidate message identifiers.</param>
+        /// <returns>The number of existing messages deleted.</returns>
         public async Task<int> DeleteMessagesAsync(int sessionId, IEnumerable<int> messageIds)
         {
             var ids = (messageIds ?? Enumerable.Empty<int>()).Distinct().ToList();
@@ -477,6 +665,11 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Returns the highest-sequence message in a session.
+        /// </summary>
+        /// <param name="sessionId">The chat session identifier.</param>
+        /// <returns>The last message, or <see langword="null"/> when no messages exist.</returns>
         public async Task<AdminChatMessage> GetLastMessageAsync(int sessionId)
         {
             var messages = await base.GetFullListAsync(m => m.SessionId == sessionId, "Sequence DESC");
@@ -486,6 +679,11 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Counts messages belonging to a session.
+        /// </summary>
+        /// <param name="sessionId">The chat session identifier.</param>
+        /// <returns>The number of persisted messages.</returns>
         public async Task<int> GetMessageCountAsync(int sessionId)
         {
             var messages = await base.GetFullListAsync(m => m.SessionId == sessionId);
@@ -496,6 +694,12 @@ namespace Senparc.Areas.Admin.Domain.Services
         ///Legacy comment translated to English.
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Loads a message only when its session belongs to the requested administrator.
+        /// </summary>
+        /// <param name="messageId">The message identifier.</param>
+        /// <param name="userId">The owning administrator identifier.</param>
+        /// <returns>The owned message, or <see langword="null"/> when inaccessible.</returns>
         public async Task<AdminChatMessage> GetOwnedMessageAsync(int messageId, int userId)
         {
             if (messageId <= 0 || userId <= 0)
@@ -509,6 +713,13 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Sets feedback on a message after verifying that its session belongs to the user.
+        /// </summary>
+        /// <param name="messageId">The message identifier.</param>
+        /// <param name="userId">The owning administrator identifier.</param>
+        /// <param name="feedback">The feedback value.</param>
+        /// <returns><see langword="true"/> when the owned message was updated.</returns>
         public async Task<bool> SetMessageFeedbackAsync(int messageId, int userId, MessageFeedbackType feedback)
         {
             var message = await GetOwnedMessageAsync(messageId, userId);
@@ -522,6 +733,14 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Searches messages across the administrator's active sessions using the
+        /// shared history search and bounded result limit.
+        /// </summary>
+        /// <param name="userId">The administrator identifier.</param>
+        /// <param name="keyword">The search keyword.</param>
+        /// <param name="limit">The maximum result count.</param>
+        /// <returns>Matching history hits.</returns>
         public async Task<IReadOnlyList<AdminChatHistorySearchHit>> SearchActiveHistoryAsync(
             int userId,
             string keyword,
@@ -553,6 +772,14 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Searches tool-call trajectory events belonging to the administrator's
+        /// active sessions and returns bounded history hits.
+        /// </summary>
+        /// <param name="userId">The administrator identifier.</param>
+        /// <param name="keyword">The search keyword.</param>
+        /// <param name="limit">The maximum result count.</param>
+        /// <returns>Matching tool-call history hits.</returns>
         public async Task<IReadOnlyList<AdminChatHistorySearchHit>> SearchActiveToolCallsAsync(
             int userId,
             string keyword,

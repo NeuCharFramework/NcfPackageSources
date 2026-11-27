@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +49,11 @@ namespace Senparc.Xncf.KnowledgeBase
         /// </summary>
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
+        /// <summary>
+        /// Applies KnowledgeBase entity mappings to the module database model.
+        /// Automatic mapping discovery supplies the current mappings.
+        /// </summary>
+        /// <param name="modelBuilder">The Entity Framework Core model builder.</param>
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
             //Legacy comment translated to English.
@@ -53,6 +61,11 @@ namespace Senparc.Xncf.KnowledgeBase
             modelBuilder.ApplyConfiguration(new Admin_KnowledgeBaseItemConfigurationMapping());
         }
 
+        /// <summary>
+        /// Registers KnowledgeBase database services.
+        /// The module currently relies on shared database registrations and automatic entity discovery.
+        /// </summary>
+        /// <param name="services">The application dependency-injection service collection.</param>
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
             //DOT REMOVE OR MODIFY THIS LINE - Entities Point

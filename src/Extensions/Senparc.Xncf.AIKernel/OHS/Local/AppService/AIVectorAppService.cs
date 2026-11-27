@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;
@@ -57,6 +60,11 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         private readonly AIVectorService _aIVectorService;
 
 
+        /// <summary>
+        /// Initializes AI vector administration operations.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
+        /// <param name="aIVectorService">The vector persistence service.</param>
         public AIVectorAppService(
             IServiceProvider serviceProvider,
             AIVectorService aIVectorService) : base(serviceProvider)
@@ -64,6 +72,11 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
             _aIVectorService = aIVectorService;
         }
 
+        /// <summary>
+        /// Builds the vector list predicate; the current implementation returns an unrestricted predicate.
+        /// </summary>
+        /// <param name="request">The vector filter request.</param>
+        /// <returns>An EF-translatable vector predicate.</returns>
         protected virtual Expression<Func<AIVector, bool>> GetListWhere(AIVector_GetListRequest request)
         {
             SenparcExpressionHelper<AIVector> helper = new();
@@ -78,10 +91,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// AIVector
+        /// Loads one vector database configuration.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The vector configuration identifier.</param>
+        /// <returns>A response containing the vector DTO, or an empty mapping when absent.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<AIVectorDto>> GetAsync(int id)
         {
@@ -93,10 +106,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns a paged vector database list using the request filter and ordering.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">The paging, filtering, and ordering request.</param>
+        /// <returns>A response containing vector DTOs and total count.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PagedResponse<AIVectorDto>>> GetPagedListAsync(AIVector_GetListRequest request)
         {
@@ -118,9 +131,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Returns a paged vector database selection list for model/configuration pickers.
         /// </summary>
+        /// <param name="request">The paging, filtering, and ordering request.</param>
+        /// <returns>A response containing selection DTOs and total count.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PagedResponse<AIVectorSelectionResponse>>> GetSelectionListAsync(AIVector_GetListRequest request)
         {
@@ -140,10 +154,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns all vector database configurations matching the supplied filter.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">The filter and ordering request.</param>
+        /// <returns>A response containing vector DTOs.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<List<AIVectorDto>>> GetListAsync(AIVector_GetListRequest request)
         {
@@ -161,10 +175,11 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates and persists a vector database configuration.
         /// </summary>
-        /// <param name="createRequest"></param>
-        /// <returns></returns>
+        /// <param name="createRequest">The vector provider, connection, alias, and metadata.</param>
+        /// <returns>A response containing the created vector DTO.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the vector configuration is invalid.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<AIVectorDto>> CreateAsync(AIVector_CreateOrEditRequest createRequest)
         {
@@ -178,10 +193,12 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
                     // );
                     // if (count > 0)
                     // {
-                    //Legacy comment translated to English.
+                    // The duplicate-deployment validation remains disabled until the
+                    // provider-specific uniqueness rule is defined.
                     //     //response.Success = false;
                     //     //return null;
-                    //Legacy comment translated to English.
+                    // Keep the historical validation block available for a future
+                    // provider-aware uniqueness check without changing this endpoint's behavior.
                     // }
                     //
                     // #endregion
@@ -191,11 +208,11 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Updates an existing vector database configuration.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">The vector identifier and replacement values.</param>
+        /// <returns>A response containing the updated vector DTO.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the vector does not exist or is invalid.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<AIVectorDto>> EditAsync(AIVector_CreateOrEditRequest request)
         {
@@ -208,10 +225,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// deleteAIModel
+        /// Deletes one vector database configuration.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The vector configuration identifier.</param>
+        /// <returns>A response indicating whether deletion completed.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Delete)]
         public async Task<AppResponseBase<bool>> DeleteAsync(int id)
         {

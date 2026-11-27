@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using A2A;
@@ -32,8 +35,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Executes published Agent templates through the A2A response boundary.
     /// </summary>
     public class PublishedA2AAgentFactory
     {
@@ -42,6 +44,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         private readonly AgentTemplateRunner _agentTemplateRunner;
         private readonly ILogger<PublishedA2AAgentFactory> _logger;
 
+        /// <summary>Initializes the published A2A factory.</summary>
+        /// <param name="publishedA2AAgentService">The published-agent persistence service.</param>
+        /// <param name="agentsTemplateService">The Agent-template service.</param>
+        /// <param name="agentTemplateRunner">The template execution service.</param>
+        /// <param name="logger">The factory logger.</param>
         public PublishedA2AAgentFactory(
             PublishedA2AAgentService publishedA2AAgentService,
             AgentsTemplateService agentsTemplateService,
@@ -54,6 +61,12 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             _logger = logger;
         }
 
+        /// <summary>Runs a published Agent with user text and returns its displayable output.</summary>
+        /// <param name="publicAgentKey">The public publication key.</param>
+        /// <param name="userText">The user input sent to the Agent.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The Agent's displayable output.</returns>
+        /// <exception cref="A2AException">Thrown when publication, input, provider, or output validation fails.</exception>
         public async Task<string> RunAsync(string publicAgentKey, string userText, CancellationToken cancellationToken = default)
         {
             var (publishedAgent, template) = await GetActiveAgentAsync(publicAgentKey);
@@ -135,6 +148,12 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             return output;
         }
 
+        /// <summary>
+        /// Builds a user-facing model-configuration failure message with its diagnostic identifier.
+        /// </summary>
+        /// <param name="providerMessage">The sanitized provider message.</param>
+        /// <param name="diagnosticId">The diagnostic identifier.</param>
+        /// <returns>The localized configuration failure message.</returns>
         private static string BuildProviderConfigurationFailureMessage(string providerMessage, string diagnosticId)
         {
             return $"远程 A2A Agent 的模型配置当前不可用：{providerMessage} DiagnosticId: {diagnosticId}。";
@@ -153,6 +172,13 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             return (publishedAgent, template);
         }
 
+        /// <summary>
+        /// Builds the public A2A Agent Card from publication settings and the local Agent template.
+        /// </summary>
+        /// <param name="publishedAgent">The publication configuration.</param>
+        /// <param name="template">The local Agent template.</param>
+        /// <param name="endpointUrl">The externally reachable JSON-RPC endpoint.</param>
+        /// <returns>The populated Agent Card.</returns>
         public AgentCard BuildAgentCard(PublishedA2AAgent publishedAgent, AgentTemplate template, string endpointUrl)
         {
             var cardName = string.IsNullOrWhiteSpace(publishedAgent.CardName) ? template.Name : publishedAgent.CardName;
@@ -199,6 +225,12 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             };
         }
 
+        /// <summary>
+        /// Logs the effective execution profile and model diagnostics without credential content.
+        /// </summary>
+        /// <param name="diagnosticId">The run diagnostic identifier.</param>
+        /// <param name="publishedAgent">The published Agent configuration.</param>
+        /// <param name="diagnostics">The effective execution diagnostics.</param>
         private void LogExecutionModel(
             string diagnosticId,
             PublishedA2AAgent publishedAgent,
@@ -227,6 +259,12 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 $"functionCalls={diagnostics.FunctionCallsEnabled}; toolCount={diagnostics.ToolCount}");
         }
 
+        /// <summary>
+        /// Logs a bounded summary for a failed published-A2A execution.
+        /// </summary>
+        /// <param name="diagnosticId">The run diagnostic identifier.</param>
+        /// <param name="publishedAgent">The published Agent configuration.</param>
+        /// <param name="exception">The execution exception.</param>
         private void LogExecutionFailure(string diagnosticId, PublishedA2AAgent publishedAgent, Exception exception)
         {
             var summary = SummarizeFailure($"{exception.GetType().Name}: {exception.Message}");
@@ -242,6 +280,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 $"ExceptionType={exception.GetType().FullName}; Failure={summary}");
         }
 
+        /// <summary>
+        /// Determines whether provider text contains a recognized 401/403 service failure signature.
+        /// </summary>
+        /// <param name="text">The provider or exception text.</param>
+        /// <returns><see langword="true"/> when the text matches a supported service-failure pattern.</returns>
         private static bool ContainsServiceFailureSignature(string? text)
         {
             if (string.IsNullOrWhiteSpace(text))
@@ -264,6 +307,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             return hasServiceFailed && (has403 || has401);
         }
 
+        /// <summary>
+        /// Normalizes and bounds a failure string for diagnostics.
+        /// </summary>
+        /// <param name="text">The failure text.</param>
+        /// <returns>The single-line maximum-length summary.</returns>
         private static string SummarizeFailure(string text)
         {
             var normalized = text.Replace('\r', ' ').Replace('\n', ' ').Trim();

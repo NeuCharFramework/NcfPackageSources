@@ -2235,12 +2235,20 @@ var chatApp = new Vue({
 
     messageRegularAttachments(message) {
       return ((message && message.attachments) || [])
-        .filter(attachment => !attachment.actionType && !attachment.isWorkspaceArtifact);
+        .filter(attachment => !attachment.actionType && !this.isWorkspaceArtifact(attachment));
     },
 
     messageWorkspaceArtifacts(message) {
       return ((message && message.attachments) || [])
-        .filter(attachment => attachment.isWorkspaceArtifact);
+        .filter(attachment => this.isWorkspaceArtifact(attachment));
+    },
+
+    isWorkspaceArtifact(attachment) {
+      return !!attachment
+        && !attachment.actionType
+        && !!attachment.relativePath
+        && (attachment.isWorkspaceArtifact === true
+          || !!attachment.changeType);
     },
 
     workspaceArtifactsExpanded(message) {
@@ -2257,7 +2265,7 @@ var chatApp = new Vue({
     workspaceArtifactStats(message) {
       const artifacts = this.messageWorkspaceArtifacts(message);
       return artifacts.reduce((stats, artifact) => {
-        const type = String(artifact.changeType || 'changed').toLowerCase();
+        const type = this.workspaceArtifactChangeType(artifact.changeType);
         if (type === 'created') stats.created += 1;
         else if (type === 'deleted') stats.deleted += 1;
         else stats.changed += 1;
@@ -2266,39 +2274,71 @@ var chatApp = new Vue({
       }, { total: 0, created: 0, changed: 0, deleted: 0 });
     },
 
+    workspaceArtifactChangeType(changeType) {
+      const type = String(changeType || 'changed').toLowerCase();
+      if (type === 'added' || type === 'created') return 'created';
+      if (type === 'deleted' || type === 'removed') return 'deleted';
+      return 'changed';
+    },
+
     workspaceArtifactChangeLabel(changeType) {
-      const key = String(changeType || '').toLowerCase() === 'created'
+      const key = this.workspaceArtifactChangeType(changeType) === 'created'
         ? 'AdminChat.WorkspaceArtifact.Created'
-        : String(changeType || '').toLowerCase() === 'deleted'
+        : this.workspaceArtifactChangeType(changeType) === 'deleted'
           ? 'AdminChat.WorkspaceArtifact.Deleted'
           : 'AdminChat.WorkspaceArtifact.Changed';
       return ncfT(key);
     },
 
     openMessageAttachmentAction(attachment) {
-      if (!attachment || attachment.actionType !== 'agents-task' || !attachment.actionTargetId) return;
+      if (!attachment || !this.isMessageAsyncAction(attachment)) return;
       const url = this.agentTaskUrl(attachment, false);
-      const title = `${attachment.name || 'Agent Task'} #${attachment.actionTargetId}`;
+      const target = attachment.actionTarget || attachment.actionTargetId;
+      const title = `${attachment.name || this.messageActionTypeLabel(attachment)} #${target}`;
       const opener = window.parent && window.parent !== window ? window.parent : window;
       if (typeof opener.ncfOpenAdminPage === 'function' && opener.ncfOpenAdminPage(url, title)) return;
-      window.open(url, `ncf-agent-task-${attachment.actionTargetId}`, 'noopener');
+      window.open(url, `ncf-${attachment.actionType}-${target}`, 'noopener');
     },
 
     agentTaskUrl(attachment, embedded) {
-      if (!attachment || !attachment.actionTargetId) return '';
-      const query = embedded ? '?embedded=1&ncfTab=1' : '';
-      return `/Admin/AgentsManager/Index${query}#tab=third&taskId=${encodeURIComponent(attachment.actionTargetId)}`;
+      if (!this.isMessageAsyncAction(attachment)) return '';
+      if (attachment.actionType === 'workflow-run') {
+        const query = new URLSearchParams();
+        if (attachment.actionOwnerId) query.set('workflowId', String(attachment.actionOwnerId));
+        if (attachment.actionTarget) query.set('runId', attachment.actionTarget);
+        if (embedded) {
+          query.set('embedded', '1');
+          query.set('ncfTab', '1');
+          query.set('preview', '1');
+        }
+        return `/Admin/NeuCharWorkflow/Index?${query.toString()}`;
+      }
+      const target = attachment.actionTarget || attachment.actionTargetId;
+      const query = embedded ? '?embedded=1&ncfTab=1&preview=1' : '';
+      return `/Admin/AgentsManager/Index${query}#tab=third&taskId=${encodeURIComponent(target)}`;
     },
 
     openAgentTaskPreview(attachment) {
-      if (!attachment || attachment.actionType !== 'agents-task' || !attachment.actionTargetId) return;
+      if (!this.isMessageAsyncAction(attachment)) return;
       this.agentTaskPreviewAction = attachment;
       this.agentTaskPreviewVisible = true;
     },
 
+    isMessageAsyncAction(attachment) {
+      return !!attachment
+        && (attachment.actionType === 'agents-task' || attachment.actionType === 'workflow-run')
+        && !!(attachment.actionTarget || attachment.actionTargetId);
+    },
+
+    messageActionTypeLabel(attachment) {
+      return ncfT(attachment && attachment.actionType === 'workflow-run'
+        ? 'AdminChat.Action.WorkflowRun'
+        : 'AdminChat.Action.AgentTask');
+    },
+
     async openWorkspaceArtifact(attachment) {
       if (!attachment || !attachment.relativePath) return;
-      if (attachment.changeType === 'deleted') return;
+      if (this.workspaceArtifactChangeType(attachment.changeType) === 'deleted') return;
       this.workspacePreviewOpen = true;
       await this.$nextTick();
       const path = this.normalizeWorkspacePath(attachment.relativePath);
@@ -4291,6 +4331,35 @@ var chatApp = new Vue({
         return;
       }
 
+      if (eventName === 'async-action') {
+        const action = payload && payload.action;
+        const state = payload && payload.actionState;
+        if (action) {
+          const attachment = {
+            actionType: action.actionType,
+            actionTarget: action.target,
+            actionTargetId: action.actionType === 'agents-task' ? Number(action.target) || 0 : 0,
+            actionOwnerId: action.ownerId || 0,
+            name: action.name || this.messageActionTypeLabel({ actionType: action.actionType })
+          };
+          if (sessionId === this.currentSessionId && !state?.isTerminal) {
+            this.openAgentTaskPreview(attachment);
+          }
+          this.updateActiveTask({
+            preview: state && state.message
+              ? state.message
+              : this.messageActionTypeLabel(attachment),
+            status: state && state.status === 'waiting-human'
+              ? '等待人工交互'
+              : state && state.isTerminal ? '任务已结束' : '后台运行中'
+          }, sessionId);
+        }
+        write('liveStatusText', state && state.status === 'waiting-human'
+          ? '后台任务正在等待人工交互…'
+          : state && state.isTerminal ? '后台任务已结束，AI 正在整理结果…' : '后台任务运行中…');
+        return;
+      }
+
       if (eventName === 'trajectory-complete') {
         write('livePendingApprovals', payload && payload.pendingApprovals ? payload.pendingApprovals : []);
         write('liveStatusText', read('livePendingApprovals').length > 0 ? '等待你的确认…' : '任务已完成，正在保存…');
@@ -4303,6 +4372,10 @@ var chatApp = new Vue({
           payload.trajectoryEvents = read('liveTrajectoryEvents').slice();
           payload.pendingApprovals = read('livePendingApprovals').slice();
           messages.push(payload);
+          const action = this.messageActionAttachments(payload)[0];
+          if (action && Number(sessionId) === Number(this.currentSessionId)) {
+            this.openAgentTaskPreview(action);
+          }
         }
         this.finishActiveTask('已完成', sessionId);
         return;
@@ -4764,15 +4837,86 @@ var chatApp = new Vue({
       return this.currentSessionId === sessionId;
     },
 
+    inheritCurrentSessionSettings() {
+      if (!(Number(this.currentSessionId) > 0)) return;
+
+      this.launcherAiModelId = this.normalizeAiModelId(this.currentSessionAiModelId);
+      this.launcherChatMode = this.chatMode;
+      this.launcherMemoryMode = Number(this.memoryMode) === 2
+        ? 2
+        : Number(this.memoryMode) === 1 ? 1 : 0;
+      this.launcherUseMemory = this.launcherMemoryMode > 0;
+
+      const sessionModules = Array.isArray(this.currentSessionModules)
+        ? this.currentSessionModules : [];
+      const moduleUids = sessionModules
+        .map(module => module && (module.xncfModuleUid || module.uid))
+        .filter(uid => typeof uid === 'string' && uid.length > 0);
+      this.selectedModuleUids = moduleUids.slice();
+      this.selectedModules = moduleUids.map(uid => {
+        const available = (this.availableModules || []).find(item => item.uid === uid);
+        if (available) return available;
+
+        const source = sessionModules.find(module => (module.xncfModuleUid || module.uid) === uid) || {};
+        return {
+          uid,
+          name: source.menuName || source.displayName || source.moduleName || uid,
+          icon: source.icon || 'fa fa-cube',
+          description: source.moduleDescription || source.description || '',
+          version: source.moduleVersion || source.version || '',
+          menus: source.menus || [],
+          functions: source.functions || []
+        };
+      });
+
+      const sessionWorkflows = Array.isArray(this.currentSessionWorkflows)
+        ? this.currentSessionWorkflows : [];
+      const workflowIds = sessionWorkflows
+        .map(workflow => Number.parseInt(workflow && (workflow.workflowId || workflow.id), 10))
+        .filter(id => Number.isInteger(id) && id > 0);
+      this.selectedWorkflowIds = workflowIds.slice();
+      this.selectedWorkflows = workflowIds.map(id => {
+        const available = (this.availableWorkflows || []).find(item => Number(item.id) === id);
+        if (available) return available;
+
+        const source = sessionWorkflows.find(workflow =>
+          Number(workflow.workflowId || workflow.id) === id) || {};
+        return {
+          id,
+          name: source.workflowName || source.name || `Workflow #${id}`,
+          description: source.workflowDescription || source.description || '',
+          parameters: source.parameters || []
+        };
+      });
+
+      this.selectedWorkspaceId = this.currentSessionWorkspaceId || '';
+      this.workspaceWriteEnabled = !!this.selectedWorkspaceId
+        && !!this.currentSessionWorkspaceWriteEnabled;
+      this.workspaceCliEnabled = !!this.selectedWorkspaceId
+        && !!this.currentSessionWorkspaceCliEnabled;
+
+      // These controls are shared by the active session and the launcher. Keep
+      // the assignment explicit so future session-scoped controls are not lost.
+      this.chatMaxOutputTokens = Number(this.chatMaxOutputTokens) || 2000;
+      this.harnessMaxIterations = Number(this.harnessMaxIterations) || 32;
+      this.harnessCapabilities = {
+        todo: !!this.harnessCapabilities.todo,
+        compaction: !!this.harnessCapabilities.compaction,
+        fileMemory: !!this.harnessCapabilities.fileMemory,
+        skills: !!this.harnessCapabilities.skills,
+        webSearch: !!this.harnessCapabilities.webSearch
+      };
+    },
+
     async createNewSession() {
       if (this.workspaceUploading) { this.$message.warning('请等待附件上传完成后再新建会话。'); return; }
       if (!(await this.confirmDiscardWorkspaceEdit())) return;
+      this.inheritCurrentSessionSettings();
       this.rememberSessionDraft();
       this.resetWorkspacePreview();
       this.closeWorkspaceMention();
       await this.deletePendingAttachments();
       this.clearPendingAttachments();
-      this.launcherAiModelId = this.currentSessionAiModelId || this.launcherAiModelId || 0;
       this.currentSessionId = 0;
       this.hideForeignRunView();
       this.syncAdminChatLocation();

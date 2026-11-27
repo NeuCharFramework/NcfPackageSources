@@ -6,6 +6,9 @@
 
     Created by: Senparc - 20261125
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +21,10 @@ namespace Senparc.Xncf.KnowledgeBase;
 
 public partial class Register : IChatTool
 {
+    /// <summary>
+    /// Returns the AdminChat command definition for indexed knowledge-base search and recall.
+    /// </summary>
+    /// <returns>The registered chat tool definitions.</returns>
     public IReadOnlyCollection<ChatToolDefinition> GetChatTools()
     {
         return new[]
@@ -94,6 +101,10 @@ Answer the user's question only with evidence retrieved from an existing indexed
         };
     }
 
+    /// <summary>
+    /// Registers services used by the knowledge-base chat-tool parameter providers.
+    /// </summary>
+    /// <param name="services">The application service collection.</param>
     private static void AddChatToolServices(IServiceCollection services)
     {
         services.AddScoped<KnowledgeBaseChatToolParameterOptionsProvider>();

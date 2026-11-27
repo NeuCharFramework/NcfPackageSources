@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.0.0 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Hosting;
@@ -30,14 +33,22 @@ namespace Senparc.Xncf.NeuCharWorkflow;
 
 public partial class Register : IAreaRegister, IXncfRazorRuntimeCompilation
 {
+    /// <summary>Gets the Workflow administration home URL.</summary>
     public string HomeUrl => "/Admin/NeuCharWorkflow/Index";
 
+    /// <summary>Gets the Workflow administration menu entries.</summary>
     public List<AreaPageMenuItem> AreaPageMenuItems => new()
     {
         new AreaPageMenuItem(GetAreaHomeUrl(), NeuCharWorkflowResource.Get("Area.Workflow", "Workflow"), "fa fa-random"),
         new AreaPageMenuItem(GetAreaUrl("/Admin/NeuCharWorkflow/Tasks"), NeuCharWorkflowResource.Get("Area.Tasks", "任务列表"), "fa fa-list-alt")
     };
 
+    /// <summary>
+    /// Registers Workflow Razor Pages and applies the AdminOnly authorization policy.
+    /// </summary>
+    /// <param name="builder">The MVC builder being configured.</param>
+    /// <param name="env">The current host environment.</param>
+    /// <returns>The configured MVC builder.</returns>
     public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
     {
         builder.AddRazorPagesOptions(options =>
@@ -50,6 +61,7 @@ public partial class Register : IAreaRegister, IXncfRazorRuntimeCompilation
         return builder;
     }
 
+    /// <summary>Gets the absolute Workflow module path used for runtime compilation.</summary>
     public string LibraryPath => Path.GetFullPath(Path.Combine(
         SiteConfig.WebRootPath, "..", "..", "Senparc.Xncf.NeuCharWorkflow"));
 }

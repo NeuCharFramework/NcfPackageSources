@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.16 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.16.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
@@ -28,11 +31,11 @@ namespace Senparc.Xncf.ReloadPage.OHS.Hubs
         private static readonly PhysicalFileProvider _fileProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory());
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Registers a background watcher for JavaScript, CSS, and Razor file changes.
         /// </summary>
-        /// <param name="app"></param>
-        /// <param name="hubContext"></param>
-        /// <returns></returns>
+        /// <param name="app">The ASP.NET Core application builder.</param>
+        /// <param name="hubContext">The SignalR hub context used for notifications.</param>
+        /// <returns>The same application builder.</returns>
         public static IApplicationBuilder UsePhysicalFile(this IApplicationBuilder app, IHubContext<ReloadPageHub> hubContext)
         {
             RegisterPhysical(hubContext);
@@ -40,9 +43,9 @@ namespace Senparc.Xncf.ReloadPage.OHS.Hubs
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Starts the physical-file monitoring loop for the reload page hub.
         /// </summary>
-        /// <param name="hubContext"></param>
+        /// <param name="hubContext">The SignalR hub context receiving change notifications.</param>
         public static void RegisterPhysical(IHubContext<ReloadPageHub> hubContext)
         {
             Task.Run(() =>
@@ -56,10 +59,10 @@ namespace Senparc.Xncf.ReloadPage.OHS.Hubs
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Waits for one watched file change and broadcasts a reload notification.
         /// </summary>
-        /// <param name="hubContext"></param>
-        /// <returns></returns>
+        /// <param name="hubContext">The SignalR hub context receiving change notifications.</param>
+        /// <returns>A task completing after one change notification is observed.</returns>
         private static async Task PhysicalFileAsync(IHubContext<ReloadPageHub> hubContext)
         {
             var jsToken = _fileProvider.Watch("wwwroot/**/*.js");

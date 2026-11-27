@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.13-preview12 Updated repository infrastructure and related localization metadata
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.13.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -31,10 +34,10 @@ namespace Senparc.Respository
     public interface ISysButtonRespository : IClientRepositoryBase<SysButton>
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Deletes all button rows associated with a menu.
         /// </summary>
-        /// <param name="menuId"></param>
-        /// <returns></returns>
+        /// <param name="menuId">The menu identifier whose buttons should be removed.</param>
+        /// <returns>The number of affected rows reported by the database provider.</returns>
         Task<int> DeleteButtonsByMenuId(string menuId);
     }
 
@@ -42,16 +45,20 @@ namespace Senparc.Respository
     {
         private readonly SenparcEntitiesBase _senparcEntities;
 
+        /// <summary>
+        /// Initializes the system-button repository and its EF Core context reference.
+        /// </summary>
+        /// <param name="db">The client database data provider.</param>
         public SysButtonRespository(INcfDbData db) : base(db)
         {
             _senparcEntities = db.BaseDataContext as SenparcEntitiesBase;
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Deletes all button rows associated with a menu.
         /// </summary>
-        /// <param name="menuId"></param>
-        /// <returns></returns>
+        /// <param name="menuId">The menu identifier whose buttons should be removed.</param>
+        /// <returns>The number of affected rows reported by the database provider.</returns>
         public async Task<int> DeleteButtonsByMenuId(string menuId)
         {
             //Legacy comment translated to English.

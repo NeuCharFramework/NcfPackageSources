@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Helpers;
@@ -87,6 +90,14 @@ public sealed class NeuCharFunctionService
         _moduleService = moduleService;
     }
 
+    /// <summary>
+    /// Enumerates registered FunctionRender methods, optionally loads parameter metadata,
+    /// and builds a sorted catalog including module availability and output descriptors.
+    /// </summary>
+    /// <param name="moduleUid">Optional module UID filter.</param>
+    /// <param name="loadParameterOptions">Whether dynamic parameter options should be loaded.</param>
+    /// <param name="cancellationToken">Token used to cancel catalog construction.</param>
+    /// <returns>The sorted function catalog.</returns>
     public async Task<IReadOnlyList<NeuCharFunctionDescriptor>> GetCatalogAsync(
         string moduleUid = null,
         bool loadParameterOptions = true,
@@ -160,6 +171,16 @@ public sealed class NeuCharFunctionService
             .ToList();
     }
 
+    /// <summary>
+    /// Resolves and invokes one registered FunctionRender method from a JSON request,
+    /// enforcing module availability, required parameters, request-size limits, and
+    /// the single-request-object invocation contract.
+    /// </summary>
+    /// <param name="moduleUid">The registered module UID.</param>
+    /// <param name="functionKeyOrName">The function key, display name, or method name.</param>
+    /// <param name="parametersJson">The JSON request object.</param>
+    /// <param name="cancellationToken">Token used to cancel execution.</param>
+    /// <returns>A normalized function execution result; invocation failures are returned as failed results.</returns>
     public async Task<NeuCharFunctionExecutionResult> ExecuteAsync(
         string moduleUid,
         string functionKeyOrName,
@@ -268,6 +289,13 @@ public sealed class NeuCharFunctionService
         }
     }
 
+    /// <summary>
+    /// Validates that every required function parameter exists and is non-empty
+    /// in a JSON object.
+    /// </summary>
+    /// <param name="parameterInfos">The function parameter metadata.</param>
+    /// <param name="parametersJson">The JSON request payload.</param>
+    /// <returns><see langword="null"/> when valid; otherwise a localized validation message.</returns>
     public static string ValidateRequiredParameters(
         IReadOnlyList<FunctionParameterInfo> parameterInfos,
         string parametersJson)
@@ -301,6 +329,13 @@ public sealed class NeuCharFunctionService
         return null;
     }
 
+    /// <summary>
+    /// Retrieves a JSON object property using case-insensitive matching.
+    /// </summary>
+    /// <param name="element">The JSON object.</param>
+    /// <param name="name">The property name.</param>
+    /// <param name="value">Receives the property value.</param>
+    /// <returns><see langword="true"/> when a matching property exists.</returns>
     private static bool TryGetPropertyIgnoreCase(JsonElement element, string name, out JsonElement value)
     {
         foreach (var property in element.EnumerateObject())
@@ -316,6 +351,11 @@ public sealed class NeuCharFunctionService
         return false;
     }
 
+    /// <summary>
+    /// Determines whether a JSON value represents an absent or empty required input.
+    /// </summary>
+    /// <param name="value">The JSON value to inspect.</param>
+    /// <returns><see langword="true"/> for null, undefined, blank strings, or empty arrays.</returns>
     private static bool IsEmpty(JsonElement value) => value.ValueKind switch
     {
         JsonValueKind.Null or JsonValueKind.Undefined => true,
@@ -324,6 +364,11 @@ public sealed class NeuCharFunctionService
         _ => false
     };
 
+    /// <summary>
+    /// Reflects a FunctionRender return type into a bounded, navigable output-field descriptor.
+    /// </summary>
+    /// <param name="methodInfo">The function method to inspect.</param>
+    /// <returns>The normalized output descriptor.</returns>
     public static NeuCharFunctionOutputDescriptor BuildOutputDescriptor(MethodInfo methodInfo)
     {
         var dataType = GetResponseDataType(methodInfo?.ReturnType) ?? typeof(object);
@@ -347,6 +392,11 @@ public sealed class NeuCharFunctionService
             fields);
     }
 
+    /// <summary>
+    /// Maps a CLR type to the output schema vocabulary used by the Admin UI.
+    /// </summary>
+    /// <param name="type">The CLR type.</param>
+    /// <returns>A normalized string, boolean, datetime, number, object, or any type name.</returns>
     public static string NormalizeValueType(Type type)
     {
         type ??= typeof(object);
@@ -377,6 +427,11 @@ public sealed class NeuCharFunctionService
         return type == typeof(object) ? "any" : "object";
     }
 
+    /// <summary>
+    /// Extracts the data type from Task and AppResponseBase return wrappers.
+    /// </summary>
+    /// <param name="returnType">The reflected method return type.</param>
+    /// <returns>The response data type, or <see langword="null"/> when unrecognized.</returns>
     private static Type GetResponseDataType(Type returnType)
     {
         if (returnType == null)
@@ -397,6 +452,17 @@ public sealed class NeuCharFunctionService
         return typeof(IAppResponse).IsAssignableFrom(returnType) ? typeof(object) : null;
     }
 
+    /// <summary>
+    /// Recursively adds readable object properties to an output descriptor up to
+    /// the depth and property-count safety bounds.
+    /// </summary>
+    /// <param name="fields">The output field collection.</param>
+    /// <param name="type">The current CLR type.</param>
+    /// <param name="path">The current output path.</param>
+    /// <param name="labelPrefix">The current display-label prefix.</param>
+    /// <param name="parentRequiresIndex">Whether an ancestor array requires indexing.</param>
+    /// <param name="depth">The current recursion depth.</param>
+    /// <param name="ancestors">Types already visited on the current branch.</param>
     private static void AddOutputFields(
         ICollection<NeuCharFunctionOutputFieldDescriptor> fields,
         Type type,
@@ -438,6 +504,12 @@ public sealed class NeuCharFunctionService
         }
     }
 
+    /// <summary>
+    /// Detects arrays and generic enumerable types and returns their element type.
+    /// </summary>
+    /// <param name="type">The CLR type to inspect.</param>
+    /// <param name="elementType">Receives the collection element type or the original type.</param>
+    /// <returns><see langword="true"/> when the type is a collection.</returns>
     private static bool TryGetCollectionElementType(Type type, out Type elementType)
     {
         type = Nullable.GetUnderlyingType(type) ?? type;
@@ -460,9 +532,19 @@ public sealed class NeuCharFunctionService
         return false;
     }
 
+    /// <summary>
+    /// Determines whether a type does not require recursive property expansion.
+    /// </summary>
+    /// <param name="type">The CLR type.</param>
+    /// <returns><see langword="true"/> for primitive/schema scalar types.</returns>
     private static bool IsSimpleType(Type type) =>
         NormalizeValueType(type) is not ("object" or "any");
 
+    /// <summary>
+    /// Produces a compact display name for a scalar or collection type.
+    /// </summary>
+    /// <param name="type">The CLR type.</param>
+    /// <returns>The friendly type name.</returns>
     private static string GetFriendlyTypeName(Type type)
     {
         if (TryGetCollectionElementType(type, out var elementType))
@@ -472,9 +554,19 @@ public sealed class NeuCharFunctionService
         return (Nullable.GetUnderlyingType(type) ?? type).Name;
     }
 
+    /// <summary>
+    /// Creates a failed function execution result with no data or request temp ID.
+    /// </summary>
+    /// <param name="message">The failure message.</param>
+    /// <returns>A failed execution result.</returns>
     private static NeuCharFunctionExecutionResult Failure(string message) =>
         new(false, null, message, null);
 
+    /// <summary>
+    /// Splits comma-separated role/permission codes, trims them, and removes duplicates.
+    /// </summary>
+    /// <param name="codes">The raw comma-separated code string.</param>
+    /// <returns>Distinct normalized codes.</returns>
     private static IReadOnlyList<string> ParseCodes(string codes)
     {
         return string.IsNullOrWhiteSpace(codes)

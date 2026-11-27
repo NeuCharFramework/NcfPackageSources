@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authorization;
@@ -24,26 +27,32 @@ using System.Text;
 namespace Senparc.Ncf.Core.Authorization
 {
     /// <summary>
-    /// 
-    /// <see cref="https://docs.microsoft.com/zh-cn/aspnet/core/security/authorization/resourcebased?view=aspnetcore-6.0#write-a-resource-based-handler"/>
+    /// Authorization requirement containing the resource codes accepted by a permission handler.
     /// </summary>
     public class PermissionRequirement: IAuthorizationRequirement
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the wildcard resource code that represents unrestricted permission.
         /// </summary>
         public const string All = "*";
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the normalized resource codes required by the authorization handler.
         /// </summary>
         public string[] ResourceCodes { get; set; }
 
+        /// <summary>
+        /// Initializes a requirement that grants the wildcard <see cref="All"/> code.
+        /// </summary>
         public PermissionRequirement()
         {
             this.ResourceCodes = new string[] { All };
         }
 
+        /// <summary>
+        /// Initializes a requirement with non-empty normalized resource codes.
+        /// </summary>
+        /// <param name="resourceCodes">The resource codes to require.</param>
         public PermissionRequirement(string[] resourceCodes)
         {
             ResourceCodes = resourceCodes.Where(code => !string.IsNullOrEmpty(code?.Trim())).Select(code => code.Trim()).ToArray(); //Legacy comment translated to English.

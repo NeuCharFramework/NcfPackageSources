@@ -71,4 +71,33 @@
   <data name="Error.InvocationFailed" xml:space="preserve"><value>コネクターの呼び出しに失敗しました。後でもう一度お試しいただくか、アカウント権限を確認してください。</value></data>
   <data name="Message.Saved" xml:space="preserve"><value>コネクターを保存しました。</value></data>
   <data name="Message.Deleted" xml:space="preserve"><value>コネクターを削除しました。</value></data>
+  <data name="Frontend.Connectors.AddMcpConnector" xml:space="preserve"><value>MCP コネクターを追加</value></data>
+  <data name="Frontend.Connectors.ConnectorTemplates" xml:space="preserve"><value>組み込みコネクターテンプレート</value></data>
+  <data name="Frontend.Connectors.TemplateDescription" xml:space="preserve"><value>一般的な MCP テンプレートから開始できます。接続、認証、ツール検出は MCP モジュールが一元管理します。</value></data>
+  <data name="Frontend.Connectors.McpManagedCentrally" xml:space="preserve"><value>MCP モジュールで管理</value></data>
+  <data name="Frontend.Connectors.CreateFromTemplate" xml:space="preserve"><value>テンプレートから作成</value></data>
+  <data name="Frontend.Connectors.CreateMcpConnector" xml:space="preserve"><value>MCP コネクターを作成</value></data>
+  <data name="Frontend.Connectors.McpConnectionName" xml:space="preserve"><value>MCP 接続名</value></data>
+  <data name="Frontend.Connectors.McpConnectionPlaceholder" xml:space="preserve"><value>例: GitHub MCP</value></data>
+  <data name="Frontend.Connectors.ConnectorDisplayName" xml:space="preserve"><value>コネクター表示名</value></data>
+  <data name="Frontend.Connectors.McpEndpoint" xml:space="preserve"><value>MCP エンドポイント</value></data>
+  <data name="Frontend.Connectors.Transport" xml:space="preserve"><value>トランスポート</value></data>
+  <data name="Frontend.Connectors.SecretStoredByMcpModule" xml:space="preserve"><value>このシークレットは MCP モジュールが暗号化して保存します</value></data>
+  <data name="Frontend.Connectors.QuickCreateBehavior" xml:space="preserve"><value>最初に MCP 接続を保存してテストし、ツールを検出してからコネクターを自動作成します。</value></data>
+  <data name="Frontend.Connectors.TestAndCreate" xml:space="preserve"><value>テストして作成</value></data>
+  <data name="Frontend.Connectors.McpFieldsRequired" xml:space="preserve"><value>MCP 接続名とエンドポイントを入力してください。</value></data>
+  <data name="Frontend.Connectors.CreateFailed" xml:space="preserve"><value>作成に失敗しました。接続設定を確認してください。</value></data>
+  <data name="Frontend.Connectors.McpConnectorCreated" xml:space="preserve"><value>MCP コネクターを作成しました。</value></data>
+  <data name="Template.GitHub.Description" xml:space="preserve"><value>一元管理されたエンドポイントと保護されたトークンを使用して GitHub MCP ツールを利用します。</value></data>
+  <data name="Template.GitHub.Auth" xml:space="preserve"><value>GitHub アクセストークン</value></data>
+  <data name="Template.CustomHttp.Description" xml:space="preserve"><value>Streamable HTTP に対応する任意の MCP サーバーに接続します。</value></data>
+  <data name="Template.CustomHttp.Auth" xml:space="preserve"><value>Bearer トークン（任意）</value></data>
+  <data name="Template.CustomSse.Description" xml:space="preserve"><value>Server-Sent Events を使用して MCP サーバーに接続します。</value></data>
+  <data name="Template.CustomSse.Auth" xml:space="preserve"><value>Bearer トークン（任意）</value></data>
+  <data name="Template.Ncf.Description" xml:space="preserve"><value>この NCF 環境で公開されている MCP サーバー用のコネクターを作成します。</value></data>
+  <data name="Template.Ncf.Auth" xml:space="preserve"><value>アクセストークン（任意）</value></data>
+  <data name="Error.McpModuleNotInstalled" xml:space="preserve"><value>MCP ベースのコネクターを作成する前に MCP モジュールを有効にしてください。</value></data>
+  <data name="Error.TemplateNotFound" xml:space="preserve"><value>コネクターテンプレートが見つかりません。</value></data>
+  <data name="Error.McpCreatedButTestFailed" xml:space="preserve"><value>MCP 接続は保存されましたが、ツール検出に失敗しました: {0}</value></data>
+  <data name="Error.ParameterRequired" xml:space="preserve"><value>このアクションには「{0}」が必要です。</value></data>
 </root>

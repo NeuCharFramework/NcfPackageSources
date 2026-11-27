@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.20.12.1</Version>
+    <Version>0.20.12.2</Version>
     <!--<LangVersion>lastest</LangVersion>-->
     <LangVersion>preview</LangVersion>
     <AssemblyName>Senparc.Xncf.Swagger</AssemblyName>
@@ -80,7 +80,10 @@
         2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
         [2026-11-24] v0.20.12 Integrated localization, tooling, and runtime improvements across the module.
         1. Updated functional behavior and package metadata for the current module changes.
-        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.
+        [2026-11-27] v0.20.12.2 Improve source documentation, headers, and module metadata consistency.
+        1. Applied standardized copyright headers, XML documentation, and localization metadata across touched sources.
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test</Configurations>
   </PropertyGroup>

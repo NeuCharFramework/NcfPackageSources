@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Xncf.Sandbox.Domain.Services.Runtime;
@@ -26,15 +29,19 @@ using Senparc.Xncf.Sandbox.Domain.Services.Runtime;
 namespace Senparc.Xncf.Sandbox.Domain.Services;
 
 /// <summary>
-///Legacy comment translated to English.
-///Legacy comment translated to English.
-///Legacy comment translated to English.
-///Legacy comment translated to English.
-///Legacy comment translated to English.
-///Legacy comment translated to English.
+/// Parses the compact additional-port mapping syntax used by Sandbox requests.
+/// Each entry may be a container port, a host/container pair, and may begin with
+/// <c>*</c> to request external exposure.
 /// </summary>
 public static class SandboxPortMappings
 {
+    /// <summary>
+    /// Parses all supplied port entries and rejects malformed, duplicate, or over-limit mappings.
+    /// </summary>
+    /// <param name="input">A comma- or semicolon-separated mapping string.</param>
+    /// <param name="maxMappings">The maximum number of mappings; non-positive values use the default limit of eight.</param>
+    /// <returns>The normalized port mappings in input order.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when an entry is invalid, duplicated, or exceeds the limit.</exception>
     public static IReadOnlyList<SandboxPortMapping> Parse(string? input, int maxMappings)
     {
         if (maxMappings <= 0)
@@ -69,6 +76,13 @@ public static class SandboxPortMappings
         return result;
     }
 
+    /// <summary>
+    /// Parses one host/container port mapping entry and records duplicate host ports.
+    /// </summary>
+    /// <param name="entry">The textual mapping entry.</param>
+    /// <param name="seenHostPorts">The host-port set used for duplicate detection.</param>
+    /// <returns>The parsed port mapping.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when syntax, ports, or duplication are invalid.</exception>
     private static SandboxPortMapping ParseEntry(string entry, HashSet<int> seenHostPorts)
     {
         var exposeExternally = entry.StartsWith("*", StringComparison.Ordinal);
@@ -94,6 +108,13 @@ public static class SandboxPortMappings
         throw new InvalidOperationException($"无法解析的端口映射：{entry}");
     }
 
+    /// <summary>
+    /// Parses and validates a TCP port number.
+    /// </summary>
+    /// <param name="value">The port text.</param>
+    /// <param name="entry">The original mapping entry for diagnostics.</param>
+    /// <returns>A port between 1 and 65535.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the port is invalid.</exception>
     private static int RequirePort(string value, string entry)
     {
         if (!int.TryParse(value, out var port) || port is < 1 or > 65535)

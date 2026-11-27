@@ -43,6 +43,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.20.17 Improved PromptRange localization consistency and prompt tooling behavior.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
@@ -1150,7 +1153,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             //     Content = c.Content
             // }).ToList();
 
-            ///Legacy comment translated to English.
+            // The older inline prompt-parameter construction is retained as historical
+            // reference; current chat continuation uses the persisted item configuration.
             //var promptParameter = new PromptConfigParameter()
             //{
             //    MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 200,

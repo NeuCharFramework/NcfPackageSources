@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.0.0 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Shared.Abstractions.NeuBell;
@@ -31,8 +34,14 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 
+/// <summary>
+/// Represents a human approval decision and optional input/reason text.
+/// </summary>
 public sealed record WorkflowHumanInputDecision(bool Approved, string? Input = null, string? Reason = null);
 
+/// <summary>
+/// Represents the result of resolving a pending Workflow human-input request.
+/// </summary>
 public sealed record WorkflowHumanInputResolution(
     bool Handled,
     bool Success,

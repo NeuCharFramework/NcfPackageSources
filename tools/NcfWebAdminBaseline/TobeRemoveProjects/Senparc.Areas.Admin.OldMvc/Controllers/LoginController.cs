@@ -9,6 +9,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.0.1 Updated legacy MVC integration metadata and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.0.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System.Threading.Tasks;
@@ -29,11 +32,21 @@ namespace Senparc.Areas.Admin.Controllers
     public class LoginController : BaseAdminController
     {
         private readonly AdminUserInfoService _userInfoService;
+        /// <summary>
+        /// Initializes the anonymous legacy administrator login controller.
+        /// </summary>
+        /// <param name="userInfoService">The administrator authentication service.</param>
         public LoginController(AdminUserInfoService userInfoService)
         {
             this._userInfoService = userInfoService;
         }
 
+        /// <summary>
+        /// Shows the login page or redirects an already authenticated administrator
+        /// to the requested local destination.
+        /// </summary>
+        /// <param name="returnUrl">Optional URL to return to after authentication.</param>
+        /// <returns>The login view or a redirect result.</returns>
         public async Task<IActionResult> Index(string returnUrl)
         {
             //Legacy comment translated to English.
@@ -59,6 +72,12 @@ namespace Senparc.Areas.Admin.Controllers
 
         [HttpPost]
         //[ValidateAntiForgeryToken]
+        /// <summary>
+        /// Validates administrator credentials and redirects to the requested destination
+        /// when authentication succeeds.
+        /// </summary>
+        /// <param name="vdForm">The posted login form.</param>
+        /// <returns>The login view on failure or a redirect on success.</returns>
         public ActionResult Index(Login_IndexVD vdForm)
         {
             if (!ModelState.IsValid)
@@ -93,6 +112,8 @@ namespace Senparc.Areas.Admin.Controllers
             return Redirect(vdForm.ReturnUrl.UrlDecode());
         }
 
+        /// <summary>Logs out the current administrator and returns to the login action.</summary>
+        /// <returns>A redirect to the login page.</returns>
         public ActionResult Logout()
         {
             _userInfoService.Logout();

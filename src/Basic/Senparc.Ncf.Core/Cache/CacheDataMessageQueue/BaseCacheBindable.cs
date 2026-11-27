@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -24,20 +27,24 @@ using Senparc.Ncf.Log;
 namespace Senparc.Ncf.Core.Cache
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Binds property changes on cache data objects to deferred cache-update actions.
     /// </summary>
     [Serializable]
     public abstract class BaseCacheBindable<T> : BindableBase where T : class, ICacheData, new()
     {
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///// </summary>
+        // Cache data exposes its key through ICacheData; the former abstract Key
+        // member is retained only in historical source.
         //public abstract object Key { get; }
 
         protected string GenerateKey_Name { get; set; }
         protected string GenerateKey_ActionName { get; set; }
 
 
+        /// <summary>
+        /// Handles cache-data property changes and schedules the configured deferred cache update.
+        /// </summary>
+        /// <param name="sender">The changed cache-data instance.</param>
+        /// <param name="e">The property-change event data.</param>
         protected void BaseCacheBindable_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (sender == null)
@@ -61,38 +68,39 @@ namespace Senparc.Ncf.Core.Cache
 
             var mqKey = CacheDataMessageQueue.GenerateKey("SenparcCache", sender.GetType(), objCacheData.Key as string, "UpdateCache");
 
-            //Legacy comment translated to English.
-
-            //Legacy comment translated to English.
+            // Coalesce property changes through the cache message queue so repeated
+            // updates do not perform immediate synchronous writes.
             CacheDataMessageQueue mq = new CacheDataMessageQueue();
             mq.Add(mqKey, () =>
             {
                 var cacheStragegy = CacheStrategyFactory.GetObjectCacheStrategyInstance();
                 //var cacheKey = objCacheData.Key;
-                objCacheData.CacheTime = DateTime.Now;//Legacy comment translated to English.
+                objCacheData.CacheTime = DateTime.Now;
                 cacheStragegy.Set(objCacheData.Key, objCacheData as T);
 
                 //var cacheKey = ContainerHelper.GetCacheKey(this.GetType());
-                //Legacy comment translated to English.
                 //containerCacheStragegy.UpdateContainerBag(cacheKey, containerBag);
             });
         }
 
 
         /// <summary>
-        /// settingsContainerproperty
+        /// Sets a backing field and exposes the standard property-change notification.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="storage"></param>
-        /// <param name="value"></param>
-        /// <param name="propertyName"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The cache data type.</typeparam>
+        /// <param name="storage">The backing field.</param>
+        /// <param name="value">The new value.</param>
+        /// <param name="propertyName">The caller property name.</param>
+        /// <returns><see langword="true"/> when the value changed.</returns>
         protected bool SetContainerProperty(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
             var result = base.SetProperty(ref storage, value, propertyName);
             return result;
         }
 
+        /// <summary>
+        /// Initializes cache binding and subscribes to property changes.
+        /// </summary>
         public BaseCacheBindable()
         {
             base.PropertyChanged += BaseCacheBindable_PropertyChanged;

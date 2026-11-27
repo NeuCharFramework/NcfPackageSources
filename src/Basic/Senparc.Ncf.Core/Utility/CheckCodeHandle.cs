@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;
@@ -23,13 +26,14 @@ using System.Collections.Generic;
 
 namespace Senparc.Ncf.Core.Utility
 {
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Identifies the business flow that owns a verification code.</summary>
     public enum CheckCodeKind
     {
+        /// <summary>Registration verification.</summary>
         Reg = 0,
+        /// <summary>Login verification.</summary>
         Login = 1,
+        /// <summary>SMS verification.</summary>
         SMS = 2
     }
 
@@ -39,7 +43,7 @@ namespace Senparc.Ncf.Core.Utility
         private const string COOKIE_NAME_PREFIX = "senparccheckcodeverify_";
         private string _cookieName;
         private HttpContext _httpContext;
-        private IMemoryCache _cache;//Legacy comment translated to English.
+        private IMemoryCache _cache;
         private string _checkCodeSalt = "_senparccheckcode";
         private Dictionary<string, string> checkedCodeCollection
         {
@@ -54,6 +58,11 @@ namespace Senparc.Ncf.Core.Utility
             }
         }
 
+        /// <summary>
+        /// Initializes check-code generation and validation for one request context.
+        /// </summary>
+        /// <param name="checkCodeKind">The kind of verification code.</param>
+        /// <param name="httpContext">The HTTP context used for cookies.</param>
         public CheckCodeHandle(CheckCodeKind checkCodeKind, HttpContext httpContext)
         {
             _checkCodeKind = checkCodeKind;
@@ -63,10 +72,9 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Generates a four-character verification code and stores its signed value in a cookie.
         /// </summary>
-        /// <param name="checkCodeKind"></param>
-        /// <returns></returns>
+        /// <returns>The generated verification code.</returns>
         public string GenerateCheckCode()
         {
             //int number;
@@ -77,7 +85,7 @@ namespace Senparc.Ncf.Core.Utility
             //string[] str = new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
             string str1 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";//abcdefghijklmnopqrstuvwxyz
 
-            for (int i = 0; i < 4; i++)//Legacy comment translated to English.
+            for (int i = 0; i < 4; i++)
             {
 
                 //code = (char)str[random.Next(0, 61)];
@@ -100,14 +108,23 @@ namespace Senparc.Ncf.Core.Utility
             return checkcode;
         }
 
+        /// <summary>
+        /// Stores a signed verification code in the request's check-code cookie for one day.
+        /// </summary>
+        /// <param name="checkCode">The plain verification code to protect.</param>
         public void SaveToCookie(string checkCode)
         {
             DateTimeOffset to = new DateTimeOffset(DateTime.Now.AddDays(1));
             var verifyCode = GenerateVerifyCode(checkCode, null);
             var value = $"checkcode={verifyCode}";
-            _httpContext.Response.Cookies.Append(this._cookieName, value, new CookieOptions() { Expires = to });//Legacy comment translated to English.
+            _httpContext.Response.Cookies.Append(this._cookieName, value, new CookieOptions() { Expires = to });
         }
 
+        /// <summary>
+        /// Validates a submitted code against the signed cookie and prevents reuse.
+        /// </summary>
+        /// <param name="inputCheckCode">The code submitted by the client.</param>
+        /// <returns><see langword="true"/> when the code is valid and has not been consumed.</returns>
         public bool ValidateCheckCode(string inputCheckCode)
         {
             if (string.IsNullOrEmpty(inputCheckCode))
@@ -115,7 +132,6 @@ namespace Senparc.Ncf.Core.Utility
                 return false;
             }
 
-            //Legacy comment translated to English.
             var myCookie = _httpContext.Request.Cookies[this._cookieName];
 
             if (myCookie == null || !myCookie.StartsWith("checkcode="))
@@ -130,7 +146,7 @@ namespace Senparc.Ncf.Core.Utility
             }
             if (checkedCodeCollection.ContainsKey(checkCodeVerify))
             {
-                return false;//Legacy comment translated to English.
+                return false;
             }
             var verifyCode = GenerateVerifyCode(inputCheckCode.Trim(), checkCodeVerify.Substring(checkCodeVerify.Length - 32, 32));
             if (verifyCode.ToUpper() != checkCodeVerify.ToUpper())
@@ -143,6 +159,12 @@ namespace Senparc.Ncf.Core.Utility
             //Legacy comment translated to English.
         }
 
+        /// <summary>
+        /// Produces the verification token combining code kind, MD5 digest, and salt/key material.
+        /// </summary>
+        /// <param name="inputCheckCode">The plain check code.</param>
+        /// <param name="key">The optional key; blank values receive a generated key.</param>
+        /// <returns>The serialized verification token.</returns>
         public string GenerateVerifyCode(string inputCheckCode, string key)
         {
             if (string.IsNullOrEmpty(key))
@@ -154,7 +176,7 @@ namespace Senparc.Ncf.Core.Utility
             string verifyCode = string.Format(verifyFormat,
                                     ((int)_checkCodeKind).ToString(),
                                     checkcodeEncoding,
-                                    key//Legacy comment translated to English.
+                                    key
                                     );
             return verifyCode;
         }

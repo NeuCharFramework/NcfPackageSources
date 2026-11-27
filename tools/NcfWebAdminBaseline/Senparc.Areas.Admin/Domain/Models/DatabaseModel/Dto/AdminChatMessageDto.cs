@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 using Senparc.Areas.Admin.Domain.Services;
 using Senparc.Ncf.Core.Models;
@@ -30,39 +33,41 @@ using Senparc.Xncf.PromptRange.Abstractions.References;
 namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Represents an administrator chat message projected for transport to the client.
+    /// The DTO includes conversation ordering, model provenance, attachments, references,
+    /// and optional trajectory metadata.
     /// </summary>
     public class AdminChatMessageDto : DtoBase<int>
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the identifier of the conversation session containing this message.
         /// </summary>
         public int SessionId { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the role that produced the message.
         /// </summary>
         public ChatMessageRoleType RoleType { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the message text.
         /// </summary>
         public string Content { get; set; }
         public IReadOnlyList<AdminChatAttachment> Attachments { get; set; } = Array.Empty<AdminChatAttachment>();
         public IReadOnlyList<PromptReference> PromptReferences { get; set; } = Array.Empty<PromptReference>();
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the sequence number used to order this message within its session.
         /// </summary>
         public int Sequence { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the feedback state supplied by the administrator.
         /// </summary>
         public MessageFeedbackType UserFeedback { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the model identifier that generated this message, when available.
         /// </summary>
         public string ModelIdentifier { get; set; }
 
@@ -71,8 +76,11 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
         public int? TrajectorySequence { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates a transport DTO from a persisted <see cref="AdminChatMessage"/> entity.
+        /// Attachment and prompt-reference payloads are expanded through the entity helpers.
         /// </summary>
+        /// <param name="entity">The persisted message; <see langword="null"/> returns <see langword="null"/>.</param>
+        /// <returns>A populated message DTO, or <see langword="null"/> when <paramref name="entity"/> is null.</returns>
         public static AdminChatMessageDto CreateFromEntity(AdminChatMessage entity)
         {
             if (entity == null) return null;
@@ -102,28 +110,28 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Carries the user input required to append a message to an administrator chat session.
     /// </summary>
     public class ChatMessageInputDto
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the target chat session identifier.
         /// </summary>
         [Required]
         public int SessionId { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the optional AI model identifier requested for the message.
         /// </summary>
         public int AiModelId { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the message text submitted by the administrator.
         /// </summary>
         public string Content { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the execution mode used to process the message.
         /// </summary>
         public AdminChatMode Mode { get; set; } = AdminChatMode.Simple;
         public int MaxOutputTokens { get; set; }

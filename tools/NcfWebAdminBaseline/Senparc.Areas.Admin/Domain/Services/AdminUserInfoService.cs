@@ -34,6 +34,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authentication;
@@ -80,6 +83,13 @@ namespace Senparc.Areas.Admin.Domain
             _adminAuthConfigService = adminAuthConfigService;
         }
 
+        /// <summary>
+        /// Clamps an authentication expiration setting to the supported five-minute
+        /// through one-year range, using a default when the configured value is non-positive.
+        /// </summary>
+        /// <param name="expireMinutes">The configured duration in minutes.</param>
+        /// <param name="defaultValue">The fallback duration.</param>
+        /// <returns>The supported expiration duration.</returns>
         private int NormalizeExpireMinutes(int expireMinutes, int defaultValue)
         {
             var value = expireMinutes <= 0 ? defaultValue : expireMinutes;
@@ -96,6 +106,10 @@ namespace Senparc.Areas.Admin.Domain
             return value;
         }
 
+        /// <summary>
+        /// Returns the effective administrator web-login cookie lifetime in minutes.
+        /// </summary>
+        /// <returns>A clamped cookie lifetime.</returns>
         public int GetAdminWebLoginExpireMinutes()
         {
             var settings = _adminAuthConfigService.Value.GetEffectiveExpireSettings();
@@ -103,6 +117,10 @@ namespace Senparc.Areas.Admin.Domain
                 AdminAuthConfig.DefaultAdminWebLoginExpireMinutes);
         }
 
+        /// <summary>
+        /// Returns the effective backend JWT lifetime in minutes.
+        /// </summary>
+        /// <returns>A clamped JWT lifetime.</returns>
         public int GetBackendJwtExpireMinutes()
         {
             var settings = _adminAuthConfigService.Value.GetEffectiveExpireSettings();
@@ -110,6 +128,13 @@ namespace Senparc.Areas.Admin.Domain
                 AdminAuthConfig.DefaultBackendJwtExpireMinutes);
         }
 
+        /// <summary>
+        /// Reissues the administrator authentication cookie for the effective web-login
+        /// lifetime while preserving the current claims.
+        /// </summary>
+        /// <param name="principal">The currently authenticated principal.</param>
+        /// <returns>The UTC expiration time assigned to the renewed cookie.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the principal is not authenticated.</exception>
         public async Task<DateTimeOffset> KeepCookieLoginAliveAsync(ClaimsPrincipal principal)
         {
             if (principal?.Identity?.IsAuthenticated != true)
@@ -131,6 +156,12 @@ namespace Senparc.Areas.Admin.Domain
             return expiresUtc;
         }
 
+        /// <summary>
+        /// Reads a JWT expiration claim from a principal, accepting Unix seconds
+        /// and parseable date-time text while returning <see langword="null"/> for invalid input.
+        /// </summary>
+        /// <param name="principal">The principal whose claims are inspected.</param>
+        /// <returns>The normalized UTC expiration, or <see langword="null"/> when absent or invalid.</returns>
         public DateTimeOffset? TryGetJwtExpiresUtc(ClaimsPrincipal principal)
         {
             var expValue = principal?.Claims?
@@ -163,11 +194,12 @@ namespace Senparc.Areas.Admin.Domain
         }
 
         /// <summary>
-        /// 
+        /// Determines whether another administrator already uses the supplied user name.
+        /// Comparison is case-insensitive after trimming.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="userName"></param>
-        /// <returns></returns>
+        /// <param name="id">The current record identifier excluded from the duplicate check.</param>
+        /// <param name="userName">The user name to test.</param>
+        /// <returns><see langword="true"/> when another record has the same user name.</returns>
         public bool CheckUserNameExisted(long id, string userName)
         {
             userName = userName.Trim().ToUpper();
@@ -180,6 +212,11 @@ namespace Senparc.Areas.Admin.Domain
         ///Legacy comment translated to English.
         ////[ApiBind]
         ////[Core.BackendJwtAuthorize]
+        /// <summary>
+        /// Loads an administrator by its trimmed user name.
+        /// </summary>
+        /// <param name="userName">The user name to look up.</param>
+        /// <returns>The matching administrator, or <see langword="null"/> when no record exists.</returns>
         public async Task<AdminUserInfo> GetUserInfoAsync(string userName)
         {
             var obj = await base.GetObjectAsync(z => z.UserName.Equals(userName.Trim()));
@@ -187,6 +224,11 @@ namespace Senparc.Areas.Admin.Domain
         }
 
 
+        /// <summary>
+        /// Signs out the current administrator using the configured NCF administration scheme.
+        /// Sign-out failures are logged and suppressed.
+        /// </summary>
+        /// <returns>A task that completes after the sign-out attempt.</returns>
         public async Task LogoutAsync()
         {
             try
@@ -200,12 +242,13 @@ namespace Senparc.Areas.Admin.Domain
         }
 
         /// <summary>
-        /// Performs the login operation for the specified admin user
+        /// Creates the authenticated administrator claims principal and signs it in
+        /// with the configured expiration window.
         /// </summary>
-        /// <param name="userInfo">The admin user information</param>
-        /// <param name="rememberMe">Whether to persist the login</param>
-        /// <param name="tenantKey"></param>
-        /// <returns>A task representing the asynchronous operation</returns>
+        /// <param name="userInfo">The administrator identity to authenticate.</param>
+        /// <param name="rememberMe">Whether the caller requested persistent login state.</param>
+        /// <param name="tenantKey">The optional tenant key included in tenant-aware claims.</param>
+        /// <returns>A task that completes after the authentication cookie is issued.</returns>
         public virtual async Task LoginAsync(AdminUserInfo userInfo, bool rememberMe, string tenantKey = null)
         {
             #region Legacy section
@@ -257,10 +300,10 @@ namespace Senparc.Areas.Admin.Domain
         //}
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Reads the cached failed-login count for a user name.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="userName">The user name whose failed attempts are queried.</param>
+        /// <returns>The cached failed-login count, or zero when no count is stored.</returns>
         public async Task<int> GetFailedLoginCountAsync(string userName)
         {
             var cache = CO2NET.Cache.CacheStrategyFactory.GetObjectCacheStrategyInstance();
@@ -269,13 +312,15 @@ namespace Senparc.Areas.Admin.Domain
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Validates a candidate password under the cache lock, updates failed-attempt state,
+        /// and signs in the administrator on success.
         /// </summary>
-        /// <param name="adminUserInfo"></param>
-        /// <param name="password"></param>
-        /// <param name="rememberMe"></param>
-        /// <param name="tenantKey"></param>
-        /// <returns></returns>
+        /// <param name="adminUserInfo">The persisted administrator being authenticated.</param>
+        /// <param name="password">The candidate password.</param>
+        /// <param name="rememberMe">Whether the login should be persistent.</param>
+        /// <param name="tenantKey">The optional tenant key for the login claims.</param>
+        /// <returns>The authenticated administrator on success; otherwise <see langword="null"/>.</returns>
+        /// <exception cref="LoginLockException">Thrown when the account is currently locked or becomes locked.</exception>
         public async Task<AdminUserInfo> TryLoginAsync(AdminUserInfo adminUserInfo, string password,
             bool rememberMe, string tenantKey = null)
         {
@@ -339,10 +384,10 @@ namespace Senparc.Areas.Admin.Domain
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates and persists a new administrator from the supplied DTO.
         /// </summary>
-        /// <param name="objDto"></param>
-        /// <returns></returns>
+        /// <param name="objDto">The administrator creation values.</param>
+        /// <returns>The newly persisted administrator.</returns>
         public async Task<AdminUserInfo> CreateAdminUserInfoAsync(CreateOrUpdate_AdminUserInfoDto objDto)
         {
             var obj = new AdminUserInfo(objDto);
@@ -351,10 +396,11 @@ namespace Senparc.Areas.Admin.Domain
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Updates and persists an existing administrator identified by the DTO.
         /// </summary>
-        /// <param name="objDto"></param>
-        /// <returns></returns>
+        /// <param name="objDto">The administrator identifier and replacement values.</param>
+        /// <returns>The updated administrator.</returns>
+        /// <exception cref="Exception">Thrown when the administrator identifier does not exist.</exception>
         public async Task<AdminUserInfo> UpdateAdminUserInfoAsync(CreateOrUpdate_AdminUserInfoDto objDto)
         {
             var obj = this.GetObject(z => z.Id == objDto.Id);
@@ -368,9 +414,10 @@ namespace Senparc.Areas.Admin.Domain
         }
 
         /// <summary>
-        /// updateuserinformation
+        /// Synchronously updates and persists an existing administrator.
         /// </summary>
-        /// <param name="objDto"></param>
+        /// <param name="objDto">The administrator identifier and replacement values.</param>
+        /// <exception cref="Exception">Thrown when the administrator identifier does not exist.</exception>
         public void UpdateAdminUserInfo(CreateOrUpdate_AdminUserInfoDto objDto)
         {
             var obj = this.GetObject(z => z.Id == objDto.Id);
@@ -382,6 +429,12 @@ namespace Senparc.Areas.Admin.Domain
             SaveObject(obj);
         }
 
+        /// <summary>
+        /// Maps one persisted administrator to the create/update DTO used by the editor.
+        /// </summary>
+        /// <param name="id">The administrator identifier.</param>
+        /// <param name="includes">Optional related entities to include during lookup.</param>
+        /// <returns>The mapped DTO, or a DTO with default values when mapping receives no entity.</returns>
         public CreateOrUpdate_AdminUserInfoDto GetAdminUserInfo(int id, params string[] includes)
         {
             var obj = GetObject(z => z.Id == id, includes: includes);
@@ -391,6 +444,12 @@ namespace Senparc.Areas.Admin.Domain
             return objDto;
         }
 
+        /// <summary>
+        /// Loads administrators whose identifiers are in the supplied list.
+        /// </summary>
+        /// <param name="ids">The administrator identifiers to retrieve.</param>
+        /// <param name="includes">Optional related entities to include.</param>
+        /// <returns>The matching administrators ordered by identifier.</returns>
         public List<AdminUserInfo> GetAdminUserInfo(List<int> ids, params string[] includes)
         {
             return GetFullList(z => ids.Contains(z.Id), z => z.Id, Ncf.Core.Enums.OrderingType.Ascending, includes: includes);
@@ -398,8 +457,10 @@ namespace Senparc.Areas.Admin.Domain
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Counts administrators belonging to a tenant while bypassing the context query filter.
         /// </summary>
+        /// <param name="tenantId">The tenant identifier.</param>
+        /// <returns>The number of administrators assigned to the tenant.</returns>
         public async Task<int> GetTenantUserCountAsync(int tenantId)
         {
             var db = BaseData.BaseDB.BaseDataContext;
@@ -410,11 +471,10 @@ namespace Senparc.Areas.Admin.Domain
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Initializes the first administrator when no administrator record exists.
         /// </summary>
-        /// <param name="userName">user name</param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="userName">The optional initial user name.</param>
+        /// <returns>The initialized administrator and generated password, or null values when initialization is already complete.</returns>
         public async Task<(AdminUserInfo AdminUserInfo, string Password)> InitAsync(string userName)
         {
             var oldAdminUserInfo = GetObject(z => true);
@@ -437,6 +497,11 @@ namespace Senparc.Areas.Admin.Domain
             return (adminUserInfo, adminUserInfoDto.Password);
         }
 
+        /// <summary>
+        /// Loads and deletes an administrator record by identifier.
+        /// </summary>
+        /// <param name="id">The administrator record identifier.</param>
+        /// <exception cref="Exception">Thrown when no matching administrator exists.</exception>
         public void DeleteObject(int id)
         {
             var obj = GetObject(z => z.Id == id);
@@ -461,10 +526,12 @@ namespace Senparc.Areas.Admin.Domain
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Authenticates credentials and returns the JWT-oriented login result with roles,
+        /// permissions, menu tree, and token expiration metadata.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="loginDto">The login credentials and optional tenant key.</param>
+        /// <returns>The populated login result.</returns>
+        /// <exception cref="LoginLockException">Propagated when the account is locked.</exception>
         //[ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
         public async Task<AccountLoginResultDto> LoginAsync(AccountLoginDto loginDto)
         {
@@ -527,10 +594,11 @@ namespace Senparc.Areas.Admin.Domain
         }
 
         /// <summary>
-        /// getcurrentmanagementinformation
+        /// Loads the administrator identity and authorization data used by the current-management view.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The administrator identifier.</param>
+        /// <returns>The populated account login result.</returns>
+        /// <exception cref="NullReferenceException">Thrown when the administrator identifier does not resolve to an entity.</exception>
         public async Task<AccountLoginResultDto> GetAdminUserInfoAsync(int id)
         {
             AccountLoginResultDto result = new AccountLoginResultDto();
@@ -549,15 +617,25 @@ namespace Senparc.Areas.Admin.Domain
 
 
         /// <summary>
-        /// GenerateToken
+        /// Generates a JWT for an administrator using the configured role claims and expiration.
         /// </summary>
-        /// <param name="memberId"></param>
-        /// <returns></returns>
+        /// <param name="memberId">The administrator identifier included in the token.</param>
+        /// <param name="expiresUtc">Receives the token expiration instant.</param>
+        /// <param name="expiresMinutes">An optional expiration override in minutes.</param>
+        /// <returns>The signed JWT text.</returns>
         public string GenerateToken(int memberId, out DateTimeOffset expiresUtc, int? expiresMinutes = null)
         {
             return GenerateToken(memberId, out expiresUtc, expiresMinutes, Array.Empty<string>());
         }
 
+        /// <summary>
+        /// Loads the administrator's role codes, creates a signed backend JWT,
+        /// and returns the token together with its effective expiration.
+        /// </summary>
+        /// <param name="memberId">The administrator identifier.</param>
+        /// <param name="expiresMinutes">Optional expiration override.</param>
+        /// <param name="tenantKey">Optional tenant key included in claims.</param>
+        /// <returns>The signed token and expiration instant.</returns>
         public async Task<(string Token, DateTimeOffset ExpiresUtc)> GenerateTokenAsync(int memberId, int? expiresMinutes = null, string tenantKey = null)
         {
             var roleCodes = await GetRoleCodesAsync(memberId);
@@ -588,6 +666,12 @@ namespace Senparc.Areas.Admin.Domain
             return (token, expiresUtc);
         }
 
+        /// <summary>
+        /// Loads distinct non-empty role codes for an administrator, returning an
+        /// empty list when the role service is unavailable.
+        /// </summary>
+        /// <param name="memberId">The administrator identifier.</param>
+        /// <returns>The distinct role codes.</returns>
         private async Task<List<string>> GetRoleCodesAsync(int memberId)
         {
             var roleService = _serviceProvider.GetService<SysRoleAdminUserInfoService>();
@@ -604,6 +688,15 @@ namespace Senparc.Areas.Admin.Domain
                 .ToList();
         }
 
+        /// <summary>
+        /// Calculates a bounded JWT expiration and delegates token construction.
+        /// </summary>
+        /// <param name="memberId">The administrator identifier.</param>
+        /// <param name="expiresUtc">Receives the calculated expiration.</param>
+        /// <param name="expiresMinutes">The optional requested duration.</param>
+        /// <param name="roleCodes">The role codes included as claims.</param>
+        /// <param name="tenantKey">Optional tenant claim value.</param>
+        /// <returns>The signed JWT text.</returns>
         private string GenerateToken(int memberId, out DateTimeOffset expiresUtc, int? expiresMinutes, IEnumerable<string> roleCodes, string tenantKey = null)
         {
             var effectiveExpireMinutes = NormalizeExpireMinutes(expiresMinutes ?? GetBackendJwtExpireMinutes(), AdminAuthConfig.DefaultBackendJwtExpireMinutes);
@@ -611,6 +704,15 @@ namespace Senparc.Areas.Admin.Domain
             return GenerateToken(memberId, expiresUtc, roleCodes, tenantKey);
         }
 
+        /// <summary>
+        /// Builds and signs a backend JWT using configured signing settings and
+        /// administrator/role/tenant claims.
+        /// </summary>
+        /// <param name="memberId">The administrator identifier.</param>
+        /// <param name="expiresUtc">The token expiration instant.</param>
+        /// <param name="roleCodes">The role codes to encode.</param>
+        /// <param name="tenantKey">Optional tenant claim value.</param>
+        /// <returns>The serialized signed JWT.</returns>
         private string GenerateToken(int memberId, DateTimeOffset expiresUtc, IEnumerable<string> roleCodes, string tenantKey = null)
         {
             var options = _serviceProvider.GetService<IOptionsSnapshot<JwtSettings>>();
@@ -646,6 +748,11 @@ namespace Senparc.Areas.Admin.Domain
             return tokenStr;
         }
 
+        /// <summary>
+        /// Creates a token with the default backend expiration and no explicit role list.
+        /// </summary>
+        /// <param name="memberId">The administrator identifier.</param>
+        /// <returns>The serialized signed JWT.</returns>
         private string GenerateToken(int memberId)
         {
             return GenerateToken(memberId, out _);

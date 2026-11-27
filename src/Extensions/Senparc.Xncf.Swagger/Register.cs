@@ -22,6 +22,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.12 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
@@ -63,7 +66,7 @@ namespace Senparc.Xncf.Swagger
             "浏览系统 API 接口说明");
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the function used to resolve generated API XML documentation paths.
         /// </summary>
         public static Func<IWebHostEnvironment, string> ApiDocXmlPathFunc = (env) => Path.Combine(env.ContentRootPath, "App_Data", "ApiDocXml");
 
@@ -73,7 +76,7 @@ namespace Senparc.Xncf.Swagger
 
         public override string Uid => "712d56f6-989e-4b5f-b769-86a870543e8d";//Legacy comment translated to English.
 
-        public override string Version => "0.7.1";//the version number is required
+        public override string Version => "0.20.12.2";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -221,6 +224,7 @@ namespace Senparc.Xncf.Swagger
             return base.AddXncfModule(services, configuration, env);
         }
 
+        /// <inheritdoc />
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             // Add authentication middleware for Swagger UI

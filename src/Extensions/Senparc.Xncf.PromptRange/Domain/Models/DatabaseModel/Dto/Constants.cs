@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -24,12 +27,10 @@ using Senparc.AI;
 
 namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto
 {
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Provides provider names and supported API-version constants for PromptRange.</summary>
     public static class Constants
     {
-        //Legacy comment translated to English.
+        // Ordered from legacy-compatible versions to newer preview versions.
         public static readonly List<string> ApiVersionList = new()
         {
             "2022-12-01", "2023-03-15-preview", "2023-05-15",

@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.13-preview12 Updated repository infrastructure and related localization metadata
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.13.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -31,11 +34,18 @@ namespace Senparc.Ncf.Repository
     {
         public INcfDbData BaseDB { get; set; }
 
+        /// <summary>
+        /// Initializes a database lifecycle wrapper around the NCF database abstraction.
+        /// </summary>
+        /// <param name="baseDB">The database connection and context provider.</param>
         public DataBase(INcfDbData baseDB)
         {
             BaseDB = baseDB;
         }
 
+        /// <summary>
+        /// Closes the underlying database connection through <see cref="BaseDB"/>.
+        /// </summary>
         public virtual void CloseConnection()
         {
             BaseDB.CloseConnection();

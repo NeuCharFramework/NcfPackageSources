@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.14 Updated database integration support and related localization metadata
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +35,8 @@ using Senparc.Ncf.Database.MySql;
 namespace Senparc.Ncf.Database.MySql.Backup
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// MySQL database configuration retaining the legacy backup extension point.
+    /// The current implementation does not generate backup SQL and returns no command.
     /// </summary>
     public class MySqlWithBackupDatabaseConfiguration : MySqlDatabaseConfiguration
     {
@@ -42,6 +46,7 @@ namespace Senparc.Ncf.Database.MySql.Backup
         public MySqlWithBackupDatabaseConfiguration() { }
 
 
+        /// <inheritdoc />
         public override string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath)
         {
             //Legacy comment translated to English.

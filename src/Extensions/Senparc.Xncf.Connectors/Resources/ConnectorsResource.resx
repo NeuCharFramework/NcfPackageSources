@@ -74,4 +74,33 @@
   <data name="Error.InvocationFailed" xml:space="preserve"><value>连接器调用失败，请稍后重试或检查账号权限。</value></data>
   <data name="Message.Saved" xml:space="preserve"><value>连接器已保存。</value></data>
   <data name="Message.Deleted" xml:space="preserve"><value>连接器已删除。</value></data>
+  <data name="Frontend.Connectors.AddMcpConnector" xml:space="preserve"><value>添加 MCP 连接器</value></data>
+  <data name="Frontend.Connectors.ConnectorTemplates" xml:space="preserve"><value>内置连接器模板</value></data>
+  <data name="Frontend.Connectors.TemplateDescription" xml:space="preserve"><value>从常用 MCP 模板开始；连接、鉴权和工具发现均由 MCP 模块统一管理。</value></data>
+  <data name="Frontend.Connectors.McpManagedCentrally" xml:space="preserve"><value>由 MCP 模块集中管理</value></data>
+  <data name="Frontend.Connectors.CreateFromTemplate" xml:space="preserve"><value>从模板创建</value></data>
+  <data name="Frontend.Connectors.CreateMcpConnector" xml:space="preserve"><value>创建 MCP 连接器</value></data>
+  <data name="Frontend.Connectors.McpConnectionName" xml:space="preserve"><value>MCP 连接名称</value></data>
+  <data name="Frontend.Connectors.McpConnectionPlaceholder" xml:space="preserve"><value>例如：GitHub 官方 MCP</value></data>
+  <data name="Frontend.Connectors.ConnectorDisplayName" xml:space="preserve"><value>连接器显示名称</value></data>
+  <data name="Frontend.Connectors.McpEndpoint" xml:space="preserve"><value>MCP 端点</value></data>
+  <data name="Frontend.Connectors.Transport" xml:space="preserve"><value>传输方式</value></data>
+  <data name="Frontend.Connectors.SecretStoredByMcpModule" xml:space="preserve"><value>密钥将由 MCP 模块加密保存</value></data>
+  <data name="Frontend.Connectors.QuickCreateBehavior" xml:space="preserve"><value>系统会先保存 MCP 连接并执行连接测试，然后自动发现工具并创建连接器。</value></data>
+  <data name="Frontend.Connectors.TestAndCreate" xml:space="preserve"><value>测试并创建</value></data>
+  <data name="Frontend.Connectors.McpFieldsRequired" xml:space="preserve"><value>请填写 MCP 连接名称和端点地址。</value></data>
+  <data name="Frontend.Connectors.CreateFailed" xml:space="preserve"><value>创建失败，请检查连接信息。</value></data>
+  <data name="Frontend.Connectors.McpConnectorCreated" xml:space="preserve"><value>MCP 连接器已创建。</value></data>
+  <data name="Template.GitHub.Description" xml:space="preserve"><value>通过统一管理的 MCP 端点和加密 Token 使用 GitHub 工具。</value></data>
+  <data name="Template.GitHub.Auth" xml:space="preserve"><value>GitHub 访问令牌</value></data>
+  <data name="Template.CustomHttp.Description" xml:space="preserve"><value>连接任何支持 Streamable HTTP 的 MCP 服务。</value></data>
+  <data name="Template.CustomHttp.Auth" xml:space="preserve"><value>Bearer Token（可选）</value></data>
+  <data name="Template.CustomSse.Description" xml:space="preserve"><value>连接使用 SSE 传输的 MCP 服务。</value></data>
+  <data name="Template.CustomSse.Auth" xml:space="preserve"><value>Bearer Token（可选）</value></data>
+  <data name="Template.Ncf.Description" xml:space="preserve"><value>将当前 NCF 系统发布的 MCP 服务创建为连接器。</value></data>
+  <data name="Template.Ncf.Auth" xml:space="preserve"><value>访问令牌（可选）</value></data>
+  <data name="Error.McpModuleNotInstalled" xml:space="preserve"><value>请先启用 MCP 模块，再创建 MCP 连接器。</value></data>
+  <data name="Error.TemplateNotFound" xml:space="preserve"><value>未找到连接器模板。</value></data>
+  <data name="Error.McpCreatedButTestFailed" xml:space="preserve"><value>MCP 连接已保存，但工具发现失败：{0}</value></data>
+  <data name="Error.ParameterRequired" xml:space="preserve"><value>该动作需要参数“{0}”。</value></data>
 </root>

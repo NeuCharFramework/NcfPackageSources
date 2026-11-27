@@ -9,6 +9,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.0.1 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.0.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -59,9 +62,11 @@ namespace Senparc.Web.FirefoxDriverTest
         }
 
         /// <summary>
-        /// settingsrole
+        /// Opens the role-assignment dialog for an administrator row, selects a random
+        /// non-empty subset of roles, saves it, and verifies the same roles are selected
+        /// when the dialog is reopened.
         /// </summary>
-        /// <param name="tr"></param>
+        /// <param name="tr">The administrator table row whose roles are being configured.</param>
         private void _setAdminRoel(IWebElement tr)
         {
             tr.FindElement(By.CssSelector("td:nth-child(5) div.cell button:nth-child(2)")).Click();//settingsrole

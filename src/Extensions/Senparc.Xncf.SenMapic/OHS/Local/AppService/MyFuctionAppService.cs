@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.4.13 Integrated localization, tooling, and runtime improvements across the module.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.13.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +48,12 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.AppService
     {
         private ColorService _colorService;
         private SenMapicTaskService _senMapicTaskService;
+        /// <summary>
+        /// Initializes the SenMapic function service.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
+        /// <param name="colorService">The color service dependency.</param>
+        /// <param name="senMapicTaskService">The crawl-task service dependency.</param>
         public MyFuctionAppService(IServiceProvider serviceProvider, ColorService colorService, SenMapicTaskService senMapicTaskService) : base(serviceProvider)
         {
             _colorService = colorService;
@@ -54,6 +63,11 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.AppService
 
         //[McpServerTool]
         [FunctionRender(typeof(SenMapicResource), "Function.SenMapic.Crawl.Name", "Function.SenMapic.Crawl.Description", typeof(Register))]
+        /// <summary>
+        /// Crawls the requested site with bounded depth/page settings and returns combined content.
+        /// </summary>
+        /// <param name="request">The URL, crawl depth, and page-count request.</param>
+        /// <returns>A string response containing crawl results and logs.</returns>
         public async Task<StringAppResponse> WebSpider(MyFunction_SenMapicRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -92,6 +106,11 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.AppService
         }
 
         [FunctionRender(typeof(SenMapicResource), "Function.Sample.Name", "Function.Sample.Description", typeof(Register))]
+        /// <summary>
+        /// Evaluates the requested arithmetic operation and optional power transformations.
+        /// </summary>
+        /// <param name="request">The operands, operator, display name, and optional powers.</param>
+        /// <returns>A string response containing the calculation result.</returns>
         public async Task<StringAppResponse> Calculate(MyFunction_CaculateRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

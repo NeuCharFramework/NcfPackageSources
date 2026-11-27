@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.42.0.0 add MCP endpoint gateway and tool invocation contracts
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -298,11 +301,23 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
             }
         }
 
+        /// <summary>
+        /// Computes the lowercase hexadecimal SHA-256 digest of an in-memory file payload.
+        /// This digest is used for optimistic concurrency and result reporting.
+        /// </summary>
+        /// <param name="bytes">The file bytes to hash.</param>
+        /// <returns>The lowercase hexadecimal SHA-256 digest.</returns>
         private static string ComputeSha256(byte[] bytes)
         {
             return Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant();
         }
 
+        /// <summary>
+        /// Finds module directories containing a matching project file while avoiding excluded/reparse paths.
+        /// </summary>
+        /// <param name="solutionDirectory">The solution directory to search.</param>
+        /// <param name="moduleName">The module project name.</param>
+        /// <returns>Matching module directories.</returns>
         private static IEnumerable<string> EnumerateModuleDirectories(string solutionDirectory, string moduleName)
         {
             var pending = new Stack<string>();
@@ -331,6 +346,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
             }
         }
 
+        /// <summary>
+        /// Validates an XNCF module name as a single safe project-name segment.
+        /// </summary>
+        /// <param name="moduleName">The module name.</param>
+        /// <exception cref="ArgumentException">Thrown when the name is invalid.</exception>
         private static void ValidateModuleName(string moduleName)
         {
             if (string.IsNullOrWhiteSpace(moduleName)
@@ -343,6 +363,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
             }
         }
 
+        /// <summary>
+        /// Rejects a target path whose existing components traverse symbolic links/reparse points.
+        /// </summary>
+        /// <param name="rootPath">The trusted workspace root.</param>
+        /// <param name="targetPath">The target path to inspect.</param>
+        /// <exception cref="UnauthorizedAccessException">Thrown when a reparse point is encountered.</exception>
         private static void EnsureNoSymbolicLink(string rootPath, string targetPath)
         {
             var root = Path.GetFullPath(rootPath);
@@ -363,6 +389,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
             }
         }
 
+        /// <summary>
+        /// Returns the operating-system-appropriate path comparer.
+        /// </summary>
+        /// <returns>The path comparer.</returns>
         private static StringComparer GetPathComparer()
         {
             return OperatingSystem.IsWindows() || OperatingSystem.IsMacOS()
@@ -370,6 +400,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
                 : StringComparer.Ordinal;
         }
 
+        /// <summary>
+        /// Returns the operating-system-appropriate path comparison mode.
+        /// </summary>
+        /// <returns>The path comparison mode.</returns>
         private static StringComparison GetPathComparison()
         {
             return OperatingSystem.IsWindows() || OperatingSystem.IsMacOS()

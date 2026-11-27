@@ -5,6 +5,9 @@
     File name: InstallCultureHelper.cs
     File description: Apply UI culture during NCF first-time installation.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.6.0.1 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -52,6 +55,11 @@ namespace Senparc.Xncf.Installer.Domain.Services
                 _previousUiCulture = previousUiCulture;
             }
 
+            /// <inheritdoc/>
+            /// <remarks>
+            /// Restores both the culture used for general formatting and the UI
+            /// culture used for localized resource lookup.
+            /// </remarks>
             public void Dispose()
             {
                 CultureInfo.CurrentCulture = _previousCulture;
@@ -63,6 +71,11 @@ namespace Senparc.Xncf.Installer.Domain.Services
         {
             public static readonly NoOpDisposable Instance = new();
 
+            /// <inheritdoc/>
+            /// <remarks>
+            /// Intentionally performs no work because the invalid-culture path
+            /// did not modify the ambient culture.
+            /// </remarks>
             public void Dispose()
             {
             }

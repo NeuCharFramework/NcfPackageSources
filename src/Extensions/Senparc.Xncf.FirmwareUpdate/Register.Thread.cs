@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.11 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.11.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +32,10 @@ namespace Senparc.Xncf.FirmwareUpdate;
 
 public partial class Register : IXncfThread
 {
+    /// <summary>
+    /// Registers the periodic package-mirror background task and its cancellation/error behavior.
+    /// </summary>
+    /// <param name="xncfThreadBuilder">The NCF thread builder.</param>
     public void ThreadConfig(XncfThreadBuilder xncfThreadBuilder)
     {
         xncfThreadBuilder.AddThreadInfo(new Ncf.XncfBase.Threads.ThreadInfo(

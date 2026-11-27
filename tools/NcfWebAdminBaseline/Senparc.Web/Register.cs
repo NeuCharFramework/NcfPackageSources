@@ -31,6 +31,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.39.9 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.39.10 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 
@@ -391,11 +394,10 @@ namespace Senparc.Web
 
 
         /// <summary>
-
-        ///Legacy comment translated to English.
+        /// Configures the selected Redis cache provider when the site settings contain
+        /// a usable Redis connection string.
         /// </summary>
-
-        /// <param name="senparcSetting"></param>
+        /// <param name="senparcSetting">The options containing the Redis configuration.</param>
 
         private static void SetCache(IOptions<SenparcSetting> senparcSetting)
 
@@ -434,12 +436,10 @@ namespace Senparc.Web
 
 
         /// <summary>
-
-        /// output the startup success marker
-
+        /// Writes the localized startup-ready marker, start timestamp, and elapsed time
+        /// through the NCF version manager.
         /// </summary>
-
-        /// <param name="app"></param>
+        /// <param name="app">The web application whose startup has completed.</param>
 
         public static void ShowSuccessTip(this WebApplication app)
 
@@ -473,13 +473,12 @@ namespace Senparc.Web
 
 
         /// <summary>
-
-        ///Legacy comment translated to English.
+        /// Determines whether Redis is enabled and returns the configured connection string.
+        /// Template placeholder values are treated as disabled configuration.
         /// </summary>
-
-        /// <param name="senparcSetting"></param>
-
-        /// <returns></returns>
+        /// <param name="senparcSetting">The site cache settings.</param>
+        /// <param name="redisConfigurationStr">Receives the configured Redis connection string.</param>
+        /// <returns><see langword="true"/> when a non-empty non-placeholder Redis configuration is present.</returns>
 
         internal static bool UseRedis(SenparcSetting senparcSetting, out string redisConfigurationStr)
 
@@ -496,8 +495,7 @@ namespace Senparc.Web
 
 
         /// <summary>
-
-        ///Legacy comment translated to English.
+        /// Registers the trace-log configuration used by the web application.
         /// </summary>
 
         private static void ConfigTraceLog()

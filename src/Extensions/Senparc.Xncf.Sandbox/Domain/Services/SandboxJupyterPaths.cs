@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Sandbox.Domain.Services;
@@ -23,10 +26,16 @@ namespace Senparc.Xncf.Sandbox.Domain.Services;
 public static class SandboxJupyterPaths
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Prefix used by the Jupyter reverse-proxy routes.
     /// </summary>
     public const string ProxyPrefix = "/sandbox-jupyter";
 
+    /// <summary>
+    /// Builds the normalized reverse-proxy base URL for a Sandbox session.
+    /// </summary>
+    /// <param name="sessionId">The non-empty session identifier.</param>
+    /// <returns>The session-scoped proxy base URL with a trailing slash.</returns>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="sessionId"/> is empty.</exception>
     public static string GetBaseUrl(string sessionId)
     {
         if (string.IsNullOrWhiteSpace(sessionId))
@@ -37,8 +46,22 @@ public static class SandboxJupyterPaths
         return $"{ProxyPrefix}/{sessionId.Trim().ToLowerInvariant()}/";
     }
 
+    /// <summary>
+    /// Builds the JupyterLab entry path under a session-scoped proxy URL.
+    /// </summary>
+    /// <param name="sessionId">The non-empty session identifier.</param>
+    /// <returns>The JupyterLab proxy path.</returns>
     public static string GetLabEntryUrl(string sessionId) => GetBaseUrl(sessionId) + "lab";
 
+    /// <summary>
+    /// Builds a loopback URL that connects directly to a JupyterLab host port.
+    /// </summary>
+    /// <param name="sessionId">The session identifier.</param>
+    /// <param name="hostPort">The local host port in the range 1 through 65535.</param>
+    /// <param name="accessToken">The non-empty Jupyter access token.</param>
+    /// <returns>A loopback JupyterLab URL with an escaped token query value.</returns>
+    /// <exception cref="ArgumentException">Thrown when the session identifier or access token is empty.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="hostPort"/> is outside the TCP port range.</exception>
     public static string GetDirectLabEntryUrl(string sessionId, int hostPort, string accessToken)
     {
         if (hostPort is < 1 or > 65535)
@@ -54,6 +77,13 @@ public static class SandboxJupyterPaths
         return $"http://127.0.0.1:{hostPort}{GetLabEntryUrl(sessionId)}?token={Uri.EscapeDataString(accessToken)}";
     }
 
+    /// <summary>
+    /// Parses a Jupyter proxy path into its session identifier and backend-relative remainder.
+    /// </summary>
+    /// <param name="path">The incoming request path.</param>
+    /// <param name="sessionId">Receives the parsed session identifier.</param>
+    /// <param name="remaining">Receives the remaining backend path, defaulting to <c>/</c>.</param>
+    /// <returns><see langword="true"/> when the path contains a valid session segment.</returns>
     public static bool TryParse(string path, out string sessionId, out string remaining)
     {
         sessionId = string.Empty;

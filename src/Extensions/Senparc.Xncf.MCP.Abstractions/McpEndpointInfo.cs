@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.1.2 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.1.2.2 Expand MCP endpoint gateway, credentials, and tool invocation support.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -26,18 +29,18 @@ using System;
 namespace Senparc.Xncf.MCP.Abstractions;
 
 /// <summary>
-///Legacy comment translated to English.
+/// Describes one configured MCP endpoint and the latest connectivity/tool-discovery status.
 /// </summary>
-///Legacy comment translated to English.
-///Legacy comment translated to English.
-///Legacy comment translated to English.
-///Legacy comment translated to English.
-///Legacy comment translated to English.
-/// <param name="Description">descriptioninformation。</param>
-/// <param name="Enabled">whether enabled。</param>
-///Legacy comment translated to English.
-/// <param name="LastTestResult">finallytestresult（success/failure）。</param>
-///Legacy comment translated to English.
+/// <param name="Id">The persisted endpoint identifier.</param>
+/// <param name="Name">The display name.</param>
+/// <param name="Endpoint">The configured transport endpoint.</param>
+/// <param name="EndpointType">The transport type, such as SSE or streamable HTTP.</param>
+/// <param name="ProtocolVersion">The configured protocol version.</param>
+/// <param name="Description">The administrator description.</param>
+/// <param name="Enabled">Whether the endpoint is enabled for selection.</param>
+/// <param name="LastTestedTime">The last connectivity-test time.</param>
+/// <param name="LastTestResult">Whether the last connectivity test succeeded.</param>
+/// <param name="LastToolCount">The number of tools discovered by the last successful test.</param>
 public sealed record McpEndpointInfo(
     int Id,
     string Name,

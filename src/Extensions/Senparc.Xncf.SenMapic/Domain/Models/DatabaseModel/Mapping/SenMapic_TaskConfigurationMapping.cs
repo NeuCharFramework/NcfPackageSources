@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.13 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.13.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -24,6 +27,7 @@ namespace Senparc.Xncf.SenMapic.Models
     [XncfAutoConfigurationMapping]
     public class SenMapic_TaskConfigurationMapping : ConfigurationMappingWithIdBase<SenMapicTask, int>
     {
+        /// <inheritdoc />
         public override void Configure(EntityTypeBuilder<SenMapicTask> builder)
         {
             builder.Property(e => e.Name).IsRequired().HasMaxLength(100);
@@ -31,4 +35,4 @@ namespace Senparc.Xncf.SenMapic.Models
             builder.Property(e => e.ErrorMessage).HasMaxLength(2000);
         }
     }
-} 
+}

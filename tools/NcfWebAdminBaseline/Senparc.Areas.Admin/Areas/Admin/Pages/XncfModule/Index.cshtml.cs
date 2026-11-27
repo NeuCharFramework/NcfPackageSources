@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
 using Senparc.CO2NET.Trace;
@@ -75,6 +78,11 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             NewXncfRegisters = XncfRegisterManager.RegisterList.Where(z => !z.IgnoreInstall && !xncfModules.Exists(m => m.Uid == z.Uid && m.Version == z.Version)).ToList() ?? new List<IXncfRegister>();
         }
 
+        /// <summary>
+        /// Loads the paged installed-module list and identifies registered module versions
+        /// that are available for installation or update.
+        /// </summary>
+        /// <returns>A task that completes after the page model collections are populated.</returns>
         public async Task OnGetAsync()
         {
             //Legacy comment translated to English.
@@ -84,9 +92,10 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Installs or updates the module identified by the route and redirects to its start page.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="uid">The registered XNCF module UID.</param>
+        /// <returns>A redirect to the module start page.</returns>
         public async Task<IActionResult> OnGetScanAsync(string uid)
         {
             var result = await _xncfModuleServiceEx.InstallModuleAsync(uid, true);
@@ -99,9 +108,10 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// hide“module management”feature
+        /// Toggles the persisted module-manager visibility setting and redirects to the
+        /// appropriate dashboard or module-manager page.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A redirect to the page selected by the resulting visibility state.</returns>
         public async Task<IActionResult> OnPostHideManagerAsync()
         {
             //Legacy comment translated to English.
@@ -120,9 +130,9 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// hide“module management”feature handler=HideManagerAjax
+        /// Toggles the persisted module-manager visibility setting for an AJAX caller.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An <see cref="OkObjectResult"/> containing the resulting visibility value.</returns>
         public async Task<IActionResult> OnPostHideManagerAjaxAsync()
         {
             //Legacy comment translated to English.
@@ -141,9 +151,11 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns installed modules joined with their registered area URLs and icons.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="pageIndex">The requested page number; zero delegates paging behavior to the service.</param>
+        /// <param name="pageSize">The requested page size; zero delegates paging behavior to the service.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing module data and visibility state.</returns>
         public async Task<IActionResult> OnGetMofulesAsync(int pageIndex = 0, int pageSize = 0)
         {
             //Legacy comment translated to English.
@@ -164,9 +176,9 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns registered modules that are not installed in the current database.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An <see cref="OkObjectResult"/> containing install candidates.</returns>
         public async Task<IActionResult> OnGetUnMofulesAsync()
         {
             //Legacy comment translated to English.
@@ -186,9 +198,9 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns registered modules whose versions are newer than the installed versions.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An <see cref="OkObjectResult"/> containing update candidates.</returns>
         public async Task<IActionResult> OnGetUpdatedMofulesAsync()
         {
             //Legacy comment translated to English.
@@ -207,9 +219,10 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Installs or updates one module and returns the resulting module list without redirecting.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="uid">The registered XNCF module UID.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing the resulting module list.</returns>
         public async Task<IActionResult> OnGetScanAjaxAsync(string uid)
         {
             var result = await _xncfModuleServiceEx.InstallModuleAsync(uid, true);
@@ -377,10 +390,10 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Installs the registered module whose internal name matches the supplied value.
         /// </summary>
-        /// <param name="xncfName"></param>
-        /// <returns></returns>
+        /// <param name="xncfName">The registered module name.</param>
+        /// <returns>A redirect or error result describing the installation outcome.</returns>
         public async Task<IActionResult> OnGetInstallModuleAsync(string xncfName)
         {
             bool success = true;

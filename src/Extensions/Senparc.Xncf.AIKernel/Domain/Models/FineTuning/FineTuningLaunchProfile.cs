@@ -10,6 +10,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -33,6 +36,11 @@ public sealed class FineTuningLaunchProfile
     public string WorkerProjectPath { get; set; } = "";
     public bool AutoStart { get; set; }
 
+    /// <summary>
+    /// Serializes the launch profile for persistence.
+    /// </summary>
+    /// <returns>The web-default JSON representation.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the serialized profile exceeds 2000 characters.</exception>
     public string ToJson()
     {
         var json = JsonSerializer.Serialize(this, JsonOptions);
@@ -41,6 +49,12 @@ public sealed class FineTuningLaunchProfile
         return json;
     }
 
+    /// <summary>
+    /// Deserializes a launch profile and applies safe defaults for missing fields.
+    /// </summary>
+    /// <param name="json">The persisted JSON text; blank input produces a default profile.</param>
+    /// <param name="profile">Receives the parsed or default profile.</param>
+    /// <returns><see langword="true"/> when parsing succeeds or input is blank; otherwise <see langword="false"/>.</returns>
     public static bool TryFromJson(string json, out FineTuningLaunchProfile profile)
     {
         profile = new FineTuningLaunchProfile();

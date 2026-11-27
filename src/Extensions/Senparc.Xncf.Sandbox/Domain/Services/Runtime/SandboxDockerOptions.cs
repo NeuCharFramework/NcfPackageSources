@@ -16,26 +16,27 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Sandbox.Domain.Services.Runtime;
 
 /// <summary>
-///Legacy comment translated to English.
+/// Configures Docker-specific Sandbox startup behavior.
 /// </summary>
 public sealed class SandboxDockerOptions
 {
     public const string SectionName = "SenparcXncfSandbox:Docker";
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Maximum time allowed to create an interactive Docker session, in seconds.</summary>
     public int InteractiveCreateTimeoutSeconds { get; set; } = 900;
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Returns the configured interactive-create timeout clamped to 60 seconds through one hour.
     /// </summary>
+    /// <returns>The effective interactive creation timeout.</returns>
     public TimeSpan GetInteractiveCreateTimeout() =>
         TimeSpan.FromSeconds(Math.Clamp(InteractiveCreateTimeoutSeconds, 60, 3600));
 }

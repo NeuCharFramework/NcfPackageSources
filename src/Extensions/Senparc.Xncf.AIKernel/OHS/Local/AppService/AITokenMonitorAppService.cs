@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;
@@ -52,6 +55,13 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         private readonly AITokenUsageService _aITokenUsageService;
         private readonly AITokenMonitorService _aITokenMonitorService;
 
+        /// <summary>
+        /// Initializes token-usage monitoring and model lookup dependencies.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
+        /// <param name="aIModelService">The AI model service.</param>
+        /// <param name="aITokenUsageService">The token usage query service.</param>
+        /// <param name="aITokenMonitorService">The token monitor service.</param>
         public AITokenMonitorAppService(
             IServiceProvider serviceProvider,
             AIModelService aIModelService,
@@ -66,8 +76,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         #region Legacy section
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns a paged token-usage list using the requested filters and ordering.
         /// </summary>
+        /// <param name="request">The paging, filter, and ordering request.</param>
+        /// <returns>A response containing token-usage DTOs and total count.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PagedResponse<AITokenUsageDto>>> GetPagedListAsync(AITokenUsage_GetListRequest request)
         {
@@ -88,8 +100,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns all token-usage records matching the supplied filters.
         /// </summary>
+        /// <param name="request">The filter and ordering request.</param>
+        /// <returns>A response containing token-usage DTOs.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<List<AITokenUsageDto>>> GetListAsync(AITokenUsage_GetListRequest request)
         {
@@ -105,8 +119,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Loads one persisted token-usage record.
         /// </summary>
+        /// <param name="id">The token-usage identifier.</param>
+        /// <returns>A response containing the usage DTO.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<AITokenUsageDto>> GetAsync(int id)
         {
@@ -118,8 +134,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Deletes one persisted token-usage record.
         /// </summary>
+        /// <param name="id">The token-usage identifier.</param>
+        /// <returns>A response indicating whether deletion completed.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Delete)]
         public async Task<AppResponseBase<bool>> DeleteAsync(int id)
         {
@@ -142,8 +160,9 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         #region Legacy section
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns aggregated token usage for the last seven days.
         /// </summary>
+        /// <returns>A response containing persisted usage statistics.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<AITokenMonitorStats>> GetStatsAsync()
         {
@@ -155,8 +174,9 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns live in-memory token usage for the current tenant over the last seven days.
         /// </summary>
+        /// <returns>A response containing live monitor statistics.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<AITokenMonitorStats>> GetLiveStatsAsync()
         {
@@ -171,8 +191,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         #region Legacy section
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Runs one configured AI model while recording live token progress.
         /// </summary>
+        /// <param name="request">The model identifier, prompt, system message, and generation limits.</param>
+        /// <returns>A response containing run output, usage, timing, and errors.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<AITokenMonitor_RunModelResponse>> RunModelWithMonitorAsync(AITokenMonitor_RunModelRequest request)
         {
@@ -235,8 +257,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns the latest token-progress event for a monitored run and current tenant.
         /// </summary>
+        /// <param name="request">The monitored run identifier.</param>
+        /// <returns>A response containing the latest progress event.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<AITokenProgressEvent>> GetProgressAsync(AITokenMonitor_GetProgressRequest request)
         {
@@ -248,8 +272,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns buffered token-progress events for a monitored run and current tenant.
         /// </summary>
+        /// <param name="request">The monitored run identifier.</param>
+        /// <returns>A response containing buffered progress events in sequence order.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<List<AITokenProgressEvent>>> GetBufferedProgressAsync(AITokenMonitor_GetProgressRequest request)
         {

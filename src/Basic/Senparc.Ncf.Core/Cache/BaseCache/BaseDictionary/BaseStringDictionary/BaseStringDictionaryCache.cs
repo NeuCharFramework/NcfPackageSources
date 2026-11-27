@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -32,11 +35,11 @@ namespace Senparc.Ncf.Core.Cache
         where TValue : class, new()
     {
         /// <summary>
-        /// 
+        /// Initializes a string-keyed cache backed by the supplied database wrapper.
         /// </summary>
-        /// <param name="CACHE_KEY"></param>
-        /// <param name="db"></param>
-        ///Legacy comment translated to English.
+        /// <param name="CACHE_KEY">The cache key prefix.</param>
+        /// <param name="db">The database wrapper used for persistence.</param>
+        /// <param name="timeOut">The cache timeout.</param>
         public BaseStringDictionaryCache(string CACHE_KEY, INcfDbData db, int timeOut)
             : base(CACHE_KEY, db, timeOut)
         {
@@ -49,11 +52,11 @@ namespace Senparc.Ncf.Core.Cache
         where TEntity : class/*, new()*/
     {
         /// <summary>
-        /// 
+        /// Initializes a string-keyed cache with a distinct entity persistence type.
         /// </summary>
-        /// <param name="CACHE_KEY"></param>
-        /// <param name="db"></param>
-        ///Legacy comment translated to English.
+        /// <param name="CACHE_KEY">The cache key prefix.</param>
+        /// <param name="db">The database wrapper used for persistence.</param>
+        /// <param name="timeOut">The cache timeout.</param>
         public BaseStringDictionaryCache(string CACHE_KEY, INcfDbData db, int timeOut)
             : base(CACHE_KEY, db, timeOut)
         {

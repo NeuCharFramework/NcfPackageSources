@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -26,21 +29,21 @@ namespace Senparc.Ncf.Core.Cache
         Func<T> _fun;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Initializes a cache using the default timeout.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <param name="fun"></param>
+        /// <param name="key">The logical cache key suffix.</param>
+        /// <param name="fun">The factory used to refresh the value.</param>
         public CommonDataCache(string key, Func<T> fun)
             :this(key, 1440, fun)
         {
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Initializes a cache with an explicit timeout and refresh factory.
         /// </summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <param name="fun"></param>
+        /// <param name="key">The logical cache key suffix.</param>
+        /// <param name="timeout">The cache timeout in minutes.</param>
+        /// <param name="fun">The factory used to refresh the value.</param>
         public CommonDataCache(string key, int timeout, Func<T> fun)
             : base(CACHE_KEY + key)
         {

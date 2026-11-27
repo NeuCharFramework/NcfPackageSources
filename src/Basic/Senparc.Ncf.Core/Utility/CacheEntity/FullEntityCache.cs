@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Log;
@@ -22,6 +25,14 @@ namespace Senparc.Ncf.Core.Utility
 {
     public static class FullEntityCache
     {
+        /// <summary>
+        /// Copies properties marked with <see cref="AutoSetCacheAttribute"/> from an entity to a cache projection.
+        /// </summary>
+        /// <typeparam name="TFullEntity">The cache projection type.</typeparam>
+        /// <typeparam name="TEntity">The source entity type.</typeparam>
+        /// <param name="fullEntity">The cache projection receiving values.</param>
+        /// <param name="entity">The source entity.</param>
+        /// <exception cref="Exception">Thrown when either object is null or a marked property is missing/incompatible.</exception>
         public static void SetFullEntityCache<TFullEntity, TEntity>(TFullEntity fullEntity, TEntity entity)
         {
             if (fullEntity == null || entity == null)

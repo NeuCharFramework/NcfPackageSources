@@ -11,6 +11,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Xncf.AIKernel.Models;
@@ -29,10 +32,17 @@ public sealed class AIModelSelectionResponse
 
     public bool Show { get; set; }
 
+    /// <summary>
+    /// Initializes an empty model-selector response.
+    /// </summary>
     public AIModelSelectionResponse()
     {
     }
 
+    /// <summary>
+    /// Projects non-sensitive selector fields from an AI model.
+    /// </summary>
+    /// <param name="model">The model to project.</param>
     public AIModelSelectionResponse(AIModel model)
     {
         Id = model.Id;
@@ -53,10 +63,17 @@ public sealed class AIVectorSelectionResponse
 
     public bool Show { get; set; }
 
+    /// <summary>
+    /// Initializes an empty vector-selector response.
+    /// </summary>
     public AIVectorSelectionResponse()
     {
     }
 
+    /// <summary>
+    /// Projects non-sensitive selector fields from a vector database configuration.
+    /// </summary>
+    /// <param name="vector">The vector configuration to project.</param>
     public AIVectorSelectionResponse(AIVector vector)
     {
         Id = vector.Id;

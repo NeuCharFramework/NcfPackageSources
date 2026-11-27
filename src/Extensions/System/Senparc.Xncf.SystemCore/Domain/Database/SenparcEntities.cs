@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.14.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.14.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -26,14 +29,25 @@ using Senparc.Ncf.XncfBase;
 namespace Senparc.Xncf.SystemCore.Domain.Database
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Root system database context that dynamically applies the model configuration
+    /// contributed by registered XNCF database modules.
     /// </summary>
     public partial class SenparcEntities : SenparcEntitiesBase, ISenparcEntitiesDbContext
     {
+        /// <summary>
+        /// Initializes the system database context with provider options and service access.
+        /// </summary>
+        /// <param name="dbContextOptions">The provider-specific EF Core options.</param>
+        /// <param name="serviceProvider">The service provider used by the base context.</param>
         public SenparcEntities(DbContextOptions/*<SenparcEntities>*/ dbContextOptions, IServiceProvider serviceProvider) : base(dbContextOptions, serviceProvider)
         {
         }
 
+        /// <inheritdoc />
+        /// <remarks>
+        /// The method enumerates registered database modules and delegates their
+        /// model configuration to the shared EF Core model builder.
+        /// </remarks>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             #region Legacy section
@@ -51,7 +65,7 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
             Console.WriteLine("============= SenparcEntities 动态加载 Start =============");
             var databaseList = XncfRegisterManager.XncfDatabaseList;
 
-            //Legacy comment translated to English.
+            // Calculate column widths once so the diagnostic table remains readable.
             int maxRegisterLength = databaseList.Max(db => db.GetType().FullName.Length);
             int maxDbContextTypeLength = databaseList.Max(db => db.TryGetXncfDatabaseDbContextType.Name.Length);
             Console.WriteLine($"{"Register".PadRight(maxRegisterLength)} | {"DbContextType"}");
@@ -62,7 +76,6 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
                 string typeName = databaseRegister.GetType().FullName;
                 string dbContextTypeName = databaseRegister.TryGetXncfDatabaseDbContextType.Name;
 
-                //Legacy comment translated to English.
                 Console.WriteLine($"{typeName.PadRight(maxRegisterLength)} | {dbContextTypeName}");
 
                 databaseRegister.OnModelCreating(modelBuilder);

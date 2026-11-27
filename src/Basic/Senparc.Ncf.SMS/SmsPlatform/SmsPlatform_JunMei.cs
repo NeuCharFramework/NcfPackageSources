@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.13-preview13 Updated SMS integration support and related localization metadata
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.13.2-preview14 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -43,13 +46,18 @@ namespace Senparc.Ncf.SMS
 
         }
 
-        public override string SmsServiceAddress => "http://120.77.14.55:8888/sms.aspx";
         /// <summary>
-        /// 
+        /// Gets the fixed JunMei endpoint used by the legacy provider API.
         /// </summary>
-        /// <param name="content"></param>
-        /// <param name="number"></param>
-        /// <returns></returns>
+        public override string SmsServiceAddress => "http://120.77.14.55:8888/sms.aspx";
+
+        /// <inheritdoc cref="ISmsPlatform.Send(string, string)"/>
+        /// <remarks>
+        /// Long content is split into provider-sized segments. The method returns
+        /// <see cref="SmsResult.成功"/> only when the provider response reports success;
+        /// transport or parsing failures are logged and returned as
+        /// <see cref="SmsResult.未知错误"/>.
+        /// </remarks>
         public override SmsResult Send(string content, string number)
         {
             SmsResult smsResult = SmsResult.未知错误;
@@ -59,7 +67,6 @@ namespace Senparc.Ncf.SMS
                 int contentIndex = 0;
                 int limitedLetterCount = 65 * 4;
 
-                //Legacy comment translated to English.
                 List<string> messageList = new List<string>();
                 while (contentIndex < content.Length)
                 {
@@ -68,7 +75,6 @@ namespace Senparc.Ncf.SMS
                     contentIndex += limitedLetterCount;
                 }
 
-                //Legacy comment translated to English.
                 for (int i = 0; i < messageList.Count; i++)
                 {
                     var msg = messageList[i];
@@ -97,6 +103,7 @@ namespace Senparc.Ncf.SMS
             return smsResult;
         }
 
+        /// <inheritdoc />
         public override string GetLastCount()
         {
             var url = $"{SmsServiceAddress}?action=overage&userid={Setting.SmsAccountCORPID}&account={Setting.SmsAccountName}&password={Setting.SmsAccountPassword}";

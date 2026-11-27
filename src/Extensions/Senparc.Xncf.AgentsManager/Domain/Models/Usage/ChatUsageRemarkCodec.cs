@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -33,6 +36,9 @@ public static class ChatUsageRemarkCodec
     private const string MessagePrefix = "u1";
     private const string AggregatePrefix = "a1";
 
+    /// <summary>Encodes one response usage snapshot into the compact remark format.</summary>
+    /// <param name="snapshot">The usage snapshot to encode.</param>
+    /// <returns>The compact remark string, or <see langword="null"/> for a null snapshot.</returns>
     public static string EncodeMessage(ChatUsageSnapshot snapshot)
     {
         if (snapshot == null)
@@ -58,6 +64,10 @@ public static class ChatUsageRemarkCodec
         return $"{MessagePrefix}|pt:{safePrompt}|ct:{safeCompletion}|tt:{safeTotal}|ms:{safeResponseMs}|r:{safeRound}|id:{responseId}";
     }
 
+    /// <summary>Decodes a compact response usage remark.</summary>
+    /// <param name="remark">The stored remark text.</param>
+    /// <param name="snapshot">Receives the decoded snapshot when parsing succeeds.</param>
+    /// <returns><see langword="true"/> when the remark has the expected format.</returns>
     public static bool TryDecodeMessage(string remark, out ChatUsageSnapshot snapshot)
     {
         snapshot = null;
@@ -84,6 +94,9 @@ public static class ChatUsageRemarkCodec
         return true;
     }
 
+    /// <summary>Encodes aggregate task usage into the compact remark format.</summary>
+    /// <param name="aggregate">The aggregate usage to encode.</param>
+    /// <returns>The compact aggregate remark, or <see langword="null"/> for null input.</returns>
     public static string EncodeAggregate(ChatTaskUsageAggregate aggregate)
     {
         if (aggregate == null)
@@ -101,6 +114,10 @@ public static class ChatUsageRemarkCodec
         return $"{AggregatePrefix}|m:{messageCount}|pt:{prompt}|ct:{completion}|tt:{total}|sr:{totalResponseMs}|mx:{maxResponseMs}";
     }
 
+    /// <summary>Decodes a compact aggregate usage remark.</summary>
+    /// <param name="remark">The stored remark text.</param>
+    /// <param name="aggregate">Receives the decoded aggregate when parsing succeeds.</param>
+    /// <returns><see langword="true"/> when the remark has the expected format.</returns>
     public static bool TryDecodeAggregate(string remark, out ChatTaskUsageAggregate aggregate)
     {
         aggregate = null;
@@ -127,6 +144,9 @@ public static class ChatUsageRemarkCodec
         return true;
     }
 
+    /// <summary>Decodes aggregate usage or returns an empty aggregate when parsing fails.</summary>
+    /// <param name="remark">The stored remark text.</param>
+    /// <returns>The decoded or empty aggregate.</returns>
     public static ChatTaskUsageAggregate DecodeAggregateOrDefault(string remark)
     {
         return TryDecodeAggregate(remark, out var aggregate)
@@ -134,6 +154,13 @@ public static class ChatUsageRemarkCodec
             : new ChatTaskUsageAggregate();
     }
 
+    /// <summary>
+    /// Parses the compact pipe-separated remark format into key/value fields.
+    /// </summary>
+    /// <param name="remark">The stored compact remark.</param>
+    /// <param name="expectedPrefix">The expected version/type prefix.</param>
+    /// <param name="map">Receives parsed fields when the prefix and segments are valid.</param>
+    /// <returns><see langword="true"/> when at least one valid field is parsed.</returns>
     private static bool TryDecodeInternal(string remark, string expectedPrefix, out Dictionary<string, string> map)
     {
         map = null;
@@ -166,6 +193,12 @@ public static class ChatUsageRemarkCodec
         return map.Count > 0;
     }
 
+    /// <summary>
+    /// Reads a non-throwing invariant integer field from a decoded remark map.
+    /// </summary>
+    /// <param name="map">The decoded field map.</param>
+    /// <param name="key">The field key.</param>
+    /// <returns>The parsed integer or zero.</returns>
     private static int GetInt(Dictionary<string, string> map, string key)
     {
         if (map.TryGetValue(key, out var value)
@@ -177,6 +210,12 @@ public static class ChatUsageRemarkCodec
         return 0;
     }
 
+    /// <summary>
+    /// Reads a string field from a decoded remark map, treating the sentinel as empty.
+    /// </summary>
+    /// <param name="map">The decoded field map.</param>
+    /// <param name="key">The field key.</param>
+    /// <returns>The stored value or an empty string.</returns>
     private static string GetString(Dictionary<string, string> map, string key)
     {
         return map.TryGetValue(key, out var value) && value != "-"
@@ -207,6 +246,10 @@ public sealed class ChatTaskUsageAggregate
     public double AverageResponseMilliseconds =>
         MessageCount <= 0 ? 0 : (double)TotalResponseMilliseconds / MessageCount;
 
+    /// <summary>
+    /// Adds one response usage snapshot to this aggregate and updates response-time statistics.
+    /// </summary>
+    /// <param name="snapshot">The usage snapshot to merge.</param>
     public void Merge(ChatUsageSnapshot snapshot)
     {
         if (snapshot == null)

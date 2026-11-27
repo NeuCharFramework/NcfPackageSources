@@ -16,12 +16,22 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Sandbox.Domain.Services;
 
 public static class SandboxWorkspacePaths
 {
+    /// <summary>
+    /// Normalizes a workspace-relative path and rejects roots, traversal, separators, and invalid characters.
+    /// </summary>
+    /// <param name="value">The path value to normalize.</param>
+    /// <param name="allowEmpty">Whether an empty path represents the workspace root.</param>
+    /// <returns>A slash-separated normalized relative path.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the path violates workspace constraints.</exception>
     public static string NormalizeRelativePath(string? value, bool allowEmpty = false)
     {
         var normalized = (value ?? string.Empty).Trim().Replace('\\', '/');
@@ -61,6 +71,12 @@ public static class SandboxWorkspacePaths
         return string.Join('/', segments);
     }
 
+    /// <summary>
+    /// Resolves a session directory under a workspace root without allowing path escape.
+    /// </summary>
+    /// <param name="workspaceRoot">The physical workspace root.</param>
+    /// <param name="sessionId">The single-segment session identifier.</param>
+    /// <returns>The physical session workspace path.</returns>
     public static string GetSessionWorkspacePath(string workspaceRoot, string sessionId)
     {
         if (string.IsNullOrWhiteSpace(workspaceRoot))
@@ -88,6 +104,12 @@ public static class SandboxWorkspacePaths
         return path;
     }
 
+    /// <summary>
+    /// Combines a host workspace path with a validated relative path.
+    /// </summary>
+    /// <param name="workspacePath">The physical workspace path.</param>
+    /// <param name="relativePath">The workspace-relative path.</param>
+    /// <returns>The physical child path.</returns>
     public static string CombineHostPath(string workspacePath, string relativePath)
     {
         var relative = NormalizeRelativePath(relativePath);
@@ -103,6 +125,12 @@ public static class SandboxWorkspacePaths
         return path;
     }
 
+    /// <summary>
+    /// Combines a container mount path with a validated relative path.
+    /// </summary>
+    /// <param name="mountPath">The absolute container mount path.</param>
+    /// <param name="relativePath">The workspace-relative path.</param>
+    /// <returns>The container path.</returns>
     public static string CombineContainerPath(string mountPath, string relativePath)
     {
         if (string.IsNullOrWhiteSpace(mountPath) || !mountPath.StartsWith('/'))
@@ -116,6 +144,12 @@ public static class SandboxWorkspacePaths
             : $"{mountPath.TrimEnd('/')}/{relative}";
     }
 
+    /// <summary>
+    /// Determines whether a target path is the workspace root or one of its descendants.
+    /// </summary>
+    /// <param name="workspacePath">The workspace root.</param>
+    /// <param name="targetPath">The candidate path.</param>
+    /// <returns><see langword="true"/> when the candidate remains within the root.</returns>
     internal static bool IsWithinWorkspace(string workspacePath, string targetPath)
     {
         var normalizedWorkspace = Path.GetFullPath(workspacePath)

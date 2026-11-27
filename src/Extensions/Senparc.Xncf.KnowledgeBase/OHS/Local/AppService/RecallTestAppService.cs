@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -65,8 +68,11 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Runs retrieval against a knowledge base and returns ranked candidates with timing metadata.
         /// </summary>
+        /// <param name="request">The knowledge-base identifier, query content, and retrieval options.</param>
+        /// <returns>A response containing ranked recall candidates.</returns>
+        /// <exception cref="ArgumentException">Thrown when the request or knowledge-base identifier is invalid.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<List<RecallTestResponse>>> RecallTest(plRequest.RecallTestRequest request)
         {

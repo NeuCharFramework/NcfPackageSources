@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -87,6 +90,16 @@ namespace Senparc.Ncf.Core.MultiTenant
             return tenant == null ? null : CreateInitializedScope(tenant);
         }
 
+        /// <summary>
+        /// Resolves enabled tenants for background work. Single-tenant deployments receive
+        /// a synthetic matched default tenant; multi-tenant deployments require a provider
+        /// and reject null, unmatched, non-positive, or duplicate tenant records.
+        /// </summary>
+        /// <param name="serviceProvider">The discovery scope provider.</param>
+        /// <param name="multiTenantEnabled">Whether multi-tenant discovery is enabled.</param>
+        /// <param name="cancellationToken">Token used to cancel tenant discovery.</param>
+        /// <returns>Enabled tenants ordered by identifier.</returns>
+        /// <exception cref="NcfTenantException">Thrown when the provider is missing or returns invalid tenant data.</exception>
         private static async Task<IReadOnlyList<RequestTenantInfo>> GetEnabledTenantsAsync(
             IServiceProvider serviceProvider, bool multiTenantEnabled, CancellationToken cancellationToken)
         {
@@ -111,6 +124,13 @@ namespace Senparc.Ncf.Core.MultiTenant
             return tenants.OrderBy(z => z.Id).ToList();
         }
 
+        /// <summary>
+        /// Creates a dependency-injection scope and copies the selected tenant identity
+        /// into the scoped <see cref="RequestTenantInfo"/> instance.
+        /// </summary>
+        /// <param name="tenant">The tenant snapshot used to initialize the scope.</param>
+        /// <returns>An initialized service scope.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when the scoped tenant service is unavailable.</exception>
         private IServiceScope CreateInitializedScope(RequestTenantInfo tenant)
         {
             var scope = _scopeFactory.CreateScope();

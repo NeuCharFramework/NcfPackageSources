@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261124
     Change description: v0.4.13 Integrated localization, tooling, and runtime improvements across the module.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.13.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -79,7 +82,8 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         private int _threadInUsing = 0;//Legacy comment translated to English.
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the number of crawler threads currently processing pages.
+        /// Access is synchronized by <see cref="syncLock"/>.
         /// </summary>
         private int threadInUsing
         {

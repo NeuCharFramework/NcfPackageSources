@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.13 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.13.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -60,7 +63,7 @@ namespace Senparc.Xncf.SenMapic
 
         public override string Uid => "8D02B05B-7FBE-461F-9F8F-43BE0CE6EFE9";//Legacy comment translated to English.
 
-        public override string Version => "0.1.3";//the version number is required
+        public override string Version => "0.4.13.2";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -68,6 +71,7 @@ namespace Senparc.Xncf.SenMapic
 
         public override string Description => RegisterText.Description;
 
+        /// <inheritdoc />
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //update the database when installing or upgrading a version
@@ -91,6 +95,7 @@ namespace Senparc.Xncf.SenMapic
             }
         }
 
+        /// <inheritdoc />
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             #region Legacy section
@@ -109,6 +114,7 @@ namespace Senparc.Xncf.SenMapic
         }
         #endregion
 
+        /// <inheritdoc />
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddScoped<ColorAppService>();
@@ -128,6 +134,7 @@ namespace Senparc.Xncf.SenMapic
             return base.AddXncfModule(services, configuration, env);
         }
 
+        /// <inheritdoc />
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             app.UseStaticFiles(new StaticFileOptions

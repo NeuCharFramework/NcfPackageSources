@@ -12,6 +12,9 @@
     Modified by: Senparc - 20261124
     Change description: v1.1.15 Integrated localization, tooling, and runtime improvements across the module.
 
+    Modified by: Senparc - 20261127
+    Change description: v1.1.16 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -25,11 +28,20 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
 {
     public class ColorService : ServiceBase<Color>
     {
+        /// <summary>
+        /// Initializes the sample-color persistence service.
+        /// </summary>
+        /// <param name="repo">The color repository.</param>
+        /// <param name="serviceProvider">The dependency provider passed to the base service.</param>
         public ColorService(IRepositoryBase<Color> repo, IServiceProvider serviceProvider)
             : base(repo, serviceProvider)
         {
         }
 
+        /// <summary>
+        /// Creates and persists a new color using the entity's default-channel behavior.
+        /// </summary>
+        /// <returns>The newly persisted color DTO.</returns>
         public async Task<ColorDto> CreateNewColor()
         {
             Color color = new Color(-1, -1, -1);
@@ -38,6 +50,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
             return colorDto;
         }
 
+        /// <summary>
+        /// Retrieves the available color or creates the initial record when the table is empty.
+        /// </summary>
+        /// <returns>The existing or newly created color DTO.</returns>
         public async Task<ColorDto> GetOrInitColor()
         {
             var color = await base.GetObjectAsync(z => true);
@@ -51,6 +67,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
             return base.Mapper.Map<ColorDto>(color);
         }
 
+        /// <summary>
+        /// Increases the newest persisted color channels and returns the updated DTO.
+        /// </summary>
+        /// <returns>The brightened color DTO.</returns>
         public async Task<ColorDto> Brighten()
         {
             //TODO: add sorting to the asynchronous method
@@ -60,6 +80,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
             return base.Mapper.Map<ColorDto>(obj);
         }
 
+        /// <summary>
+        /// Decreases the newest persisted color channels and returns the updated DTO.
+        /// </summary>
+        /// <returns>The darkened color DTO.</returns>
         public async Task<ColorDto> Darken()
         {
             //TODO: add sorting to the asynchronous method
@@ -69,6 +93,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
             return base.Mapper.Map<ColorDto>(obj);
         }
 
+        /// <summary>
+        /// Replaces the newest persisted color channels with generated values.
+        /// </summary>
+        /// <returns>The randomized color DTO.</returns>
         public async Task<ColorDto> Random()
         {
             //TODO: add sorting to the asynchronous method

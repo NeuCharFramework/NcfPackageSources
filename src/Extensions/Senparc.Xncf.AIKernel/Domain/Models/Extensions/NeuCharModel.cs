@@ -22,6 +22,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -34,10 +37,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace Senparc.Xncf.AIKernel.Domain.Models.Extensions
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Represents one model definition returned by the NeuChar model catalog.
     /// </summary>
     public class NeuCharModel
     {
+        /// <summary>Gets or sets the remote model identifier.</summary>
         public int Id { get; set; }
 
         /// <summary>
@@ -55,14 +59,10 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.Extensions
         /// </summary>
         public string ApiVersion { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the model weight used by the remote catalog.</summary>
         public float Weight { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets whether the remote model is enabled.</summary>
         public bool Enable { get; set; }
 
         /// <summary>
@@ -71,17 +71,20 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.Extensions
         public DateTime AddTime { get; set; }
     }
 
+    /// <summary>
+    /// Represents the response envelope returned by the NeuChar model catalog endpoint.
+    /// </summary>
     public class NeuCharGetModelJsonResult
     {
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///// </summary>
-        //public string Message { get; set; }
+        /// <summary>Gets or sets whether the remote request succeeded.</summary>
         public bool Success { get; set; }
+        /// <summary>Gets or sets the returned model catalog payload.</summary>
         public AIModel_GetNeuCharModelsResponse_Result Result { get; set; }
 
+        /// <summary>Contains the model entries returned by the catalog.</summary>
         public class AIModel_GetNeuCharModelsResponse_Result
         {
+            /// <summary>Gets or sets the returned model definitions.</summary>
             public List<NeuCharModel> Data { get; set; }
         }
     }

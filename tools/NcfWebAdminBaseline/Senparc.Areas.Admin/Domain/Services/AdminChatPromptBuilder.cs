@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
@@ -36,6 +39,14 @@ public static class AdminChatPromptBuilder
     public const int MaxCurrentMessageCharacters = 7500;
     public const int MaxUserPromptCharacters = 16000;
 
+    /// <summary>
+    /// Builds a bounded prompt from recent chat history, the current user message,
+    /// and attachment metadata while marking attached files as untrusted context.
+    /// </summary>
+    /// <param name="messages">The persisted chat messages to order and summarize.</param>
+    /// <param name="currentUserMessage">The current user message.</param>
+    /// <param name="attachments">Optional attachment metadata for the current turn.</param>
+    /// <returns>A prompt capped at <see cref="MaxUserPromptCharacters"/>.</returns>
     public static string BuildUserPrompt(IReadOnlyList<AdminChatMessage> messages, string currentUserMessage,
         IReadOnlyList<AdminChatAttachment> attachments = null)
     {
@@ -66,6 +77,12 @@ public static class AdminChatPromptBuilder
             : prompt.Substring(prompt.Length - MaxUserPromptCharacters);
     }
 
+    /// <summary>
+    /// Serializes attachment metadata into an explicitly non-instructional prompt section.
+    /// </summary>
+    /// <param name="attachments">The attachment metadata.</param>
+    /// <param name="currentTurn">Whether vision authorization applies to this turn.</param>
+    /// <returns>The serialized attachment section, or an empty string.</returns>
     private static string AttachmentReferences(IReadOnlyList<AdminChatAttachment> attachments, bool currentTurn)
     {
         if (attachments?.Count > 0)
@@ -80,6 +97,11 @@ public static class AdminChatPromptBuilder
         return "";
     }
 
+    /// <summary>
+    /// Converts the persisted chat role enum to the localized label used in prompts.
+    /// </summary>
+    /// <param name="roleType">The stored message role.</param>
+    /// <returns>The prompt role label.</returns>
     private static string GetRoleName(ChatMessageRoleType roleType)
     {
         return roleType switch

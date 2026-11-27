@@ -20,6 +20,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -51,7 +54,7 @@ public class AccessModel(
     private readonly SysRoleService _sysRoleService = sysRoleService;
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Renders the function access-policy administration page.
     /// </summary>
     public IActionResult OnGet()
     {
@@ -59,9 +62,11 @@ public class AccessModel(
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Lists catalog functions together with code defaults, persisted policy
+    /// overrides, and orphaned database policies.
     /// </summary>
+    /// <param name="moduleUid">Optional module filter.</param>
+    /// <returns>An HTTP 200 response containing function policy items and counts.</returns>
     public async Task<IActionResult> OnGetListAsync([FromQuery] string moduleUid = null)
     {
         var catalog = await _functionService.GetCatalogAsync(null, false, HttpContext.RequestAborted)
@@ -138,8 +143,9 @@ public class AccessModel(
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Lists non-deleted administrator accounts available for user-scoped access policies.
     /// </summary>
+    /// <returns>An HTTP 200 response containing administrator identity fields.</returns>
     public async Task<IActionResult> OnGetUsersAsync()
     {
         var users = await _adminUserInfoService.GetFullListAsync(
@@ -155,8 +161,9 @@ public class AccessModel(
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Lists enabled system roles available for role-scoped access policies.
     /// </summary>
+    /// <returns>An HTTP 200 response containing role codes and names.</returns>
     public async Task<IActionResult> OnGetRolesAsync()
     {
         var roles = await _sysRoleService.GetFullListAsync(
@@ -170,8 +177,10 @@ public class AccessModel(
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Creates or updates one persisted function access policy.
     /// </summary>
+    /// <param name="request">The function identity, access mode, allow-lists, and remark.</param>
+    /// <returns>The saved policy DTO or a service error response.</returns>
     public async Task<IActionResult> OnPostSaveAsync([FromBody] PolicySaveRequest request)
     {
         try
@@ -189,8 +198,10 @@ public class AccessModel(
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Removes the persisted policy for one module/function pair.
     /// </summary>
+    /// <param name="request">The module UID and function key to clear.</param>
+    /// <returns>A deletion result or a validation/not-found response.</returns>
     public async Task<IActionResult> OnPostClearAsync([FromBody] PolicyKeyRequest request)
     {
         if (request == null ||
@@ -212,9 +223,12 @@ public class AccessModel(
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    /// operation：apply-open / apply-restrict / apply-deny / apply-inherit / clear
+    /// Applies one supported access operation to a batch of function policies.
+    /// Supported operations are <c>apply-open</c>, <c>apply-restrict</c>,
+    /// <c>apply-deny</c>, <c>apply-inherit</c>, and <c>clear</c>.
     /// </summary>
+    /// <param name="request">The operation, target functions, allow-lists, and remark.</param>
+    /// <returns>The number of affected policies or a validation/service error.</returns>
     public async Task<IActionResult> OnPostBatchAsync([FromBody] PolicyBatchRequest request)
     {
         if (request == null ||
@@ -290,6 +304,12 @@ public class AccessModel(
 
     #region Legacy section
 
+    /// <summary>
+    /// Converts the page request into the domain input consumed by the policy service.
+    /// </summary>
+    /// <param name="request">The page request to convert.</param>
+    /// <returns>A domain policy input with non-null allow-lists.</returns>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="request"/> is null.</exception>
     private static NeuCharFunctionProvitAccessInput ToInput(PolicySaveRequest request)
     {
         if (request == null)
@@ -308,6 +328,11 @@ public class AccessModel(
         };
     }
 
+    /// <summary>
+    /// Projects a persisted policy entity into the JSON shape used by the editor.
+    /// </summary>
+    /// <param name="policy">The persisted policy entity.</param>
+    /// <returns>The policy DTO projection.</returns>
     private static object ToPolicyDto(NeuCharFunctionProvitAccess policy)
     {
         return new
@@ -325,6 +350,23 @@ public class AccessModel(
         };
     }
 
+    /// <summary>
+    /// Combines source-code exposure metadata and persisted overrides into one
+    /// function-policy row, including the effective mode and source.
+    /// </summary>
+    /// <param name="moduleUid">The owning module UID.</param>
+    /// <param name="moduleName">The catalog module name.</param>
+    /// <param name="moduleVersion">The catalog module version.</param>
+    /// <param name="moduleAvailable">Whether the module is currently available.</param>
+    /// <param name="functionKey">The stable function key.</param>
+    /// <param name="functionName">The catalog display name.</param>
+    /// <param name="functionDescription">The catalog description.</param>
+    /// <param name="codeAllowGlobalPivot">The source-code global exposure flag.</param>
+    /// <param name="codeRoleCodes">The source-code role restrictions.</param>
+    /// <param name="codePermissionCodes">The source-code permission restrictions.</param>
+    /// <param name="policy">The persisted override, if any.</param>
+    /// <param name="orphan">Whether the policy has no matching catalog function.</param>
+    /// <returns>The JSON-ready policy row.</returns>
     private static object BuildFunctionItem(
         string moduleUid,
         string moduleName,

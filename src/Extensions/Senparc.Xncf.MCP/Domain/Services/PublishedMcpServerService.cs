@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.5.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.14.2 Expand MCP endpoint gateway, credentials, and tool invocation support.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;
@@ -45,12 +48,25 @@ namespace Senparc.Xncf.MCP.Domain.Services
         private readonly McpServerInfoCollection _registrations;
         private readonly EndpointDataSource _endpoints;
 
+        /// <summary>
+        /// Initializes a service that combines declared MCP registrations with the routes
+        /// actually mapped in the current ASP.NET Core endpoint data source.
+        /// </summary>
+        /// <param name="registrations">The registered MCP server metadata.</param>
+        /// <param name="endpoints">The endpoint data source used to verify route availability.</param>
         public PublishedMcpServerService(McpServerInfoCollection registrations, EndpointDataSource endpoints)
         {
             _registrations = registrations;
             _endpoints = endpoints;
         }
 
+        /// <summary>
+        /// Builds a list of MCP servers whose advertised SSE or HTTP routes are mapped
+        /// in the current application.
+        /// </summary>
+        /// <param name="request">The current request used to preserve the application path base.</param>
+        /// <returns>Published server metadata and only the endpoint transports that are mapped.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is <see langword="null"/>.</exception>
         public List<PublishedMcpServerDto> GetPublishedServers(HttpRequest request)
         {
             var routes = _endpoints.Endpoints.OfType<RouteEndpoint>().ToArray();

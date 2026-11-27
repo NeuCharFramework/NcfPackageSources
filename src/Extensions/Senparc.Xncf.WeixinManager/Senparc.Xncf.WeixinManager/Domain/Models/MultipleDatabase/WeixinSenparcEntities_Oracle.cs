@@ -11,11 +11,15 @@ using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel;
 namespace Senparc.Xncf.WeixinManager.Domain.Models.MultipleDatabase
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Oracle-specific WeixinManager database context used by runtime registration and migrations.
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.Oracle, typeof(Register))]
     public class WeixinSenparcEntities_Oracle : WeixinSenparcEntities, IMultipleMigrationDbContext
     {
+        /// <summary>
+        /// Initializes the Oracle-specific WeixinManager DbContext.
+        /// </summary>
+        /// <param name="dbContextOptions">The EF Core options configured for Oracle.</param>
         public WeixinSenparcEntities_Oracle(DbContextOptions<WeixinSenparcEntities_Oracle> dbContextOptions) : base(dbContextOptions)
         {
         }
@@ -34,6 +38,9 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models.MultipleDatabase
             app.UseNcfDatabase("Senparc.Ncf.Database.Oracle", "Senparc.Ncf.Database.Oracle", "OracleDatabaseConfiguration");
         };
 
+        /// <summary>
+        /// Initializes the Oracle design-time DbContext factory.
+        /// </summary>
         public SenparcDbContextFactory_Oracle()
             : base(SenparcDbContextFactoryConfig.RootDictionaryPath)
         {

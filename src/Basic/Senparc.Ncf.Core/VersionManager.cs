@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Extensions;
@@ -28,9 +31,18 @@ namespace Senparc.Ncf.Core
     public class VersionManager
     {
         /// <summary>
-        /// returnversioninformation
+        /// Builds the localized NCF startup banner, version line, license line,
+        /// optional open-source links, and an optional caller-supplied note.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="ncfVersion">
+        /// The version displayed in the banner. When omitted, the executing
+        /// assembly version is used.
+        /// </param>
+        /// <param name="note">An optional note appended after the standard banner.</param>
+        /// <param name="showOpenSourceInfo">
+        /// Whether repository and documentation links should be included.
+        /// </param>
+        /// <returns>The complete localized banner text.</returns>
         public static string GetVersionNote(string ncfVersion = null, string note = null, bool showOpenSourceInfo = true)
         {
             ncfVersion ??= Assembly.GetExecutingAssembly().GetName().Version.ToString();
@@ -68,7 +80,6 @@ namespace Senparc.Ncf.Core
                     {
                         sb.AppendLine("    开源模板：https://github.com/NeuCharFramework/NCF");
                         sb.AppendLine("    开源模板：https://gitee.com/NeuCharFramework/NCF");
-                        //Legacy comment translated to English.
                         sb.AppendLine("    文档：https://doc.ncf.pub/");
                     }
                 })
@@ -83,6 +94,13 @@ namespace Senparc.Ncf.Core
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Writes the formatted NCF startup banner and success note to the console.
+        /// The output culture is selected by the current localization context.
+        /// </summary>
+        /// <param name="note">The startup note appended below the version information.</param>
+        /// <param name="systemVersion">The displayed version; the executing assembly version is used when omitted.</param>
+        /// <param name="showOpenSourceInfo">Whether repository and documentation links are included.</param>
         public static void ShowSuccessTip(string note, string systemVersion = null, bool showOpenSourceInfo = true)
         {
             //output the startup success marker

@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.13.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.13.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
@@ -38,17 +41,18 @@ using System.Text.Json.Serialization;
 namespace Senparc.Xncf.AreasBase
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Provides startup helpers for discovering XNCF area registrations and configuring
+    /// their Razor Pages and MVC services.
     /// </summary>
     public static class AreaRegister
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Applies every discovered <see cref="IAreaRegister"/> authorization configuration.
         /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="env"></param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="builder">The MVC builder receiving area configuration.</param>
+        /// <param name="env">The current web-host environment.</param>
+        /// <param name="eachRegsiterAction">Optional callback invoked for each discovered area registration.</param>
+        /// <returns>The configured MVC builder.</returns>
         public static IMvcBuilder AddNcfAreas(this IMvcBuilder builder, /*Microsoft.Extensions.Hosting.IHostEnvironment*/IWebHostEnvironment env, Action<IAreaRegister> eachRegsiterAction = null)
         {
             //Console.WriteLine("XncfRegisterManager:"+ XncfRegisterManager.RegisterList.Select(z=>z.Name).ToJson(true));
@@ -120,15 +124,15 @@ namespace Senparc.Xncf.AreasBase
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Starts the NCF web engine, registers Razor Pages, and applies discovered area configurations.
         /// </summary>
-        /// <param name="services"></param>
-        /// <param name="configuration"></param>
-        /// <param name="env"></param>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <param name="dllFilePatterns">File name of the included dll, ".Xncf."will definitely be included inside</param>
-        /// <returns></returns>
+        /// <param name="services">The application service collection.</param>
+        /// <param name="configuration">The application configuration.</param>
+        /// <param name="env">The current web-host environment.</param>
+        /// <param name="dllFilePatterns">Optional assembly-name filters used during scanning.</param>
+        /// <param name="addRazorPagesConfig">Optional Razor Pages configuration callback.</param>
+        /// <param name="eachRegsiterAction">Optional callback invoked for each area registration.</param>
+        /// <returns>The startup diagnostic log.</returns>
         public static string StartWebEngine(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env,
             string[] dllFilePatterns,
             Action<RazorPagesOptions>? addRazorPagesConfig = null,
@@ -148,16 +152,13 @@ namespace Senparc.Xncf.AreasBase
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Starts the NCF web engine and configures Razor Pages through a WebApplicationBuilder.
         /// </summary>
-        /// <typeparam name="TDatabaseConfiguration">databasetype</typeparam>
-        /// <param name="builder">WebApplicationBuilder</param>
-        /// <param name="configuration"></param>
-        /// <param name="env"></param>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <param name="dllFilePatterns">File name of the included dll, ".Xncf."will definitely be included inside</param>
-        /// <returns></returns>
+        /// <param name="builder">The WebApplicationBuilder being configured.</param>
+        /// <param name="dllFilePatterns">Optional assembly-name filters used during scanning.</param>
+        /// <param name="addRazorPagesConfig">Optional Razor Pages configuration callback.</param>
+        /// <param name="eachRegsiterAction">Optional callback invoked for each area registration.</param>
+        /// <returns>The startup diagnostic log.</returns>
         public static string StartWebEngine(this WebApplicationBuilder builder,
                 string[] dllFilePatterns,
                 Action<RazorPagesOptions>? addRazorPagesConfig = null,

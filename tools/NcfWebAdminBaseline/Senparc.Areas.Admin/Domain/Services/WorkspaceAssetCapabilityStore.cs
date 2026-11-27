@@ -20,6 +20,11 @@
 
     Created by: Senparc - 20261123
 
+
+
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -41,11 +46,25 @@ public sealed class WorkspaceAssetCapabilityStore
     private readonly ConcurrentDictionary<string, WorkspaceAssetCapability> _capabilities = new();
     private readonly TimeProvider _time;
 
+    /// <summary>
+    /// Initializes the short-lived in-memory capability store.
+    /// </summary>
+    /// <param name="timeProvider">Optional clock used for expiration and deterministic tests.</param>
     public WorkspaceAssetCapabilityStore(TimeProvider timeProvider = null)
     {
         _time = timeProvider ?? TimeProvider.System;
     }
 
+    /// <summary>
+    /// Creates a ten-minute capability for one normalized workspace path and
+    /// removes expired or excessive older capabilities.
+    /// </summary>
+    /// <param name="sessionId">The chat session owning the capability.</param>
+    /// <param name="workspaceId">The workspace identifier.</param>
+    /// <param name="path">The workspace-relative path.</param>
+    /// <param name="etag">The expected file fingerprint, or an empty value.</param>
+    /// <returns>The generated capability identifier, token, path, and expiration.</returns>
+    /// <exception cref="ArgumentException">Thrown when the session/workspace or path is invalid.</exception>
     public WorkspaceAssetCapability Create(int sessionId, string workspaceId, string path, string etag)
     {
         if (sessionId <= 0 || string.IsNullOrWhiteSpace(workspaceId))
@@ -73,6 +92,14 @@ public sealed class WorkspaceAssetCapabilityStore
         return capability;
     }
 
+    /// <summary>
+    /// Validates a capability identifier/token pair, removes expired entries,
+    /// and returns the stored capability when the constant-time token comparison succeeds.
+    /// </summary>
+    /// <param name="id">The capability identifier.</param>
+    /// <param name="token">The capability token.</param>
+    /// <param name="capability">Receives the validated capability.</param>
+    /// <returns><see langword="true"/> when the capability is valid and unexpired.</returns>
     public bool TryGet(string id, string token, out WorkspaceAssetCapability capability)
     {
         capability = null;

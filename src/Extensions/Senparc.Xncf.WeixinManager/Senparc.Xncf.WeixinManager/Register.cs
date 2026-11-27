@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.25.1 Localized Weixin account and administration surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.25.1.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using AutoMapper;
@@ -88,7 +91,7 @@ namespace Senparc.Xncf.WeixinManager
         public override string Uid => "EB84CB21-AC22-406E-0001-000000000001";
 
 
-        public override string Version => "0.24.13";
+        public override string Version => "0.25.1.2";
 
 
         public override string MenuName => RegisterText.MenuName;
@@ -144,13 +147,15 @@ namespace Senparc.Xncf.WeixinManager
             return base.AddXncfModule(services, configuration, env);//Legacy comment translated to English.
         }
 
-        public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
+    /// <inheritdoc/>
+    public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //update the database when installing or upgrading a version
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
         }
 
-        public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
+    /// <inheritdoc/>
+    public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             //Legacy comment translated to English.
 
@@ -188,7 +193,8 @@ namespace Senparc.Xncf.WeixinManager
             await base.UninstallAsync(serviceProvider, unsinstallFunc).ConfigureAwait(false);
         }
 
-        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+    /// <inheritdoc/>
+    public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             //Legacy comment translated to English.
             _ = Task.Factory.StartNew(async () =>
@@ -276,6 +282,11 @@ namespace Senparc.Xncf.WeixinManager
             //    }
             //}
 
+            /// <inheritdoc/>
+            /// <remarks>
+            /// The current implementation returns before the legacy platform-specific
+            /// filtering block; the method is retained to satisfy the Swagger filter contract.
+            /// </remarks>
             public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
             {
                 //Legacy comment translated to English.
@@ -330,7 +341,8 @@ namespace Senparc.Xncf.WeixinManager
             }
         }
 
-        public override void AddMcpServer(IServiceCollection services, IXncfRegister xncfRegister)
+    /// <inheritdoc/>
+    public override void AddMcpServer(IServiceCollection services, IXncfRegister xncfRegister)
         {
             //base.AddMcpServer(services, xncfRegister);
 
@@ -356,7 +368,8 @@ namespace Senparc.Xncf.WeixinManager
             };
         }
 
-        public override void UseMcpServer(IApplicationBuilder app, IRegisterService registerService)
+    /// <inheritdoc/>
+    public override void UseMcpServer(IApplicationBuilder app, IRegisterService registerService)
         {
             base.UseMcpServer(app, registerService);
         }

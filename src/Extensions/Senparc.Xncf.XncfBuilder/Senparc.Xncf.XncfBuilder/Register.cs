@@ -34,6 +34,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.42.0.0 add MCP endpoint gateway and tool invocation contracts
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -80,7 +83,7 @@ namespace Senparc.Xncf.XncfBuilder
 
         public override string Uid => "C2E1F87F-2DCE-4921-87CE-36923ED0D6EA";//Legacy comment translated to English.
 
-        public override string Version => "0.10.3";//the version number is required
+        public override string Version => "0.42.0.0";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -98,12 +101,14 @@ namespace Senparc.Xncf.XncfBuilder
         //    typeof(AddMigration),
         //};
 
+        /// <inheritdoc/>
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //updatedatabase
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
         }
 
+        /// <inheritdoc/>
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
@@ -118,6 +123,7 @@ namespace Senparc.Xncf.XncfBuilder
             await base.UninstallAsync(serviceProvider, unsinstallFunc).ConfigureAwait(false);
         }
 
+        /// <inheritdoc/>
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             if (!services.Any(d => d.ServiceType == typeof(IXncfModulesInventoryRequestWaiter)))
@@ -170,6 +176,7 @@ namespace Senparc.Xncf.XncfBuilder
 
         #endregion
 
+        /// <inheritdoc/>
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             return base.UseXncfModule(app, registerService);

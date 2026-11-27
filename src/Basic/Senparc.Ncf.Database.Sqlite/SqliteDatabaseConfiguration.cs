@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.14 Updated database integration support and related localization metadata
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Data.Sqlite;
@@ -31,10 +34,12 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Database.Sqlite
 {
     /// <summary>
-    /// SQLite databaseconfiguration
+    /// Configures SQLite EF Core options and resolves relative database filenames
+    /// against the NCF root directory.
     /// </summary>
     public class SqliteDatabaseConfiguration : DatabaseConfigurationBase<SqliteDbContextOptionsBuilder, SqliteOptionsExtension>
     {
+        /// <summary>Gets the SQLite provider type.</summary>
         public override MultipleDatabaseType MultipleDatabaseType => MultipleDatabaseType.Sqlite;
 
         //private static DbConnection CreateInMemoryDatabase(string connStr)
@@ -52,11 +57,10 @@ namespace Senparc.Ncf.Database.Sqlite
         /// <returns>The connection string with a rooted filename when a relative filename is used.</returns>
         internal static string GetLocalConnectionString(string connectionString)
         {
-            //Legacy comment translated to English.
             const string PREFIX = "Filename=";
             if (connectionString.StartsWith($"{PREFIX}\\") || connectionString.StartsWith($"{PREFIX}./") || connectionString.StartsWith($"{PREFIX}.\\"))
             {
-                string relativePath = connectionString.Substring(PREFIX.Length); //Legacy comment translated to English.
+                string relativePath = connectionString.Substring(PREFIX.Length);
                 string dbPath = Path.Combine(Senparc.CO2NET.Config.RootDirectoryPath, relativePath.Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar));
                 connectionString = $"{PREFIX}{dbPath}";
             }
@@ -67,9 +71,6 @@ namespace Senparc.Ncf.Database.Sqlite
         public override Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase =>
             (optionsBuilder, connectionString, xncfDatabaseData, actionBase) =>
             {
-                //Legacy comment translated to English.
-
-                //Legacy comment translated to English.
                 connectionString = GetLocalConnectionString(connectionString);
 
                 //execute UseSqlite（must）
@@ -80,10 +81,10 @@ namespace Senparc.Ncf.Database.Sqlite
 
         public override Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionExtension => (builder, xncfDatabaseData) =>
         {
-            //Legacy comment translated to English.
         };
 
 
+        /// <inheritdoc />
         public override string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath)
         {
             dbConnection.Open();
@@ -92,6 +93,7 @@ namespace Senparc.Ncf.Database.Sqlite
             return null;
         }
 
+        /// <inheritdoc />
         public override string GetDropTableSql(DbContext dbContext, string tableName)
         {
             return $"DROP TABLE IF EXISTS {tableName}";

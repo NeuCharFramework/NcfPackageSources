@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
@@ -30,6 +33,7 @@ using static Dm.net.buffer.ByteArrayBuffer;
 
 namespace Senparc.Areas.Admin.Domain.Models
 {
+    /// <summary>Persists administrator credentials, profile data, and login timestamps.</summary>
     [Table(Register.DATABASE_PREFIX + nameof(AdminUserInfo) + "s")]//a prefix is required to prevent system-wide conflicts
     [Serializable]
     public partial class AdminUserInfo : EntityBase<int>
@@ -46,13 +50,12 @@ namespace Senparc.Areas.Admin.Domain.Models
         public string LastLoginIp { get; private set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Hashes a password using the legacy SHA-512-compatible account format.
         /// </summary>
-        /// <param name="password"></param>
-        /// <param name="salt"></param>
-        /// <param name="isMD5Password"></param>
-        /// <returns></returns>
+        /// <param name="password">The plaintext or pre-hashed password.</param>
+        /// <param name="salt">The account password salt.</param>
+        /// <param name="isMD5Password">Whether the input is already pre-hashed.</param>
+        /// <returns>The encoded password value.</returns>
         private string GetMD5Password(string password, string salt, bool isMD5Password)
         {
             string md5 = password.ToUpper().Replace("-", "");
@@ -65,20 +68,13 @@ namespace Senparc.Areas.Admin.Domain.Models
 
         private AdminUserInfo() { }
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///Legacy comment translated to English.
-        ///// <param name="password"></param>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Initializes an administrator entity from the supplied create/update DTO.
+        /// Missing user name, password, and salt values are generated before the password
+        /// is hashed and the login timestamps are initialized.
         /// </summary>
-        /// <param name="objDto"></param>
+        /// <param name="objDto">The administrator values used to initialize the entity.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="objDto"/> is null.</exception>
         public AdminUserInfo(CreateOrUpdate_AdminUserInfoDto objDto)
         {
             objDto.UserName ??= GenerateUserName();//recorduser name
@@ -100,11 +96,12 @@ namespace Senparc.Areas.Admin.Domain.Models
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Hashes the supplied password using this entity's salt and compares it with
+        /// the persisted password value.
         /// </summary>
-        /// <param name="password"></param>
-        /// <param name="usePasswordSaltToken"></param>
-        /// <returns></returns>
+        /// <param name="password">The candidate password.</param>
+        /// <param name="usePasswordSaltToken">Whether the configured global password token participates in hashing.</param>
+        /// <returns><see langword="true"/> when the candidate matches the persisted password.</returns>
         public bool CheckPassword(string password, bool usePasswordSaltToken = true)
         {
             var encodedPassword = GetSHA512Password(password, PasswordSalt, usePasswordSaltToken);
@@ -112,32 +109,41 @@ namespace Senparc.Areas.Admin.Domain.Models
         }
 
         /// <summary>
-        /// generateuser name
+        /// Generates a short default administrator user name with a two-digit random suffix.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A generated administrator user name.</returns>
         public string GenerateUserName()
         {
             return $"SenparcCoreAdmin{new Random().Next(100).ToString("00")}";
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Generates a random 16-character password suitable for initial entity creation.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The generated password text.</returns>
         public string GeneratePassword()
         {
             return Guid.NewGuid().ToString("n").Substring(0, 16);
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Generates the password salt used by the administrator password hashing routine.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The generated salt text.</returns>
         public string GeneratePasswordSalt()
         {
             return DateTime.Now.Ticks.ToString();
         }
 
+        /// <summary>
+        /// Produces the administrator password digest using the configured salt-token policy.
+        /// Legacy MD5 compatibility is selected when the global password token is unavailable.
+        /// </summary>
+        /// <param name="password">The plain-text password to digest.</param>
+        /// <param name="salt">The per-user salt; it must contain at least 16 characters.</param>
+        /// <param name="usePasswordToken">Whether the configured global password token participates.</param>
+        /// <returns>The encoded password digest.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when <paramref name="salt"/> is shorter than 16 characters.</exception>
         public string GetSHA512Password(string password, string salt, bool usePasswordToken = true)
         {
             if (salt.Length < 16)
@@ -184,6 +190,11 @@ namespace Senparc.Areas.Admin.Domain.Models
             return "g01" + sha512;
         }
 
+        /// <summary>
+        /// Applies editable administrator fields and, when supplied, replaces the
+        /// password hash using the entity's existing salt before updating the timestamp.
+        /// </summary>
+        /// <param name="objDto">The validated administrator values to apply.</param>
         public void UpdateObject(CreateOrUpdate_AdminUserInfoDto objDto)
         {
             UserName = objDto.UserName;

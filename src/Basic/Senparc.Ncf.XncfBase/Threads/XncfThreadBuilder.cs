@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.29.1 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.29.1.2 Extend shared chat-tool contracts for admin task initiation.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
@@ -30,19 +33,28 @@ using System.Threading.Tasks;
 
 namespace Senparc.Ncf.XncfBase.Threads
 {
-    //Legacy comment translated to English.
-
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Collects module background-thread definitions and builds their guarded
+    /// application-lifetime loops.
     /// </summary>
     public class XncfThreadBuilder
     {
         private List<ThreadInfo> _threadInfoList = new List<ThreadInfo>();
+        /// <summary>
+        /// Adds a thread definition to the module's pending thread collection.
+        /// </summary>
+        /// <param name="threadInfo">The thread definition to register.</param>
         public void AddThreadInfo(ThreadInfo threadInfo)
         {
             _threadInfoList.Add(threadInfo);
         }
 
+        /// <summary>
+        /// Builds and starts all configured background threads for a module registration.
+        /// Each thread observes application shutdown and routes failures to its handler or trace log.
+        /// </summary>
+        /// <param name="app">The application builder providing services and lifetime tokens.</param>
+        /// <param name="register">The module registration owning the thread definitions.</param>
         internal void Build(IApplicationBuilder app, IXncfRegister register)
         {
             var threadRegister = register as IXncfThread;

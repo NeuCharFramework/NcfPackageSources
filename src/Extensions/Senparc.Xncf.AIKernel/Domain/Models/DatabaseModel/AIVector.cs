@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -29,61 +32,70 @@ using Senparc.AI.Interfaces;
 namespace Senparc.Xncf.AIKernel.Models
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Stores one vector-database provider configuration.
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(AIVector))] //a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class AIVector : EntityBase<int>
     {
         /// <summary>
-        /// code
+        /// Gets the stable application alias used to select this vector configuration.
         /// </summary>
         [Required, MaxLength(50)]
         public string Alias { get; private set; }
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the provider-specific vector database identifier.
         /// </summary>
         [Required, MaxLength(100)]
         public string VectorId { get; private set; }
 
         /// <summary>
-        /// name
+        /// Gets the administrator-facing vector configuration name.
         /// </summary>
         [MaxLength(150)]
         public string Name { get; private set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the connection string or provider configuration used by the vector store.
         /// </summary>
         public string ConnectionString { get; private set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the vector database provider type.
         /// </summary>
         [Required]
         public VectorDBType VectorDBType { get; private set; }
 
         /// <summary>
-        /// Note (optional)
+        /// Gets the optional administrative note.
         /// </summary>
         public string Note { get; private set; }
 
         /// <summary>
-        /// whether shared
+        /// Gets a value indicating whether the configuration is shared.
         /// </summary>
         [Required, DefaultValue(false)]
         public bool IsShared { get; private set; } = false;
 
 
         /// <summary>
-        /// whether displayed
+        /// Gets a value indicating whether the configuration is shown in selection APIs.
         /// </summary>
         [Required, DefaultValue(true)]
         public bool Show { get; private set; }
 
 
+        /// <summary>
+        /// Initializes a visible vector database configuration.
+        /// </summary>
+        /// <param name="name">The display name.</param>
+        /// <param name="connectionString">The provider connection string.</param>
+        /// <param name="vectorDBType">The vector database provider type.</param>
+        /// <param name="note">Optional administrative note.</param>
+        /// <param name="alias">The stable alias.</param>
+        /// <param name="vectorId">The provider-specific vector identifier.</param>
         public AIVector(string name, string connectionString, VectorDBType vectorDBType, string note, string alias, string vectorId)
         {
             Name = name;
@@ -96,16 +108,30 @@ namespace Senparc.Xncf.AIKernel.Models
             IsShared = false;
         }
 
+        /// <summary>
+        /// Initializes a vector configuration from an application request.
+        /// </summary>
+        /// <param name="orEditRequest">The vector configuration request.</param>
         public AIVector(AIVector_CreateOrEditRequest orEditRequest) : this(orEditRequest.Name, orEditRequest.ConnectionString,orEditRequest.VectorDBType, orEditRequest.Note, orEditRequest.Alias, orEditRequest.VectorId)
         {
         }
 
+        /// <summary>
+        /// Changes whether this vector configuration is visible to selection APIs.
+        /// </summary>
+        /// <param name="show">Whether the configuration should be visible.</param>
+        /// <returns>This vector entity.</returns>
         public AIVector SwitchShow(bool show)
         {
             Show = show;
             return this;
         }
 
+        /// <summary>
+        /// Replaces editable vector configuration fields from an application request.
+        /// </summary>
+        /// <param name="request">The replacement vector configuration.</param>
+        /// <returns>This updated vector entity.</returns>
         public AIVector Update(AIVector_CreateOrEditRequest request)
         {
             VectorId = request.VectorId;

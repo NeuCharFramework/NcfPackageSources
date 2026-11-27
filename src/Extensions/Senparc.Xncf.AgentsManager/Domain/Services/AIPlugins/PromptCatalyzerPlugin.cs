@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -28,6 +31,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
     {
         private readonly PromptOptimizationService _optimizationService;
 
+        /// <summary>
+        /// Resolves the prompt-optimization service from the application service provider.
+        /// </summary>
         public PromptCatalyzerPlugin()
         {
             //Legacy comment translated to English.
@@ -36,6 +42,15 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
             _optimizationService = Senparc.CO2NET.SenparcDI.GetServiceProvider().GetRequiredService<PromptOptimizationService>();
         }
 
+        /// <summary>
+        /// Optimizes a prompt using the supplied content, requirement, and model context,
+        /// returning the generated code, score, rationale, and replacement content.
+        /// </summary>
+        /// <param name="promptCode">The prompt code being optimized.</param>
+        /// <param name="promptContent">The current prompt content.</param>
+        /// <param name="requirement">The requested improvement or feedback.</param>
+        /// <param name="context">The current optimization parameters.</param>
+        /// <returns>A formatted optimization result for the calling Agent.</returns>
         [KernelFunction, Description("Optimize the given prompt code based on user requirement")]
         public async Task<string> OptimizePrompt(
             [Description("The prompt code to optimize (e.g., 2010.1.2.1-T1-A1)")] string promptCode,

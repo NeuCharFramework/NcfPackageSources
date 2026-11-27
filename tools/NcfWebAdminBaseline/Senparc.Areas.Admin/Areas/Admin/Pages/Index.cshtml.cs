@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -63,10 +66,14 @@ namespace Senparc.Areas.Admin.Pages
         private readonly XncfModuleServiceExtension _xncfModuleServiceEx = xncfModuleServiceEx;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the current administrator identifier used by the dashboard view.
         /// </summary>
         public int CurrentUserId { get; set; }
 
+        /// <summary>
+        /// Handles the administration dashboard page request and initializes the current user identifier.
+        /// </summary>
+        /// <returns>The result used to render the dashboard page.</returns>
         public IActionResult OnGet()
         {
             CurrentUserId = _adminWorkContextProvider.GetAdminWorkContext().AdminUserId;
@@ -75,9 +82,10 @@ namespace Senparc.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// getstatus
+        /// Summarizes installed, newly available, updated, and no-longer-registered modules
+        /// for the dashboard status panel.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An <see cref="JsonResult"/> containing the calculated module counters.</returns>
         public async Task<IActionResult> OnGetXncfStatAsync()
         {
             //Legacy comment translated to English.
@@ -109,9 +117,10 @@ namespace Senparc.Areas.Admin.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns installed modules that are open for use, enriched with registered menu,
+        /// function, and available-version metadata for the dashboard.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An <see cref="JsonResult"/> containing the localized module display models.</returns>
         public async Task<IActionResult> OnGetXncfOpeningAsync()
         {
             //Legacy comment translated to English.
@@ -186,10 +195,11 @@ namespace Senparc.Areas.Admin.Pages
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Loads the current administrator's menu permissions and converts them into a
+        /// hierarchical menu tree.
         /// </summary>
-        /// <param name="sysPermissionService"></param>
-        /// <returns></returns>
+        /// <param name="sysPermissionService">The service used to obtain the current user's menu DTOs.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing the hierarchical menu tree.</returns>
         public async Task<IActionResult> OnGetMenuTreeAsync([FromServices] SysRolePermissionService sysPermissionService)
         {
             IEnumerable<SysMenuDto> sysMenus = (await sysPermissionService.GetCurrentUserMenuDtoAsync())
@@ -200,10 +210,10 @@ namespace Senparc.Areas.Admin.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Loads the current administrator's menu permissions and resource codes in one response.
         /// </summary>
-        /// <param name="sysPermissionService"></param>
-        /// <returns></returns>
+        /// <param name="sysPermissionService">The service used to obtain menus and resource codes.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing the menu tree and resource-code collection.</returns>
         public async Task<IActionResult> OnGetMenuResourceAsync([FromServices] SysRolePermissionService sysPermissionService)
         {
             IEnumerable<SysMenuDto> sysMenus = (await sysPermissionService.GetCurrentUserMenuDtoAsync())
@@ -215,10 +225,11 @@ namespace Senparc.Areas.Admin.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Recursively transforms flat menu DTOs into the hierarchy consumed by the dashboard.
+        /// Module-manager visibility and missing module registrations are handled while traversing.
         /// </summary>
-        /// <param name="sysMenuTreeItems"></param>
-        /// <returns></returns>
+        /// <param name="sysMenuTreeItems">The flat menu items to group by parent identifier.</param>
+        /// <returns>The recursively constructed menu tree.</returns>
         private async Task<IEnumerable<SysMenuTreeItemDto>> GetSysMenuTreesMainRecursiveAsync(IEnumerable<SysMenuDto> sysMenuTreeItems)
         {
             bool hideModuleManager = FullSystemConfig.HideModuleManager == true;//Legacy comment translated to English.
@@ -394,11 +405,14 @@ namespace Senparc.Areas.Admin.Pages
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Recursively copies flat menu DTOs into the dashboard hierarchy while preserving
+        /// module context and applying visibility rules for module-generated menu entries.
         /// </summary>
-        /// <param name="sysMenuTreeItems"></param>
-        /// <param name="sysMenuTrees"></param>
-        /// <param name="parent"></param>
+        /// <param name="sysMenuTreeItems">The flat menu items to inspect.</param>
+        /// <param name="sysMenuTrees">The destination collection receiving tree nodes.</param>
+        /// <param name="parent">The parent menu node whose children are being built.</param>
+        /// <param name="moduleName">The current module display name, when traversal is inside a module.</param>
+        /// <param name="moduleUid">The current module UID, when traversal is inside a module.</param>
         private void GetSysMenuTreesRecursive(
             IEnumerable<SysMenuDto> sysMenuTreeItems,
             IList<SysMenuTreeItemDto> sysMenuTrees,
@@ -436,12 +450,23 @@ namespace Senparc.Areas.Admin.Pages
             }
         }
 
+        /// <summary>
+        /// Determines whether a menu URL points to the module start page used to
+        /// establish the current module context during recursive traversal.
+        /// </summary>
+        /// <param name="url">The menu URL to inspect.</param>
+        /// <returns><see langword="true"/> when the URL targets the module start page.</returns>
         private static bool IsXncfModuleStartUrl(string url)
         {
             return !string.IsNullOrWhiteSpace(url)
                    && url.Contains("/Admin/XncfModule/Start", StringComparison.OrdinalIgnoreCase);
         }
 
+        /// <summary>
+        /// Extracts and URL-decodes the <c>uid</c> query-string value from a menu URL.
+        /// </summary>
+        /// <param name="url">The menu URL to inspect.</param>
+        /// <returns>The decoded module UID, or an empty string when no UID is present.</returns>
         private static string GetUidFromUrl(string url)
         {
             if (string.IsNullOrWhiteSpace(url))

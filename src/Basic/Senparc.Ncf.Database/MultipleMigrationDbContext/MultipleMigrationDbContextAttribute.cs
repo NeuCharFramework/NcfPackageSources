@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.21.14 Updated database integration support and related localization metadata
 
+    Modified by: Senparc - 20261127
+    Change description: v0.21.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Exceptions;
@@ -26,17 +29,15 @@ using System.Text;
 namespace Senparc.Ncf.Database
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Associates an XNCF database registration with a provider-specific migration context.
     /// </summary>
     [System.AttributeUsage(AttributeTargets.Class, AllowMultiple = false/*temporarilynotsupport*/)]
     public class MultipleMigrationDbContextAttribute : Attribute
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="multipleDatabaseType">MultipleDatabaseType databasetype</param>
-        ///Legacy comment translated to English.
-        //Legacy comment translated to English.
+        /// <summary>Initializes provider and XNCF registration metadata.</summary>
+        /// <param name="multipleDatabaseType">The database provider type.</param>
+        /// <param name="xncfDatabaseRegisterType">The XNCF registration type implementing <see cref="IXncfDatabase"/>.</param>
+        /// <exception cref="NcfDatabaseException">Thrown when the registration type is null or does not implement <see cref="IXncfDatabase"/>.</exception>
         public MultipleMigrationDbContextAttribute(MultipleDatabaseType multipleDatabaseType,
             Type xncfDatabaseRegisterType/*, Type runtimeDbContextType*/)
         {
@@ -50,11 +51,16 @@ namespace Senparc.Ncf.Database
             //RuntimeDbContextType = runtimeDbContextType;
         }
 
+        /// <summary>Gets or sets the database provider type.</summary>
         public MultipleDatabaseType MultipleDatabaseType { get; set; }
+        /// <summary>Gets or sets the XNCF database registration type.</summary>
         public Type XncfDatabaseRegisterType { get; set; }
         //public Type RuntimeDbContextType { get; set; }
 
         IXncfDatabase _xncfDatabaseRegister;
+        /// <summary>
+        /// Gets an instantiated XNCF database registration for this attribute.
+        /// </summary>
         public IXncfDatabase XncfDatabaseRegister
         {
             get

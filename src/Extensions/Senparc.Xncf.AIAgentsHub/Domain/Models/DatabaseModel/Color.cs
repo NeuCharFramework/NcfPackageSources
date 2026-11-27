@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.13.16 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.13.16.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -23,7 +26,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.AIAgentsHub
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Stores an RGB color used by the AIAgentsHub sample domain and its migration tests.
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(Color))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
@@ -50,6 +53,13 @@ namespace Senparc.Xncf.AIAgentsHub
 
         private Color() { }
 
+        /// <summary>
+        /// Initializes a color from RGB components. If any component is negative, the entity
+        /// generates a random color instead of preserving the supplied values.
+        /// </summary>
+        /// <param name="red">The red component, normally from 0 through 255.</param>
+        /// <param name="green">The green component, normally from 0 through 255.</param>
+        /// <param name="blue">The blue component, normally from 0 through 255.</param>
         public Color(int red, int green, int blue)
         {
             if (red < 0 || green < 0 || blue < 0)
@@ -64,6 +74,10 @@ namespace Senparc.Xncf.AIAgentsHub
             }
         }
 
+        /// <summary>
+        /// Initializes a color from the RGB values in a DTO.
+        /// </summary>
+        /// <param name="colorDto">The DTO containing the source RGB values.</param>
         public Color(ColorDto colorDto)
         {
             Red = colorDto.Red;
@@ -71,6 +85,9 @@ namespace Senparc.Xncf.AIAgentsHub
             Blue = colorDto.Blue;
         }
 
+        /// <summary>
+        /// Replaces all RGB components with independently generated values.
+        /// </summary>
         public void Random()
         {
             //generate a random color code
@@ -81,6 +98,9 @@ namespace Senparc.Xncf.AIAgentsHub
             Blue = getRadomColorCode();
         }
 
+        /// <summary>
+        /// Increases every RGB component by ten, capped at 255.
+        /// </summary>
         public void Brighten()
         {
             Red = Math.Min(255, Red + 10);
@@ -88,6 +108,9 @@ namespace Senparc.Xncf.AIAgentsHub
             Blue = Math.Min(255, Blue + 10);
         }
 
+        /// <summary>
+        /// Decreases every RGB component by ten, floored at zero.
+        /// </summary>
         public void Darken()
         {
             Red = Math.Max(0, Red - 10);

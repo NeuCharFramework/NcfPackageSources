@@ -9,6 +9,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.39.9 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.39.10 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.NeuChar.App.AppStore;
@@ -36,7 +39,15 @@ namespace Senparc.Web
         private readonly ServiceProvider _services;
 
 
-        //Legacy comment translated to English.
+        /// <summary>
+        /// Initializes the message handler with the public-account metadata and
+        /// the request context used by the base Weixin message handler.
+        /// </summary>
+        /// <param name="mpAccountDto">The public-account metadata.</param>
+        /// <param name="stream">The raw request stream.</param>
+        /// <param name="postModel">The parsed request model.</param>
+        /// <param name="maxRecordCount">The maximum context record count.</param>
+        /// <param name="services">The request service provider.</param>
         public JeffreyMpMessageHandler(MpAccountDto mpAccountDto, Stream stream, PostModel postModel, int maxRecordCount, ServiceProvider services) : this(stream, postModel, maxRecordCount)
         {
             this._mpAccountDto = mpAccountDto;

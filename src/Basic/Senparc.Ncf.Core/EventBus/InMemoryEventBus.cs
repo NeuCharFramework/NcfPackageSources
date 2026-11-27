@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System.Threading.Channels;
@@ -39,7 +42,7 @@ namespace Senparc.Ncf.Core.EventBus
         private readonly TimeSpan _maxRequestTimeout;
         private readonly ConcurrentDictionary<Guid, PendingRequest> _pendingRequests = new();
         
-        //Legacy comment translated to English.
+        // Retain recently processed identifiers to suppress duplicate deliveries.
         private readonly ConcurrentDictionary<Guid, DateTime> _processedEventIds = new();
         private readonly TimeSpan _eventIdRetentionPeriod = TimeSpan.FromMinutes(10);
         
@@ -63,12 +66,10 @@ namespace Senparc.Ncf.Core.EventBus
                     "EventBus MaxRequestTimeout must be a finite value greater than zero.");
             }
             
-            //Legacy comment translated to English.
-            //Legacy comment translated to English.
             var channelOptions = new UnboundedChannelOptions
             {
-                SingleReader = true,   //Legacy comment translated to English.
-                SingleWriter = false   //Legacy comment translated to English.
+                SingleReader = true,
+                SingleWriter = false
             };
             _channel = Channel.CreateUnbounded<IIntegrationEvent>(channelOptions);
         }
@@ -158,7 +159,6 @@ namespace Senparc.Ncf.Core.EventBus
         public ValueTask PublishDerivedAsync<TEvent>(TEvent @event, IIntegrationEvent parentEvent, CancellationToken cancellationToken = default)
             where TEvent : IIntegrationEvent
         {
-            //Legacy comment translated to English.
             if (parentEvent is not IntegrationEvent typedParent)
             {
                 throw new ArgumentException("Parent event must inherit from IntegrationEvent base class", nameof(parentEvent));
@@ -169,10 +169,8 @@ namespace Senparc.Ncf.Core.EventBus
                 throw new ArgumentException("Event must inherit from IntegrationEvent base class", nameof(@event));
             }
             
-            //Legacy comment translated to English.
             var metadata = typedParent.DeriveMetadata();
             
-            //Legacy comment translated to English.
             var newEventType = typedEvent.GetType().Name;
             if (typedParent.HasCircularReference(newEventType))
             {
@@ -187,7 +185,6 @@ namespace Senparc.Ncf.Core.EventBus
                     $"This would cause an infinite event loop.");
             }
             
-            //Legacy comment translated to English.
             var derivedEvent = typedEvent with
             {
                 ParentEventId = metadata.ParentEventId,
@@ -206,9 +203,10 @@ namespace Senparc.Ncf.Core.EventBus
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Completes a pending request when an event-bus response matches its request ID and type.
         /// </summary>
+        /// <param name="event">The event received from the dispatch channel.</param>
+        /// <returns><see langword="true"/> when a pending request accepted the response.</returns>
         internal bool TryCompleteRequest(IIntegrationEvent @event)
         {
             if (@event is not IIntegrationResponse response || response.RequestId == Guid.Empty)
@@ -241,7 +239,6 @@ namespace Senparc.Ncf.Core.EventBus
         /// <returns><see langword="true"/> when the identifier was new; otherwise, <see langword="false"/>.</returns>
         public bool TryMarkEventAsProcessed(Guid eventId)
         {
-            //Legacy comment translated to English.
             if (_processedEventIds.Count > 0 && _processedEventIds.Count % 100 == 0)
             {
                 CleanupExpiredEventIds();
@@ -250,6 +247,9 @@ namespace Senparc.Ncf.Core.EventBus
             return _processedEventIds.TryAdd(eventId, DateTime.UtcNow);
         }
 
+        /// <summary>
+        /// Removes processed event identifiers older than the duplicate-detection retention period.
+        /// </summary>
         private void CleanupExpiredEventIds()
         {
             var cutoffTime = DateTime.UtcNow.Subtract(_eventIdRetentionPeriod);
@@ -269,6 +269,10 @@ namespace Senparc.Ncf.Core.EventBus
 
         private sealed class PendingRequest
         {
+            /// <summary>
+            /// Initializes a pending request with its expected response type and asynchronous completion source.
+            /// </summary>
+            /// <param name="responseType">The expected integration-response type.</param>
             public PendingRequest(Type responseType)
             {
                 ResponseType = responseType;

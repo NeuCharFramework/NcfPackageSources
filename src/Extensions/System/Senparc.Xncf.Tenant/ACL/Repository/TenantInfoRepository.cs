@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.15.17 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.15.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Repository;
@@ -22,10 +25,14 @@ using Senparc.Xncf.Tenant.Domain.Models;
 namespace Senparc.Xncf.Tenant.ACL.Repository
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Repository for persisted tenant registrations.
     /// </summary>
     public class TenantInfoRepository : ClientRepositoryBase<TenantInfo>
     {
+        /// <summary>
+        /// Initializes the repository with tenant database access.
+        /// </summary>
+        /// <param name="db">The tenant database wrapper.</param>
         public TenantInfoRepository(ITenantInfoDbData db) : base(db)
         {
         }

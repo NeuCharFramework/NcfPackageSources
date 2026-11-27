@@ -21,22 +21,29 @@ using Senparc.Xncf.XncfModuleManager.Domain.Services;
 
 namespace Senparc.Xncf.AIAgentsHub.Domain.Services
 {
+    /// <summary>
+    /// Coordinates system initialization, module installation, and validation of
+    /// the AIAgentsHub test installation workflow.
+    /// </summary>
     public class InstallerService
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly InstallOptionsService _installOptionsService;
         private readonly XncfModuleServiceExtension _xncfModuleServiceExtension;
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the tenant context created during installation.</summary>
         public RequestTenantInfo CreatedRequestTenantInfo { get; set; }
+        /// <summary>Gets or sets the tenant-selection rule used by installation.</summary>
         public TenantRule TenantRule { get; set; }
+        /// <summary>Gets or sets whether multi-tenant installation is enabled.</summary>
         public bool MultiTenantEnable { get; set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Initializes core system modules, database state, menus, and configuration
+        /// for the requested installation.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="systemName">The system name persisted in system configuration.</param>
+        /// <param name="adminUserInfoId">The administrator identifier used for menu initialization.</param>
+        /// <param name="serviceProvider">The scoped provider used by module initialization.</param>
         private async Task InitSystemAsync(string systemName, int adminUserInfoId, IServiceProvider serviceProvider)
         {
             Senparc.Xncf.Tenant.Register tenantRegister = new Senparc.Xncf.Tenant.Register();
@@ -114,20 +121,8 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
                 await InstallAndOpenModuleAsync(menuRegister, serviceProvider, true, true);
             }
 
-            //Legacy comment translated to English.
-
             {
                 var _xncfModuleService = _xncfModuleServiceExtension;
-
-                //Legacy comment translated to English.
-                //Senparc.Areas.Admin.Register adminRegister = new Senparc.Areas.Admin.Register();
-                //var adminModule = await InstallAndOpenModuleAsync(adminRegister, serviceProvider);
-
-                ///Legacy comment translated to English.
-                //adminModule ??= await _xncfModuleService.GetObjectAsync(z => z.Uid == adminRegister.Uid);
-
-                ///Legacy comment translated to English.
-                //await _xncfModuleService.SaveObjectAsync(adminModule).ConfigureAwait(false);
 
                 var _systemConfigService = serviceProvider.GetService<SystemConfigService>();
                 _systemConfigService.Init(systemName);//Legacy comment translated to English.
@@ -142,6 +137,8 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
             //Legacy comment translated to English.
         }
 
+        /// <summary>Runs a database initializer and converts failure into an NCF database exception.</summary>
+        /// <param name="initDatabaseFunc">The initializer returning success and diagnostic text.</param>
         private async Task InitDatabaseAsync(Func<Task<(bool, string)>> initDatabaseFunc)
         {
             //initialize the database
@@ -157,12 +154,14 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Installs or updates an XNCF register and optionally opens the persisted
+        /// module and menu.
         /// </summary>
-        /// <param name="register"></param>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="register">The XNCF register to initialize.</param>
+        /// <param name="serviceProvider">The provider used by the register.</param>
+        /// <param name="installNow">Whether to create/open the persisted module immediately.</param>
+        /// <param name="addMenu">Whether module installation should add its menu.</param>
+        /// <returns>The persisted module when installation is performed.</returns>
         private async Task<XncfModule> InstallAndOpenModuleAsync(IXncfRegister register, IServiceProvider serviceProvider, bool installNow = true, bool addMenu = true)
         {
             try
@@ -217,10 +216,11 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Validates the minimum database, system-name, and administrator fields
+        /// required by installation.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="installRequestDto">The submitted installation request.</param>
+        /// <returns><see langword="true"/> when all required values are present.</returns>
         private bool VerifyInstallRequest(InstallRequestDto installRequestDto)
         {
             if (installRequestDto.DbConnectionString.IsNullOrEmpty())
@@ -241,6 +241,10 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
         }
 
 
+        /// <summary>Initializes the installer service and its module/options dependencies.</summary>
+        /// <param name="serviceProvider">The installation service provider.</param>
+        /// <param name="installOptionsService">The default/options persistence service.</param>
+        /// <param name="xncfModuleServiceExtension">The XNCF module installation service.</param>
         public InstallerService(IServiceProvider serviceProvider, InstallOptionsService installOptionsService, XncfModuleServiceExtension xncfModuleServiceExtension)
         {
             this._serviceProvider = serviceProvider;
@@ -248,6 +252,8 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
             this._xncfModuleServiceExtension = xncfModuleServiceExtension;
         }
 
+        /// <summary>Gets the default values shown by the installation form.</summary>
+        /// <returns>The default database, system-name, and administrator values.</returns>
         public GetDefaultInstallOptionsResponseDto GetDefaultInstallOptions()
         {
             var result = new GetDefaultInstallOptionsResponseDto();
@@ -260,10 +266,10 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
             return result;
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <returns></returns>
+        /// <summary>Executes installation after validating and applying the submitted options.</summary>
+        /// <param name="installRequestDto">The submitted installation request.</param>
+        /// <param name="serviceProvider">The provider used by installation operations.</param>
+        /// <returns>The installation result and status code.</returns>
         public async Task<InstallResponseDto> InstallAsync(InstallRequestDto installRequestDto, IServiceProvider serviceProvider)
         {
             using (var sope = serviceProvider.CreateScope())

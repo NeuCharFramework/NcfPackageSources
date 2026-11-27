@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.AI;
@@ -22,6 +25,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services;
 
 public static class PromptUsageHelper
 {
+    /// <summary>
+    /// Converts provider usage details into bounded prompt/completion/total token counts.
+    /// </summary>
+    /// <param name="usageDetails">The provider usage details.</param>
+    /// <returns>Normalized usage information.</returns>
     public static PromptUsageInfo ResolveUsage(UsageDetails usageDetails)
     {
         var prompt = ClampToInt(usageDetails?.InputTokenCount ?? 0);
@@ -40,6 +48,11 @@ public static class PromptUsageHelper
         };
     }
 
+    /// <summary>
+    /// Clamps a non-positive or oversized token count to the supported integer range.
+    /// </summary>
+    /// <param name="value">The provider token count.</param>
+    /// <returns>A non-negative integer token count.</returns>
     private static int ClampToInt(long value)
     {
         if (value <= 0)

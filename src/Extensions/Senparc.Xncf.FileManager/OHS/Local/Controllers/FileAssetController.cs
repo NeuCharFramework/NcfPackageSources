@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.5 Localized file management and upload surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.5.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authorization;
@@ -38,11 +41,22 @@ public sealed class FileAssetController : ControllerBase
 {
     private readonly NcfFileService _fileService;
 
+    /// <summary>
+    /// Initializes the anonymous published-asset controller.
+    /// </summary>
+    /// <param name="fileService">The FileManager service used to resolve published assets.</param>
     public FileAssetController(NcfFileService fileService)
     {
         _fileService = fileService;
     }
 
+    /// <summary>
+    /// Serves a published site asset after verifying its FileManager scope, optional
+    /// content fingerprint, and cache validation headers.
+    /// </summary>
+    /// <param name="id">The FileManager file identifier.</param>
+    /// <param name="fingerprint">Optional hash prefix used for immutable caching.</param>
+    /// <returns>The physical asset, HTTP 304, or HTTP 404 when publication/integrity checks fail.</returns>
     [HttpGet("{id:int}/{fingerprint?}")]
     public async Task<IActionResult> Get(int id, string fingerprint = null)
     {

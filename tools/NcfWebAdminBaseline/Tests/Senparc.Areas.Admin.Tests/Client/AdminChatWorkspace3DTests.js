@@ -35,7 +35,8 @@ assert.match(controller, /visited > 100/);
 assert.match(builder, /IsPreviewAsset/);
 assert.match(message, /CollectWorkspaceArtifactsAsync/);
 assert.match(attachment, /IsWorkspaceArtifact/);
-assert.match(page, /attachment\.isWorkspaceArtifact \|\| attachment\.previewKind === '3d' \? openWorkspaceArtifact/);
+assert.match(page, /attachment\.previewKind === '3d' \? openWorkspaceArtifact/);
+assert.match(page, /messageWorkspaceArtifacts\(message\)\.length/);
 assert.match(page, /attachment\.previewKind === '3d'/);
 assert.match(page, /workspacePreviewIsDocument \|\| workspacePreviewIs3D/);
 

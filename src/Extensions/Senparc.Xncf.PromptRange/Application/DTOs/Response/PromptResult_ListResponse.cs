@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -30,6 +33,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         public List<PromptResultDto> PromptResults { get; set; }
         public DateTime QueryTime { get; set; } = DateTime.Now;
 
+        /// <summary>Initializes a prompt-result list response.</summary>
+        /// <param name="promptItemId">The prompt item identifier.</param>
+        /// <param name="promptItem">The prompt item DTO.</param>
+        /// <param name="promptResults">The prompt result records.</param>
         public PromptResult_ListResponse(int promptItemId, PromptItemDto promptItem, List<PromptResultDto> promptResults)
         {
             PromptItemId = promptItemId;
@@ -37,6 +44,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
             PromptResults = promptResults;
         }
 
+        /// <summary>Initializes an empty response for model binding.</summary>
         public PromptResult_ListResponse()
         {
         }

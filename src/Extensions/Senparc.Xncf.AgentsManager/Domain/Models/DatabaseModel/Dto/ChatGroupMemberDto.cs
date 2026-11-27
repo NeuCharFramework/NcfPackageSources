@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -23,7 +26,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Transfers one Agent-template membership link to a chat group.
     /// </summary>
     public class ChatGroupMemberDto : DtoBase
     {
@@ -38,7 +41,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         public int AgentTemplateId { get;  set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the mapped Agent-template entity.
         /// </summary>
         public AgentTemplate AgentTemplate { get;  set; }
 
@@ -48,12 +51,20 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         public int ChatGroupId { get;  set; }
 
         ///// <summary>
-        ///Legacy comment translated to English.
         ///// </summary>
         //public ChatGroup ChatGroup { get;  set; }
 
+        /// <summary>
+        /// Initializes an empty ChatGroup membership DTO for binding.
+        /// </summary>
         public ChatGroupMemberDto() { }
 
+        /// <summary>
+        /// Initializes a ChatGroup membership DTO from identifiers.
+        /// </summary>
+        /// <param name="uID">The stable membership UID.</param>
+        /// <param name="chatGroupId">The ChatGroup identifier.</param>
+        /// <param name="agentTemplateId">The Agent template identifier.</param>
         public ChatGroupMemberDto(string uID, int chatGroupId, int agentTemplateId /*,AgentTemplate agentTemplate  ChatGroup chatGroup*/)
         {
             UID = uID;
@@ -63,6 +74,10 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
             //ChatGroup = chatGroup;
         }
 
+        /// <summary>
+        /// Projects a persisted ChatGroup membership entity into a DTO.
+        /// </summary>
+        /// <param name="chatGroupMemer">The membership entity to project.</param>
         public ChatGroupMemberDto(ChatGroupMember chatGroupMemer)
         {
             UID = chatGroupMemer.UID;

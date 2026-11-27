@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -54,12 +57,37 @@ public class AIFineTuningMigration : EntityBase<int>
 
     public string Error { get; private set; }
 
+    /// <summary>
+    /// Creates a persisted Worker-store migration record.
+    /// </summary>
+    /// <param name="workerAlias">The Worker alias.</param>
+    /// <param name="storeId">The Worker store identifier.</param>
+    /// <param name="migrationKey">The migration key.</param>
+    /// <param name="status">The migration status.</param>
+    /// <param name="sourceVersion">The source version.</param>
+    /// <param name="targetVersion">The target version.</param>
+    /// <param name="startedUtc">The start timestamp.</param>
+    /// <param name="completedUtc">The optional completion timestamp.</param>
+    /// <param name="error">The optional failure message.</param>
     public AIFineTuningMigration(string workerAlias, string storeId, string migrationKey, string status,
         string sourceVersion, string targetVersion, DateTime startedUtc, DateTime? completedUtc, string error)
     {
         Update(workerAlias, storeId, migrationKey, status, sourceVersion, targetVersion, startedUtc, completedUtc, error);
     }
 
+    /// <summary>
+    /// Updates the persisted migration state.
+    /// </summary>
+    /// <param name="workerAlias">The Worker alias.</param>
+    /// <param name="storeId">The Worker store identifier.</param>
+    /// <param name="migrationKey">The migration key.</param>
+    /// <param name="status">The migration status.</param>
+    /// <param name="sourceVersion">The source version.</param>
+    /// <param name="targetVersion">The target version.</param>
+    /// <param name="startedUtc">The start timestamp.</param>
+    /// <param name="completedUtc">The optional completion timestamp.</param>
+    /// <param name="error">The optional failure message.</param>
+    /// <returns>This migration entity.</returns>
     public AIFineTuningMigration Update(string workerAlias, string storeId, string migrationKey, string status,
         string sourceVersion, string targetVersion, DateTime startedUtc, DateTime? completedUtc, string error)
     {

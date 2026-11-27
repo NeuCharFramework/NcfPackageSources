@@ -14,6 +14,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.0.0 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -51,6 +54,10 @@ public sealed class NeuCharWorkflowChatController : ControllerBase
 
     private readonly NeuCharWorkflowAppService _workflowAppService;
 
+    /// <summary>
+    /// Initializes the anonymous workflow-chat HTTP controller.
+    /// </summary>
+    /// <param name="workflowAppService">The service used for owner/guest chat operations.</param>
     public NeuCharWorkflowChatController(
         NeuCharWorkflowAppService workflowAppService)
     {
@@ -61,6 +68,11 @@ public sealed class NeuCharWorkflowChatController : ControllerBase
     /// Open the chat page. The page carries no session data; the client loads
     /// it through the JSON endpoints below.
     /// </summary>
+    /// <summary>
+    /// Renders the localized static chat page shell for one workflow.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier embedded in the page.</param>
+    /// <returns>An HTML response containing the chat shell and translations.</returns>
     [HttpGet("{workflowId:int}/page")]
     public IActionResult Page(int workflowId)
     {
@@ -97,6 +109,12 @@ public sealed class NeuCharWorkflowChatController : ControllerBase
 
     [HttpGet("{workflowId:int}/bootstrap")]
     [RequestSizeLimit(MaxRequestBytes)]
+    /// <summary>
+    /// Returns bootstrap metadata and persisted messages for a workflow chat participant.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel loading.</param>
+    /// <returns>An HTTP result containing chat bootstrap state.</returns>
     public async Task<IActionResult> Bootstrap(int workflowId, CancellationToken cancellationToken)
     {
         EnsureGuestCookie();
@@ -121,6 +139,13 @@ public sealed class NeuCharWorkflowChatController : ControllerBase
 
     [HttpPost("{workflowId:int}/messages")]
     [RequestSizeLimit(MaxRequestBytes)]
+    /// <summary>
+    /// Accepts one participant message and starts a workflow chat run.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="request">The message payload.</param>
+    /// <param name="cancellationToken">Token used to cancel submission.</param>
+    /// <returns>An HTTP 202 result when a run starts, or a mapped error result.</returns>
     public async Task<IActionResult> SendMessage(
         int workflowId,
         [FromBody] ChatMessageRequest? request,
@@ -139,6 +164,14 @@ public sealed class NeuCharWorkflowChatController : ControllerBase
     }
 
     [HttpGet("{workflowId:int}/runs/{runId:guid}")]
+    /// <summary>
+    /// Returns participant-scoped incremental status for a chat workflow run.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="runId">The run identifier.</param>
+    /// <param name="afterSequence">The last sequence already consumed.</param>
+    /// <param name="cancellationToken">Token used to cancel status loading.</param>
+    /// <returns>An HTTP result containing run state and latest output.</returns>
     public async Task<IActionResult> RunStatus(
         int workflowId,
         Guid runId,
@@ -169,6 +202,12 @@ public sealed class NeuCharWorkflowChatController : ControllerBase
     }
 
     [HttpPost("{workflowId:int}/reset")]
+    /// <summary>
+    /// Clears the participant's persisted chat session for a workflow.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel reset.</param>
+    /// <returns>An HTTP result indicating whether reset completed.</returns>
     public async Task<IActionResult> Reset(int workflowId, CancellationToken cancellationToken)
     {
         EnsureGuestCookie();
@@ -219,10 +258,19 @@ public sealed class NeuCharWorkflowChatController : ControllerBase
         return token;
     }
 
+    /// <summary>
+    /// Validates the fixed-length URL-safe guest token format.
+    /// </summary>
+    /// <param name="value">The cookie value to validate.</param>
+    /// <returns><see langword="true"/> when the value contains exactly 43 URL-safe characters.</returns>
     private static bool IsValidGuestToken([NotNullWhen(true)] string? value) =>
         value is { Length: 43 }
         && value.All(z => (z >= 'A' && z <= 'Z') || (z >= 'a' && z <= 'z') || (z >= '0' && z <= '9') || z is '-' or '_');
 
+    /// <summary>
+    /// Generates a URL-safe guest token from 32 cryptographically random bytes.
+    /// </summary>
+    /// <returns>The Base64Url-encoded guest token.</returns>
     private static string GenerateGuestToken()
     {
         Span<byte> bytes = stackalloc byte[32];
@@ -230,5 +278,8 @@ public sealed class NeuCharWorkflowChatController : ControllerBase
         return WebEncoders.Base64UrlEncode(bytes.ToArray());
     }
 
+    /// <summary>
+    /// Carries one participant message submitted to the workflow chat endpoint.
+    /// </summary>
     public sealed record ChatMessageRequest(string? Message);
 }

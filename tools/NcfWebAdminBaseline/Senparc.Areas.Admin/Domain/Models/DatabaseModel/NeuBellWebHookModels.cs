@@ -29,6 +29,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.Domain.Services;
@@ -40,9 +43,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 
 /// <summary>
-///Legacy comment translated to English.
-///Legacy comment translated to English.
-///Legacy comment translated to English.
+/// Defines a persisted outbound WebHook subscription for NeuBell notifications.
+/// The entity stores endpoint, filtering, authentication, request-template, and
+/// enablement settings used by the dispatcher.
 /// </summary>
 [Table(Register.DATABASE_PREFIX + nameof(NeuBellWebHook))]
 [Serializable]
@@ -55,13 +58,13 @@ public class NeuBellWebHook : EntityBase<int>
     public string Name { get; private set; }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Gets the provider identifier filter. An empty value matches every provider.
     /// </summary>
     [Required, MaxLength(1000)]
     public string WebHookUrl { get; private set; }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Gets the optional secret used by the dispatcher when authenticating a delivery.
     /// </summary>
     [MaxLength(200)]
     public string ProviderFilter { get; private set; }
@@ -73,17 +76,13 @@ public class NeuBellWebHook : EntityBase<int>
     public string Secret { get; private set; }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Gets the HTTP method used when delivering the WebHook request.
     /// </summary>
     [Required, MaxLength(10)]
     public string HttpMethod { get; private set; }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Gets the optional request-body template used by the dispatcher.
     /// </summary>
     public string BodyTemplate { get; private set; }
 
@@ -102,10 +101,19 @@ public class NeuBellWebHook : EntityBase<int>
     /// </summary>
     public bool IsEnabled { get; private set; }
 
+    /// <summary>
+    /// Gets the administrator who owns this WebHook subscription.
+    /// </summary>
     public int AdminUserId { get; private set; }
 
     private NeuBellWebHook() { }
 
+    /// <summary>
+    /// Initializes an enabled POST WebHook with notifications enabled for additions and removals.
+    /// </summary>
+    /// <param name="name">The display name of the subscription.</param>
+    /// <param name="webHookUrl">The endpoint URL used for delivery.</param>
+    /// <param name="adminUserId">The owning administrator identifier.</param>
     public NeuBellWebHook(string name, string webHookUrl, int adminUserId)
     {
         Name = name?.Trim() ?? string.Empty;
@@ -121,17 +129,36 @@ public class NeuBellWebHook : EntityBase<int>
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Gets the HTTP GET method name accepted by the WebHook configuration.
     /// </summary>
     public const string MethodGet = "GET";
+    /// <summary>
+    /// Gets the HTTP POST method name and default delivery method.
+    /// </summary>
     public const string MethodPost = "POST";
+    /// <summary>
+    /// Gets the HTTP PUT method name accepted by the WebHook configuration.
+    /// </summary>
     public const string MethodPut = "PUT";
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Gets the maximum supported request-body template length.
     /// </summary>
     public const int MaxBodyTemplateLength = 20000;
 
+    /// <summary>
+    /// Updates the mutable WebHook configuration and records the entity update time.
+    /// Blank names and URLs preserve their current values; a supplied HTTP method is normalized.
+    /// </summary>
+    /// <param name="name">The replacement display name, when non-blank.</param>
+    /// <param name="webHookUrl">The replacement endpoint URL, when non-blank.</param>
+    /// <param name="providerFilter">The provider identifier filter.</param>
+    /// <param name="secret">The delivery secret.</param>
+    /// <param name="notifyOnAdd">Whether additions should trigger delivery.</param>
+    /// <param name="notifyOnRemove">Whether removals should trigger delivery.</param>
+    /// <param name="isEnabled">Whether the subscription is enabled.</param>
+    /// <param name="httpMethod">The optional HTTP method to normalize.</param>
+    /// <param name="bodyTemplate">The optional request-body template.</param>
     public void UpdateInfo(
         string name,
         string webHookUrl,
@@ -168,8 +195,11 @@ public class NeuBellWebHook : EntityBase<int>
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Normalizes a configured HTTP method to GET, PUT, or the POST default.
+    /// Unknown and blank values become POST.
     /// </summary>
+    /// <param name="input">The raw HTTP method value.</param>
+    /// <returns>The normalized method name.</returns>
     public static string NormalizeHttpMethod(string input)
     {
         var value = (input ?? string.Empty).Trim().ToUpperInvariant();
@@ -177,8 +207,12 @@ public class NeuBellWebHook : EntityBase<int>
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Validates an HTTP method and returns its normalized representation when valid.
     /// </summary>
+    /// <param name="input">The raw HTTP method value.</param>
+    /// <param name="normalized">Receives the normalized method when the value is valid.</param>
+    /// <param name="error">Receives a localized validation message when the value is invalid.</param>
+    /// <returns><see langword="true"/> when the method is blank or one of the supported methods.</returns>
     public static bool TryValidateHttpMethod(string input, out string normalized, out string error)
     {
         var value = (input ?? string.Empty).Trim().ToUpperInvariant();
@@ -194,8 +228,11 @@ public class NeuBellWebHook : EntityBase<int>
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Validates that a WebHook URL is an absolute HTTP or HTTPS URL.
     /// </summary>
+    /// <param name="url">The URL to validate.</param>
+    /// <param name="error">Receives a validation message when the URL is invalid.</param>
+    /// <returns><see langword="true"/> when the URL is a supported absolute URL.</returns>
     public static bool TryValidateUrl(string url, out string error)
     {
         error = null;
@@ -216,10 +253,12 @@ public class NeuBellWebHook : EntityBase<int>
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Validates a URL that may contain supported template tokens by masking those tokens
+    /// before applying the absolute HTTP/HTTPS URL checks.
     /// </summary>
+    /// <param name="url">The URL template to validate.</param>
+    /// <param name="error">Receives a validation message when the masked URL is invalid.</param>
+    /// <returns><see langword="true"/> when the URL template resolves to a supported URL shape.</returns>
     public static bool TryValidateUrlTemplate(string url, out string error)
     {
         if (string.IsNullOrWhiteSpace(url))
@@ -233,8 +272,11 @@ public class NeuBellWebHook : EntityBase<int>
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Determines whether this subscription applies to the specified provider.
+    /// An empty provider filter matches every provider.
     /// </summary>
+    /// <param name="providerId">The provider identifier associated with an event.</param>
+    /// <returns><see langword="true"/> when the filter is empty or matches case-insensitively.</returns>
     public bool MatchesProvider(string providerId)
     {
         return string.IsNullOrWhiteSpace(ProviderFilter)

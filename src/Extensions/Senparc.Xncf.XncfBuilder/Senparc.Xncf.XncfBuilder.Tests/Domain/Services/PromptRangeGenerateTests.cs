@@ -37,10 +37,12 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Domain.Services
         private string _projectPath = Path.Combine("X:\\Senparc 项目\\NeuCharFramework\\NcfPackageSources\\src\\Extensions\\Senparc.Xncf.PromptRange\\", "Domain", "Models", "DatabaseModel");
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Runs the shared prompt-generation scenario for a supplied entity name and input.
+        /// The current body is retained as historical test scaffolding.
         /// </summary>
-        /// <param name="entityName"></param>
-        /// <returns></returns>
+        /// <param name="entityName">The entity name embedded in the generation request.</param>
+        /// <param name="input">The prompt-generation input text.</param>
+        /// <returns>A task representing the asynchronous test scaffold.</returns>
         private async Task RunPromptBaseTest(string entityName, string input)
         {
             CO2NET.Helpers.FileHelper.TryCreateDirectory(_projectPath);

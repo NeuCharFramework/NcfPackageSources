@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -42,11 +45,21 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         [BindProperty(SupportsGet = true)]
+        /// <summary>
+        /// Gets or sets the role identifier selected by the editor.
+        /// </summary>
         public string Id { get; set; }
 
         [BindProperty]
+        /// <summary>
+        /// Gets or sets the role values bound from the editor.
+        /// </summary>
         public SysRoleDto SysRoleDto { get; set; }
 
+        /// <summary>
+        /// Loads the selected role into the editor when an identifier is present.
+        /// </summary>
+        /// <returns>A completed task after the bound editor model has been populated.</returns>
         public async Task OnGetAsync()
         {
             if (!string.IsNullOrEmpty(Id))
@@ -57,9 +70,10 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// Handler=Detail
+        /// Retrieves the role entity requested by the client-side editor.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="id">The role identifier to retrieve.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing the role entity.</returns>
         [Ncf.AreaBase.Admin.Filters.CustomerResource("role-edit")]
         public async Task<IActionResult> OnGetDetailAsync(string id)
         {
@@ -68,10 +82,10 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// handler=SelectItems
+        /// Returns enabled roles as select-list items for another administration form.
         /// </summary>
-        /// <param name="senparcEntities"></param>
-        /// <returns></returns>
+        /// <param name="senparcEntities">The pooled database context used to query roles.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing enabled role options.</returns>
         public async Task<IActionResult> OnGetSelectItemsAsync([FromServices] /*SenparcEntities*/ BasePoolEntities senparcEntities)
         {
             var list = await senparcEntities.Set<SysRole>().Where(_ => _.Enabled)
@@ -81,9 +95,10 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// Handler=Save
+        /// Creates or updates the JSON-bound role DTO.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="sysRoleDto">The role values submitted by the editor.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing <see langword="true"/> after persistence.</returns>
         [Ncf.AreaBase.Admin.Filters.CustomerResource("role-add", "role-edit")]
         public async Task<IActionResult> OnPostSaveAsync([FromBody] SysRoleDto sysRoleDto)
         {
@@ -91,6 +106,10 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             return Ok(true);
         }
 
+        /// <summary>
+        /// Persists the form-bound role model and redirects to the role list.
+        /// </summary>
+        /// <returns>A redirect to the role index page after persistence.</returns>
         public async Task<IActionResult> OnPostAsync()
         {
             //if (!string.IsNullOrEmpty(Id))

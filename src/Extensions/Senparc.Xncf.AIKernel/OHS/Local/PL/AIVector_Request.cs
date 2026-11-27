@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -42,7 +45,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         public string Name { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the vector database provider type used for filtering.
         /// </summary>
         public VectorDBType VectorDBType { get; set; }
 
@@ -76,12 +79,12 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
         public string Name { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the provider connection string.
         /// </summary>
         public string ConnectionString { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the vector database provider type.
         /// </summary>
         public VectorDBType VectorDBType { get; set; }
 

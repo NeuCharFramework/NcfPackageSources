@@ -9,6 +9,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.0.1 Updated legacy MVC integration metadata and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.0.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authentication;
@@ -57,6 +60,11 @@ namespace Senparc.Areas.User.Controllers
             }
         }
 
+        /// <inheritdoc/>
+        /// <remarks>
+        /// Preserves TempData messages before delegating user context loading
+        /// and action preparation to the base controller.
+        /// </remarks>
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             TempData["Messager"] = TempData["Messager"];
@@ -65,6 +73,11 @@ namespace Senparc.Areas.User.Controllers
             base.OnActionExecuting(context);
         }
 
+        /// <summary>
+        /// Copies authenticated user, route, and serialized TempData message information
+        /// into the legacy user view-data model before rendering.
+        /// </summary>
+        /// <param name="context">The result execution context.</param>
         public new void OnResultExecuting(ResultExecutingContext context)
         {
             if (ViewData.Model is IBaseUserVD vd)
@@ -92,12 +105,15 @@ namespace Senparc.Areas.User.Controllers
             base.OnResultExecuting(context);
         }
 
+        /// <inheritdoc/>
         public new void OnResultExecuted(ResultExecutedContext context)
         {
             base.OnResultExecuted(context);
         }
 
         [NonAction]
+        /// <inheritdoc/>
+        /// <remarks>Uses the user-area success view model and navigation route values.</remarks>
         public override ActionResult RenderSuccess(string message, string backAction = null, string backController = null, RouteValueDictionary backRouteValues = null)
         {
             backAction = backAction ?? RouteData.Values["controller"] as string;
@@ -114,6 +130,8 @@ namespace Senparc.Areas.User.Controllers
         }
 
         [NonAction]
+        /// <inheritdoc/>
+        /// <remarks>Uses the user-area error view model while preserving route diagnostics.</remarks>
         public override ActionResult RenderError(string message, Exception ex = null)
         {
             //preserve the original controller and action information
@@ -124,13 +142,13 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        /// displayJsonresult
+        /// Creates the legacy JSON response envelope and optionally wraps it in JSONP.
         /// </summary>
-        /// <param name="success">whethersuccess</param>
-        ///Legacy comment translated to English.
-        /// <param name="jsonSerializerSettings"></param>
-        /// <param name="jsonpCallbackFunction"></param>
-        /// <returns></returns>
+        /// <param name="success">Whether the operation succeeded.</param>
+        /// <param name="result">The response payload.</param>
+        /// <param name="jsonSerializerSettings">Optional serializer settings.</param>
+        /// <param name="jsonpCallbackFunction">An optional JSONP callback name.</param>
+        /// <returns>A JSON or JSONP action result.</returns>
         [NonAction]
         public new ActionResult RenderJsonSuccessResult(bool success, object result,
             Newtonsoft.Json.JsonSerializerSettings jsonSerializerSettings = null,
@@ -153,6 +171,12 @@ namespace Senparc.Areas.User.Controllers
             return new JsonResult(json);
         }
 
+        /// <summary>
+        /// Stores a serialized user-area message in TempData for the next rendered result.
+        /// </summary>
+        /// <param name="messageType">The message severity/type.</param>
+        /// <param name="messageText">The message text.</param>
+        /// <param name="showClose">Whether the UI may dismiss the message.</param>
         public new void SetMessager(MessageType messageType, string messageText, bool showClose = true)
         {
             TempData["Messager"] = new Messager(messageType, messageText).ToJson();

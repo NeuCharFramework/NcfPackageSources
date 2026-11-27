@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 using System;
 using System.Collections.Generic;
@@ -63,6 +66,11 @@ namespace Senparc.Areas.Admin.Domain.Services
         public const int MaxKeywordLength = 80;
         private const int SnippetRadius = 42;
 
+        /// <summary>
+        /// Trims a search keyword and caps it at the supported length.
+        /// </summary>
+        /// <param name="keyword">The raw search keyword.</param>
+        /// <returns>The normalized keyword.</returns>
         public static string NormalizeKeyword(string keyword)
         {
             var normalized = (keyword ?? string.Empty).Trim();
@@ -71,6 +79,16 @@ namespace Senparc.Areas.Admin.Domain.Services
                 : normalized.Substring(0, MaxKeywordLength);
         }
 
+        /// <summary>
+        /// Searches active owner-scoped chat sessions by message content or session title,
+        /// creates bounded snippets, and returns newest matches first.
+        /// </summary>
+        /// <param name="sessions">The candidate chat sessions.</param>
+        /// <param name="messages">The candidate chat messages.</param>
+        /// <param name="userId">The owning administrator identifier.</param>
+        /// <param name="keyword">The search keyword.</param>
+        /// <param name="limit">The maximum result count, capped by the default limit.</param>
+        /// <returns>Matching content/title hits.</returns>
         public static IReadOnlyList<AdminChatHistorySearchHit> Search(
             IEnumerable<AdminChatSession> sessions,
             IEnumerable<AdminChatMessage> messages,
@@ -153,6 +171,18 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
+        /// <summary>
+        /// Searches active owner-scoped trajectory tool-call events by tool name
+        /// and maps each match to its nearest chat message.
+        /// </summary>
+        /// <param name="sessions">The candidate chat sessions.</param>
+        /// <param name="trajectories">The candidate trajectories.</param>
+        /// <param name="events">The candidate trajectory events.</param>
+        /// <param name="messages">The candidate chat messages.</param>
+        /// <param name="userId">The owning administrator identifier.</param>
+        /// <param name="keyword">The tool-name keyword.</param>
+        /// <param name="limit">The maximum result count.</param>
+        /// <returns>Matching tool-call hits.</returns>
         public static IReadOnlyList<AdminChatHistorySearchHit> SearchToolCalls(
             IEnumerable<AdminChatSession> sessions,
             IEnumerable<AdminChatTrajectory> trajectories,
@@ -219,6 +249,12 @@ namespace Senparc.Areas.Admin.Domain.Services
                 .ToList();
         }
 
+        /// <summary>
+        /// Selects distinct active, non-deleted sessions owned by the user.
+        /// </summary>
+        /// <param name="sessions">The candidate sessions.</param>
+        /// <param name="userId">The owner identifier.</param>
+        /// <returns>Sessions keyed by identifier.</returns>
         private static Dictionary<int, AdminChatSession> SelectActiveSessions(
             IEnumerable<AdminChatSession> sessions,
             int userId)
@@ -233,6 +269,13 @@ namespace Senparc.Areas.Admin.Domain.Services
                 .ToDictionary(session => session.Id);
         }
 
+        /// <summary>
+        /// Finds the nearest message covering a trajectory event sequence.
+        /// </summary>
+        /// <param name="messages">The candidate messages.</param>
+        /// <param name="trajectoryId">The trajectory identifier.</param>
+        /// <param name="sequence">The event sequence.</param>
+        /// <returns>The nearest message identifier, or zero.</returns>
         private static int LocateToolCallMessage(
             IEnumerable<AdminChatMessage> messages,
             int trajectoryId,
@@ -257,6 +300,14 @@ namespace Senparc.Areas.Admin.Domain.Services
                 .FirstOrDefault()?.Id ?? 0;
         }
 
+        /// <summary>
+        /// Extracts a collapsed context snippet around a case-insensitive keyword match.
+        /// </summary>
+        /// <param name="text">The source text.</param>
+        /// <param name="keyword">The keyword to locate.</param>
+        /// <param name="before">Receives text before the match.</param>
+        /// <param name="match">Receives the matched text.</param>
+        /// <param name="after">Receives text after the match.</param>
         private static void SplitSnippet(string text, string keyword, out string before, out string match, out string after)
         {
             text ??= string.Empty;
@@ -287,6 +338,11 @@ namespace Senparc.Areas.Admin.Domain.Services
             after = end < text.Length ? after.TrimEnd() + "…" : after.TrimEnd();
         }
 
+        /// <summary>
+        /// Replaces whitespace runs with single spaces for compact search snippets.
+        /// </summary>
+        /// <param name="value">The text to collapse.</param>
+        /// <returns>Whitespace-collapsed text.</returns>
         private static string Collapse(string value) =>
             string.IsNullOrEmpty(value) ? string.Empty : Regex.Replace(value, @"\s+", " ");
     }

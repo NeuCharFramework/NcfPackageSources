@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -22,7 +25,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Defines the common persistence fields shared by all NCF entities.
     /// </summary>
     public interface IEntityBase : ISoftDelete
     {
@@ -31,7 +34,7 @@ namespace Senparc.Ncf.Core.Models
         /// </summary>
         DateTime AddTime { get; set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the most recent update time.
         /// </summary>
         DateTime LastUpdateTime { get; set; }
     }
@@ -39,7 +42,7 @@ namespace Senparc.Ncf.Core.Models
     public interface IEntityBase<TKey> : IEntityBase
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the entity identifier.
         /// </summary>
         TKey Id { get; set; }
     }

@@ -20,56 +20,66 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using System;
 
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
-/// <summary>
-///Legacy comment translated to English.
-/// </summary>
+/// <summary>Defines the human-in-the-loop policy level.</summary>
 public enum HumanInTheLoopLevel
 {
-    ///Legacy comment translated to English.
+    /// <summary>Allows tools to run automatically.</summary>
     Automatic = 0,
 
-    ///Legacy comment translated to English.
+    /// <summary>Uses risk-based approval rules.</summary>
     RiskBased = 1,
 
-    ///Legacy comment translated to English.
+    /// <summary>Requests approval before tool calls.</summary>
     ToolApproval = 2,
 
-    ///Legacy comment translated to English.
+    /// <summary>Requires a human participant in the execution.</summary>
     HumanParticipant = 3
 }
 
-/// <summary>
-///Legacy comment translated to English.
-/// </summary>
+/// <summary>Defines how plugin and MCP tools may be invoked.</summary>
 public enum ToolPermissionMode
 {
-    ///Legacy comment translated to English.
+    /// <summary>Uses the effective level's default permission.</summary>
     Inherit = 0,
 
     /// <summary>automaticexecute。</summary>
     Automatic = 1,
 
-    ///Legacy comment translated to English.
+    /// <summary>Requires human approval before invocation.</summary>
     RequireApproval = 2,
 
-    ///Legacy comment translated to English.
+    /// <summary>Denies invocation.</summary>
     Deny = 3
 }
 
+/// <summary>Contains the normalized policy applied to one Agent execution.</summary>
 public sealed record EffectiveHumanInTheLoopPolicy(
     HumanInTheLoopLevel Level,
     ToolPermissionMode PluginTools,
     ToolPermissionMode McpTools,
     bool IncludeHumanParticipant);
 
+/// <summary>Resolves legacy flags and explicit overrides into an effective policy.</summary>
 public static class HumanInTheLoopPolicyResolver
 {
+    /// <summary>
+    /// Resolves tool permissions and human-participant behavior from the supplied policy inputs.
+    /// </summary>
+    /// <param name="level">The requested human-in-the-loop level.</param>
+    /// <param name="pluginTools">The plugin permission override.</param>
+    /// <param name="mcpTools">The MCP permission override.</param>
+    /// <param name="legacyRequireHumanApproval">Legacy flag requiring approval for all tools.</param>
+    /// <param name="includeHumanParticipant">Whether a human participant should be included.</param>
+    /// <returns>The normalized effective policy.</returns>
     public static EffectiveHumanInTheLoopPolicy Resolve(
         HumanInTheLoopLevel level,
         ToolPermissionMode pluginTools,
@@ -94,7 +104,6 @@ public static class HumanInTheLoopPolicyResolver
             _ => ToolPermissionMode.Automatic
         };
 
-        //Legacy comment translated to English.
         if (legacyRequireHumanApproval)
         {
             defaultPluginMode = ToolPermissionMode.RequireApproval;
@@ -112,6 +121,13 @@ public static class HumanInTheLoopPolicyResolver
             includeHumanParticipant || normalizedLevel == HumanInTheLoopLevel.HumanParticipant);
     }
 
+    /// <summary>
+    /// Resolves a requested tool permission override against the effective default.
+    /// Deny is authoritative, while existing approval requirements cannot be relaxed.
+    /// </summary>
+    /// <param name="defaultMode">The default permission mode.</param>
+    /// <param name="requestedMode">The requested override.</param>
+    /// <returns>The effective permission mode.</returns>
     private static ToolPermissionMode ApplyOverride(
         ToolPermissionMode defaultMode,
         ToolPermissionMode requestedMode)
@@ -121,7 +137,6 @@ public static class HumanInTheLoopPolicyResolver
             return defaultMode;
         }
 
-        //Legacy comment translated to English.
         if (requestedMode == ToolPermissionMode.Deny)
         {
             return ToolPermissionMode.Deny;
@@ -137,16 +152,21 @@ public static class HumanInTheLoopPolicyResolver
     }
 }
 
-/// <summary>
-///Legacy comment translated to English.
-/// </summary>
+/// <summary>Provides stable identifiers for the built-in human participant.</summary>
 public static class HumanParticipantConstants
 {
+    /// <summary>Gets the built-in human-participant prompt code.</summary>
     public const string PromptCode = "system:human-participant";
+    /// <summary>Gets the participant display name.</summary>
     public const string Name = "Human";
+    /// <summary>Gets the stable participant key.</summary>
     public const string ParticipantKey = "human:default";
+    /// <summary>Gets the participant kind identifier.</summary>
     public const string ParticipantKind = "Human";
 
+    /// <summary>Determines whether a prompt code identifies the built-in human participant.</summary>
+    /// <param name="promptCode">The prompt code to inspect.</param>
+    /// <returns><see langword="true"/> when the code matches.</returns>
     public static bool IsHuman(string promptCode)
         => string.Equals(promptCode?.Trim(), PromptCode, StringComparison.Ordinal);
 }

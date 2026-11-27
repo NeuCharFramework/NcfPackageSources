@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.23.13-preview12 Updated service infrastructure and related localization metadata
 
+    Modified by: Senparc - 20261127
+    Change description: v0.23.13.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using AutoMapper;
@@ -221,14 +224,6 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// getalldata
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="where"></param>
-        /// <param name="orderField">xxx desc, yyy asc</param>
-        /// <param name="includes"></param>
-        /// <returns></returns>
-        /// <summary>
         /// Asynchronously retrieves all matching entities using a provider-specific order expression.
         /// </summary>
         /// <param name="where">The predicate used to select entities.</param>
@@ -256,29 +251,28 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// getalldata
+        /// Asynchronously retrieves all matching entities with expression-based ordering and eager-loading.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="TIncludesProperty"></typeparam>
-        /// <param name="where"></param>
-        /// <param name="orderBy"></param>
-        /// <param name="orderingType"></param>
-        /// <param name="includesNavigationPropertyPathFunc"></param>
-        /// <returns></returns>
+        /// <typeparam name="TK">The ordering key type.</typeparam>
+        /// <typeparam name="TIncludesProperty">The included navigation property type.</typeparam>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="orderBy">The expression used to order entities.</param>
+        /// <param name="orderingType">The ordering direction.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The typed include expression.</param>
+        /// <returns>All matching entities and paging metadata.</returns>
         public virtual async Task<PagedList<T>> GetFullListAsync<TK, TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             return await RepositoryBase.GetObjectListAsync(where, orderBy, orderingType, 0, 0, includesNavigationPropertyPathFunc);
         }
 
         /// <summary>
-        /// getalldata
+        /// Asynchronously retrieves all matching entities using a textual order expression and typed eager-loading.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="TIncludesProperty"></typeparam>
-        /// <param name="where"></param>
-        /// <param name="orderField">xxx desc, yyy asc</param>
-        /// <param name="includesNavigationPropertyPathFunc"></param>
-        /// <returns></returns>
+        /// <typeparam name="TIncludesProperty">The included navigation property type.</typeparam>
+        /// <param name="where">The predicate used to select entities.</param>
+        /// <param name="orderField">The textual order expression.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The typed include expression.</param>
+        /// <returns>All matching entities and paging metadata.</returns>
         public virtual async Task<PagedList<T>> GetFullListAsync<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc, string orderField = null)
         {
             return await RepositoryBase.GetObjectListAsync(where, orderField, 0, 0, includesNavigationPropertyPathFunc);
@@ -289,46 +283,46 @@ namespace Senparc.Ncf.Service
         #region Legacy section
 
         /// <summary>
-        /// get paginated data
+        /// Retrieves a page using expression-based ordering and string include paths.
         /// </summary>
-        /// <typeparam name="TK"></typeparam>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageCount"></param>
-        /// <param name="where"></param>
-        /// <param name="orderBy"></param>
-        /// <param name="orderingType"></param>
-        /// <param name="includes"></param>
-        /// <returns></returns>
+        /// <typeparam name="TK">The ordering key type.</typeparam>
+        /// <param name="pageIndex">The requested page index.</param>
+        /// <param name="pageCount">The maximum number of items in the page.</param>
+        /// <param name="where">The entity-selection predicate.</param>
+        /// <param name="orderBy">The ordering expression.</param>
+        /// <param name="orderingType">The ordering direction.</param>
+        /// <param name="includes">Navigation property paths to eager-load.</param>
+        /// <returns>The requested page and paging metadata.</returns>
         public virtual PagedList<T> GetObjectList<TK>(int pageIndex, int pageCount, Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes)
         {
             return RepositoryBase.GetObjectList(where, orderBy, orderingType, pageIndex, pageCount, includes);
         }
 
         /// <summary>
-        /// get paginated data
+        /// Asynchronously retrieves a page using expression-based ordering and string include paths.
         /// </summary>
-        /// <typeparam name="TK"></typeparam>
-        ///Legacy comment translated to English.
-        /// <param name="pageCount">items per page</param>
-        /// <param name="where">condition</param>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <param name="includes"></param>
-        /// <returns></returns>
+        /// <typeparam name="TK">The ordering key type.</typeparam>
+        /// <param name="pageIndex">The requested page index.</param>
+        /// <param name="pageCount">The maximum number of items in the page.</param>
+        /// <param name="where">The entity-selection predicate.</param>
+        /// <param name="orderBy">The ordering expression.</param>
+        /// <param name="orderingType">The ordering direction.</param>
+        /// <param name="includes">Navigation property paths to eager-load.</param>
+        /// <returns>The asynchronously loaded page and paging metadata.</returns>
         public virtual async Task<PagedList<T>> GetObjectListAsync<TK>(int pageIndex, int pageCount, Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes)
         {
             return await RepositoryBase.GetObjectListAsync(where, orderBy, orderingType, pageIndex, pageCount, includes);
         }
 
         /// <summary>
-        /// get paginated data
+        /// Asynchronously retrieves a page using a textual order expression and string include paths.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <param name="pageCount">items per page</param>
-        /// <param name="where">condition</param>
-        ///Legacy comment translated to English.
-        /// <param name="includes"></param>
-        /// <returns></returns>
+        /// <param name="pageIndex">The requested page index.</param>
+        /// <param name="pageCount">The maximum number of items in the page.</param>
+        /// <param name="where">The entity-selection predicate.</param>
+        /// <param name="orderBy">The textual order expression.</param>
+        /// <param name="includes">Navigation property paths to eager-load.</param>
+        /// <returns>The asynchronously loaded page and paging metadata.</returns>
         public virtual async Task<PagedList<T>> GetObjectListAsync(int pageIndex, int pageCount, Expression<Func<T, bool>> where, string orderBy, params string[] includes)
         {
             return await RepositoryBase.GetObjectListAsync(where, orderBy, pageIndex, pageCount, includes);
@@ -352,14 +346,15 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// get paginated data
+        /// Asynchronously retrieves a page using a textual order expression and typed eager-loading.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <param name="pageCount">items per page</param>
-        /// <param name="where">condition</param>
-        ///Legacy comment translated to English.
-        /// <param name="includesNavigationPropertyPathFunc"></param>
-        /// <returns></returns>
+        /// <typeparam name="TIncludesProperty">The included navigation property type.</typeparam>
+        /// <param name="pageIndex">The requested page index.</param>
+        /// <param name="pageCount">The maximum number of items in the page.</param>
+        /// <param name="where">The entity-selection predicate.</param>
+        /// <param name="orderBy">The textual order expression.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The typed include expression.</param>
+        /// <returns>The asynchronously loaded page and paging metadata.</returns>
         public virtual async Task<PagedList<T>> GetObjectListAsync<TIncludesProperty>(int pageIndex, int pageCount, Expression<Func<T, bool>> where, string orderBy, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             return await RepositoryBase.GetObjectListAsync<TIncludesProperty>(where, orderBy, pageIndex, pageCount, includesNavigationPropertyPathFunc);
@@ -367,16 +362,17 @@ namespace Senparc.Ncf.Service
 
 
         /// <summary>
-        /// get paginated data
+        /// Asynchronously retrieves a page using expression-based ordering and typed eager-loading.
         /// </summary>
-        /// <typeparam name="TK"></typeparam>
-        ///Legacy comment translated to English.
-        /// <param name="pageCount">items per page</param>
-        /// <param name="where">condition</param>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// <param name="includesNavigationPropertyPathFunc"></param>
-        /// <returns></returns>
+        /// <typeparam name="TK">The ordering key type.</typeparam>
+        /// <typeparam name="TIncludesProperty">The included navigation property type.</typeparam>
+        /// <param name="pageIndex">The requested page index.</param>
+        /// <param name="pageCount">The maximum number of items in the page.</param>
+        /// <param name="where">The entity-selection predicate.</param>
+        /// <param name="orderBy">The ordering expression.</param>
+        /// <param name="orderingType">The ordering direction.</param>
+        /// <param name="includesNavigationPropertyPathFunc">The typed include expression.</param>
+        /// <returns>The asynchronously loaded page and paging metadata.</returns>
         public virtual async Task<PagedList<T>> GetObjectListAsync<TK, TIncludesProperty>(int pageIndex, int pageCount, Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
         {
             return await RepositoryBase.GetObjectListAsync<TK, TIncludesProperty>(where, orderBy, orderingType, pageIndex, pageCount, includesNavigationPropertyPathFunc);

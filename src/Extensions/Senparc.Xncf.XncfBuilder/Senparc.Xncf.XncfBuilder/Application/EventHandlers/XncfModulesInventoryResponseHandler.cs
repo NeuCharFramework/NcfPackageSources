@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.42.0.0 add MCP endpoint gateway and tool invocation contracts
+
 ----------------------------------------------------------------*/
 
 using System.Threading;
@@ -25,7 +28,7 @@ using Senparc.Xncf.XncfBuilder.Abstractions.Events;
 namespace Senparc.Xncf.XncfBuilder.Application.EventHandlers
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Completes the pending XNCF module inventory waiter when a response event arrives.
     /// </summary>
     public class XncfModulesInventoryResponseHandler : IIntegrationEventHandler<XncfModulesInventoryResponseEvent>
     {
@@ -40,6 +43,7 @@ namespace Senparc.Xncf.XncfBuilder.Application.EventHandlers
             _logger = logger;
         }
 
+        /// <inheritdoc />
         public Task Handle(XncfModulesInventoryResponseEvent @event, CancellationToken cancellationToken)
         {
             _logger.LogInformation(

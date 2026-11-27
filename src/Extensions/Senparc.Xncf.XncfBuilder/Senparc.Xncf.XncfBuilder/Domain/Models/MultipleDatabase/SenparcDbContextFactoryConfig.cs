@@ -26,6 +26,11 @@ namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
 
         public static string RootDictionaryPath => RootDirectory.Value;
 
+        /// <summary>
+        /// Locates the nearest configured Senparc.Web root used by design-time
+        /// database-context factories, falling back to the application project path.
+        /// </summary>
+        /// <returns>The selected application root directory.</returns>
         private static string ResolveRootDirectory()
         {
             var projectPath = Path.GetFullPath(
@@ -45,6 +50,12 @@ namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
             return candidates.FirstOrDefault(HasDatabaseConfiguration) ?? projectPath;
         }
 
+        /// <summary>
+        /// Determines whether a candidate application root contains the expected
+        /// <c>SenparcConfig.config</c> database configuration file.
+        /// </summary>
+        /// <param name="rootDirectoryPath">The candidate application root.</param>
+        /// <returns><see langword="true"/> when the configuration file exists.</returns>
         private static bool HasDatabaseConfiguration(string rootDirectoryPath)
         {
             return File.Exists(Path.Combine(

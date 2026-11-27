@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.0.3</Version>
+    <Version>0.0.4</Version>
     <PackageReleaseNotes>[2026-07-26] v0.0.1 Updated module behavior and related support.
         1. Updated module behavior and related support.
         2. Updated module behavior and related support.
@@ -14,7 +14,10 @@
         1. Add bilingual console messages, CLI language selection, and non-interactive sync options.
         2. Skip module-specific App_Data folders (for example Senparc.Xncf.AIKernel) during baseline copy.
         3. Updated functional behavior and package metadata for the current module changes.
-        4. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
+        4. Preserved existing public APIs and runtime integration while incorporating the related improvements.
+        [2026-11-27] v0.0.4 Improve source documentation, headers, and module metadata consistency.
+        1. Applied standardized copyright headers, XML documentation, and localization metadata across touched sources.
+    </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>

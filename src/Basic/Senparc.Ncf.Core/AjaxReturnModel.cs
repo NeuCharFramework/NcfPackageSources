@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -23,28 +26,38 @@ namespace Senparc.Ncf.Core
 {
 
     /// <summary>
-    /// ajaxreturnmodel
+    /// Represents a non-generic AJAX operation result with success state and message.
     /// </summary>
     public class AjaxReturnModel
     {
+        /// <summary>Gets or sets whether the represented AJAX operation succeeded.</summary>
         public bool Success { get; set; }
 
+        /// <summary>Gets or sets the human-readable operation message.</summary>
         public string Msg { get; set; }
     }
 
     /// <summary>
-    /// ajaxreturnmodel
+    /// Represents an AJAX operation result carrying a typed response payload.
     /// </summary>
-    /// <typeparam name="T">Object to return</typeparam>
+    /// <typeparam name="T">The response payload type.</typeparam>
     public class AjaxReturnModel<T> : AjaxReturnModel
     {
+        /// <summary>Gets or sets the typed payload returned by the AJAX operation.</summary>
         public T Data { get; set; }
 
+        /// <summary>
+        /// Initializes an empty typed response result.
+        /// </summary>
         public AjaxReturnModel()
         {
 
         }
 
+        /// <summary>
+        /// Initializes a typed response result with a payload.
+        /// </summary>
+        /// <param name="data">The response payload.</param>
         public AjaxReturnModel(T data) : this()
         {
             this.Data = data;

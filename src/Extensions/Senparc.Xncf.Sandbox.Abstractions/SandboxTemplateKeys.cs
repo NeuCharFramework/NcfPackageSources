@@ -22,12 +22,15 @@
     Modified by: Senparc - 20261119
     Change description: v0.3.2 Localized sandbox setup and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.3.2.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Sandbox.Abstractions;
 
 /// <summary>
-///Legacy comment translated to English.
+/// Stable template keys accepted by Sandbox creation and execution requests.
 /// </summary>
 public static class SandboxTemplateKeys
 {

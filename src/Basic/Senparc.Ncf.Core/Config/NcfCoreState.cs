@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Utility.Helpers;
@@ -23,7 +26,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Config
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Stores process-wide NCF startup and module-registration state.
     /// </summary>
     public record class NcfCoreState
     {
@@ -32,7 +35,7 @@ namespace Senparc.Ncf.Core.Config
         NcfCoreState() { }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the singleton startup-state instance.
         /// </summary>
         public static NcfCoreState Instance
         {
@@ -52,43 +55,43 @@ namespace Senparc.Ncf.Core.Config
         #endregion
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether all module service registrations have been applied.
         /// </summary>
         public bool AllAddXncfModuleApplied { get; set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether all module middleware registrations have been applied.
         /// </summary>
         public bool AllUseXncfModuleApplied { get; set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether all area authorization configurations have been applied.
         /// </summary>
         public bool AllAuthorizeConfigApplied { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether any database XNCF has been loaded.
         /// </summary>
         public bool AynDatabaseXncfLoaded { get; set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether all database XNCFs have been loaded.
         /// </summary>
         public bool AllDatabaseXncfLoaded { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether any background thread has been loaded.
         /// </summary>
         public bool AnyThreadXncfLoaded { get; set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether all background threads have been loaded.
         /// </summary>
         public bool AllThreadXncfLoaded { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether any module database service registration has been applied.
         /// </summary>
         public bool AnyAddXncfDatabaseModuleApplied { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the assembly-name filters used during module scanning.
         /// </summary>
         public List<string> DllFilePatterns { get; set; }
 

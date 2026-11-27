@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 #nullable enable
@@ -116,6 +119,11 @@ public sealed class FineTuningWorkerOptions
         return new Uri(endpoint.AbsoluteUri.TrimEnd('/') + "/");
     }
 
+    /// <summary>
+    /// Validates and returns the legacy single-worker endpoint configuration.
+    /// </summary>
+    /// <returns>The legacy worker endpoint.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the legacy endpoint or key is invalid.</exception>
     [Obsolete("Use GetValidatedEndpoint(workerAlias, workerEndpoint, requestTimeoutSeconds).")]
     public Uri GetValidatedEndpoint() => GetLegacyConfiguration().Endpoint;
 

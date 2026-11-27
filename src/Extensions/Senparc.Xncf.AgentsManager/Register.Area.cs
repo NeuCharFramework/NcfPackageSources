@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Hosting;
@@ -43,6 +46,12 @@ namespace Senparc.Xncf.AgentsManager
 			 		//new AreaPageMenuItem(GetAreaUrl($"/Admin/AgentsManager/DatabaseSample"), "Database example", "fa fa-bookmark-o")
 			};
 
+        /// <summary>
+        /// Configures Razor Page authorization hooks for the AgentsManager area.
+        /// </summary>
+        /// <param name="builder">The MVC builder receiving the area configuration.</param>
+        /// <param name="env">The hosting environment used by MVC configuration.</param>
+        /// <returns>The configured MVC builder.</returns>
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
             builder.AddRazorPagesOptions(options =>

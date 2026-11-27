@@ -22,6 +22,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.22.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.22.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -32,6 +35,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.Terminal
 {
     [XncfRegister]
+    /// <summary>Registers the terminal-command XNCF module.</summary>
     public class Register : XncfRegisterBase, IXncfRegister
     {
         private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<TerminalResource>(
@@ -45,22 +49,21 @@ namespace Senparc.Xncf.Terminal
         public Register()
         { }
 
-        #region Legacy section
+        #region Module metadata
 
+        /// <inheritdoc />
         public override string Name => "Senparc.Xncf.Terminal";
-        public override string Uid => "600C608A-F99A-4B1B-A18E-8CE69BE8DA92";//Legacy comment translated to English.
-        public override string Version => "0.1.6";//the version number is required
+        /// <inheritdoc />
+        public override string Uid => "600C608A-F99A-4B1B-A18E-8CE69BE8DA92";
+        /// <inheritdoc />
+        public override string Version => "0.22.14.2";//the version number is required
 
+        /// <inheritdoc />
         public override string MenuName => RegisterText.MenuName;
+        /// <inheritdoc />
         public override string Icon => "fa fa-terminal";
+        /// <inheritdoc />
         public override string Description => RegisterText.Description;
-
-        ///// <summary>
-        ///Legacy comment translated to English.
-        ///// </summary>
-        //public override IList<Type> Functions => new[] { 
-        //    typeof(Functions.Terminal),
-        //};
 
         public override Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

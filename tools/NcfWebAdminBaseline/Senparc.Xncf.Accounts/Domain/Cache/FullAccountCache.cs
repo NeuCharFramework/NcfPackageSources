@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.3.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.3.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 using Senparc.Ncf.Core.Extensions;
 using System;
@@ -35,11 +38,10 @@ namespace Senparc.Xncf.Accounts.Domain.Cache
     using Senparc.Ncf.Core.Cache;
 
     [AutoDIType(DILifecycleType.Scoped)]
+    /// <summary>Provides cached full-account projections keyed by user name.</summary>
     public class FullAccountCache : BaseStringDictionaryCache<FullAccount, Account> //, IFullAccountCache
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Maps account identifiers to user names for cache lookups.</summary>
         public static ConcurrentDictionary<int, string> UserIdNameRelationshop = new ConcurrentDictionary<int, string>();
 
         public const string CACHE_KEY = "FullAccountCache";
@@ -49,11 +51,9 @@ namespace Senparc.Xncf.Accounts.Domain.Cache
 
         #region Legacy section
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="where"></param>
-        /// <returns></returns>
+        /// <summary>Loads the first account matching the supplied database predicate.</summary>
+        /// <param name="where">The account predicate.</param>
+        /// <returns>The matching account, or null.</returns>
         private Account GetAccount(Expression<Func<Account, bool>> where)
         {
             var account = (_dataContext.BaseDataContext as SenparcEntitiesBase).Set<Account>()
@@ -96,6 +96,11 @@ namespace Senparc.Xncf.Accounts.Domain.Cache
             return fullUser;
         }
 
+        /// <summary>
+        /// Marks a cached account as forcibly logged out and resets its activity time.
+        /// Missing or blank user names are ignored.
+        /// </summary>
+        /// <param name="userName">The cached account user name.</param>
         public void ForceLogout(string userName)
         {
             if (userName.IsNullOrEmpty())
@@ -111,6 +116,11 @@ namespace Senparc.Xncf.Accounts.Domain.Cache
             fullUser.LastActiveTime = DateTime.MinValue;
         }
 
+        /// <summary>
+        /// Resolves the cached user name associated with an account identifier.
+        /// </summary>
+        /// <param name="accountId">The account identifier.</param>
+        /// <returns>The cached user name, or <see langword="null"/> when no relation exists.</returns>
         public string GetUserName(int accountId)
         {
             var userName = UserIdNameRelationshop.ContainsKey(accountId)
@@ -118,6 +128,12 @@ namespace Senparc.Xncf.Accounts.Domain.Cache
                 : null;
             return userName;
         }
+        /// <summary>
+        /// Retrieves a full-account projection by identifier, loading the backing
+        /// account into the cache when no identifier relation is known.
+        /// </summary>
+        /// <param name="accountId">The account identifier.</param>
+        /// <returns>The cached projection, or <see langword="null"/> when no account exists.</returns>
         public FullAccount GetFullAccount(int accountId)
         {
             var userName = GetUserName(accountId);
@@ -148,10 +164,11 @@ namespace Senparc.Xncf.Accounts.Domain.Cache
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Queries the underlying account table for one account matching the supplied predicate.
+        /// This helper bypasses the normal single-value cache removal API.
         /// </summary>
-        /// <param name="where"></param>
-        /// <returns></returns>
+        /// <param name="where">The predicate used to select the account.</param>
+        /// <returns>The first matching account, or <see langword="null"/> when none exists.</returns>
         private async Task<Account> GetAccountAsync(Expression<Func<Account, bool>> where)
         {
             var account = await (_dataContext.BaseDataContext as SenparcEntitiesBase).Set<Account>()

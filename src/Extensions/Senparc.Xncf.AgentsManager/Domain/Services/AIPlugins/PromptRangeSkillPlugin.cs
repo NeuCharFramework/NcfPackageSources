@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel;
@@ -37,6 +40,12 @@ public sealed class PromptRangeSkillPlugin
     private readonly ISkillExecutor _executor;
     private readonly IReadOnlyDictionary<string, AgentSkillBinding> _bindings;
 
+    /// <summary>
+    /// Initializes the published Skill catalog/executor bridge and optional Agent bindings.
+    /// </summary>
+    /// <param name="catalog">The published Skill catalog.</param>
+    /// <param name="executor">The Skill execution service.</param>
+    /// <param name="bindings">Optional enabled Skill bindings for the Agent.</param>
     public PromptRangeSkillPlugin(
         ISkillCatalog catalog,
         ISkillExecutor executor,
@@ -47,6 +56,10 @@ public sealed class PromptRangeSkillPlugin
         _bindings = bindings;
     }
 
+    /// <summary>
+    /// Lists published PromptRange Skills allowed for this Agent binding.
+    /// </summary>
+    /// <returns>A JSON array of available Skill metadata and versions.</returns>
     [KernelFunction]
     [Description("List published PromptRange Skills that this agent may use.")]
     public async Task<string> ListSkillsAsync()
@@ -65,6 +78,13 @@ public sealed class PromptRangeSkillPlugin
         }));
     }
 
+    /// <summary>
+    /// Executes a published Skill only when it is explicitly enabled in the Agent binding.
+    /// </summary>
+    /// <param name="skillId">The stable Skill identifier or SkillCode.</param>
+    /// <param name="input">The user input passed to the Skill.</param>
+    /// <param name="version">An optional concrete PromptCode version.</param>
+    /// <returns>The Skill output, or a binding-denied message.</returns>
     [KernelFunction]
     [Description("Execute one published PromptRange Skill by SkillId and optional PromptCode version.")]
     public async Task<string> ExecuteSkillAsync(

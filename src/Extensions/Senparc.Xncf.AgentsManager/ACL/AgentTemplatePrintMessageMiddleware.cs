@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Trace;
@@ -29,6 +32,15 @@ namespace Senparc.Xncf.AgentsManager.ACL
 {
     public static class AgentTemplatePrintMessageMiddleware
     {
+        /// <summary>
+        /// Sends an Agent result to the configured WeChat Work robot hook when enabled.
+        /// Unsupported hook types and missing configuration are ignored; provider failures are logged.
+        /// </summary>
+        /// <param name="message">The message content to send.</param>
+        /// <param name="agentTemplateDto">The Agent template containing hook settings.</param>
+        /// <param name="chatGroupDto">The ChatGroup context.</param>
+        /// <param name="chatTaskDto">The ChatTask context.</param>
+        /// <returns>A task completing after the optional send attempt.</returns>
         public static async Task SendWechatMessageAsync(
             string message,
             AgentTemplateDto agentTemplateDto,

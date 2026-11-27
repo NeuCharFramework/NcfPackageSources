@@ -28,6 +28,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel.DataAnnotations;
@@ -271,6 +274,13 @@ public class SandboxSession : EntityBase<int>
         };
     }
 
+    /// <summary>
+    /// Truncates a persisted status value to the requested maximum length while
+    /// preserving <see langword="null"/> and already-short values.
+    /// </summary>
+    /// <param name="value">The value to bound.</param>
+    /// <param name="max">The maximum character count.</param>
+    /// <returns>The bounded value.</returns>
     private static string Truncate(string value, int max)
     {
         if (string.IsNullOrEmpty(value) || value.Length <= max)

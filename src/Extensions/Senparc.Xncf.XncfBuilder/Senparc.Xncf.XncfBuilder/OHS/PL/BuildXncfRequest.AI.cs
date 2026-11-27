@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.42.0.0 add MCP endpoint gateway and tool invocation contracts
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -38,6 +41,17 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 {
     public static class BuildXncfRequestHelper
     {
+        /// <summary>
+        /// Adds the configured default AI model and visible persisted AI models to
+        /// a builder selection list. The default entry is retained even when the
+        /// global AI endpoint is not configured, so the request remains explainable.
+        /// </summary>
+        /// <param name="serviceProvider">The provider used to resolve <see cref="AIModelAppService"/>.</param>
+        /// <param name="aiModel">The selection list to populate.</param>
+        /// <returns>A task that completes after model options have been loaded.</returns>
+        /// <exception cref="NullReferenceException">
+        /// May be raised when the service provider cannot resolve the required AI model service.
+        /// </exception>
         public static async Task LoadAiModelData(IServiceProvider serviceProvider, SelectionList aiModel)
         {
             var defaultSetting = Senparc.AI.Config.SenparcAiSetting;

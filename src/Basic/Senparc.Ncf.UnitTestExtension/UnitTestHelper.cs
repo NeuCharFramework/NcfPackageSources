@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.3.29 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.3.29.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -26,20 +29,29 @@ using Moq;
 
 namespace Senparc.Ncf.UnitTestExtension
 {
+    /// <summary>
+    /// Provides file, configuration, and Entity Framework test-double helpers.
+    /// </summary>
     public static class UnitTestHelper
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the repository-relative root path used by the test host.
         /// </summary>
         public static string RootPath => Path.GetFullPath("..\\..\\..\\");
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Determines whether a file contains every supplied literal keyword.
         /// </summary>
-        /// <param name="filePath"></param>
-        /// <param name="keywords"></param>
-        /// <returns></returns>
+        /// <param name="filePath">The file to read.</param>
+        /// <param name="keywords">The case-sensitive substrings that must be present.</param>
+        /// <returns>
+        /// <see langword="true"/> when all keywords are found; otherwise,
+        /// <see langword="false"/>.
+        /// </returns>
+        /// <exception cref="FileNotFoundException">
+        /// Thrown when <paramref name="filePath"/> does not identify a file.
+        /// </exception>
         public static bool CheckKeywordsExist(string filePath, params string[] keywords)
         {
             using (var fs = new FileStream(filePath, FileMode.Open))
@@ -60,9 +72,14 @@ namespace Senparc.Ncf.UnitTestExtension
         }
 
         /// <summary>
-        /// Get AppSettings file name.
+        /// Selects the environment-specific appsettings file when it exists,
+        /// otherwise falling back to <c>appsettings.json</c>.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="env">
+        /// Optional host environment whose name selects the file suffix. When
+        /// omitted, the <c>Test</c> environment name is used.
+        /// </param>
+        /// <returns>The selected appsettings file name.</returns>
         public static string GetAppSettingsFile(IHostEnvironment env=null)
         {
             var envStr = env?.EnvironmentName ?? "Test";
@@ -77,6 +94,13 @@ namespace Senparc.Ncf.UnitTestExtension
             return "appsettings.json";
         }
 
+        /// <summary>
+        /// Creates a Moq <see cref="DbSet{TEntity}"/> that exposes the supplied
+        /// in-memory list through the standard <see cref="IQueryable{T}"/> members.
+        /// </summary>
+        /// <typeparam name="T">The entity type represented by the mock set.</typeparam>
+        /// <param name="dataList">The in-memory source list used by the query provider.</param>
+        /// <returns>A mocked entity set backed by <paramref name="dataList"/>.</returns>
         public static Mock<DbSet<T>> CreateMockDbSet<T>(List<T> dataList) where T : class
         {
             var queryable = dataList.AsQueryable();

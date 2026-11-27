@@ -11,11 +11,15 @@ using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel;
 namespace Senparc.Xncf.WeixinManager.Domain.Models.MultipleDatabase
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Dameng-specific WeixinManager database context used by runtime registration and migrations.
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.Dm, typeof(Register))]
     public class WeixinSenparcEntities_Dm : WeixinSenparcEntities, IMultipleMigrationDbContext
     {
+        /// <summary>
+        /// Initializes the DM-specific WeixinManager DbContext.
+        /// </summary>
+        /// <param name="dbContextOptions">The EF Core options configured for DM.</param>
         public WeixinSenparcEntities_Dm(DbContextOptions<WeixinSenparcEntities_Dm> dbContextOptions) : base(dbContextOptions)
         {
         }
@@ -34,6 +38,9 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models.MultipleDatabase
             app.UseNcfDatabase("Senparc.Ncf.Database.Dm", "Senparc.Ncf.Database.Dm", "DmDatabaseConfiguration");
         };
 
+        /// <summary>
+        /// Initializes the DM design-time DbContext factory.
+        /// </summary>
         public SenparcDbContextFactory_Dm()
             : base(SenparcDbContextFactoryConfig.RootDictionaryPath)
         {

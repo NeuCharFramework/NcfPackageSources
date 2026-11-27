@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.13.16 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.13.16.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -24,7 +27,9 @@ namespace Senparc.Xncf.AIAgentsHub.Models
     [XncfAutoConfigurationMapping]
     public class AIAgentsHub_ColorConfigurationMapping : ConfigurationMappingWithIdBase<Color, int>
     {
-        public override void Configure(EntityTypeBuilder<Color> builder)
+        /// <inheritdoc />
+    /// <inheritdoc/>
+    public override void Configure(EntityTypeBuilder<Color> builder)
         {
             builder.Property(e => e.Red).IsRequired();
             builder.Property(e => e.Green).IsRequired();

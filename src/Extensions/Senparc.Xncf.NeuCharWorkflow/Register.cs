@@ -40,6 +40,9 @@
     Modified by: Senparc - 20261125
     Change description: v0.4.8 Registered and localized workflow chat-tool services.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.0.0 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
@@ -80,7 +83,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Uid => "5F972F29-A2A5-4A87-B5B8-2FE758AA457B";
 
-    public override string Version => "0.1.0-preview1";
+    public override string Version => "0.5.0.0";
 
     public override string MenuName => RegisterText.MenuName;
 
@@ -88,6 +91,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Description => RegisterText.Description;
 
+    /// <inheritdoc />
     public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
     {
         await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this).ConfigureAwait(false);
@@ -95,6 +99,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
             .MigrateAsync(installOrUpdate).ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
     public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
     {
         var contextType = TryGetXncfDatabaseDbContextType;
@@ -104,6 +109,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
         await unsinstallFunc().ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
     public override IServiceCollection AddXncfModule(
         IServiceCollection services,
         IConfiguration configuration,
@@ -150,6 +156,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
         return base.AddXncfModule(services, configuration, env);
     }
 
+    /// <inheritdoc />
     public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
     {
         app.UseStaticFiles(new StaticFileOptions

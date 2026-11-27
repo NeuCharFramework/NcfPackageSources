@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -32,12 +35,26 @@ public sealed class PromptRangeSkillTestService : ISkillTestRunner
     private readonly ISkillCatalog _catalog;
     private readonly ISkillExecutor _executor;
 
+    /// <summary>
+    /// Initializes the PromptRange skill test runner.
+    /// </summary>
+    /// <param name="catalog">The skill catalog used to resolve descriptors.</param>
+    /// <param name="executor">The PromptRange skill executor.</param>
     public PromptRangeSkillTestService(ISkillCatalog catalog, ISkillExecutor executor)
     {
         _catalog = catalog;
         _executor = executor;
     }
 
+    /// <summary>
+    /// Resolves and executes a PromptRange skill in evaluation mode.
+    /// Workspace and Sandbox isolation requests are rejected because this runner
+    /// intentionally provides PromptOnly execution only.
+    /// </summary>
+    /// <param name="request">The skill identifier, optional version, input, caller module, and isolation request.</param>
+    /// <param name="cancellationToken">Token used to cancel catalog lookup or execution.</param>
+    /// <returns>A test result containing output, success state, isolation state, and diagnostics.</returns>
+    /// <exception cref="ArgumentException">Thrown when the request or SkillId is empty.</exception>
     public async Task<SkillTestResult> TestAsync(
         SkillTestRequest request,
         CancellationToken cancellationToken = default)

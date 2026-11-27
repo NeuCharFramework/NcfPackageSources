@@ -28,6 +28,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.12 Localized DesktopBridge pairing and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Configuration;
@@ -58,7 +61,7 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Uid => ModuleUid;
 
-    public override string Version => "0.4.8";
+    public override string Version => "0.4.12.2";
 
     public override string MenuName => RegisterText.MenuName;
 
@@ -66,17 +69,20 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Description => RegisterText.Description;
 
-    public override Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
+        /// <inheritdoc />
+        public override Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
     {
         return Task.CompletedTask;
     }
 
-    public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
+        /// <inheritdoc />
+        public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
     {
         await unsinstallFunc().ConfigureAwait(false);
     }
 
-    public override IServiceCollection AddXncfModule(
+        /// <inheritdoc />
+        public override IServiceCollection AddXncfModule(
         IServiceCollection services,
         IConfiguration configuration,
         IHostEnvironment env)
@@ -109,6 +115,10 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
         return base.AddXncfModule(services, configuration, env);
     }
 
+    /// <summary>
+    /// Discovers concrete integration-event types from loaded Senparc assemblies.
+    /// </summary>
+    /// <returns>The distinct event types eligible for handler registration.</returns>
     private static IEnumerable<Type> GetIntegrationEventTypes()
     {
         return AppDomain.CurrentDomain.GetAssemblies()
@@ -130,6 +140,11 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
             .Distinct();
     }
 
+    /// <summary>
+    /// Returns loadable types from an assembly while tolerating partial type-load failures.
+    /// </summary>
+    /// <param name="assembly">The assembly to inspect.</param>
+    /// <returns>Types that could be loaded successfully.</returns>
     private static IEnumerable<Type> GetLoadableTypes(Assembly assembly)
     {
         try

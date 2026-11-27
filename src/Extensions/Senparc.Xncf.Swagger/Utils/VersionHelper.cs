@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.12 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -27,10 +30,10 @@ namespace Senparc.Xncf.Swagger.Utils
     public class VersionHelper
     {
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Scans registered assemblies for MVC API version attributes and returns distinct
+        /// major/minor version strings in ascending order.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The discovered version labels.</returns>
         public static List<string> GetApiVersions()
         {
             var versions = new List<ApiVersion>();
@@ -55,7 +58,6 @@ namespace Senparc.Xncf.Swagger.Utils
                             versions.AddRange(methodVersion);
                         }
                     }
-                    ///Legacy comment translated to English.
                     //var subTypes = allTypes.Where(w => w.GetCustomAttributes(typeof(ApiVersionAttribute), true).Length > 0);
                     //foreach (var t in subTypes)
                     //{

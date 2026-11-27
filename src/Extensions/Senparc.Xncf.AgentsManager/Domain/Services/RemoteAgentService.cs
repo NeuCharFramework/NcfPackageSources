@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Repository;
@@ -24,6 +27,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
     public class RemoteAgentService : ServiceBase<RemoteAgent>
     {
+        /// <summary>
+        /// Initializes the remote-agent persistence service.
+        /// </summary>
+        /// <param name="repo">The repository for remote-agent entities.</param>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
         public RemoteAgentService(IRepositoryBase<RemoteAgent> repo, IServiceProvider serviceProvider)
             : base(repo, serviceProvider)
         {

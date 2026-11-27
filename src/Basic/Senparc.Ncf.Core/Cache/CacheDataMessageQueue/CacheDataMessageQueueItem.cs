@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -20,33 +23,33 @@ using System;
 namespace Senparc.Ncf.Core.Cache
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Represents one deferred cache update action.
     /// </summary>
     public class CacheDataMessageQueueItem
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the queue item key.
         /// </summary>
         public string Key { get; set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the deferred action.
         /// </summary>
         public Action Action { get; set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the enqueue time.
         /// </summary>
         public DateTime AddTime { get; set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the diagnostic description.
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Initializes a cache queue item.
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="action"></param>
-        /// <param name="description"></param>
+        /// <param name="key">The cache update key.</param>
+        /// <param name="action">The deferred cache update action.</param>
+        /// <param name="description">Optional diagnostic text.</param>
         public CacheDataMessageQueueItem(string key, Action action, string description = null)
         {
             Key = key;

@@ -22,6 +22,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;
@@ -38,11 +41,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AIKernel.Domain.Services
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    /// <para>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
-    /// </para>
+    /// Buffers normalized AI token-usage records, updates live monitoring state,
+    /// and persists records asynchronously within the originating tenant scope.
     /// </summary>
     public sealed class AITokenUsageRecorder : IAITokenUsageRecorder, IHostedService, IDisposable
     {
@@ -59,6 +59,13 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             });
         private Task _workerTask;
 
+        /// <summary>
+        /// Initializes the asynchronous token-usage recorder.
+        /// </summary>
+        /// <param name="monitor">The token monitor used for recording.</param>
+        /// <param name="scopeFactory">The scope factory used for persistence.</param>
+        /// <param name="logger">The recorder logger.</param>
+        /// <param name="httpContextAccessor">Optional request context accessor.</param>
         public AITokenUsageRecorder(
             AITokenMonitorService monitor,
             IServiceScopeFactory scopeFactory,
@@ -71,12 +78,22 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
+        /// <summary>
+        /// Starts the background record-processing loop.
+        /// </summary>
+        /// <param name="cancellationToken">Hosted-service startup cancellation token.</param>
+        /// <returns>A completed task after scheduling processing.</returns>
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _workerTask = ProcessAsync();
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Completes the record channel and waits briefly for pending records to persist.
+        /// </summary>
+        /// <param name="cancellationToken">Token used to bound drain waiting.</param>
+        /// <returns>A task that completes after the drain attempt.</returns>
         public async Task StopAsync(CancellationToken cancellationToken)
         {
             _records.Writer.TryComplete();
@@ -85,8 +102,8 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 return;
             }
 
-            //Legacy comment translated to English.
-            //Legacy comment translated to English.
+            // Allow a short drain window during host shutdown; token persistence must
+            // not indefinitely delay application termination.
             var drainTimeout = TimeSpan.FromSeconds(1);
             try
             {
@@ -104,6 +121,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             }
         }
 
+        /// <summary>
+        /// Normalizes a token-usage record, updates the in-memory monitor, and queues
+        /// a tenant-aware persistence operation.
+        /// </summary>
+        /// <param name="record">The provider usage record to record.</param>
         public void Record(AITokenUsageRecord record)
         {
             if (record == null)
@@ -146,8 +168,9 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Captures the current request tenant so queued persistence can restore it later.
         /// </summary>
+        /// <returns>The matched tenant snapshot, or an unmatched snapshot outside an HTTP request.</returns>
         private RequestTenantSnapshot CaptureCurrentTenant()
         {
             var httpContext = _httpContextAccessor?.HttpContext;
@@ -156,6 +179,9 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 : RequestTenantSnapshot.Capture(httpContext.RequestServices);
         }
 
+        /// <summary>
+        /// Drains queued usage records and persists them in order until the channel completes.
+        /// </summary>
         private async Task ProcessAsync()
         {
             await foreach (var pending in _records.Reader.ReadAllAsync().ConfigureAwait(false))
@@ -166,6 +192,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
 
         private sealed class PendingTokenUsageRecord
         {
+            /// <summary>
+            /// Initializes a queued token-usage record together with its tenant snapshot.
+            /// </summary>
+            /// <param name="record">The normalized usage record.</param>
+            /// <param name="tenant">The tenant context captured when the usage occurred.</param>
             public PendingTokenUsageRecord(AITokenUsageRecord record, RequestTenantSnapshot tenant)
             {
                 Record = record;
@@ -176,6 +207,10 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             public RequestTenantSnapshot Tenant { get; }
         }
 
+        /// <summary>
+        /// Persists one usage record with bounded retries and restored tenant scope.
+        /// </summary>
+        /// <param name="pending">The normalized record and captured tenant snapshot.</param>
         private async Task PersistAsync(PendingTokenUsageRecord pending)
         {
             var record = pending.Record;
@@ -225,6 +260,9 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             }
         }
 
+        /// <summary>
+        /// Completes the usage-record channel and releases recorder resources.
+        /// </summary>
         public void Dispose()
         {
             _records.Writer.TryComplete();

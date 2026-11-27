@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -53,6 +56,12 @@ public class NeuCharPivotConfiguration : EntityBase<int>
 
     private NeuCharPivotConfiguration() { }
 
+    /// <summary>
+    /// Initializes a pivot configuration for a module and administrator.
+    /// </summary>
+    /// <param name="moduleUid">The target module UID.</param>
+    /// <param name="name">The initial configuration name.</param>
+    /// <param name="adminUserId">The owning administrator identifier.</param>
     public NeuCharPivotConfiguration(string moduleUid, string name, int adminUserId)
     {
         ModuleUid = moduleUid;
@@ -63,6 +72,16 @@ public class NeuCharPivotConfiguration : EntityBase<int>
         Revision = 0;
     }
 
+    /// <summary>
+    /// Applies a generated layout and generation metadata, increments the revision,
+    /// and clears the previous error.
+    /// </summary>
+    /// <param name="name">The generated display name.</param>
+    /// <param name="requirement">The user requirement.</param>
+    /// <param name="layoutSchemaJson">The normalized layout JSON.</param>
+    /// <param name="aiModelId">The model identifier used.</param>
+    /// <param name="adminUserId">The administrator owner.</param>
+    /// <param name="chatSessionId">The optional source chat session.</param>
     public void ApplyGeneratedLayout(
         string name,
         string requirement,
@@ -83,6 +102,10 @@ public class NeuCharPivotConfiguration : EntityBase<int>
         SetUpdateTime();
     }
 
+    /// <summary>
+    /// Records a bounded generation error and updates the entity timestamp.
+    /// </summary>
+    /// <param name="error">The error detail.</param>
     public void RecordError(string error)
     {
         LastError = Truncate(error, 4000);
@@ -123,6 +146,14 @@ public class NeuCharPivotFunction : EntityBase<int>
 
     private NeuCharPivotFunction() { }
 
+    /// <summary>
+    /// Initializes a persisted pivot Function row with visible/default JSON state.
+    /// </summary>
+    /// <param name="pivotId">The parent pivot configuration identifier.</param>
+    /// <param name="moduleUid">The owning module UID.</param>
+    /// <param name="functionKey">The live Function key.</param>
+    /// <param name="functionName">The Function display name.</param>
+    /// <param name="description">The Function description.</param>
     public NeuCharPivotFunction(
         int pivotId,
         string moduleUid,
@@ -140,6 +171,17 @@ public class NeuCharPivotFunction : EntityBase<int>
         Visible = true;
     }
 
+    /// <summary>
+    /// Updates Function display metadata, UI/default schemas, module version,
+    /// ordering, and visibility.
+    /// </summary>
+    /// <param name="functionName">The display name.</param>
+    /// <param name="description">The description.</param>
+    /// <param name="uiSchemaJson">The UI parameter schema JSON.</param>
+    /// <param name="defaultParametersJson">The default parameter JSON.</param>
+    /// <param name="moduleVersion">The source module version.</param>
+    /// <param name="sort">The display order.</param>
+    /// <param name="visible">Whether the Function is visible.</param>
     public void Update(
         string functionName,
         string description,
@@ -190,6 +232,11 @@ public class NeuCharPivotLoopTask : EntityBase<int>
 
     private NeuCharPivotLoopTask() { }
 
+    /// <summary>
+    /// Initializes a loop task with the default five-minute interval and empty parameters.
+    /// </summary>
+    /// <param name="functionId">The pivot Function identifier.</param>
+    /// <param name="adminUserId">The owning administrator identifier.</param>
     public NeuCharPivotLoopTask(int functionId, int adminUserId)
     {
         FunctionId = functionId;
@@ -198,6 +245,15 @@ public class NeuCharPivotLoopTask : EntityBase<int>
         ParametersJson = "{}";
     }
 
+    /// <summary>
+    /// Configures interval, protected parameters, enablement, NeuBell, and workflow routing.
+    /// Enabled tasks receive their next scheduled execution time.
+    /// </summary>
+    /// <param name="intervalSeconds">The interval, clamped to 60 seconds through one year.</param>
+    /// <param name="parametersJson">The protected execution parameters.</param>
+    /// <param name="enabled">Whether scheduling is enabled.</param>
+    /// <param name="useNeuBell">Whether completion notifications are enabled.</param>
+    /// <param name="workflowId">Optional workflow identifier.</param>
     public void Configure(
         int intervalSeconds,
         string parametersJson,
@@ -218,6 +274,9 @@ public class NeuCharPivotLoopTask : EntityBase<int>
         SetUpdateTime();
     }
 
+    /// <summary>
+    /// Records the current run start and schedules the next run using the configured interval.
+    /// </summary>
     public void MarkStarted()
     {
         LastRunAt = DateTime.UtcNow;
@@ -225,6 +284,12 @@ public class NeuCharPivotLoopTask : EntityBase<int>
         SetUpdateTime();
     }
 
+    /// <summary>
+    /// Records completion outcome, resets or increments consecutive failures,
+    /// and stores a bounded error when execution failed.
+    /// </summary>
+    /// <param name="succeeded">Whether execution succeeded.</param>
+    /// <param name="error">The failure detail.</param>
     public void MarkCompleted(bool succeeded, string error)
     {
         LastSucceeded = succeeded;
@@ -233,6 +298,10 @@ public class NeuCharPivotLoopTask : EntityBase<int>
         SetUpdateTime();
     }
 
+    /// <summary>
+    /// Disables scheduling after an unrecoverable task error and records the failure.
+    /// </summary>
+    /// <param name="error">The disabling error detail.</param>
     public void DisableForError(string error)
     {
         Enabled = false;
@@ -280,6 +349,15 @@ public class NeuCharExecutionLog : EntityBase<int>
 
     private NeuCharExecutionLog() { }
 
+    /// <summary>
+    /// Starts an execution audit log with source, Function, display, and correlation metadata.
+    /// </summary>
+    /// <param name="sourceType">The execution source category.</param>
+    /// <param name="sourceId">The source entity identifier.</param>
+    /// <param name="moduleUid">The module UID.</param>
+    /// <param name="functionKey">The Function key.</param>
+    /// <param name="displayName">The display name.</param>
+    /// <param name="correlationId">The correlation identifier.</param>
     public NeuCharExecutionLog(
         string sourceType,
         int sourceId,
@@ -297,6 +375,12 @@ public class NeuCharExecutionLog : EntityBase<int>
         StartedAt = DateTime.UtcNow;
     }
 
+    /// <summary>
+    /// Closes an execution log with bounded result/error summaries and completion time.
+    /// </summary>
+    /// <param name="succeeded">Whether execution succeeded.</param>
+    /// <param name="resultSummary">The result summary.</param>
+    /// <param name="error">The error detail.</param>
     public void Complete(bool succeeded, string resultSummary, string error)
     {
         FinishedAt = DateTime.UtcNow;

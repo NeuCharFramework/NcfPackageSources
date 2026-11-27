@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -20,7 +23,7 @@ using Senparc.Ncf.Core.Models;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Transfers the public A2A-agent publication, skill, and authentication settings.
     /// </summary>
     public class PublishedA2AAgentDto : DtoBase<int>
     {
@@ -38,11 +41,18 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         public string AuthHeaderName { get; set; }
         public string AuthSecretKey { get; set; }
 
-        ///Legacy comment translated to English.
+        /// Gets or sets the generated public Agent-card URL.
         public string AgentCardUrl { get; set; }
 
+        /// <summary>
+        /// Initializes an empty publication DTO for binding.
+        /// </summary>
         public PublishedA2AAgentDto() { }
 
+        /// <summary>
+        /// Projects a persisted A2A publication entity into a transport DTO.
+        /// </summary>
+        /// <param name="publishedAgent">The publication entity to project.</param>
         public PublishedA2AAgentDto(PublishedA2AAgent publishedAgent)
         {
             Id = publishedAgent.Id;

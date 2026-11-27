@@ -1685,4 +1685,9 @@
   <data name="AdminChat.Action.PreviewAgentTask" xml:space="preserve"><value>预览运行：{0} #{1}</value></data>
   <data name="AdminChat.Action.AgentTaskPreviewTitle" xml:space="preserve"><value>Agent 任务运行预览：{0} #{1}</value></data>
   <data name="AdminChat.Action.OpenInTab" xml:space="preserve"><value>在独立页面打开</value></data>
+  <data name="AdminChat.Action.AgentTask" xml:space="preserve"><value>Agent 任务</value></data>
+  <data name="AdminChat.Action.WorkflowRun" xml:space="preserve"><value>工作流运行</value></data>
+  <data name="AdminChat.Action.PreviewAsyncTask" xml:space="preserve"><value>预览{0}：{1} #{2}</value></data>
+  <data name="AdminChat.Action.OpenAsyncTask" xml:space="preserve"><value>在独立页面打开{0}：{1}</value></data>
+  <data name="AdminChat.Action.AsyncTaskPreviewTitle" xml:space="preserve"><value>{0}实时预览：{1} #{2}</value></data>
 </root>

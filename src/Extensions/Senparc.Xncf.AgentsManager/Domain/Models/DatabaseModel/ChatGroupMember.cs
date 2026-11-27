@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -25,7 +28,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Persists the membership of an Agent template in a ChatGroup.
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(ChatGroupMember))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
@@ -46,7 +49,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
 
         [InverseProperty(nameof(AgentTemplate.ChatGroupMembers))]
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the linked Agent template.
         /// </summary>
         public AgentTemplate AgentTemplate { get; private set; }
 
@@ -57,7 +60,6 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         public int ChatGroupId { get; private set; }
 
         ///// <summary>
-        ///Legacy comment translated to English.
         ///// </summary>
         //public ChatGroup ChatGroup { get; private set; }
 
@@ -68,8 +70,15 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         //public List<ChatGroupHistory> ToChatGroupHistories { get; set; }
 
 
+        /// <summary>
+        /// Reserved for EF Core materialization.
+        /// </summary>
         private ChatGroupMember() { }
 
+        /// <summary>Initializes a ChatGroup membership and generates its UID.</summary>
+        /// <param name="agentTemplateId">The Agent-template identifier.</param>
+        /// <param name="agentTemplate">The linked Agent template.</param>
+        /// <param name="chatGroupId">The ChatGroup identifier.</param>
         public ChatGroupMember(int agentTemplateId, AgentTemplate agentTemplate, int chatGroupId/* ChatGroup chatGroup*/)
         {
             ResetUID();
@@ -79,6 +88,8 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
             //ChatGroup = chatGroup;
         }
 
+        /// <summary>Maps a membership DTO to the persisted entity.</summary>
+        /// <param name="chatGroupMemerDto">The source membership DTO.</param>
         public ChatGroupMember(ChatGroupMemberDto chatGroupMemerDto)
         {
             UID = chatGroupMemerDto.UID;
@@ -89,7 +100,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Generates a new stable membership UID.
         /// </summary>
         public void ResetUID()
         {

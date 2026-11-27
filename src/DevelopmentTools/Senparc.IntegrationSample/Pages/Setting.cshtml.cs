@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.0.19 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.0.20 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System.Reflection;
@@ -32,6 +35,9 @@ namespace Senparc.IntegrationSample.Pages
 
         public List<Assembly> XncfAssemblies { get; set; }
 
+        /// <summary>
+        /// Handles the sample settings page GET request.
+        /// </summary>
         public void OnGet()
         {
             SenparcCoreSetting = SiteConfig.SenparcCoreSetting with { };

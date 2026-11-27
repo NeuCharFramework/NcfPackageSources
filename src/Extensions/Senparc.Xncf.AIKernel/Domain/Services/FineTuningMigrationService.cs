@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -39,6 +42,12 @@ public sealed class FineTuningMigrationService
     private readonly IFineTuningControlPlaneService _controlPlane;
     private readonly IFineTuningFileStore _fileStore;
 
+    /// <summary>
+    /// Initializes migration over Worker, local control-plane, and FileManager boundaries.
+    /// </summary>
+    /// <param name="worker">The Worker API client.</param>
+    /// <param name="controlPlane">The local metadata control plane.</param>
+    /// <param name="fileStore">The FileManager-backed artifact store.</param>
     public FineTuningMigrationService(FineTuningWorkerClient worker,
         IFineTuningControlPlaneService controlPlane, IFineTuningFileStore fileStore)
     {
@@ -47,6 +56,13 @@ public sealed class FineTuningMigrationService
         _fileStore = fileStore;
     }
 
+    /// <summary>
+    /// Migrates paged legacy Worker datasets/jobs/events/artifacts into local metadata storage.
+    /// </summary>
+    /// <param name="workerAlias">The Worker alias to migrate.</param>
+    /// <param name="cancellationToken">Token used to cancel migration.</param>
+    /// <returns>A result containing migration counts and terminal status.</returns>
+    /// <exception cref="ArgumentException">Thrown when the Worker alias is blank.</exception>
     public async Task<FineTuningMigrationResult> MigrateAsync(string workerAlias,
         CancellationToken cancellationToken = default)
     {
@@ -126,6 +142,14 @@ public sealed class FineTuningMigrationService
         }
     }
 
+    /// <summary>
+    /// Mirrors one Worker job and downloads missing artifacts into FileManager.
+    /// </summary>
+    /// <param name="workerAlias">The Worker alias.</param>
+    /// <param name="job">The Worker job snapshot.</param>
+    /// <param name="result">The migration result counters.</param>
+    /// <param name="cancellationToken">Token used to cancel mirroring.</param>
+    /// <returns>A task that completes after job/events/artifacts are mirrored.</returns>
     private async Task MirrorJobAsync(string workerAlias, FineTuningJob job,
         FineTuningMigrationResult result, CancellationToken cancellationToken)
     {

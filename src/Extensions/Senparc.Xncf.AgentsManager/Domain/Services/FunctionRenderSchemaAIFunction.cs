@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.AI;
@@ -30,6 +33,11 @@ internal sealed class FunctionRenderSchemaAIFunction : DelegatingAIFunction
 {
     private readonly JsonElement _jsonSchema;
 
+    /// <summary>
+    /// Initializes a wrapper that augments a FunctionRender schema with selection metadata.
+    /// </summary>
+    /// <param name="innerFunction">The original FunctionRender AI function.</param>
+    /// <param name="parameterInfos">The parameter metadata used to enrich the schema.</param>
     public FunctionRenderSchemaAIFunction(
         AIFunction innerFunction,
         IReadOnlyList<FunctionParameterInfo> parameterInfos)
@@ -40,5 +48,6 @@ internal sealed class FunctionRenderSchemaAIFunction : DelegatingAIFunction
             parameterInfos);
     }
 
+    /// <inheritdoc/>
     public override JsonElement JsonSchema => _jsonSchema;
 }

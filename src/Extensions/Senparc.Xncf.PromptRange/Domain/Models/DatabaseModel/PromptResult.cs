@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -24,51 +27,37 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Stores one prompt execution result, usage totals, timing, scores, and mode metadata.
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(PromptResult))] //a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class PromptResult : EntityBase<int>
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the language-model configuration identifier.</summary>
         public int LlmModelId { get; private set; }
 
         // public LlmModel LlmModel { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the generated result text.</summary>
         public string ResultString { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets execution time in milliseconds.</summary>
         public double CostTime { get; private set; }
 
         #region Legacy section
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the automated evaluation score.</summary>
         public decimal RobotScore { get; private set; } = -1;
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the human evaluation score.</summary>
         public decimal HumanScore { get; private set; } = -1;
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the final evaluation score.</summary>
         public decimal FinalScore { get; private set; } = -1;
 
         #endregion
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the evaluation modality.</summary>
         public TestType TestType { get; private set; }
 
         /// <summary>
@@ -86,9 +75,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         /// </summary>
         public int TotalCostToken { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the prompt item identifier.</summary>
         public int PromptItemId { get; private set; }
 
         /// <summary>
@@ -97,21 +84,18 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         [MaxLength(50)]
         public string PromptItemVersion { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the result mode.</summary>
         public ResultMode? Mode { get; private set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets the system message supplied to the model.</summary>
         public string SystemMessage { get; private set; }
 
         private PromptResult()
         {
         }
 
+        /// <summary>Creates a result entity from a DTO.</summary>
+        /// <param name="dto">The result values to copy.</param>
         public PromptResult(PromptResultDto dto)
         {
             LlmModelId = dto.LlmModelId;
@@ -153,11 +137,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         }
 
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="score"></param>
-        /// <returns></returns>
+        /// <summary>Sets the human evaluation score.</summary>
+        /// <param name="score">The human-provided score.</param>
+        /// <returns>This result entity.</returns>
         public PromptResult ManualScoring(decimal score)
         {
             HumanScore = score;
@@ -165,11 +147,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
             return this;
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="score"></param>
-        /// <returns></returns>
+        /// <summary>Sets the automated evaluation score.</summary>
+        /// <param name="score">The automated score.</param>
+        /// <returns>This result entity.</returns>
         public PromptResult RobotScoring(decimal score)
         {
             RobotScore = score;
@@ -177,11 +157,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
             return this;
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
-        /// <param name="score"></param>
-        /// <returns></returns>
+        /// <summary>Sets the final evaluation score.</summary>
+        /// <param name="score">The final score.</param>
+        /// <returns>This result entity.</returns>
         public PromptResult FinalScoring(decimal score)
         {
             FinalScore = score;
@@ -190,8 +168,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Adds usage counters and optionally replaces the latest result text.
         /// </summary>
+        /// <param name="promptTokens">Additional prompt tokens.</param>
+        /// <param name="completionTokens">Additional completion tokens.</param>
+        /// <param name="totalTokens">Reported total tokens; recalculated when non-positive.</param>
+        /// <param name="costTime">Latest execution time in milliseconds.</param>
+        /// <param name="latestResult">Optional latest generated result text.</param>
+        /// <returns>This result entity.</returns>
         public PromptResult AppendUsageAndResult(int promptTokens, int completionTokens, int totalTokens, double costTime, string latestResult)
         {
             PromptCostToken += Math.Max(0, promptTokens);
@@ -213,40 +197,26 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         }
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Identifies the evaluation modality.</summary>
     public enum TestType
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>A text-based evaluation.</summary>
         Text,
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>A graph or visual evaluation.</summary>
         Graph,
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>A voice evaluation.</summary>
         Voice
     }
 
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Identifies how a prompt result is presented or continued.</summary>
     public enum ResultMode
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>A single prompt response.</summary>
         Single = 1,
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>A multi-turn chat response.</summary>
         Chat = 2
     }
 }

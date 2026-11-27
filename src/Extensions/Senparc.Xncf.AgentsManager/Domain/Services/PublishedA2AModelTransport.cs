@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Trace;
@@ -92,6 +95,9 @@ internal static class PublishedA2AModelTransport
         }
     }
 
+    /// <summary>
+    /// Stores async-local diagnostics and optional API-version override for one model request.
+    /// </summary>
     private sealed record ModelRequestContext(string DiagnosticId, string? ApiVersionOverride);
 
     private sealed class ContextScope : IDisposable
@@ -133,6 +139,11 @@ internal static class PublishedA2AModelTransport
         {
         }
 
+        /// <inheritdoc/>
+        /// <remarks>
+        /// Applies an optional API-version override, captures provider failures,
+        /// and restores the original request URI before returning or throwing.
+        /// </remarks>
         protected override async Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request,
             CancellationToken cancellationToken)
@@ -548,6 +559,9 @@ internal static class PublishedA2AModelTransport
         }
     }
 
+    /// <summary>
+    /// Classifies a provider failure for published A2A response and diagnostic handling.
+    /// </summary>
     internal sealed record ModelProviderFailure(
         int StatusCode,
         string ProviderError,
@@ -563,6 +577,11 @@ internal sealed class PublishedA2AModelProviderException : Exception
 {
     public PublishedA2AModelTransport.ModelProviderFailure Failure { get; }
 
+    /// <summary>
+    /// Initializes an exception representing a classified published-A2A provider failure.
+    /// </summary>
+    /// <param name="failure">The classified provider failure.</param>
+    /// <param name="innerException">The original provider exception.</param>
     public PublishedA2AModelProviderException(
         PublishedA2AModelTransport.ModelProviderFailure failure,
         Exception innerException)

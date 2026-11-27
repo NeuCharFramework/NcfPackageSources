@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 #nullable enable
@@ -42,6 +45,10 @@ public sealed class AIFineTuningWorkerService : ServiceBase<AIFineTuningWorker>
 {
     private readonly IHostEnvironment _environment;
 
+    /// <summary>Initializes fine-tuning Worker persistence and launch validation.</summary>
+    /// <param name="repo">The Worker repository.</param>
+    /// <param name="serviceProvider">The dependency provider.</param>
+    /// <param name="environment">The host environment used to resolve launch paths.</param>
     public AIFineTuningWorkerService(IRepositoryBase<AIFineTuningWorker> repo, IServiceProvider serviceProvider,
         IHostEnvironment environment)
         : base(repo, serviceProvider)
@@ -49,6 +56,10 @@ public sealed class AIFineTuningWorkerService : ServiceBase<AIFineTuningWorker>
         _environment = environment;
     }
 
+    /// <summary>Lists Workers ordered by name and marks aliases with configured secrets.</summary>
+    /// <param name="configuredAliases">Aliases known to have configured secrets.</param>
+    /// <param name="cancellationToken">Token used to cancel lookup.</param>
+    /// <returns>Worker DTOs ordered for display.</returns>
     public async Task<List<AIFineTuningWorkerDto>> GetListAsync(IEnumerable<string> configuredAliases,
         CancellationToken cancellationToken = default)
     {
@@ -58,12 +69,20 @@ public sealed class AIFineTuningWorkerService : ServiceBase<AIFineTuningWorker>
             .Select(z => new AIFineTuningWorkerDto(z, configured.Contains(z.Alias))).ToList();
     }
 
+    /// <summary>Loads all persisted fine-tuning Workers.</summary>
+    /// <param name="cancellationToken">Token used to cancel lookup.</param>
+    /// <returns>All Worker entities.</returns>
     public async Task<List<AIFineTuningWorker>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         var workers = await GetFullListAsync(z => true).ConfigureAwait(false);
         return workers.ToList();
     }
 
+    /// <summary>Creates or updates a Worker after validating launch profile, endpoint, and alias uniqueness.</summary>
+    /// <param name="request">The Worker create/edit request.</param>
+    /// <param name="configuredAliases">Aliases with configured secrets.</param>
+    /// <param name="cancellationToken">Token used to cancel persistence.</param>
+    /// <returns>The saved Worker DTO.</returns>
     public async Task<AIFineTuningWorkerDto> SaveAsync(AIFineTuningWorker_CreateOrEditRequest request,
         IEnumerable<string> configuredAliases, CancellationToken cancellationToken = default)
     {
@@ -95,6 +114,10 @@ public sealed class AIFineTuningWorkerService : ServiceBase<AIFineTuningWorker>
             configuredAliases.Contains(worker.Alias, StringComparer.OrdinalIgnoreCase));
     }
 
+    /// <summary>Loads a Worker by alias and rejects missing aliases/entities.</summary>
+    /// <param name="workerAlias">The Worker alias.</param>
+    /// <param name="cancellationToken">Token used to cancel lookup.</param>
+    /// <returns>The matching Worker entity.</returns>
     public async Task<AIFineTuningWorker> GetRequiredAsync(string workerAlias, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(workerAlias))
@@ -103,6 +126,10 @@ public sealed class AIFineTuningWorkerService : ServiceBase<AIFineTuningWorker>
             ?? throw new NcfExceptionBase("The selected fine-tuning worker does not exist.");
     }
 
+    /// <summary>Loads an enabled Worker by alias.</summary>
+    /// <param name="workerAlias">The Worker alias.</param>
+    /// <param name="cancellationToken">Token used to cancel lookup.</param>
+    /// <returns>The enabled Worker entity.</returns>
     public async Task<AIFineTuningWorker> GetEnabledAsync(string workerAlias, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(workerAlias))
@@ -114,6 +141,9 @@ public sealed class AIFineTuningWorkerService : ServiceBase<AIFineTuningWorker>
         return worker;
     }
 
+    /// <summary>Validates an absolute HTTP(S) Worker endpoint without credentials/query/fragment.</summary>
+    /// <param name="value">The endpoint value.</param>
+    /// <exception cref="NcfExceptionBase">Thrown when endpoint validation fails.</exception>
     private static void ValidateEndpoint(string value)
     {
         if (!Uri.TryCreate(value, UriKind.Absolute, out var endpoint)

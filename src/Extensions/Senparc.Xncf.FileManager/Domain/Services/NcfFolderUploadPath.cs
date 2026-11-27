@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+
+    Copyright (C) 2026 Senparc
+
+    File name: NcfFolderUploadPath.cs
+    File description: Senparc.Xncf.FileManager.Domain.Services related implementation
+
+    Created by: Senparc - 20260813
+
+    Modified by: Senparc - 20261127
+    Change description: v0.8.5.2 Improve source documentation, headers, and module metadata consistency.
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,6 +28,14 @@ public static class NcfFolderUploadPath
     public const int MaxDepth = 20;
     public const int MaxRelativePathLength = 2048;
 
+    /// <summary>
+    /// Validates a browser-provided folder-upload path and returns only the directory
+    /// segments preceding the uploaded file name.
+    /// </summary>
+    /// <param name="relativePath">The browser-relative path associated with the upload.</param>
+    /// <param name="uploadedFileName">The uploaded file name used to validate the final path segment.</param>
+    /// <returns>The safe directory segments, or an empty list when no folder path was supplied.</returns>
+    /// <exception cref="ArgumentException">Thrown when the path is absolute, traverses directories, exceeds limits, or does not match the file name.</exception>
     public static IReadOnlyList<string> GetFolderSegments(string relativePath, string uploadedFileName)
     {
         if (string.IsNullOrWhiteSpace(relativePath))

@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System.Globalization;
@@ -61,6 +64,11 @@ public static class SandboxTtlPolicy
         return utcNow.Add(ttl);
     }
 
+    /// <summary>
+    /// Determines whether a Sandbox expiration timestamp represents unlimited retention.
+    /// </summary>
+    /// <param name="expiresAtUtc">The expiration timestamp.</param>
+    /// <returns><see langword="true"/> when the timestamp is <see cref="DateTime.MaxValue"/>.</returns>
     public static bool IsUnlimited(DateTime expiresAtUtc)
     {
         return expiresAtUtc.Ticks == DateTime.MaxValue.Ticks;

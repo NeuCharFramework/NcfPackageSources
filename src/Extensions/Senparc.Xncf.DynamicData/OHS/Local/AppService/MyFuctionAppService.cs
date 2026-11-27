@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.7.12 Localized DynamicData configuration and layout surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.7.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -36,11 +39,23 @@ namespace Senparc.Xncf.DynamicData.OHS.Local.AppService
     public class MyFuctionAppService: AppServiceBase
     {
         private ColorService _colorService;
+        /// <summary>
+        /// Initializes the DynamicData calculation sample service.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
+        /// <param name="colorService">The color service retained for the sample module integration.</param>
         public MyFuctionAppService(IServiceProvider serviceProvider, ColorService colorService) : base(serviceProvider)
         {
             _colorService = colorService;
         }
 
+        /// <summary>
+        /// Applies the requested arithmetic operation and optional square/cube transformations.
+        /// Division by zero and unsupported operators are returned as unsuccessful function responses.
+        /// </summary>
+        /// <param name="request">The operands, operator, display name, and optional powers.</param>
+        /// <returns>A response containing the formatted calculation result.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is <see langword="null"/>.</exception>
         [FunctionRender(typeof(DynamicDataResource), "Function.Sample.Name", "Function.Sample.Description", typeof(Register))]
         public async Task<StringAppResponse> Calculate(MyFunction_CaculateRequest request)
         {

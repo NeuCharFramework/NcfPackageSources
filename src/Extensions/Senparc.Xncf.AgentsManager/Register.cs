@@ -52,6 +52,9 @@
     Modified by: Senparc - 20261125
     Change description: v0.19.4 Improved Agent group command parameter selection and conversation loading.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using A2A.AspNetCore;
@@ -106,7 +109,7 @@ namespace Senparc.Xncf.AgentsManager
 
         public override string Uid => ModuleUid;//Legacy comment translated to English.
 
-        public override string Version => "0.3.23";//the version number is required
+        public override string Version => "0.20.0.0";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -114,7 +117,8 @@ namespace Senparc.Xncf.AgentsManager
 
         public override string Description => RegisterText.Description;
 
-        public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
+    /// <inheritdoc/>
+    public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //update the database when installing or upgrading a version
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
@@ -137,7 +141,8 @@ namespace Senparc.Xncf.AgentsManager
             }
         }
 
-        public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
+    /// <inheritdoc/>
+    public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             #region Legacy section
 
@@ -155,7 +160,8 @@ namespace Senparc.Xncf.AgentsManager
         }
         #endregion
 
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+    /// <inheritdoc/>
+    public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             //AutoMap mapping
             base.AddAutoMapMapping(profile =>
@@ -223,7 +229,8 @@ namespace Senparc.Xncf.AgentsManager
 
             return base.AddXncfModule(services, configuration, env);
         }
-        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+    /// <inheritdoc/>
+    public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             app.UseStaticFiles(new StaticFileOptions
             {

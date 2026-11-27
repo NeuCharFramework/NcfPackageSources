@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.7.12 Localized DynamicData configuration and layout surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.7.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -28,17 +31,17 @@ namespace Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Dto
     {
 
         /// <summary>  
-        ///Legacy comment translated to English.
+        /// Gets or sets the parent table identifier.
         /// </summary>  
         public int TableId { get; set; }
 
         /// <summary>  
-        ///Legacy comment translated to English.
+        /// Gets or sets the column metadata identifier.
         /// </summary>  
         public int ColumnMetadataId { get; set; }
 
         /// <summary>  
-        ///Legacy comment translated to English.
+        /// Gets or sets the serialized cell value.
         /// </summary>  
         public string CellValue { get; set; }
 
@@ -48,7 +51,7 @@ namespace Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Dto
         //public TableMetadata TableMetadata { get; set; }
 
         /// <summary>  
-        ///Legacy comment translated to English.
+        /// Gets or sets the associated column metadata.
         /// </summary>  
         public ColumnMetadataDto ColumnMetadata { get; set; }
 

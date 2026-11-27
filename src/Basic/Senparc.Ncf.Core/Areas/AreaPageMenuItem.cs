@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models.DataBaseModel;
@@ -34,6 +37,12 @@ namespace Senparc.Ncf.Core.Areas
         public string ParentId { get; set; }
         public MenuType MenuType { get; set; }
 
+        /// <summary>
+        /// Initializes a top-level area menu item.
+        /// </summary>
+        /// <param name="url">The target URL.</param>
+        /// <param name="name">The display name.</param>
+        /// <param name="icon">The CSS/icon class.</param>
         public AreaPageMenuItem(string url, string name, string icon)
         {
             Url = url;
@@ -41,6 +50,15 @@ namespace Senparc.Ncf.Core.Areas
             Icon = icon;
         }
 
+        /// <summary>
+        /// Initializes a menu item with identity, hierarchy, URL, icon, and menu type metadata.
+        /// </summary>
+        /// <param name="id">The menu identifier.</param>
+        /// <param name="url">The target URL.</param>
+        /// <param name="name">The display name.</param>
+        /// <param name="icon">The CSS/icon class.</param>
+        /// <param name="parentId">The parent menu identifier.</param>
+        /// <param name="menuType">The menu type.</param>
         public AreaPageMenuItem(string id,string url, string name, string icon,string parentId,MenuType menuType)
         {
             Id = id;

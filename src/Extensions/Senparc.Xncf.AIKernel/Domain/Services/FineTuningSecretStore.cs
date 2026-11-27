@@ -10,6 +10,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 #nullable enable
@@ -165,6 +168,12 @@ public sealed class FineTuningSecretStore
         return (true, path);
     }
 
+    /// <summary>
+    /// Validates the worker alias format used for secret-file names.
+    /// </summary>
+    /// <param name="alias">The worker alias.</param>
+    /// <returns>The validated alias.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the alias is empty or contains unsafe characters.</exception>
     private static string NormalizeAlias(string alias)
     {
         if (string.IsNullOrWhiteSpace(alias) || !AliasPattern.IsMatch(alias))
@@ -172,6 +181,11 @@ public sealed class FineTuningSecretStore
         return alias;
     }
 
+    /// <summary>
+    /// Applies owner-only Unix permissions where supported; permission failures are diagnostic-only.
+    /// </summary>
+    /// <param name="path">The file or directory path.</param>
+    /// <param name="directory">Whether the path is a directory.</param>
     private static void Protect(string path, bool directory)
     {
         if (OperatingSystem.IsWindows())

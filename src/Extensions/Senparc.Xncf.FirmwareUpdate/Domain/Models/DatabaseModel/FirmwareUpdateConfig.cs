@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.11 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.11.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel.DataAnnotations.Schema;
@@ -21,24 +24,24 @@ using Senparc.Ncf.Core.Models;
 namespace Senparc.Xncf.FirmwareUpdate;
 
 /// <summary>
-///Legacy comment translated to English.
+/// Stores the persisted scheduling state for firmware mirror synchronization.
 /// </summary>
 [Table(Register.DATABASE_PREFIX + nameof(FirmwareUpdateConfig))]
 [Serializable]
 public class FirmwareUpdateConfig : EntityBase<int>
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Gets or sets whether periodic mirror synchronization is enabled.
     /// </summary>
     public bool AutoMirrorEnabled { get; set; }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Gets or sets the interval between periodic synchronization attempts, in hours.
     /// </summary>
     public int UpdateIntervalHours { get; set; } = 24;
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Gets or sets the UTC timestamp of the last completed periodic synchronization.
     /// </summary>
     public DateTime? LastPeriodicSyncUtc { get; set; }
 }

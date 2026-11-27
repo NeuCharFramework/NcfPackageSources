@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Trace;
@@ -49,6 +52,12 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         private readonly KnowledgeBaseItemService knowledgeBasesDetailService;
         private readonly KnowledgeBaseService knowledgeBaseService;
 
+        /// <summary>
+        /// Initializes knowledge-base item query and content synchronization operations.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
+        /// <param name="knowledgeBasesDetailService">The chunk/item service.</param>
+        /// <param name="knowledgeBaseService">The knowledge-base domain service.</param>
         public KnowledgeBaseItemAppService(
             IServiceProvider serviceProvider,
             KnowledgeBaseItemService knowledgeBasesDetailService,
@@ -59,8 +68,10 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns all stored chunks for a knowledge base ordered by chunk index and creation time.
         /// </summary>
+        /// <param name="knowledgeBaseId">The knowledge-base identifier.</param>
+        /// <returns>A response containing mapped chunk DTOs.</returns>
         [ApiBind]
         public async Task<AppResponseBase<List<KnowledgeBaseItemDto>>> GetListByKnowledgeBaseId(int knowledgeBaseId)
         {
@@ -72,8 +83,11 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns the configured source-file entries and inline content for a knowledge base.
         /// </summary>
+        /// <param name="knowledgeBaseId">The knowledge-base identifier.</param>
+        /// <returns>A response containing source configuration DTOs.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when the knowledge base does not exist.</exception>
         [ApiBind]
         public async Task<AppResponseBase<List<KnowledgeBaseItemDto>>> GetConfigurationByKnowledgeBaseId(int knowledgeBaseId)
         {
@@ -105,10 +119,11 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Replaces manual text content for a knowledge base through the compatibility item endpoint.
         /// </summary>
-        /// <param name="request">requestrecordDtomodel</param>
-        /// <returns></returns>
+        /// <param name="request">The knowledge-base identifier, content type, and text.</param>
+        /// <returns>A response indicating whether synchronization completed.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when the request contains file content instead of manual text.</exception>
         [ApiBind("AutoMate", ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<bool>> CreateOrUpdateAsync(KnowledgeBaseItemRequest request)
         {

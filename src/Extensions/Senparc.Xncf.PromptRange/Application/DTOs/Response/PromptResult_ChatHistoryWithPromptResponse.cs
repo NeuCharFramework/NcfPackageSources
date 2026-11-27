@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System.Collections.Generic;
@@ -20,14 +23,10 @@ using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 {
-    /// <summary>
-    ///Legacy comment translated to English.
-    /// </summary>
+    /// <summary>Contains prompt content and the ordered chat history for a result.</summary>
     public class PromptResult_ChatHistoryWithPromptResponse
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the ordered chat history.</summary>
         public List<PromptResultChatDto> ChatHistory { get; set; }
         
         /// <summary>

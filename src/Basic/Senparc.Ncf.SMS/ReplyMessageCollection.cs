@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.13-preview13 Updated SMS integration support and related localization metadata
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.13.2-preview14 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System.Collections.Generic;
@@ -23,6 +26,9 @@ namespace Senparc.Ncf.SMS
     {
         public List<IReplyMessage> MsgCollection { get; set; }
 
+        /// <summary>
+        /// Initializes an empty inbound-reply collection.
+        /// </summary>
         public ReplyMessageCollection()
         {
             MsgCollection=new List<IReplyMessage>();

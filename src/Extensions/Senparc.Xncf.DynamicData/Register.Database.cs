@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.7.12 Localized DynamicData configuration and layout surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.7.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -43,6 +46,12 @@ namespace Senparc.Xncf.DynamicData
         /// </summary>
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
+        /// <summary>
+        /// Applies DynamicData entity mappings to the module database model.
+        /// The current module relies on convention and automatic mapping discovery,
+        /// so no explicit mappings are registered here.
+        /// </summary>
+        /// <param name="modelBuilder">The EF Core model builder being configured.</param>
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
             //after implementing the [XncfAutoConfigurationMapping] attribute, this runs automatically and no manual registration is needed
@@ -52,6 +61,12 @@ namespace Senparc.Xncf.DynamicData
             //modelBuilder.ApplyConfiguration(new DynamicData_TableDataConfigurationMapping());
         }
 
+        /// <summary>
+        /// Registers DynamicData-specific database services.
+        /// The method is intentionally empty while the module has no additional
+        /// service registrations beyond the shared database infrastructure.
+        /// </summary>
+        /// <param name="services">The application dependency-injection service collection.</param>
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
             //DOT REMOVE OR MODIFY THIS LINE - Entities Point

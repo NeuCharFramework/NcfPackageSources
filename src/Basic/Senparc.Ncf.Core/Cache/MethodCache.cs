@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -27,13 +30,13 @@ namespace Senparc.Ncf.Core.Cache
         #region Legacy section
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets a value from the shared method cache, invoking the factory on a cache miss.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="cacheKey"></param>
-        ///Legacy comment translated to English.
-        /// <param name="timeoutSeconds"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The cached reference type.</typeparam>
+        /// <param name="cacheKey">The logical cache key.</param>
+        /// <param name="func">The factory used to create a missing value.</param>
+        /// <param name="timeoutSeconds">The cache lifetime in seconds.</param>
+        /// <returns>The cached or newly created value.</returns>
         public static T GetMethodCache<T>(string cacheKey, Func<T> func, int timeoutSeconds) where T : class
         {
 
@@ -55,21 +58,21 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets a value from the shared method cache using the default one-hour lifetime.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="cacheKey"></param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <typeparam name="T">The cached reference type.</typeparam>
+        /// <param name="cacheKey">The logical cache key.</param>
+        /// <param name="func">The factory used to create a missing value.</param>
+        /// <returns>The cached or newly created value.</returns>
         public static T GetMethodCache<T>(string cacheKey, Func<T> func) where T : class
         {
             return GetMethodCache(cacheKey, func, 60 * 60);
         }
 
         /// <summary>
-        /// clear the cache
+        /// Removes a value from the shared method cache.
         /// </summary>
-        /// <param name="cacheKey"></param>
+        /// <param name="cacheKey">The logical cache key.</param>
         public static void ClearMethodCache<T>(string cacheKey) where T : class //Legacy comment translated to English.
         {
             cacheKey = cacheKey.ToUpper();
@@ -86,13 +89,13 @@ namespace Senparc.Ncf.Core.Cache
         #region Legacy section
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Asynchronously gets a value from the shared method cache.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="cacheKey"></param>
-        ///Legacy comment translated to English.
-        /// <param name="timeoutSeconds"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The cached reference type.</typeparam>
+        /// <param name="cacheKey">The logical cache key.</param>
+        /// <param name="func">The asynchronous factory used on a cache miss.</param>
+        /// <param name="timeoutSeconds">The cache lifetime in seconds.</param>
+        /// <returns>A task containing the cached or newly created value.</returns>
         public static async Task<T> GetMethodCacheAsync<T>(string cacheKey, Func<Task<T>> func, int timeoutSeconds) where T : class
         {
             cacheKey = cacheKey.ToUpper();
@@ -110,21 +113,21 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Asynchronously gets a value using the default one-hour lifetime.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="cacheKey"></param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <typeparam name="T">The cached reference type.</typeparam>
+        /// <param name="cacheKey">The logical cache key.</param>
+        /// <param name="func">The asynchronous factory used on a cache miss.</param>
+        /// <returns>A task containing the cached or newly created value.</returns>
         public static Task<T> GetMethodCacheAsync<T>(string cacheKey, Func<Task<T>> func) where T : class
         {
             return GetMethodCacheAsync(cacheKey, func, 60 * 60);
         }
 
         /// <summary>  
-        /// clear the cache  
+        /// Asynchronously removes a value from the shared method cache.
         /// </summary>  
-        /// <param name="cacheKey"></param>  
+        /// <param name="cacheKey">The logical cache key.</param>
         public static async Task ClearMethodCacheAsync<T>(string cacheKey) where T : class
         {
             cacheKey = cacheKey.ToUpper();

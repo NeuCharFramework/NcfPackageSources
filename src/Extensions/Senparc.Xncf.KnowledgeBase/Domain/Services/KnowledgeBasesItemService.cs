@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Trace;
@@ -29,11 +32,22 @@ namespace Senparc.Xncf.KnowledgeBase.Services
 {
     public class KnowledgeBaseItemService : ServiceBase<KnowledgeBaseItem>
     {
+        /// <summary>
+        /// Initializes knowledge-base chunk persistence operations.
+        /// </summary>
+        /// <param name="repo">The knowledge-base item repository.</param>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
         public KnowledgeBaseItemService(IRepositoryBase<KnowledgeBaseItem> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
         {
         }
 
-        //TODO: more business methods can be added here
+        /// <summary>
+        /// Returns a paged-compatible list of all knowledge-base item DTOs ordered newest first.
+        /// The current implementation materializes the complete source list before mapping.
+        /// </summary>
+        /// <param name="PageIndex">The requested page index; currently retained for API compatibility.</param>
+        /// <param name="PageSize">The requested page size; currently retained for API compatibility.</param>
+        /// <returns>All mapped knowledge-base item DTOs.</returns>
         public async Task<IEnumerable<KnowledgeBaseItemDto>> GetKnowledgeBasesDetailList(int PageIndex, int PageSize)
         {
             List<KnowledgeBaseItemDto> selectListItems = null;
@@ -43,14 +57,22 @@ namespace Senparc.Xncf.KnowledgeBase.Services
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Loads all chunks belonging to one knowledge base in chunk and creation order.
         /// </summary>
+        /// <param name="knowledgeBaseId">The knowledge-base identifier.</param>
+        /// <returns>The mapped chunk DTOs.</returns>
         public async Task<IEnumerable<KnowledgeBaseItemDto>> GetListByKnowledgeBaseIdAsync(int knowledgeBaseId)
         {
             var list = await GetFullListAsync(_ => _.KnowledgeBasesId == knowledgeBaseId).ConfigureAwait(false);
             return Mapper.Map<List<KnowledgeBaseItemDto>>(list.OrderBy(_ => _.ChunkIndex).ThenBy(_ => _.AddTime));
         }
 
+        /// <summary>
+        /// Creates a new chunk or updates an existing chunk from the supplied DTO.
+        /// </summary>
+        /// <param name="dto">The chunk values to persist.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="dto"/> is <see langword="null"/>.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when an existing chunk cannot be resolved for update.</exception>
         public async Task CreateOrUpdateAsync(KnowledgeBaseItemDto dto)
         {
             KnowledgeBaseItem knowledgeBasesDetail;

@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.5 Localized file management and upload surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.5.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -27,11 +30,20 @@ namespace Senparc.Xncf.FileManager.Domain.Services
 {
     public class ColorService : ServiceBase<Color>
     {
+        /// <summary>
+        /// Initializes the color persistence service.
+        /// </summary>
+        /// <param name="repo">The repository used to load and save colors.</param>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
         public ColorService(IRepositoryBase<Color> repo, IServiceProvider serviceProvider)
             : base(repo, serviceProvider)
         {
         }
 
+        /// <summary>
+        /// Creates and persists a new randomly initialized color.
+        /// </summary>
+        /// <returns>The persisted color mapped to a DTO.</returns>
         public async Task<ColorDto> CreateNewColor()
         {
             Color color = new Color(-1, -1, -1);
@@ -40,6 +52,10 @@ namespace Senparc.Xncf.FileManager.Domain.Services
             return colorDto;
         }
 
+        /// <summary>
+        /// Loads a stored color or creates the initial random color when no record exists.
+        /// </summary>
+        /// <returns>The existing or newly created color DTO.</returns>
         public async Task<ColorDto> GetOrInitColor()
         {
             var color = await base.GetObjectAsync(z => true);
@@ -53,6 +69,10 @@ namespace Senparc.Xncf.FileManager.Domain.Services
             return base.Mapper.Map<ColorDto>(color);
         }
 
+        /// <summary>
+        /// Brightens the newest stored color and persists the updated RGB values.
+        /// </summary>
+        /// <returns>The updated color DTO.</returns>
         public async Task<ColorDto> Brighten()
         {
             //TODO: add sorting to the asynchronous method
@@ -62,6 +82,10 @@ namespace Senparc.Xncf.FileManager.Domain.Services
             return base.Mapper.Map<ColorDto>(obj);
         }
 
+        /// <summary>
+        /// Darkens the newest stored color and persists the updated RGB values.
+        /// </summary>
+        /// <returns>The updated color DTO.</returns>
         public async Task<ColorDto> Darken()
         {
             //TODO: add sorting to the asynchronous method
@@ -71,6 +95,10 @@ namespace Senparc.Xncf.FileManager.Domain.Services
             return base.Mapper.Map<ColorDto>(obj);
         }
 
+        /// <summary>
+        /// Replaces the newest stored color with a generated random color and persists it.
+        /// </summary>
+        /// <returns>The updated color DTO.</returns>
         public async Task<ColorDto> Random()
         {
             //TODO: add sorting to the asynchronous method

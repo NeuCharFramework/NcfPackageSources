@@ -22,6 +22,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
@@ -56,6 +59,12 @@ namespace Senparc.Xncf.KnowledgeBase
             new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBase/RecallTest"), KnowledgeBaseResource.Get("Area.KnowledgeBase.RecallTest", "召回测试"),"fa fa-bookmark-o"),
         };
 
+        /// <summary>
+        /// Configures Razor Page authorization hooks for the KnowledgeBase area.
+        /// </summary>
+        /// <param name="builder">The MVC builder receiving the area configuration.</param>
+        /// <param name="env">The hosting environment used by MVC configuration.</param>
+        /// <returns>The configured MVC builder.</returns>
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
             builder.AddRazorPagesOptions(options =>

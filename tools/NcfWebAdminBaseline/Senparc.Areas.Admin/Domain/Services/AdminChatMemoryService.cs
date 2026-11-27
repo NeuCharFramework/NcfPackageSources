@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -89,6 +92,12 @@ public sealed class AdminChatMemoryService
         new(UpdateStatus, _updateReason, _updateRequested, _globalChanges, _workspaceChanges, _promptCode)
         { Revision = _proposalRevision, Proposals = _proposals };
 
+    /// <summary>
+    /// Builds the system instruction block that explains memory persistence scope,
+    /// learning modes, review boundaries, and the requirement to wait for a system receipt.
+    /// </summary>
+    /// <param name="mode">The current memory mode.</param>
+    /// <returns>The instruction text appended to the chat system context.</returns>
     public static string StorageInstructions(AdminChatMemoryMode mode) =>
         "\n[Memory persistence contract]\nCurrent Memory mode: " + mode + ". "
         + "Long-term Memory is private per-user database storage, not a Workspace Memory.md file. "
@@ -132,6 +141,13 @@ public sealed class AdminChatMemoryService
         }
     }
 
+    /// <summary>
+    /// Validates the administrator and resolves an owner-scoped chat session.
+    /// </summary>
+    /// <param name="userId">The administrator identifier.</param>
+    /// <param name="sessionId">The chat session identifier, or zero for global memory operations.</param>
+    /// <returns>The authorized session, or <see langword="null"/> for session zero.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when authentication or session access fails.</exception>
     private async Task<AdminChatSession> AuthorizeAsync(int userId, int sessionId)
     {
         if (userId <= 0) throw new NcfExceptionBase("Authentication required.");
@@ -140,12 +156,29 @@ public sealed class AdminChatMemoryService
             ?? throw new NcfExceptionBase("Chat session not found or access denied.");
     }
 
+    /// <summary>
+    /// Reads the owner-scoped memory profile and projects entries/history visible
+    /// to the selected session workspace.
+    /// </summary>
+    /// <param name="userId">The administrator identifier.</param>
+    /// <param name="sessionId">The chat session identifier.</param>
+    /// <returns>The memory view for the session.</returns>
     public async Task<AdminChatMemoryView> GetAsync(int userId, int sessionId)
     {
         var session = await AuthorizeAsync(userId, sessionId);
         return View(await _store.ReadAsync(TenantId, userId), sessionId, session?.WorkspaceId ?? "");
     }
 
+    /// <summary>
+    /// Parses and saves manually edited global memory markdown and system instructions
+    /// using optimistic revision control.
+    /// </summary>
+    /// <param name="userId">The administrator identifier.</param>
+    /// <param name="sessionId">The target chat session.</param>
+    /// <param name="revision">The revision read by the editor.</param>
+    /// <param name="markdown">The edited global memory markdown.</param>
+    /// <param name="systemMessage">The replacement system message.</param>
+    /// <returns>The updated memory view.</returns>
     public async Task<AdminChatMemoryView> SaveAsync(int userId, int sessionId, string revision,
         string markdown, string systemMessage)
     {
@@ -183,9 +216,23 @@ public sealed class AdminChatMemoryService
         }), sessionId, session?.WorkspaceId ?? "");
     }
 
+    /// <summary>
+    /// Maps the legacy enabled flag to Learn or Off mode and persists it.
+    /// </summary>
+    /// <param name="userId">The administrator identifier.</param>
+    /// <param name="sessionId">The chat session identifier.</param>
+    /// <param name="revision">The expected profile revision.</param>
+    /// <param name="enabled">Whether learning should be enabled.</param>
+    /// <returns>The updated memory view.</returns>
     public Task<AdminChatMemoryView> SetEnabledAsync(int userId, int sessionId, string revision, bool enabled) =>
         SetModeAsync(userId, sessionId, revision, enabled ? AdminChatMemoryMode.Learn : AdminChatMemoryMode.Off);
 
+    /// <summary>
+    /// Validates a requested memory mode and confirms PromptRange availability
+    /// before enabling Learn mode.
+    /// </summary>
+    /// <param name="mode">The requested memory mode.</param>
+    /// <exception cref="NcfExceptionBase">Thrown when the mode is invalid or its provider is unavailable.</exception>
     public async Task PrepareModeAsync(AdminChatMemoryMode mode)
     {
         if (!Enum.IsDefined(mode)) throw new NcfExceptionBase("Invalid Memory mode.");
@@ -197,6 +244,14 @@ public sealed class AdminChatMemoryService
         }
     }
 
+    /// <summary>
+    /// Changes the memory mode for an owner-scoped session and persists the mode map.
+    /// </summary>
+    /// <param name="userId">The administrator identifier.</param>
+    /// <param name="sessionId">The chat session identifier.</param>
+    /// <param name="revision">The expected profile revision.</param>
+    /// <param name="mode">The desired memory mode.</param>
+    /// <returns>The updated memory view.</returns>
     public async Task<AdminChatMemoryView> SetModeAsync(int userId, int sessionId, string revision, AdminChatMemoryMode mode)
     {
         if (sessionId <= 0) throw new NcfExceptionBase("Select a Chat session first.");
@@ -210,6 +265,15 @@ public sealed class AdminChatMemoryService
         }), sessionId, session.WorkspaceId ?? "");
     }
 
+    /// <summary>
+    /// Adds, updates, or removes one validated memory entry in global or workspace scope.
+    /// </summary>
+    /// <param name="userId">The administrator identifier.</param>
+    /// <param name="sessionId">The chat session identifier.</param>
+    /// <param name="revision">The expected profile revision.</param>
+    /// <param name="edit">The validated entry edit.</param>
+    /// <returns>The updated memory view.</returns>
+    /// <exception cref="NcfExceptionBase">Thrown when the edit is invalid, stale, or outside the workspace.</exception>
     public async Task<AdminChatMemoryView> EditAsync(int userId, int sessionId, string revision, AdminChatMemoryEdit edit)
     {
         var session = await AuthorizeAsync(userId, sessionId);
@@ -243,14 +307,29 @@ public sealed class AdminChatMemoryService
         }), sessionId, workspace);
     }
 
+    /// <summary>
+    /// Reads the tenant-global administrator memory profile.
+    /// </summary>
+    /// <returns>The global profile.</returns>
     public Task<AdminChatMemoryProfile> GetGlobalAsync() => _store.ReadAsync(TenantId, 0);
 
+    /// <summary>
+    /// Saves the tenant-global system message with optimistic revision checking.
+    /// </summary>
+    /// <param name="revision">The expected global profile revision.</param>
+    /// <param name="systemMessage">The replacement system message.</param>
+    /// <returns>The updated global profile.</returns>
     public Task<AdminChatMemoryProfile> SaveGlobalAsync(string revision, string systemMessage)
     {
         ValidateSystemMessage(systemMessage);
         return _store.UpdateAsync(TenantId, 0, revision, profile => profile.SystemMessage = systemMessage);
     }
 
+    /// <summary>
+    /// Enforces the maximum system-message length.
+    /// </summary>
+    /// <param name="text">The system message to validate.</param>
+    /// <exception cref="NcfExceptionBase">Thrown when the message exceeds 2000 characters.</exception>
     private static void ValidateSystemMessage(string text)
     {
         if (text == null || text.Length > 2000) throw new NcfExceptionBase("SystemMessage allows at most 2000 characters.");
@@ -268,6 +347,16 @@ public sealed class AdminChatMemoryService
                 && (item.After == null || item.After.WorkspaceId == "" || item.After.WorkspaceId == workspace)).Reverse().ToList()
         };
 
+    /// <summary>
+    /// Loads memory context for a chat turn, selects eligible retrieval entries,
+    /// and captures recent user/assistant messages needed for Learn mode.
+    /// </summary>
+    /// <param name="userId">The administrator identifier.</param>
+    /// <param name="sessionId">The chat session identifier.</param>
+    /// <param name="userMessage">The current user message.</param>
+    /// <param name="cancellationToken">Token used to cancel profile/message reads.</param>
+    /// <param name="modelName">The model name used for token estimation.</param>
+    /// <returns>The memory context and system instructions for the turn.</returns>
     public async Task<AdminChatMemoryContext> BeginAsync(int userId, int sessionId, string userMessage,
         CancellationToken cancellationToken, string modelName = "")
     {
@@ -318,6 +407,11 @@ public sealed class AdminChatMemoryService
         { RecentMessages = recentMessages };
     }
 
+    /// <summary>
+    /// Selects up to six recent user/assistant messages within the 6000-character context bound.
+    /// </summary>
+    /// <param name="messages">The candidate messages ordered newest first or unordered.</param>
+    /// <returns>Selected messages in chronological order.</returns>
     public static IReadOnlyList<AdminChatMemorySource> SelectRecentMessages(IEnumerable<AdminChatMessage> messages)
     {
         var selected = new List<AdminChatMemorySource>();
@@ -334,6 +428,16 @@ public sealed class AdminChatMemoryService
         return selected;
     }
 
+    /// <summary>
+    /// Performs post-response memory intent extraction, merges eligible changes, and
+    /// persists or exposes review proposals according to the active mode.
+    /// </summary>
+    /// <param name="context">The context captured before the chat turn.</param>
+    /// <param name="userMessage">The user message used for intent extraction.</param>
+    /// <param name="modelId">The model used by the memory prompt provider.</param>
+    /// <param name="generate">The callback that executes the extraction prompt.</param>
+    /// <param name="cancellationToken">Token used to cancel extraction and persistence.</param>
+    /// <returns>A task that completes after the memory update status is set.</returns>
     public async Task CompleteAsync(AdminChatMemoryContext context, string userMessage, int modelId,
         Func<string, string, CancellationToken, Task<string>> generate, CancellationToken cancellationToken)
     {

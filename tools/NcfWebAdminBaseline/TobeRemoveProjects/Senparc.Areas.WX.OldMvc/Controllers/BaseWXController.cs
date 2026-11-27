@@ -9,6 +9,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.0.1 Updated legacy MVC integration metadata and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.0.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -38,21 +41,33 @@ namespace Senparc.Areas.WX.Controllers
             }
         }
 
+        /// <inheritdoc/>
+        /// <remarks>Preserves legacy TempData messages before action execution.</remarks>
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             TempData["Messager"] = TempData["Messager"];
             base.OnActionExecuting(context);
         }
 
+        /// <inheritdoc/>
         public void OnResultExecuting(ResultExecutingContext context)
         {
             
         }
 
+        /// <inheritdoc/>
         public void OnResultExecuted(ResultExecutedContext context)
         { }
 
         [NonAction]
+        /// <summary>
+        /// Creates the legacy Weixin success view with navigation metadata.
+        /// </summary>
+        /// <param name="message">The success message.</param>
+        /// <param name="backAction">Optional return action.</param>
+        /// <param name="backController">Optional return controller.</param>
+        /// <param name="backRouteValues">Optional return route values.</param>
+        /// <returns>The success view result.</returns>
         public virtual ActionResult RenderSuccess(string message, string backAction = null, string backController = null, RouteValueDictionary backRouteValues = null)
         {
             backAction = backAction ?? RouteData.Values["controller"] as string;
@@ -69,6 +84,11 @@ namespace Senparc.Areas.WX.Controllers
         }
 
         [NonAction]
+        /// <summary>
+        /// Creates the legacy Weixin error view while preserving route metadata.
+        /// </summary>
+        /// <param name="message">The error message.</param>
+        /// <returns>The error view result.</returns>
         public virtual ActionResult RenderError(string message)
         {
             //preserve the original controller and action information
@@ -79,11 +99,13 @@ namespace Senparc.Areas.WX.Controllers
         }
 
         /// <summary>
-        /// displayJsonresult
+        /// Creates the legacy JSON response envelope and optionally wraps it in a JSONP callback.
         /// </summary>
-        /// <param name="success">whethersuccess</param>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <param name="success">Whether the operation succeeded.</param>
+        /// <param name="result">The response payload.</param>
+        /// <param name="jsonSerializerSettings">Optional serializer settings.</param>
+        /// <param name="jsonpCallbackFunction">An optional JSONP callback name.</param>
+        /// <returns>A JSON or JSONP action result.</returns>
         [NonAction]
         public ActionResult RenderJsonSuccessResult(bool success, object result,
             Newtonsoft.Json.JsonSerializerSettings jsonSerializerSettings = null,
@@ -106,6 +128,12 @@ namespace Senparc.Areas.WX.Controllers
             return new JsonResult(json);
         }
 
+        /// <summary>
+        /// Stores one legacy UI message in request TempData.
+        /// </summary>
+        /// <param name="messageType">The message type.</param>
+        /// <param name="messageText">The message text.</param>
+        /// <param name="showClose">Whether the message can be dismissed.</param>
         public void SetMessager(MessageType messageType, string messageText, bool showClose = true)
         {
             TempData["Messager"] = new Messager(messageType, messageText).ToJson();

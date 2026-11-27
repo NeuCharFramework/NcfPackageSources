@@ -20,6 +20,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -46,7 +49,7 @@ public class BoardModel(
     private readonly IAdminWorkContextProvider _adminWorkContextProvider = adminWorkContextProvider;
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Renders the NeuCharPivot board administration page.
     /// </summary>
     public IActionResult OnGet()
     {
@@ -54,8 +57,9 @@ public class BoardModel(
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Lists all configured boards in ascending identifier order for the board editor.
     /// </summary>
+    /// <returns>An HTTP 200 response containing board DTOs.</returns>
     public async Task<IActionResult> OnGetBoardsAsync()
     {
         var boards = await _boardService.GetFullListAsync(
@@ -64,8 +68,11 @@ public class BoardModel(
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Loads the enabled board associated with a page key and annotates each block
+    /// with current module/function availability.
     /// </summary>
+    /// <param name="pageKey">The stable page key used to select the board.</param>
+    /// <returns>The board DTO, or a JSON null value when no enabled board exists.</returns>
     public async Task<IActionResult> OnGetByPageKeyAsync([FromQuery] string pageKey)
     {
         var board = await _boardService.GetEnabledBoardByPageKeyAsync(pageKey).ConfigureAwait(false);
@@ -80,14 +87,20 @@ public class BoardModel(
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Lists the available NeuCharPivot block descriptors that can be placed on a board.
     /// </summary>
+    /// <returns>An HTTP 200 response containing the block catalog.</returns>
     public async Task<IActionResult> OnGetFunctionsAsync()
     {
         var catalog = await _boardService.GetBlockCatalogAsync().ConfigureAwait(false);
         return Ok(catalog);
     }
 
+    /// <summary>
+    /// Creates a board and applies its initial enabled state and descriptive metadata.
+    /// </summary>
+    /// <param name="request">The board name, page key, layout, and enabled-state request.</param>
+    /// <returns>The created board DTO or a localized validation/failure response.</returns>
     public async Task<IActionResult> OnPostCreateAsync([FromBody] BoardSaveRequest request)
     {
         if (request == null ||
@@ -112,6 +125,11 @@ public class BoardModel(
         return Ok(ToBoardDto(board));
     }
 
+    /// <summary>
+    /// Updates an existing board's identity, layout, description, and enabled state.
+    /// </summary>
+    /// <param name="request">The board identifier and replacement values.</param>
+    /// <returns>The updated board DTO or a validation/not-found response.</returns>
     public async Task<IActionResult> OnPostUpdateAsync([FromBody] BoardSaveRequest request)
     {
         if (request == null || request.Id <= 0 || string.IsNullOrWhiteSpace(request.Name))
@@ -129,6 +147,11 @@ public class BoardModel(
         return Ok(ToBoardDto(board));
     }
 
+    /// <summary>
+    /// Deletes the board identified by the request.
+    /// </summary>
+    /// <param name="request">The board identifier to delete.</param>
+    /// <returns>A success response or a validation message.</returns>
     public async Task<IActionResult> OnPostDeleteAsync([FromBody] BoardIdRequest request)
     {
         if (request == null || request.Id <= 0)
@@ -139,6 +162,11 @@ public class BoardModel(
         return Ok(true);
     }
 
+    /// <summary>
+    /// Replaces the ordered block collection associated with a board.
+    /// </summary>
+    /// <param name="request">The board identifier and new block definitions.</param>
+    /// <returns>The updated board DTO or the service validation message.</returns>
     public async Task<IActionResult> OnPostSetBlocksAsync([FromBody] BoardBlocksRequest request)
     {
         if (request == null || request.BoardId <= 0)
@@ -156,8 +184,11 @@ public class BoardModel(
     }
 
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Uses the configured AI board assistant to apply a natural-language change
+    /// request, then returns the assistant reply and resulting board representation.
     /// </summary>
+    /// <param name="request">The board identifier and requested change instruction.</param>
+    /// <returns>The AI reply and updated board, or the service failure message.</returns>
     public async Task<IActionResult> OnPostAiAsync([FromBody] BoardAiRequest request)
     {
         if (request == null || request.BoardId <= 0 || string.IsNullOrWhiteSpace(request.Instruction))
@@ -176,6 +207,13 @@ public class BoardModel(
         return Ok(new { aiReply = aiReply ?? string.Empty, board = ToBoardDto(board) });
     }
 
+    /// <summary>
+    /// Projects a persisted board and its serialized blocks into the JSON shape
+    /// consumed by the administration UI.
+    /// </summary>
+    /// <param name="board">The persisted board entity.</param>
+    /// <param name="blockAvailability">Optional availability map keyed by block key.</param>
+    /// <returns>An anonymous DTO containing board metadata and block details.</returns>
     private static object ToBoardDto(
         NeuCharPivotBoard board,
         IReadOnlyDictionary<string, bool> blockAvailability = null)

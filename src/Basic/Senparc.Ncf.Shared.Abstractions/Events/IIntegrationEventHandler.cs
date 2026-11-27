@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.7.1-preview2 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.7.1.2-preview3 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System.Threading;
@@ -21,12 +24,17 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Shared.Abstractions.Events
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Handles one integration-event type.
     /// </summary>
-    ///Legacy comment translated to English.
+    /// <typeparam name="TIntegrationEvent">The event type accepted by the handler.</typeparam>
     public interface IIntegrationEventHandler<in TIntegrationEvent>
         where TIntegrationEvent : IIntegrationEvent
     {
+        /// <summary>
+        /// Processes an event and returns when handling has completed.
+        /// </summary>
+        /// <param name="event">The event to handle.</param>
+        /// <param name="cancellationToken">Token used to cancel handling.</param>
         Task Handle(TIntegrationEvent @event, CancellationToken cancellationToken);
     }
 }

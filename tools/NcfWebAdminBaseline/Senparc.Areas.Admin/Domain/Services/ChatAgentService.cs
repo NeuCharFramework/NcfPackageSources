@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;
@@ -42,6 +45,13 @@ public sealed class ChatAgentRequestEventHandler : IIntegrationEventHandler<Chat
     private readonly IEventBus _eventBus;
     private readonly ILogger<ChatAgentRequestEventHandler> _logger;
 
+    /// <summary>
+    /// Initializes the integration-event handler that composes and publishes
+    /// ChatAgent responses.
+    /// </summary>
+    /// <param name="composer">The NeuCharPivot composition service.</param>
+    /// <param name="eventBus">The event bus used for derived responses.</param>
+    /// <param name="logger">The handler diagnostic logger.</param>
     public ChatAgentRequestEventHandler(
         ChatAgentNeuCharPivotComposer composer,
         IEventBus eventBus,
@@ -52,6 +62,11 @@ public sealed class ChatAgentRequestEventHandler : IIntegrationEventHandler<Chat
         _logger = logger;
     }
 
+    /// <inheritdoc/>
+    /// <remarks>
+    /// Composition failures are converted into failed response events so the
+    /// requesting workflow receives a terminal result.
+    /// </remarks>
     public async Task Handle(ChatAgentRequestEvent @event, CancellationToken cancellationToken)
     {
         ChatAgentResponseEvent response;
@@ -91,6 +106,20 @@ public sealed class ChatAgentNeuCharPivotComposer
     private readonly XncfModuleService _moduleService;
     private readonly ILogger<ChatAgentNeuCharPivotComposer> _logger;
 
+    /// <summary>
+    /// Initializes the system-level NeuCharPivot composition service and its
+    /// catalog, persistence, chat, and module dependencies.
+    /// </summary>
+    /// <param name="pivotService">The pivot layout persistence service.</param>
+    /// <param name="functionService">The target Function catalog service.</param>
+    /// <param name="configurationService">The pivot configuration service.</param>
+    /// <param name="executionLogService">The execution audit service.</param>
+    /// <param name="sessionService">The owner-scoped chat session service.</param>
+    /// <param name="messageService">The chat message persistence service.</param>
+    /// <param name="sessionModuleService">The session-module association service.</param>
+    /// <param name="aiService">The AdminChat AI generation service.</param>
+    /// <param name="moduleService">The installed-module service.</param>
+    /// <param name="logger">The composition diagnostic logger.</param>
     public ChatAgentNeuCharPivotComposer(
         NeuCharPivotService pivotService,
         NeuCharFunctionService functionService,
@@ -115,6 +144,14 @@ public sealed class ChatAgentNeuCharPivotComposer
         _logger = logger;
     }
 
+    /// <summary>
+    /// Validates caller/target module boundaries, creates or reuses an owner-scoped
+    /// chat session, generates a declarative NeuCharPivot layout, persists its audit
+    /// records, and falls back to a deterministic catalog when AI generation fails.
+    /// </summary>
+    /// <param name="request">The ChatAgent operation request.</param>
+    /// <param name="cancellationToken">Token used to cancel catalog, AI, and persistence operations.</param>
+    /// <returns>A success or failure response event.</returns>
     public async Task<ChatAgentResponseEvent> ComposeAsync(
         ChatAgentRequestEvent request,
         CancellationToken cancellationToken)
@@ -295,6 +332,11 @@ public sealed class ChatAgentNeuCharPivotComposer
         }
     }
 
+    /// <summary>
+    /// Returns the system prompt restricting ChatAgent output to declarative,
+    /// supplied-Function-only NeuCharPivot JSON.
+    /// </summary>
+    /// <returns>The system instruction text.</returns>
     private static string BuildSystemInstructions() =>
         """
         You are NeuCharFramework's system-level ChatAgent. Generate only a declarative NeuCharPivot JSON object.
@@ -307,6 +349,14 @@ public sealed class ChatAgentNeuCharPivotComposer
         Allowed accent values: blue, green, orange, purple, gray.
         """;
 
+    /// <summary>
+    /// Builds the user prompt containing the operation, requirement, current schema,
+    /// and a reduced safe Function catalog.
+    /// </summary>
+    /// <param name="request">The ChatAgent request containing current schema/operation.</param>
+    /// <param name="requirement">The normalized user requirement.</param>
+    /// <param name="catalog">The allowed Function descriptors.</param>
+    /// <returns>The prompt submitted to the AI generator.</returns>
     private static string BuildPrompt(
         ChatAgentRequestEvent request,
         string requirement,
@@ -348,6 +398,13 @@ public sealed class ChatAgentNeuCharPivotComposer
         return builder.ToString();
     }
 
+    /// <summary>
+    /// Creates a failed ChatAgent response while preserving the request correlation
+    /// and current schema.
+    /// </summary>
+    /// <param name="request">The original request.</param>
+    /// <param name="error">The failure message.</param>
+    /// <returns>A failed response event.</returns>
     private static ChatAgentResponseEvent Failure(ChatAgentRequestEvent request, string error) =>
         new(request.RequestId, false, request.CurrentSchemaJson, request.ChatSessionId, error, error);
 }

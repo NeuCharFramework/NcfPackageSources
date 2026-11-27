@@ -1,4 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+/*----------------------------------------------------------------
+
+    Copyright (C) 2026 Senparc
+
+    File name: FeedbackController.cs
+    File description: Senparc.Areas.Admin.Controllers related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261127
+    Change description: v0.0.2 Improve source documentation, headers, and module metadata consistency.
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Models.VD;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Enums;
@@ -15,11 +29,21 @@ namespace Senparc.Areas.Admin.Controllers
     {
         private FeedBackService _feedBackService;
 
+        /// <summary>
+        /// Initializes the legacy feedback controller.
+        /// </summary>
+        /// <param name="feedBackService">The feedback persistence service.</param>
         public FeedbackController(FeedBackService feedBackService)
         {
             _feedBackService = feedBackService;
         }
 
+        /// <summary>
+        /// Lists feedback records with optional keyword filtering and paging.
+        /// </summary>
+        /// <param name="vd">The filter view model.</param>
+        /// <param name="pageIndex">The one-based page number.</param>
+        /// <returns>The feedback list view.</returns>
         public IActionResult Index(Feedback_IndexVD vd, int pageIndex = 1)
         {
             int pageSize = 20;

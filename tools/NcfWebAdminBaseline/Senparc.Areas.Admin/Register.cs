@@ -70,6 +70,9 @@
     Modified by: Senparc - 20261125
     Change description: v0.12.29 Improved AdminChat conversation loading and command parameter feedback.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 /*
@@ -171,6 +174,11 @@ namespace Senparc.Areas.Admin
 
         public override string Description => RegisterText.Description;
 
+        /// <inheritdoc/>
+        /// <remarks>
+        /// Also initializes the default administrator authentication-expiration
+        /// settings when the Admin module has no persisted configuration.
+        /// </remarks>
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //updatedatabase
@@ -208,6 +216,11 @@ namespace Senparc.Areas.Admin
             await base.InstallOrUpdateAsync(serviceProvider, installOrUpdate);
         }
 
+        /// <inheritdoc/>
+        /// <remarks>
+        /// Drops the entity sets owned by this module before delegating the
+        /// remaining uninstall workflow to the base registration.
+        /// </remarks>
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             //Legacy comment translated to English.
@@ -229,6 +242,11 @@ namespace Senparc.Areas.Admin
         }
 
 
+        /// <inheritdoc/>
+        /// <remarks>
+        /// Registers Admin services, authentication, database integrations, hosted
+        /// monitors, and the application-layer dependencies used by the area.
+        /// </remarks>
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             //Attributes
@@ -375,9 +393,11 @@ namespace Senparc.Areas.Admin
 
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Registers the backend JWT bearer authentication scheme and binds its settings
+        /// from the application configuration.
         /// </summary>
-        /// <param name="services"></param>
+        /// <param name="services">The service collection receiving authentication services.</param>
+        /// <param name="configuration">The application configuration containing backend JWT settings.</param>
         private void AddJwtAuthentication(IServiceCollection services, IConfiguration configuration)
         {
             JwtSettings backend = new JwtSettings();
@@ -427,6 +447,11 @@ namespace Senparc.Areas.Admin
             ;
 
         }
+        /// <inheritdoc/>
+        /// <remarks>
+        /// Adds the embedded Admin static-file provider before invoking the base
+        /// module pipeline registration.
+        /// </remarks>
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             var files = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot");
@@ -455,6 +480,13 @@ namespace Senparc.Areas.Admin
         };//Legacy comment translated to English.
 
 
+        /// <summary>
+        /// Configures the Admin cookie/JWT authentication schemes, authorization
+        /// policies, Razor Page conventions, and supporting permission services.
+        /// </summary>
+        /// <param name="builder">The MVC builder receiving Admin services and policies.</param>
+        /// <param name="env">The current host environment.</param>
+        /// <returns>The same builder after Admin authorization configuration.</returns>
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
             Console.WriteLine("[IAreaRegister - Admin] AuthorizeConfig - AdminArea");
@@ -617,11 +649,21 @@ namespace Senparc.Areas.Admin
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
 
+        /// <summary>
+        /// Provides the Admin module hook for model configuration. The current
+        /// module has no additional fluent mappings beyond its entity attributes.
+        /// </summary>
+        /// <param name="modelBuilder">The Entity Framework model builder.</param>
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
 
         }
 
+        /// <summary>
+        /// Provides the Admin module hook for database-service registration.
+        /// Database services are registered by the surrounding NCF database setup.
+        /// </summary>
+        /// <param name="services">The application service collection.</param>
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
             //services.AddScoped<AdminUserInfo>();
@@ -690,6 +732,8 @@ namespace Senparc.Areas.Admin
         //#region IXncfRazorRuntimeCompilation interface
         //public string LibraryPath => Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Senparc.Areas.Admin"));
         //#endregion
+        /// <inheritdoc/>
+        /// <remarks>Registers the Admin AutoMapper profile after base mappings.</remarks>
         public override void OnAutoMapMapping(IServiceCollection services, IConfiguration configuration)
         {
             base.OnAutoMapMapping(services, configuration);

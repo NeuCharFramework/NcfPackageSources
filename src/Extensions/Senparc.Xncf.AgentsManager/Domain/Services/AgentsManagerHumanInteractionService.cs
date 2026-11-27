@@ -23,6 +23,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET;
@@ -38,6 +41,9 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
+/// <summary>
+/// Represents the outcome of resolving an AgentsManager human interaction request.
+/// </summary>
 public sealed record AgentsManagerHumanInteractionResolution(
     bool Success,
     PendingHumanRequest Pending,

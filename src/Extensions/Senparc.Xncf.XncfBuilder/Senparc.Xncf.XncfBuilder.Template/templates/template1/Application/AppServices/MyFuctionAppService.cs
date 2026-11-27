@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261124
     Change description: v1.1.15 Integrated localization, tooling, and runtime improvements across the module.
 
+    Modified by: Senparc - 20261127
+    Change description: v1.1.16 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 using Senparc.CO2NET;
 using Senparc.Ncf.Core.AppServices;
@@ -34,6 +37,11 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
     {
         private readonly IEventBusRequestClient _eventBusRequestClient;
 
+        /// <summary>
+        /// Initializes the sample function application service.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
+        /// <param name="eventBusRequestClient">The request client used by the round-trip sample.</param>
         public MyFuctionAppService(
             IServiceProvider serviceProvider,
             IEventBusRequestClient eventBusRequestClient) : base(serviceProvider)
@@ -41,6 +49,14 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
             _eventBusRequestClient = eventBusRequestClient;
         }
 
+        /// <summary>
+        /// Calculates a value using the requested arithmetic operator and optional square/cube
+        /// transformations, returning the operation trace through the application-service response.
+        /// Division by zero and unsupported operators are reported as unsuccessful responses.
+        /// </summary>
+        /// <param name="request">The operands, operator, display name, and optional powers to apply.</param>
+        /// <returns>A response containing the formatted calculation result.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is <see langword="null"/>.</exception>
         [FunctionRender(
             typeof(Template_XncfNameResource),
             "Function.Sample.Name",
@@ -126,9 +142,13 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Sends a sample request through the event-bus request client and returns the response
+        /// metadata, elapsed time, and event depth. A timeout is converted into an unsuccessful
+        /// application-service response.
         /// </summary>
+        /// <param name="request">The request payload; the sample currently uses the event bus rather than its fields.</param>
+        /// <returns>A response containing the event-bus round-trip result or timeout information.</returns>
+        /// <exception cref="TimeoutException">Handled internally when no event-bus response arrives within five seconds.</exception>
         [FunctionRender(
             typeof(Template_XncfNameResource),
             "Function.EventBusRoundTrip.Name",

@@ -22,6 +22,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -75,6 +78,11 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         /// </summary>
         public bool HasUnread { get; private set; }
 
+        /// <summary>
+        /// Sets the non-negative display order used when sorting sessions.
+        /// </summary>
+        /// <param name="sortOrder">The display order to store.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="sortOrder"/> is negative.</exception>
         public void SetSortOrder(int sortOrder)
         {
             if (sortOrder < 0) throw new ArgumentOutOfRangeException(nameof(sortOrder));
@@ -87,10 +95,13 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         private AdminChatSession() { }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Initializes an active chat session with optional workspace capabilities.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <param name="userId">userID</param>
+        /// <param name="title">The session title, truncated to the entity limit when needed.</param>
+        /// <param name="userId">The administrator owning the session.</param>
+        /// <param name="workspaceId">The optional workspace identifier.</param>
+        /// <param name="workspaceWriteEnabled">Whether workspace writes are enabled when a workspace is present.</param>
+        /// <param name="workspaceCliEnabled">Whether workspace CLI access is enabled when a workspace is present.</param>
         public AdminChatSession(
             string title,
             int userId,
@@ -108,8 +119,9 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Replaces the session title and records the update time when non-empty input is supplied.
         /// </summary>
+        /// <param name="title">The replacement title.</param>
         public void UpdateTitle(string title)
         {
             if (!string.IsNullOrEmpty(title))
@@ -120,7 +132,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Sets the last-message timestamp to the current local time and records the update time.
         /// </summary>
         public void UpdateLastMessageTime()
         {

@@ -13,12 +13,20 @@
     Modified by: Senparc - 20261119
     Change description: v0.21.3-preview5 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.21.3.2-preview6 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Ncf.Core.Extensions
 {
     public static class IntegerExtensions
     {
+        /// <summary>
+        /// Formats values above 999 as truncated thousands with a <c>K</c> suffix.
+        /// </summary>
+        /// <param name="num">The integer value to format.</param>
+        /// <returns>The compact display string.</returns>
         public static string ThousandChange(this int num)
         {
             if (num > 999)

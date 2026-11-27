@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;
@@ -57,6 +60,12 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         private readonly AITokenUsageService _aITokenUsageService;
 
 
+        /// <summary>
+        /// Initializes AI model administration operations and usage enrichment.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
+        /// <param name="aIModelService">The AI model persistence service.</param>
+        /// <param name="aITokenUsageService">The token usage service used for DTO enrichment.</param>
         public AIModelAppService(
             IServiceProvider serviceProvider,
             AIModelService aIModelService,
@@ -66,6 +75,11 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
             _aITokenUsageService = aITokenUsageService;
         }
 
+        /// <summary>
+        /// Adds token-usage aggregates to model DTOs by alias.
+        /// </summary>
+        /// <param name="dtos">The model DTO sequence to enrich.</param>
+        /// <returns>A task that completes after usage lookup and mutation.</returns>
         private async Task FillModelUsageAsync(IEnumerable<AIModelDto> dtos)
         {
             if (dtos == null)
@@ -93,6 +107,11 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
             }
         }
 
+        /// <summary>
+        /// Builds the optional alias/deployment/endpoint/organization/visibility filter for model queries.
+        /// </summary>
+        /// <param name="request">The list filter request.</param>
+        /// <returns>An EF-translatable model predicate.</returns>
         protected virtual Expression<Func<AIModel, bool>> GetListWhere(AIModel_GetListRequest request)
         {
             SenparcExpressionHelper<AIModel> helper = new();
@@ -107,10 +126,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// AIModel
+        /// Loads one AI model configuration and maps it to its DTO.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The AI model identifier.</param>
+        /// <returns>A response containing the model DTO.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<AIModelDto>> GetAsync(int id)
         {
@@ -122,10 +141,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns a paged AI model list with token-usage enrichment.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">The paging, filter, and ordering request.</param>
+        /// <returns>A response containing model DTOs and total count.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PagedResponse<AIModelDto>>> GetPagedListAsync(AIModel_GetListRequest request)
         {
@@ -150,9 +169,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Returns a paged AI model selection list for configuration pickers.
         /// </summary>
+        /// <param name="request">The paging, filter, and ordering request.</param>
+        /// <returns>A response containing model selection DTOs and total count.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PagedResponse<AIModelSelectionResponse>>> GetSelectionListAsync(AIModel_GetListRequest request)
         {
@@ -172,10 +192,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns all AI model configurations matching the supplied filters.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">The filter and ordering request.</param>
+        /// <returns>A response containing model DTOs with usage data.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<List<AIModelDto>>> GetListAsync(AIModel_GetListRequest request)
         {
@@ -195,10 +215,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Creates and enables an AI model configuration.
         /// </summary>
-        /// <param name="createRequest"></param>
-        /// <returns></returns>
+        /// <param name="createRequest">The platform, endpoint, model, and credential settings.</param>
+        /// <returns>A response containing the created model DTO.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<AIModelDto>> CreateAsync(AIModel_CreateOrEditRequest createRequest)
         {
@@ -212,10 +232,12 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
                     // );
                     // if (count > 0)
                     // {
-                    //Legacy comment translated to English.
+                    // The duplicate-deployment validation remains disabled until the
+                    // provider-specific uniqueness rule is defined.
                     //     //response.Success = false;
                     //     //return null;
-                    //Legacy comment translated to English.
+                    // Keep the historical validation block available for a future
+                    // provider-aware uniqueness check without changing this endpoint's behavior.
                     // }
                     //
                     // #endregion
@@ -225,11 +247,11 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Updates an AI model configuration while preserving omitted credentials.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">The model identifier and replacement values.</param>
+        /// <returns>A response containing the updated model DTO.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the model does not exist.</exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<AIModelDto>> EditAsync(AIModel_CreateOrEditRequest request)
         {
@@ -242,10 +264,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// deleteAIModel
+        /// Deletes one AI model configuration.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The AI model identifier.</param>
+        /// <returns>A response indicating whether deletion completed.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Delete)]
         public async Task<AppResponseBase<bool>> DeleteAsync(int id)
         {
@@ -264,6 +286,12 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Synchronizes NeuChar model metadata into local AI model records after validating
+        /// the configured developer account.
+        /// </summary>
+        /// <param name="request">The NeuChar developer identifier and synchronization options.</param>
+        /// <returns>A response containing the synchronization summary.</returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<string>> UpdateNeuCharModels(AIModel_UpdateNeuCharModelsRequest request)
         {
@@ -275,15 +303,15 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
                 if (fullSystemConfig.NeuCharAppKey.IsNullOrEmpty() || fullSystemConfig.NeuCharAppSecret.IsNullOrEmpty())
                 {
                     r.Success = false;
-                    //Legacy comment translated to English.
+                    // Return a stable failure marker after the external account check fails.
                     r.ErrorMessage= "错误：当前系统未配置 NeuChar 开发者账号，请到【系统管理】模块，设置页面，使用【更新 NeuChar 云账户信息】绑定 NeuChar 开发者账号！";
                     return "error";
                 }
 
                 //var apiContainer = new ApiContainer(base.ServiceProvider, fullSystemConfig.NeuCharAppKey, fullSystemConfig.NeuCharAppSecret);
 
-                ///Legacy comment translated to English.
-                ///
+                // The older direct API-container flow is retained below as reference
+                // while the current implementation obtains a developer passport first.
 
 
                 //var url = $"{Senparc.NeuChar.App.AppStore.Config.DefaultDomainName}/api/developer/getModelInfoByDeveloper";
@@ -322,11 +350,11 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
 
                 var models = await Senparc.CO2NET.HttpUtility.Post.PostGetJsonAsync<NeuCharGetModelJsonResult>(base.ServiceProvider, url, formData: modelData, encoding: Encoding.UTF8);
 
-                //Legacy comment translated to English.
+                // Convert the remote model catalog into local records through the domain service.
 
                 var result = await _aIModelService.UpdateModelsFromNeuCharAsync(models, passportResult.Data.DeveloperId, request.ApiKey);
 
-                //Legacy comment translated to English.
+                // The synchronization service applies local update rules and returns its summary.
 
                 return "更新成功！";
             });

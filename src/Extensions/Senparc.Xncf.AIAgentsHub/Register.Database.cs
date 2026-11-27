@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.13.16 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.13.16.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -42,12 +45,20 @@ namespace Senparc.Xncf.AIAgentsHub
         /// </summary>
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
+        /// <summary>
+        /// Applies AIAgentsHub Entity Framework Core model configuration.
+        /// </summary>
+        /// <param name="modelBuilder">The Entity Framework Core model builder.</param>
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
             //after implementing the [XncfAutoConfigurationMapping] attribute, this runs automatically and no manual registration is needed
             //modelBuilder.ApplyConfiguration(new AreaTemplate_ColorConfigurationMapping());
         }
 
+        /// <summary>
+        /// Registers additional AIAgentsHub database services.
+        /// </summary>
+        /// <param name="services">The application service collection.</param>
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
             //DOT REMOVE OR MODIFY THIS LINE - Entities Point

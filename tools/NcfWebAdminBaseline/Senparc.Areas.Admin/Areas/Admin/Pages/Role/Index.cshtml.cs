@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.30 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -44,23 +47,28 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         public int PageIndex { get; set; } = 1;
 
         /// <summary>
-        /// 
+        /// Gets or sets the paged role records displayed by the view.
         /// </summary>
         public PagedList<SysRole> SysRoles { get; set; }
 
+        /// <summary>
+        /// Handles the initial role-list page request.
+        /// The list data is loaded by the client-side list handler.
+        /// </summary>
         public void OnGet()
         {
             //SysRoles = new ;// await _sysRoleService.GetObjectListAsync(PageIndex, 10, _ => true, _ => _.AddTime, Ncf.Core.Enums.OrderingType.Descending);
         }
 
         /// <summary>
-        /// Handler=List
+        /// Queries roles by optional name, applies the requested sort expression,
+        /// and returns a projected page suitable for the administration list.
         /// </summary>
-        /// <param name="roleName"></param>
-        /// <param name="orderField">XXX DESC,YYY ASC</param>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <returns></returns>
+        /// <param name="roleName">Optional text matched against the role name.</param>
+        /// <param name="orderField">A service-supported sort expression such as <c>RoleName DESC</c>.</param>
+        /// <param name="pageIndex">The one-based page number to retrieve.</param>
+        /// <param name="pageSize">The maximum number of roles to include.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing paging metadata and role fields.</returns>
         [Ncf.AreaBase.Admin.Filters.CustomerResource("role-search")]
         public async Task<IActionResult> OnGetListAsync(string roleName, string orderField, int pageIndex, int pageSize)
         {
@@ -90,10 +98,12 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         //}
 
         /// <summary>
-        /// Handler=Delete
+        /// Deletes the roles identified by the request body.
+        /// Authorization is enforced by the role-delete resource filter.
         /// </summary>
-        /// <param name="ids"></param>
-        /// <returns></returns>
+        /// <param name="ids">The role identifiers to delete.</param>
+        /// <returns>An <see cref="OkObjectResult"/> containing the number of supplied identifiers.</returns>
+        /// <exception cref="NullReferenceException">Thrown when no identifier array is bound to the request.</exception>
         [Ncf.AreaBase.Admin.Filters.CustomerResource("role-delete")]
         public IActionResult OnPostDelete([FromBody] string[] ids)
         {

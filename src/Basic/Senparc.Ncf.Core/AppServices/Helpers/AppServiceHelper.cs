@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Cache;
@@ -25,86 +28,109 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Core.AppServices
 {
     /// <summary>
-    /// AppService Helper Class
+    /// Provides the standard response, logging, and temporary-log-cache lifecycle
+    /// used by NCF application services.
+    /// </summary>
+    /// <remarks>
+    /// Exceptions raised by the main asynchronous operation are converted into a
+    /// failed response. Exceptions raised by an optional exception handler or
+    /// completion callback occur outside that conversion boundary and propagate
+    /// to the caller.
     /// </summary>
     public static class AppServiceHelper
     {
 
         /// <summary>
-        /// Automatic handling process for AppService
+        /// Executes an application-service callback inside the standard response envelope,
+        /// logging lifecycle messages and invoking optional exception/finalization callbacks.
         /// </summary>
-        /// <typeparam name="TData">Main message type returned from Service (must be DTO or value type, cannot be Entity)</typeparam>
-        /// <param name="appService">AppService</param>
-        /// <param name="func"></param>
-        /// <param name="exceptionHandler"></param>
-        /// <param name="afterFunc"></param>
-        /// <param name="saveLogAfterFinished">Whether to save log after executecomplete</param>
-        /// <param name="saveLogName">Save the name of the log. Optional. If left empty, then return the name of the current AppService.</param>
-        /// <returns></returns>
+        /// <typeparam name="TData">
+        /// The data type placed in the response envelope. In normal application-service
+        /// usage this is a DTO, projection, or value type rather than a persistence entity.
+        /// </typeparam>
+        /// <param name="appService">The application service providing dependency and logging context.</param>
+        /// <param name="func">
+        /// The asynchronous operation. It receives the response being populated and the
+        /// operation logger, then returns the data value to assign to the response.
+        /// </param>
+        /// <param name="exceptionHandler">
+        /// Optional callback invoked after an exception has been converted into a failed
+        /// response.
+        /// </param>
+        /// <param name="afterFunc">
+        /// Optional callback invoked during finalization after success or failure is determined.
+        /// </param>
+        /// <param name="saveLogAfterFinished">
+        /// Whether to persist the accumulated operation log after finalization.
+        /// </param>
+        /// <param name="saveLogName">
+        /// Optional persisted log name. When omitted, the helper derives one from the
+        /// application-service type.
+        /// </param>
+        /// <returns>A task containing the populated response envelope.</returns>
+        /// <exception cref="Exception">
+        /// Propagated when an optional finalization callback or post-operation logging
+        /// hook throws. Exceptions raised by <paramref name="func"/> are converted
+        /// into the returned failed response.
+        /// </exception>
         public static Task<AppResponseBase<TData>> GetResponseAsync<TData>(this IAppService appService, Func<AppResponseBase<TData>, AppServiceLogger, Task<TData>> func, Action<Exception, AppResponseBase<TData>, AppServiceLogger> exceptionHandler = null, Action<AppResponseBase<TData>, AppServiceLogger> afterFunc = null, bool saveLogAfterFinished = false, string saveLogName = null)
             //where TData : class
         {
             return GetResponseAsync<AppResponseBase<TData>, TData>(appService, func, exceptionHandler, afterFunc, saveLogAfterFinished, saveLogName);
         }
 
-        ///// <summary>
-        ///// AppService's automatic handling process (return string data)
-        ///// </summary>
-        ///// <param name="appService">AppService</param>
-        ///// <param name="func"></param>
-        ///// <param name="exceptionHandler"></param>
-        ///// <param name="afterFunc"></param>
-        ///// Whether to <param name="saveLogAfterFinished">save the log after executecomplete</param>
-        /////<param name="saveLogName">Save the name of the log. Optional. If left empty, then return the name of the current AppService.</param>
-        ///// <returns></returns>
-        //public static Task<AppResponseBase<string>> GetStringResponseAsync(this IAppService appService, Func<AppResponseBase<string>, AppServiceLogger, Task<string>> func, Action<Exception, AppResponseBase<string>, AppServiceLogger> exceptionHandler = null, Action<AppResponseBase<string>, AppServiceLogger> afterFunc = null, bool saveLogAfterFinished = false, string saveLogName = null)
-        //{
-        //    return GetResponseAsync<AppResponseBase<string>, string>(appService, func, exceptionHandler, afterFunc, saveLogAfterFinished, saveLogName);
-        //}
-
         /// <summary>
-        /// Automatic handling process of AppService (return string data)
+        /// Executes an application-service callback that returns string data using the standard
+        /// response and logging lifecycle.
         /// </summary>
-        /// <param name="appService">AppService</param>
-        /// <param name="func"></param>
-        /// <param name="exceptionHandler"></param>
-        /// <param name="afterFunc"></param>
-        /// <param name="saveLogAfterFinished">Whether to save log after executecomplete</param>
-        /// <param name="saveLogName">Save the name of the log. Optional. If left empty, then return the name of the current AppService.</param>
-        /// <returns></returns>
+        /// <param name="appService">The application service providing dependency and logging context.</param>
+        /// <param name="func">
+        /// The asynchronous operation that receives the string response and logger,
+        /// then returns the string payload.
+        /// </param>
+        /// <param name="exceptionHandler">Optional callback for converted operation exceptions.</param>
+        /// <param name="afterFunc">Optional callback invoked during finalization.</param>
+        /// <param name="saveLogAfterFinished">Whether to persist the operation log after finalization.</param>
+        /// <param name="saveLogName">Optional persisted log name.</param>
+        /// <returns>A task containing the string response.</returns>
+        /// <exception cref="Exception">
+        /// Propagated when an optional finalization callback or post-operation logging
+        /// hook throws. Exceptions raised by <paramref name="func"/> are converted
+        /// into the returned failed response.
+        /// </exception>
         public static Task<StringAppResponse> GetStringResponseAsync(this IAppService appService, Func<StringAppResponse, AppServiceLogger, Task<string>> func, Action<Exception, StringAppResponse, AppServiceLogger> exceptionHandler = null, Action<StringAppResponse, AppServiceLogger> afterFunc = null, bool saveLogAfterFinished = false, string saveLogName = null)
            //where IStringAppResponse : StringAppResponse
         {
-            //Func<AppResponseBase<string>, AppServiceLogger, Task<string>> adaptFunc = (response, logger) =>
-            //{
-            //    return func?.Invoke((StringAppResponse)response, logger);
-            //};
-
-            //Action<Exception, AppResponseBase<string>, AppServiceLogger> adaptExceptionHandler = (ex, response, logger) =>
-            //{
-            //    exceptionHandler?.Invoke(ex, (StringAppResponse)response, logger);
-            //};
-
-            //Action<AppResponseBase<string>, AppServiceLogger> adaptAfterFunc = (response, logger) =>
-            //{
-            //    afterFunc?.Invoke((StringAppResponse)response, logger);
-            //};
-
             return GetResponseAsync<StringAppResponse, string>(appService, func, exceptionHandler, afterFunc, saveLogAfterFinished, saveLogName);
         }
 
         /// <summary>
-        /// Automatic handling process for AppService
+        /// Executes a callback using a caller-supplied response type and standard logging lifecycle.
         /// </summary>
-        /// <typeparam name="TData">Main message type returned from Service (must be DTO or value type, cannot be Entity)</typeparam>
-        /// <typeparam name="TResponse"></typeparam>
-        /// <param name="appService">AppService</param>
-        /// <param name="func"></param>
-        /// <param name="exceptionHandler"></param>
-        /// <param name="afterFunc"></param>
-        /// <param name="saveLogAfterFinished">Whether to save log after executecomplete</param>
-        /// <param name="saveLogName">Save the name of the log. Optional. If left empty, then return the name of the current AppService.</param>
-        /// <returns></returns>
+        /// <typeparam name="TResponse">
+        /// The concrete response envelope type. It must provide a public parameterless
+        /// constructor and derive from <see cref="AppResponseBase{TData}"/>.
+        /// </typeparam>
+        /// <typeparam name="TData">The data type returned by the callback.</typeparam>
+        /// <param name="appService">The application service providing dependency and logging context.</param>
+        /// <param name="func">
+        /// The asynchronous operation. A <see langword="null"/> callback produces a
+        /// 404-style response without invoking an operation.
+        /// </param>
+        /// <param name="exceptionHandler">Optional callback invoked after a callback exception is recorded.</param>
+        /// <param name="afterFunc">Optional finalization callback invoked for success and failure.</param>
+        /// <param name="saveLogAfterFinished">Whether to persist the accumulated operation log.</param>
+        /// <param name="saveLogName">Optional persisted log name.</param>
+        /// <returns>
+        /// A task containing a response whose data and success/error fields reflect the
+        /// callback outcome.
+        /// </returns>
+        /// <exception cref="Exception">
+        /// Propagated when <paramref name="exceptionHandler"/>,
+        /// <paramref name="afterFunc"/>, or a post-operation logging hook throws.
+        /// Exceptions raised by <paramref name="func"/> are converted into the
+        /// returned response.
+        /// </exception>
         public static async Task<TResponse> GetResponseAsync<TResponse, TData>(this IAppService appService, Func<TResponse, AppServiceLogger, Task<TData>> func, Action<Exception, TResponse, AppServiceLogger> exceptionHandler = null, Action<TResponse, AppServiceLogger> afterFunc = null, bool saveLogAfterFinished = false, string saveLogName = null)
             where TResponse : AppResponseBase<TData>, new()
         {
@@ -130,12 +156,6 @@ namespace Senparc.Ncf.Core.AppServices
                 {
                     response.Success = true;
                 }
-
-                ////checkfiletype
-                //if (result is INcfFile)
-                //{
-
-                //}
 
             }
             catch (Exception ex)

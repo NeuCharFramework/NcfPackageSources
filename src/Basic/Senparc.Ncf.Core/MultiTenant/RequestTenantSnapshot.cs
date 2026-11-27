@@ -17,6 +17,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -38,6 +41,13 @@ namespace Senparc.Ncf.Core.MultiTenant
         /// </summary>
         public bool MatchSuccess { get; }
 
+        /// <summary>
+        /// Initializes an immutable tenant snapshot.
+        /// </summary>
+        /// <param name="id">The tenant identifier.</param>
+        /// <param name="name">The tenant display name.</param>
+        /// <param name="tenantKey">The tenant key.</param>
+        /// <param name="matchSuccess">Whether tenant matching succeeded.</param>
         private RequestTenantSnapshot(int id, string name, string tenantKey, bool matchSuccess)
         {
             Id = id;

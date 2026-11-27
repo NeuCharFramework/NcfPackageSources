@@ -28,6 +28,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.5.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.14.2 Expand MCP endpoint gateway, credentials, and tool invocation support.
+
 ----------------------------------------------------------------*/
 
 #pragma warning disable OPENAI001 //Legacy comment translated to English.
@@ -73,6 +76,11 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     [McpServerToolType()]
     public static class NcfMcpTools
     {
+        /// <summary>
+        /// Returns the supplied message through the localized MCP echo response format.
+        /// </summary>
+        /// <param name="message">The message to echo.</param>
+        /// <returns>The localized echo result.</returns>
         [McpServerTool, LocalizedDescription(typeof(McpResource), "MCP.Tool.Echo.Description")]
         public static string Echo(string message)
         {
@@ -80,6 +88,11 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
             return McpResource.Format("MCP.Tool.Echo.Result", "你好，{0}", message);
         }
 
+        /// <summary>
+        /// Returns the supplied message together with the current local date and time.
+        /// </summary>
+        /// <param name="message">The prefix included in the result.</param>
+        /// <returns>The message followed by the current local timestamp.</returns>
         [McpServerTool, LocalizedDescription(typeof(McpResource), "MCP.Tool.Now.Description")]
         public static string Now(string message)
         {
@@ -87,14 +100,17 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
             return $"{message}: {DateTime.Now}";
         }
 
-        //Legacy comment translated to English.
         //public static string Now(DoFuncReq reqeust)
         //{
         //Legacy comment translated to English.
         //    return $"{reqeust.Str}: {DateTime.Now}";
         //}
 
-        //Legacy comment translated to English.
+        /// <summary>
+        /// Adds the requested number of hours to the current local date and time.
+        /// </summary>
+        /// <param name="hours">The signed hour offset.</param>
+        /// <returns>The resulting local timestamp.</returns>
         [McpServerTool, LocalizedDescription(typeof(McpResource), "MCP.Tool.AddHours.Description")]
         public static string AddHours(int hours)
         {
@@ -102,7 +118,14 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
 
-     [McpServerTool,Description("Bob's Lab")]
+    /// <summary>
+    /// Runs the configured Bob's Lab chat agent with the supplied input and appends
+    /// a localized execution-time footer.
+    /// </summary>
+    /// <param name="input">The user input sent to the chat agent.</param>
+    /// <returns>The generated agent output and elapsed-time footer.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the AI configuration cannot build a chat agent.</exception>
+    [McpServerTool,Description("Bob's Lab")]
     public static async Task<string> BobLab(string input)
     {
         var handler = new AgentAiHandler(Senparc.AI.Config.SenparcAiSetting);
@@ -132,10 +155,21 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     {
         //private IMcpClient McpClient { get; set; }
 
+        /// <summary>
+        /// Initializes the MCP application service.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
         public MyFuctionAppService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
+        /// <summary>
+        /// Resolves an MCP endpoint from the selection request, invokes its tools through
+        /// the MCP client, and returns the serialized tool result.
+        /// </summary>
+        /// <param name="request">The selected or manually entered MCP server and call parameters.</param>
+        /// <returns>A response containing the remote MCP call result.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when the MCP endpoint cannot be resolved or invoked.</exception>
         [FunctionRender(typeof(McpResource), "Function.MCP.Execute.Name", "Function.MCP.Execute.Description", typeof(Register))]
         public async Task<StringAppResponse> GetMcpResult(MyFunction_MCPCallRequest request)
         {
@@ -252,6 +286,16 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// Performs the selected integer arithmetic operation, including exponentiation,
+        /// and returns a localized result string.
+        /// </summary>
+        /// <param name="number1">The left-hand integer operand.</param>
+        /// <param name="number2">The right-hand integer operand.</param>
+        /// <param name="power">The exponent used by the power operation.</param>
+        /// <param name="operatorMark">The operation marker selected by the caller.</param>
+        /// <returns>A string containing the calculated result or a validation message.</returns>
+        /// <exception cref="DivideByZeroException">Thrown when division or remainder uses zero as the divisor.</exception>
         [McpServerTool, LocalizedDescription(typeof(McpResource), "MCP.Tool.Calculator.Description")]
         public async Task<string> Calculator(
             int number1, int number2, int power, [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Tool.Operator")] string operatorMark

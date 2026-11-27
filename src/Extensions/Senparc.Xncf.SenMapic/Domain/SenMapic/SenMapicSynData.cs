@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.13 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.13.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -24,12 +27,17 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 {
     public class SenMapicSynData
     {
+        /// <summary>
+        /// Initializes shared SenMapic crawl-state storage.
+        /// </summary>
         public SenMapicSynData()
         {
             CurrentCrawlingUrlList = new CurrentCrawlingUrlList();
         }
 
-        //Legacy comment translated to English.
+        /// <summary>
+        /// Gets the process-wide shared crawl-state instance.
+        /// </summary>
         public static SenMapicSynData Instance
         {
             get
@@ -43,7 +51,9 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             static Nested()
             {
             }
-            //Legacy comment translated to English.
+            /// <summary>
+            /// Holds the lazily initialized singleton instance.
+            /// </summary>
             internal static readonly SenMapicSynData instance = new SenMapicSynData();
         }
 

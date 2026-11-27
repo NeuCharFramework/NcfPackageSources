@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.8.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel;
@@ -25,19 +28,16 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.KnowledgeBase.Domain.Models.DatabaseModel.Request
 {
+    /// <summary>Represents editable source content for one knowledge-base item.</summary>
     public class KnowledgeBaseItemRequest
     {
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the owning knowledge-base identifier.</summary>
         public int KnowledgeBasesId { get; set; }
         /// <summary>
         /// contenttype
         /// </summary>
         public ContentType ContentType { get; set; }
-        /// <summary>
-        /// content
-        /// </summary>
+        /// <summary>Gets or sets the source content.</summary>
         public string Content { get; set; }
     }
 }

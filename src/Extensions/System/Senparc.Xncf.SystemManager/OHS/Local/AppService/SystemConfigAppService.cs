@@ -22,6 +22,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.15.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.15.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -40,12 +43,22 @@ namespace Senparc.Xncf.SystemManager.OHS.Local
     public class SystemConfigAppService : AppServiceBase
     {
         SystemConfigService _systemConfigService;
+        /// <summary>
+        /// Initializes the system configuration application service.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
+        /// <param name="systemConfigService">The system configuration service.</param>
         public SystemConfigAppService(IServiceProvider serviceProvider, SystemConfigService systemConfigService) : base(serviceProvider)
         {
             _systemConfigService = systemConfigService;
         }
 
         [FunctionRender(typeof(SystemManagerResource), "Function.SystemManager.UpdateCloudAccount.Name", "Function.SystemManager.UpdateCloudAccount.Description", typeof(Register))]
+        /// <summary>
+        /// Validates and updates the NeuChar cloud account credentials.
+        /// </summary>
+        /// <param name="request">The AppKey and AppSecret request.</param>
+        /// <returns>A string response containing validation result details.</returns>
         public async Task<StringAppResponse> UpdateNeuCharAccount(SystemConfig_UpdateNeuCharAccountRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -64,6 +77,11 @@ namespace Senparc.Xncf.SystemManager.OHS.Local
         }
 
         [FunctionRender(typeof(SystemManagerResource), "Function.SystemManager.ViewTempLog.Name", "Function.SystemManager.ViewTempLog.Description", typeof(Register))]
+        /// <summary>
+        /// Loads a temporary request log from cache and converts line breaks for HTML display.
+        /// </summary>
+        /// <param name="request">The temporary-log cache key request.</param>
+        /// <returns>A string response containing the cached log or an explanatory message.</returns>
         public async Task<StringAppResponse> GetRequestTempLog(SystemConfig_GetRequestTempLogRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

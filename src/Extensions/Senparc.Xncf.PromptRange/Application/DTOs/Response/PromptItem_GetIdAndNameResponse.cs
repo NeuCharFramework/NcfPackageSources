@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.AppServices;
@@ -21,6 +24,7 @@ using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
 {
+    /// <summary>Returns compact prompt-item identity, version, score, and draft metadata.</summary>
     public class PromptItem_GetIdAndNameResponse : AppResponseBase<string>
     {
         /// <summary>
@@ -38,35 +42,32 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         /// </summary>
         public string RangeName { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the full tactic/aiming version string.</summary>
         public string FullVersion { get; set; }
+        /// <summary>Gets or sets the parsed prompt-item version.</summary>
         public PromptItemVersion PromptItemVersion { get; set; }
 
+        /// <summary>Gets or sets the parent tactic version.</summary>
         public PromptItemVersion ParentPromptItemVersion { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the average evaluation score.</summary>
         public decimal EvalAvgScore { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets the maximum evaluation score.</summary>
         public decimal EvalMaxScore { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets whether the item is a draft.</summary>
         public bool IsDraft { get; set; }
 
+        /// <summary>Gets or sets the prompt content.</summary>
         public string PromptContent { get; set; }
 
         public PromptItem_GetIdAndNameResponse()
         {
         }
 
+        /// <summary>Maps a prompt item entity to this compact response.</summary>
+        /// <param name="promptItem">The prompt item to map.</param>
         public PromptItem_GetIdAndNameResponse(PromptItem promptItem)
         {
             Id = promptItem.Id;

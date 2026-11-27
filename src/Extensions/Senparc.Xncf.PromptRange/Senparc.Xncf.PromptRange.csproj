@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.20.17.1</Version>
+    <Version>0.20.17.2</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -179,7 +179,11 @@
         [2026-11-24] v0.20.17 Align PromptRange neutral resource entries
         1. Remove obsolete duplicate resource keys across locale files for consistent frontend localization lookups.
         2. Updated functional behavior and package metadata for the current module changes.
-        3. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
+        3. Preserved existing public APIs and runtime integration while incorporating the related improvements.
+        [2026-11-27] v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+        1. Removed unused project references and aligned dependent module integration.
+        2. Applied standardized copyright headers, XML documentation, and localization metadata across touched sources.
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
     <DefineConstants Condition="'$(Configuration)|$(Platform)'=='NcfDebugForPromptRange|AnyCPU'">

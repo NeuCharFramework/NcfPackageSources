@@ -951,3 +951,12 @@
     .run-status-bar { flex-wrap: wrap; }
     .run-status-bar > .el-input { order: 5; width: 100%; max-width: none; margin-left: 0; flex-basis: 100%; }
 }
+body.workflow-chat-preview .workflow-list-pane,
+body.workflow-chat-preview .workflow-palette,
+body.workflow-chat-preview .workflow-inspector {
+    display: none;
+}
+
+body.workflow-chat-preview .workflow-shell {
+    grid-template-columns: minmax(0, 1fr);
+}

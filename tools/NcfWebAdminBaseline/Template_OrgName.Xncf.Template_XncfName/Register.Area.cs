@@ -12,6 +12,9 @@
     Modified by: Senparc - 20261124
     Change description: v1.1.15 Integrated localization, tooling, and runtime improvements across the module.
 
+    Modified by: Senparc - 20261127
+    Change description: v1.1.16 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Hosting;
@@ -42,6 +45,12 @@ namespace Template_OrgName.Xncf.Template_XncfName
                           new AreaPageMenuItem(GetAreaUrl($"/Admin/Template_XncfName/DatabaseSample"), Template_XncfNameResource.Get("Area.DatabaseSample"), "fa fa-bookmark-o")
         };
 
+        /// <summary>
+        /// Registers the template Razor Pages area and emits the localized startup log.
+        /// </summary>
+        /// <param name="builder">The MVC builder being configured.</param>
+        /// <param name="env">The host environment used by the area contract.</param>
+        /// <returns>The configured MVC builder.</returns>
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
             builder.AddRazorPagesOptions(options =>

@@ -10,6 +10,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.12 Localized DesktopBridge pairing and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.4.12.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +32,12 @@ public sealed partial class Register : IAreaRegister, IXncfRazorRuntimeCompilati
         new AreaPageMenuItem(GetAreaHomeUrl(), "设备配对与会话", "fa fa-desktop")
     ];
 
+    /// <summary>
+    /// Registers the DesktopBridge Razor Pages area with the supplied MVC builder.
+    /// </summary>
+    /// <param name="builder">The MVC builder being configured.</param>
+    /// <param name="env">The host environment reserved for area-specific configuration.</param>
+    /// <returns>The same MVC builder after DesktopBridge area configuration.</returns>
     public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
     {
         return builder.AddRazorPagesOptions(_ => { });

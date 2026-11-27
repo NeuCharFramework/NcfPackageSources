@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.13-preview12 Updated repository infrastructure and related localization metadata
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.13.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET;
@@ -38,6 +41,11 @@ namespace Senparc.Ncf.Repository
 
         //public ClientRepositoryBase() : this(null) { }
 
+        /// <summary>
+        /// Initializes a repository and resolves the entity-set name for its entity type.
+        /// </summary>
+        /// <param name="db">The NCF database abstraction used for persistence.</param>
+        /// <exception cref="KeyNotFoundException">Thrown when the entity type has no registered entity-set metadata.</exception>
         public ClientRepositoryBase(INcfDbData db) : base(db)
         {
             //System.Web.HttpContext.Current.Response.Write("-"+this.GetType().Name + "<br />");

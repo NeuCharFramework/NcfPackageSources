@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.14.14 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.14.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -68,7 +71,7 @@ namespace Senparc.Xncf.SystemCore
 
         public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_SYSTEM_CORE_UID;// "00000000-0000-0000-0001-000000000001";
 
-        public override string Version => "0.1.1";//the version number is required
+        public override string Version => "0.14.14.2";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -76,7 +79,8 @@ namespace Senparc.Xncf.SystemCore
 
         public override string Description => RegisterText.Description;
 
-        public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
+    /// <inheritdoc/>
+    public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             //Legacy comment translated to English.
             //await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
@@ -130,7 +134,8 @@ namespace Senparc.Xncf.SystemCore
             await base.InstallOrUpdateAsync(serviceProvider, installOrUpdate);
         }
 
-        public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
+    /// <inheritdoc/>
+    public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             //Legacy comment translated to English.
 
@@ -138,7 +143,8 @@ namespace Senparc.Xncf.SystemCore
         }
         #endregion
 
-        public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
+    /// <inheritdoc/>
+    public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             //readLogconfigurationfile
             try
@@ -189,7 +195,8 @@ namespace Senparc.Xncf.SystemCore
             return base.AddXncfModule(services, configuration, env);
         }
 
-        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+    /// <inheritdoc/>
+    public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             #region Legacy section
 

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.3.14.1</Version>
+		<Version>0.3.14.2</Version>
 		<AssemblyName>Senparc.Xncf.Accounts</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Accounts</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -64,7 +64,11 @@
 		    2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
         [2026-11-24] v0.3.14 Dependency compatibility update for affected Senparc modules.
         1. Aligned dependent package metadata with the current Senparc module versions.
-        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.</PackageReleaseNotes>
+        2. Preserved existing public APIs and runtime integration while incorporating the related improvements.
+        [2026-11-27] v0.3.14.2 Improve source documentation, headers, and module metadata consistency.
+        1. Removed unused project references and aligned dependent module integration.
+        2. Applied standardized copyright headers, XML documentation, and localization metadata across touched sources.
+    </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>
 		<UserSecretsId>09f08471-c710-42f1-9f6b-936794838320</UserSecretsId>

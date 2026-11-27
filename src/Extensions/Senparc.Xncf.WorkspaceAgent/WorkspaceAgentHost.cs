@@ -161,6 +161,10 @@ public static class WorkspaceAgentHost
                 engine,
                 request,
                 cancellationToken).ConfigureAwait(false),
+            WorkspaceAgentOperations.Copy => await CopyAsync(
+                engine,
+                request,
+                cancellationToken).ConfigureAwait(false),
             WorkspaceAgentOperations.Search => await engine.SearchAsync(
                 Deserialize<WorkspaceSearchRequest>(request),
                 cancellationToken).ConfigureAwait(false),
@@ -232,6 +236,19 @@ public static class WorkspaceAgentHost
     {
         await engine.MoveEntryAsync(
             Deserialize<WorkspaceMoveEntryRequest>(request),
+            cancellationToken).ConfigureAwait(false);
+        return null;
+    }
+
+    /// <summary>Copies a workspace entry using the request's overwrite/ETag policy.</summary>
+    /// <param name="engine">The workspace engine.</param><param name="request">The agent request.</param><param name="cancellationToken">Cancellation token.</param>
+    private static async Task<object?> CopyAsync(
+        WorkspaceFileSystemEngine engine,
+        WorkspaceAgentRequest request,
+        CancellationToken cancellationToken)
+    {
+        await engine.CopyEntryAsync(
+            Deserialize<WorkspaceCopyEntryRequest>(request),
             cancellationToken).ConfigureAwait(false);
         return null;
     }

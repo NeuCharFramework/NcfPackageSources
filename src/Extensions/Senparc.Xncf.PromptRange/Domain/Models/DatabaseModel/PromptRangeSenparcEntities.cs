@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.17.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -26,26 +29,18 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         {
         }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets persisted prompt items.</summary>
         public DbSet<PromptItem> PromptItems { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets persisted prompt results.</summary>
         public DbSet<PromptResult> PromptResults { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets persisted language-model configurations.</summary>
         public DbSet<LlModel> LlmModels { get; set; }
 
         public DbSet<PromptRange> PromptRanges { get; set; }
 
-        /// <summary>
-        ///Legacy comment translated to English.
-        /// </summary>
+        /// <summary>Gets or sets persisted prompt-result chat messages.</summary>
         public DbSet<PromptResultChat> PromptResultChats { get; set; }
 
         //DOT REMOVE OR MODIFY THIS LINE - Entities Point

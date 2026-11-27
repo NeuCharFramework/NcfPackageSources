@@ -13,6 +13,10 @@ namespace Senparc.Xncf.AIKernel.Models
     [MultipleMigrationDbContext(MultipleDatabaseType.Dm, typeof(Register))]
     public class AIKernelSenparcEntities_Dm : AIKernelSenparcEntities
     {
+        /// <summary>
+        /// Initializes the DM-specific AIKernel DbContext.
+        /// </summary>
+        /// <param name="dbContextOptions">The EF Core options configured for DM.</param>
         public AIKernelSenparcEntities_Dm(DbContextOptions<AIKernelSenparcEntities_Dm> dbContextOptions) : base(dbContextOptions)
         {
         }
@@ -32,6 +36,9 @@ namespace Senparc.Xncf.AIKernel.Models
             app.UseNcfDatabase("Senparc.Ncf.Database.Dm", "Senparc.Ncf.Database.Dm", "DmDatabaseConfiguration");
         };
 
+        /// <summary>
+        /// Initializes the DM design-time DbContext factory.
+        /// </summary>
         public SenparcDbContextFactory_Dm() : base(SenparcDbContextFactoryConfig.RootDirectoryPath)
         {
 

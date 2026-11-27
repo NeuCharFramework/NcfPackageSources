@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -39,6 +42,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         private readonly PromptOptimizationService _promptOptimizationService;
         private readonly ILogger<PromptOptimizationAppService> _logger;
 
+        /// <summary>
+        /// Initializes the Prompt optimization application service.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
+        /// <param name="promptOptimizationService">The service that initializes and optimizes prompts.</param>
+        /// <param name="logger">The logger used for request diagnostics.</param>
         public PromptOptimizationAppService(
             IServiceProvider serviceProvider, 
             PromptOptimizationService promptOptimizationService,
@@ -50,8 +59,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Ensures the built-in Prompt optimization Agent and supporting PromptRange data exist.
         /// </summary>
+        /// <returns>A response containing the initialization event.</returns>
         [HttpPost]
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PromptInitResponseEvent>> EnsureInitializedAsync()
@@ -65,8 +75,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Optimizes prompt content using the supplied requirement and optimization context.
         /// </summary>
+        /// <param name="request">The PromptCode, current content, user requirement, and context.</param>
+        /// <returns>A response containing the optimization event and generated content.</returns>
+        /// <exception cref="NcfExceptionBase">Thrown when required PromptCode, content, or context values are missing.</exception>
         [HttpPost]
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PromptOptimizationResponseEvent>> OptimizeAsync([FromBody] PromptOptimizationRequestDto request)
@@ -106,27 +119,27 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
     }
 
     /// <summary>
-    /// Prompt optimizerequest DTO
+    /// Carries the prompt content, user requirement, and model context used for optimization.
     /// </summary>
     public class PromptOptimizationRequestDto
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the prompt code being optimized.
         /// </summary>
         public string PromptCode { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the current prompt content.
         /// </summary>
         public string PromptContent { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the requested optimization goal.
         /// </summary>
         public string UserRequirement { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets optional model and optimization context.
         /// </summary>
         public OptimizationContext Context { get; set; }
     }

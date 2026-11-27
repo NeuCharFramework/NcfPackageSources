@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -25,12 +28,13 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
     /// <summary>
-    ///Legacy comment translated to English.
+    /// Represents an administration menu, page, or button permission node.
     /// </summary>
     [Table("SysMenus")]
     public class SysMenu : EntityBase<string>
     {
 
+        /// <summary>Initializes a menu with generated identity, timestamps, and an empty resource code.</summary>
         public SysMenu()
         {
             Id = Guid.NewGuid().ToString();
@@ -39,6 +43,10 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
             ResourceCode = string.Empty;
         }
 
+        /// <summary>
+        /// Initializes a menu from a DTO.
+        /// </summary>
+        /// <param name="sysMenuDto">The menu values.</param>
         public SysMenu(SysMenuDto sysMenuDto) : this()
         {
             LastUpdateTime = DateTime.Now;
@@ -61,7 +69,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public string MenuName { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the parent menu identifier.
         /// </summary>
         [MaxLength(150)]
         public string ParentId { get; set; }
@@ -76,7 +84,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public string Icon { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether the menu is locked against ordinary editing.
         /// </summary>
         public bool IsLocked { get; set; }
 
@@ -86,11 +94,15 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public MenuType MenuType { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the resource code used by permission checks.
         /// </summary>
         [MaxLength(150)]
         public string ResourceCode { get; set; }
 
+        /// <summary>
+        /// Updates editable menu metadata and refreshes the modification timestamp.
+        /// </summary>
+        /// <param name="sysMenuDto">The replacement menu values.</param>
         public void Update(SysMenuDto sysMenuDto)
         {
             this.LastUpdateTime = DateTime.Now;
@@ -103,12 +115,12 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
             ResourceCode = sysMenuDto.ResourceCode;
         }
         /// <summary>
-        /// 
+        /// Gets or sets the display sort order.
         /// </summary>
         public int Sort { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets whether the menu is visible.
         /// </summary>
         public bool Visible { get; set; }
     }

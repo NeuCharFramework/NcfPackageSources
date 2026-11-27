@@ -12,6 +12,9 @@
     Modified by: Senparc - 20261125
     Change description: Added decoupled command parameters and option providers.
 
+    Modified by: Senparc - 20261127
+    Change description: v0.29.1.2 Extend shared chat-tool contracts for admin task initiation.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -30,6 +33,15 @@ namespace Senparc.Ncf.XncfBase.ChatTools
     {
         Task<IReadOnlyCollection<ChatToolParameterOption>> GetOptionsAsync(
             ChatToolParameterOptionsRequest request,
+            CancellationToken cancellationToken = default);
+    }
+
+    public interface IChatToolAsyncActionMonitor
+    {
+        bool Supports(ChatToolAsyncAction action);
+
+        Task<ChatToolAsyncActionState> GetStateAsync(
+            ChatToolAsyncAction action,
             CancellationToken cancellationToken = default);
     }
 
@@ -92,4 +104,19 @@ namespace Senparc.Ncf.XncfBase.ChatTools
         public IReadOnlyCollection<ChatToolParameterOption> Options { get; init; }
             = Array.Empty<ChatToolParameterOption>();
     }
+
+    public sealed record ChatToolAsyncAction(
+        string ActionType,
+        string Target,
+        int OwnerId,
+        string Name);
+
+    public sealed record ChatToolAsyncActionState(
+        string ActionType,
+        string Target,
+        string Status,
+        bool IsTerminal,
+        string Message,
+        string Result,
+        int PendingHumanCount = 0);
 }

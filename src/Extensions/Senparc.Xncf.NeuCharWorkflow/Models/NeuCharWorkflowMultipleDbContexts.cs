@@ -19,6 +19,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.0.0 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -34,30 +37,35 @@ namespace Senparc.Xncf.NeuCharWorkflow.Models;
 [MultipleMigrationDbContext(MultipleDatabaseType.Sqlite, typeof(Register))]
 public sealed class NeuCharWorkflowSenparcEntities_Sqlite : NeuCharWorkflowSenparcEntities
 {
+    /// <inheritdoc />
     public NeuCharWorkflowSenparcEntities_Sqlite(DbContextOptions<NeuCharWorkflowSenparcEntities_Sqlite> options) : base(options) { }
 }
 
 [MultipleMigrationDbContext(MultipleDatabaseType.SqlServer, typeof(Register))]
 public sealed class NeuCharWorkflowSenparcEntities_SqlServer : NeuCharWorkflowSenparcEntities
 {
+    /// <inheritdoc />
     public NeuCharWorkflowSenparcEntities_SqlServer(DbContextOptions<NeuCharWorkflowSenparcEntities_SqlServer> options) : base(options) { }
 }
 
 [MultipleMigrationDbContext(MultipleDatabaseType.MySql, typeof(Register))]
 public sealed class NeuCharWorkflowSenparcEntities_MySql : NeuCharWorkflowSenparcEntities
 {
+    /// <inheritdoc />
     public NeuCharWorkflowSenparcEntities_MySql(DbContextOptions<NeuCharWorkflowSenparcEntities_MySql> options) : base(options) { }
 }
 
 [MultipleMigrationDbContext(MultipleDatabaseType.PostgreSQL, typeof(Register))]
 public sealed class NeuCharWorkflowSenparcEntities_PostgreSQL : NeuCharWorkflowSenparcEntities
 {
+    /// <inheritdoc />
     public NeuCharWorkflowSenparcEntities_PostgreSQL(DbContextOptions<NeuCharWorkflowSenparcEntities_PostgreSQL> options) : base(options) { }
 }
 
 [MultipleMigrationDbContext(MultipleDatabaseType.Oracle, typeof(Register))]
 public sealed class NeuCharWorkflowSenparcEntities_Oracle : NeuCharWorkflowSenparcEntities
 {
+    /// <inheritdoc />
     public NeuCharWorkflowSenparcEntities_Oracle(DbContextOptions<NeuCharWorkflowSenparcEntities_Oracle> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -78,6 +86,7 @@ public sealed class NeuCharWorkflowSenparcEntities_Oracle : NeuCharWorkflowSenpa
 [MultipleMigrationDbContext(MultipleDatabaseType.Dm, typeof(Register))]
 public sealed class NeuCharWorkflowSenparcEntities_Dm : NeuCharWorkflowSenparcEntities
 {
+    /// <inheritdoc />
     public NeuCharWorkflowSenparcEntities_Dm(DbContextOptions<NeuCharWorkflowSenparcEntities_Dm> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -98,6 +107,7 @@ public sealed class NeuCharWorkflowDbContextFactory_Sqlite
 {
     protected override Action<IApplicationBuilder> AppAction => app =>
         app.UseNcfDatabase("Senparc.Ncf.Database.Sqlite", "Senparc.Ncf.Database.Sqlite", "SqliteMemoryDatabaseConfiguration");
+    /// <summary>Initializes the SQLite design-time workflow context factory.</summary>
     public NeuCharWorkflowDbContextFactory_Sqlite() : base(SenparcDbContextFactoryConfig.RootDirectoryPath) { }
 }
 
@@ -106,6 +116,7 @@ public sealed class NeuCharWorkflowDbContextFactory_SqlServer
 {
     protected override Action<IApplicationBuilder> AppAction => app =>
         app.UseNcfDatabase("Senparc.Ncf.Database.SqlServer", "Senparc.Ncf.Database.SqlServer", "SqlServerDatabaseConfiguration");
+    /// <summary>Initializes the SQL Server design-time workflow context factory.</summary>
     public NeuCharWorkflowDbContextFactory_SqlServer() : base(SenparcDbContextFactoryConfig.RootDirectoryPath) { }
 }
 
@@ -114,6 +125,7 @@ public sealed class NeuCharWorkflowDbContextFactory_MySql
 {
     protected override Action<IApplicationBuilder> AppAction => app =>
         app.UseNcfDatabase("Senparc.Ncf.Database.MySql", "Senparc.Ncf.Database.MySql", "MySqlDesignTimeDatabaseConfiguration");
+    /// <summary>Initializes the MySQL design-time workflow context factory.</summary>
     public NeuCharWorkflowDbContextFactory_MySql() : base(SenparcDbContextFactoryConfig.RootDirectoryPath) { }
 }
 
@@ -122,6 +134,7 @@ public sealed class NeuCharWorkflowDbContextFactory_PostgreSQL
 {
     protected override Action<IApplicationBuilder> AppAction => app =>
         app.UseNcfDatabase("Senparc.Ncf.Database.PostgreSQL", "Senparc.Ncf.Database.PostgreSQL", "PostgreSQLDatabaseConfiguration");
+    /// <summary>Initializes the PostgreSQL design-time workflow context factory.</summary>
     public NeuCharWorkflowDbContextFactory_PostgreSQL() : base(SenparcDbContextFactoryConfig.RootDirectoryPath) { }
 }
 
@@ -130,6 +143,7 @@ public sealed class NeuCharWorkflowDbContextFactory_Oracle
 {
     protected override Action<IApplicationBuilder> AppAction => app =>
         app.UseNcfDatabase("Senparc.Ncf.Database.Oracle", "Senparc.Ncf.Database.Oracle", "OracleDatabaseConfiguration");
+    /// <summary>Initializes the Oracle design-time workflow context factory.</summary>
     public NeuCharWorkflowDbContextFactory_Oracle() : base(SenparcDbContextFactoryConfig.RootDirectoryPath) { }
 }
 
@@ -138,5 +152,6 @@ public sealed class NeuCharWorkflowDbContextFactory_Dm
 {
     protected override Action<IApplicationBuilder> AppAction => app =>
         app.UseNcfDatabase("Senparc.Ncf.Database.Dm", "Senparc.Ncf.Database.Dm", "DmDatabaseConfiguration");
+    /// <summary>Initializes the Dm design-time workflow context factory.</summary>
     public NeuCharWorkflowDbContextFactory_Dm() : base(SenparcDbContextFactoryConfig.RootDirectoryPath) { }
 }

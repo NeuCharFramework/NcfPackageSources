@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.27.13 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.27.13.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -31,14 +34,18 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 {
     public class DatabaseUpdateAppService : AppServiceBase
     {
+        /// <summary>
+        /// Initializes the database update application service.
+        /// </summary>
+        /// <param name="serviceProvider">The dependency provider used by the base service.</param>
         public DatabaseUpdateAppService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Reports applied and pending EF Core migrations without applying them.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A string response containing migration status and guidance.</returns>
         [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.CheckUpdate.Name", "Function.Database.CheckUpdate.Description", typeof(Register))]
         public async Task<StringAppResponse> ShowDatabaseConfiguration(/*BaseAppRequest request*/)
         {
@@ -73,6 +80,10 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.Merge.Name", "Function.Database.Merge.Description", typeof(Register))]
+        /// <summary>
+        /// Resets migration state and applies pending database migrations immediately.
+        /// </summary>
+        /// <returns>A string response containing migration progress.</returns>
         public async Task<StringAppResponse> UpdateDatabase()
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

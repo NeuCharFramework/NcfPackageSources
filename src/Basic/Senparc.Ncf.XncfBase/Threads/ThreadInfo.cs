@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.29.1 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.29.1.2 Extend shared chat-tool contracts for admin task initiation.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
@@ -29,44 +32,52 @@ using System.Threading.Tasks;
 
 namespace Senparc.Ncf.XncfBase.Threads
 {
-    /// <summary>
-    /// ThreadInfo
-    /// </summary>
+        /// <summary>
+        /// Describes one registered XNCF background task, its interval, lifecycle token,
+        /// execution callback, and recent diagnostic stories.
+        /// </summary>
     public class ThreadInfo
     {
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the display name used in thread diagnostics and logs.
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the delay between scheduled task iterations.
         /// </summary>
         public TimeSpan IntervalTime { get; set; }
         /// <summary>
-        /// executetask
+        /// Gets or sets the asynchronous callback executed by the thread runner.
         /// </summary>
         public Func<IApplicationBuilder, ThreadInfo, Task> Task { get; set; }
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets the optional callback used to handle unhandled task exceptions.
         /// </summary>
         public Func<Exception, Task> ExceptionHandler { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the cancellation token signaled when the application is stopping.
         /// </summary>
         public CancellationToken StoppingToken { get; internal set; } = CancellationToken.None;
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Stores the bounded diagnostic story list for this thread.
         /// </summary>
         private List<string> Stories { get; set; } = new List<string>();
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Returns recent thread stories as HTML-encoded line breaks.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The encoded story history.</returns>
         public string StoryHtml => string.Join("<br /><br />", Stories.Select(z => z.HtmlEncode()).ToArray());
 
+        /// <summary>
+        /// Initializes a background thread definition.
+        /// </summary>
+        /// <param name="name">The display name.</param>
+        /// <param name="intervalTime">The delay between task iterations.</param>
+        /// <param name="task">The asynchronous task callback.</param>
+        /// <param name="exceptionHandler">Optional callback for unhandled task exceptions.</param>
         public ThreadInfo(string name, TimeSpan intervalTime, Func<IApplicationBuilder, ThreadInfo, Task> task, Func<Exception, Task> exceptionHandler = null)
         {
             Name = name;
@@ -76,10 +87,10 @@ namespace Senparc.Ncf.XncfBase.Threads
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Adds a timestamped diagnostic story and retains only the most recent entries.
         /// </summary>
-        /// <param name="msg"></param>
-        /// <returns></returns>
+        /// <param name="msg">The diagnostic message.</param>
+        /// <returns>The timestamped story entry.</returns>
         public string RecordStory(string msg)
         {
             while (Stories.Count > 10)

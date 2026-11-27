@@ -13,6 +13,10 @@ namespace Senparc.Xncf.AIKernel.Models
     [MultipleMigrationDbContext(MultipleDatabaseType.MySql, typeof(Register))]
     public class AIKernelSenparcEntities_MySql : AIKernelSenparcEntities
     {
+        /// <summary>
+        /// Initializes the MySQL-specific AIKernel DbContext.
+        /// </summary>
+        /// <param name="dbContextOptions">The EF Core options configured for MySQL.</param>
         public AIKernelSenparcEntities_MySql(DbContextOptions<AIKernelSenparcEntities_MySql> dbContextOptions) : base(dbContextOptions)
         {
         }
@@ -31,6 +35,9 @@ namespace Senparc.Xncf.AIKernel.Models
             app.UseNcfDatabase("Senparc.Ncf.Database.MySql", "Senparc.Ncf.Database.MySql", "MySqlDesignTimeDatabaseConfiguration");
         };
 
+        /// <summary>
+        /// Initializes the MySQL design-time DbContext factory.
+        /// </summary>
         public SenparcDbContextFactory_MySql() : base(SenparcDbContextFactoryConfig.RootDirectoryPath)
         {
 

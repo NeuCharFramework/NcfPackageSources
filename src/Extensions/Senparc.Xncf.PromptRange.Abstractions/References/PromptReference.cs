@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.3.3-preview8 Localized PromptRange administration and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.3.3.2-preview9 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 using System;
 using System.Collections.Generic;
@@ -27,6 +30,16 @@ public sealed class PromptReference
     public int Start { get; set; }
     public int Length { get; set; }
 
+    /// <summary>
+    /// Validates that prompt references are non-null, ordered, non-overlapping,
+    /// positively sized, and contained within the supplied content.
+    /// </summary>
+    /// <param name="content">The source prompt content whose character range is referenced.</param>
+    /// <param name="references">The ordered prompt references to validate.</param>
+    /// <exception cref="ArgumentException">
+    /// Thrown when more than 32 references are supplied or a reference is invalid,
+    /// overlaps a preceding reference, or extends beyond the content length.
+    /// </exception>
     public static void ValidateRanges(string content, IReadOnlyList<PromptReference> references)
     {
         if (references == null) return;

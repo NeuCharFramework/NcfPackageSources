@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -29,8 +32,11 @@ using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 
 namespace Senparc.Xncf.AgentsManager.Models
 {
+    /// <summary>EF Core context for AgentsManager persistence.</summary>
     public class AgentsManagerSenparcEntities : XncfDatabaseDbContext
     {
+        /// <summary>Initializes the AgentsManager database context.</summary>
+        /// <param name="dbContextOptions">The provider-specific EF Core options.</param>
         public AgentsManagerSenparcEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {
         }
@@ -42,17 +48,17 @@ namespace Senparc.Xncf.AgentsManager.Models
         public DbSet<ChatGroupMember> ChatGroupMembers { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets persisted remote Agent configurations.
         /// </summary>
         public DbSet<RemoteAgent> RemoteAgents { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets remote Agent membership links.
         /// </summary>
         public DbSet<ChatGroupRemoteMember> ChatGroupRemoteMembers { get; set; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets or sets published A2A Agent configurations.
         /// </summary>
         public DbSet<PublishedA2AAgent> PublishedA2AAgents { get; set; }
 

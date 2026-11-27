@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.20.14 Updated database integration support and related localization metadata
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Data.Sqlite;
@@ -65,6 +68,7 @@ namespace Senparc.Ncf.Database.Sqlite
         };
 
 
+        /// <inheritdoc />
         public override string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath)
         {
             dbConnection.Open();
@@ -73,6 +77,7 @@ namespace Senparc.Ncf.Database.Sqlite
             return null;
         }
 
+        /// <inheritdoc />
         public override string GetDropTableSql(DbContext dbContext, string tableName)
         {
             return $"DROP TABLE IF EXISTS {tableName}";

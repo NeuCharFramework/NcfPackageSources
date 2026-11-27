@@ -32,6 +32,11 @@
     Change description: v0.16.4 Updated module behavior and related support.
 
 
+
+
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -50,6 +55,12 @@ namespace Senparc.Xncf.AIKernel.Areas.AIFineTuning.Pages
         private readonly FineTuningWorkerClient _worker;
         private readonly ILogger<Index> _logger;
 
+        /// <summary>
+        /// Initializes the fine-tuning administration page.
+        /// </summary>
+        /// <param name="xncfModuleService">The lazy XNCF module service.</param>
+        /// <param name="worker">The fine-tuning Worker client.</param>
+        /// <param name="logger">The page logger.</param>
         public Index(Lazy<XncfModuleService> xncfModuleService, FineTuningWorkerClient worker,
             ILogger<Index> logger) : base(xncfModuleService)
         {
@@ -57,10 +68,20 @@ namespace Senparc.Xncf.AIKernel.Areas.AIFineTuning.Pages
             _logger = logger;
         }
 
+        /// <summary>
+        /// Initializes the fine-tuning page request.
+        /// </summary>
         public void OnGet()
         {
         }
 
+        /// <summary>
+        /// Downloads one Worker training artifact with private no-store headers.
+        /// </summary>
+        /// <param name="workerAlias">The Worker alias.</param>
+        /// <param name="id">The Worker job identifier.</param>
+        /// <param name="artifactId">The artifact identifier.</param>
+        /// <returns>A file result or an HTTP 502 error when the Worker request fails.</returns>
         public async Task<IActionResult> OnGetArtifactAsync(string workerAlias, string id, string artifactId)
         {
             try

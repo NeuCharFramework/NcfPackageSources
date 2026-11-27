@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.25.1 Localized Weixin account and administration surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.25.1.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -38,10 +41,19 @@ public class WeixinClawMessageReceipt : EntityBase<int>
 
     public DateTime ReceivedAt { get; private set; }
 
+    /// <summary>
+    /// Reserved for EF Core materialization.
+    /// </summary>
     private WeixinClawMessageReceipt()
     {
     }
 
+    /// <summary>
+    /// Initializes a received-message receipt used for duplicate suppression.
+    /// </summary>
+    /// <param name="accountId">The WeixinClaw account identifier.</param>
+    /// <param name="messageId">The provider message identifier.</param>
+    /// <param name="seq">The provider sequence number.</param>
     public WeixinClawMessageReceipt(int accountId, string messageId, long seq)
     {
         WeixinClawAccountId = accountId;

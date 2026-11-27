@@ -28,6 +28,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.42.0.0 add MCP endpoint gateway and tool invocation contracts
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Hosting;
@@ -277,7 +280,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
                 options.ModuleProjectName,
                 options.SolutionFilePath,
                 log);
-            //Legacy comment translated to English.
+            // Preserve the ambient tenant identity so recovery and diagnostics remain
+            // associated with the tenant that created the preview session.
             newState.TenantId = ambientTenant?.MatchSuccess == true ? ambientTenant.Id : 0;
             _sessions[sessionId] = newState;
             SetStage(newState, XncfPreviewStage.Queued, "预览任务已进入队列。", null);
@@ -1788,7 +1792,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             public string SolutionFilePath { get; }
 
             /// <summary>
-            ///Legacy comment translated to English.
+            /// Gets or sets the tenant identifier associated with the preview session.
             /// </summary>
             public int TenantId { get; set; }
 

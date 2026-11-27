@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.5.0.0 Added StartChatToolTask for admin-driven chat-tool runs with async task monitoring
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authorization;
@@ -43,11 +46,20 @@ public sealed class NeuCharWorkflowHumanInputController : ControllerBase
     private const string ResumeKeyHeader = "X-NeuChar-Workflow-Resume-Key";
     private readonly NeuCharWorkflowHumanInputService _humanInputService;
 
+    /// <summary>
+    /// Initializes the external Human Input resume controller.
+    /// </summary>
+    /// <param name="humanInputService">The service that validates and resolves pending requests.</param>
     public NeuCharWorkflowHumanInputController(NeuCharWorkflowHumanInputService humanInputService)
     {
         _humanInputService = humanInputService;
     }
 
+    /// <summary>
+    /// Returns pending external Human Input requests for a workflow after resume-key validation.
+    /// </summary>
+    /// <param name="workflowId">The workflow identifier.</param>
+    /// <returns>An HTTP 200 response containing pending requests.</returns>
     [HttpGet("pending/{workflowId:int}")]
     public IActionResult GetPending(int workflowId)
     {
@@ -56,6 +68,13 @@ public sealed class NeuCharWorkflowHumanInputController : ControllerBase
         return Ok(new { success = true, items = pending });
     }
 
+    /// <summary>
+    /// Resolves one pending Human Input request using the supplied approval, input, and reason.
+    /// </summary>
+    /// <param name="requestId">The pending request identifier.</param>
+    /// <param name="request">The optional resume key and resolution values.</param>
+    /// <param name="cancellationToken">Token used to cancel resolution.</param>
+    /// <returns>An HTTP 200 result when resolved, otherwise an HTTP 409 conflict.</returns>
     [HttpPost("{requestId}")]
     public async Task<IActionResult> ResumeAsync(
         string requestId,
@@ -79,6 +98,11 @@ public sealed class NeuCharWorkflowHumanInputController : ControllerBase
             : Conflict(new { success = false, errorMessage = result.Message });
     }
 
+    /// <summary>
+    /// Resolves a resume key from the request body first, then the configured header.
+    /// </summary>
+    /// <param name="bodyKey">The optional body-provided key.</param>
+    /// <returns>The trimmed resume key, or <see langword="null"/> when absent.</returns>
     private string? ResolveResumeKey(string? bodyKey)
     {
         if (!string.IsNullOrWhiteSpace(bodyKey))

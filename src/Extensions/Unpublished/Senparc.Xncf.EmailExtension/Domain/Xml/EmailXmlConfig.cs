@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.12.16 Updated module behavior, localization metadata, and English source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.12.16.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Config;
@@ -33,6 +36,10 @@ namespace Senparc.Xncf.EmailExtension.Domain.Xml
 
         private const string EMAIL_PATH = "~/App_Data/email.config";
 
+        /// <summary>
+        /// Loads all email template configurations from the module XML file.
+        /// </summary>
+        /// <returns>The configured email templates.</returns>
         public static List<XmlConfig_Email> GetEmailConfigs()
         {
             XElement xml = XmlConfig.GetXElement(EMAIL_PATH);
@@ -51,10 +58,9 @@ namespace Senparc.Xncf.EmailExtension.Domain.Xml
         }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Loads all email template configurations from the module XML file.
         /// </summary>
-        ///Legacy comment translated to English.
-        /// <returns></returns>
+        /// <returns>The configured email templates.</returns>
         public static XmlConfig_Email GetEmailConfig(SendEmailType toUse)
         {
             string filename = XmlConfig.GetMapPath(EMAIL_PATH);
@@ -70,6 +76,11 @@ namespace Senparc.Xncf.EmailExtension.Domain.Xml
             };
         }
 
+        /// <summary>
+        /// Saves or replaces one email template and writes a timestamped backup file.
+        /// </summary>
+        /// <param name="config">The email template configuration to persist.</param>
+        /// <returns><see langword="true"/> after the XML and backup files are written.</returns>
         public static bool SaveEmailConfig(XmlConfig_Email config)
         {
             try

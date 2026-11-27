@@ -67,6 +67,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.19.4 Localized agent management and task surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.20.0.0 Add admin chat-tool task orchestration and MCP-aware chat improvements.
+
 ----------------------------------------------------------------*/
 
 #nullable enable annotations
@@ -947,6 +950,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 }
             }
 
+            // Persist the buffered response for the active executor before the
+            // group advances to another participant or completes the turn.
             async Task FlushActiveResponseAsync()
             {
                 if (state.ActiveResponseText.Length == 0 || string.IsNullOrWhiteSpace(state.ActiveExecutorId))

@@ -25,6 +25,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
+    Modified by: Senparc - 20261127
+    Change description: v0.31.1.2-preview13 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -102,6 +105,12 @@ namespace Senparc.Ncf.Core.AppServices
         /// </summary>
         public string GlobalPivotPermissionCodes { get; set; }
 
+        /// <summary>
+        /// Initializes FunctionRender metadata from literal name and description values.
+        /// </summary>
+        /// <param name="name">The function display name or localization key.</param>
+        /// <param name="description">The function description or localization key.</param>
+        /// <param name="registerType">The module registration type owning the function.</param>
         public FunctionRenderAttribute(string name, string description, Type registerType/*TODO: Can provide default values for system modules*/)
         {
             _name = name;
@@ -114,6 +123,17 @@ namespace Senparc.Ncf.Core.AppServices
         /// resolved whenever the properties are read, so a cached attribute still
         /// follows the current request culture.
         /// </summary>
+        /// <summary>
+        /// Initializes FunctionRender metadata backed by a resource catalog.
+        /// </summary>
+        /// <param name="resourceType">The resource type containing localized strings.</param>
+        /// <param name="nameResourceKey">The name resource key.</param>
+        /// <param name="descriptionResourceKey">The description resource key.</param>
+        /// <param name="registerType">The module registration type owning the function.</param>
+        /// <param name="nameFallback">Fallback name when localization is unavailable.</param>
+        /// <param name="descriptionFallback">Fallback description when localization is unavailable.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="resourceType"/> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when a resource key is blank.</exception>
         public FunctionRenderAttribute(
             Type resourceType,
             string nameResourceKey,

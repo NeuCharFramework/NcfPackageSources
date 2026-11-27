@@ -16,6 +16,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
+    Modified by: Senparc - 20261127
+    Change description: v0.17.4.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using AutoMapper;
@@ -31,6 +34,9 @@ namespace Senparc.Xncf.AIKernel.AutoMapperProfiles
 {
     public class AIKernelAutoMapperProfile : Profile
     {
+        /// <summary>
+        /// Initializes AIKernel entity/DTO mapping definitions.
+        /// </summary>
         public AIKernelAutoMapperProfile()
         {
             CreateMap<AIModel, AIModelDto>();

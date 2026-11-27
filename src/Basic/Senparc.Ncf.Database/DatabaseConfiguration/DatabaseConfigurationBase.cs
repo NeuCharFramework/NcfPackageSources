@@ -13,6 +13,9 @@
     Modified by: Senparc - 20261119
     Change description: v0.21.14 Updated database integration support and related localization metadata
 
+    Modified by: Senparc - 20261127
+    Change description: v0.21.14.2 Improve source documentation, headers, and module metadata consistency.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -27,36 +30,37 @@ using System.Data.Common;
 namespace Senparc.Ncf.Database
 {
     /// <summary>
-    ///Legacy comment translated to English.
-    ///Legacy comment translated to English.
+    /// Provides the shared EF Core configuration pipeline used by concrete NCF database providers.
     /// </summary>
     public abstract class DatabaseConfigurationBase<TBuilder, TExtension> : IDatabaseConfiguration<TBuilder, TExtension>
         where TBuilder : RelationalDbContextOptionsBuilder<TBuilder, TExtension>
         where TExtension :  RelationalOptionsExtension, new()
     {
+        /// <summary>
+        /// Gets the database provider represented by the concrete configuration.
+        /// </summary>
         public abstract MultipleDatabaseType MultipleDatabaseType { get; }
 
         /// <summary>
-        ///Legacy comment translated to English.
+        /// Gets the typed callback that forwards to the common database-options callback.
         /// </summary>
         public virtual Action<TBuilder, XncfDatabaseData> TypedDbContextOptionsActionBase => DbContextOptionsActionBase;
 
+        /// <summary>
+        /// Gets the common callback that configures migration assembly and history-table metadata
+        /// for an XNCF database context.
+        /// </summary>
         public Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionBase => (builder, xncfDatabaseData) =>
          {
 
-             //Legacy comment translated to English.
              var databaseConfigurationFactory = DatabaseConfigurationFactory.Instance;
-             //Legacy comment translated to English.
              if (xncfDatabaseData != null)
              {
                  var typedBuilder = builder as TBuilder;
 
-                 //Legacy comment translated to English.
                  var dbContextType = MultipleDatabasePool.Instance.GetXncfDbContextType(xncfDatabaseData.XncfDatabaseRegister.GetType());
 
-                 //Legacy comment translated to English.
                  var dbContextAssemblyName = xncfDatabaseData.AssemblyName ?? dbContextType.Assembly.FullName;
-                 //Legacy comment translated to English.
                  var databaseMigrationHistoryTableName = NcfDatabaseMigrationHelper.GetDatabaseMigrationHistoryTableName(xncfDatabaseData.XncfDatabaseRegister);
 
                  typedBuilder.MigrationsAssembly(dbContextAssemblyName)
@@ -64,51 +68,52 @@ namespace Senparc.Ncf.Database
              }
              else
              {
-                 //Legacy comment translated to English.
              }
          };
 
+        /// <summary>
+        /// Gets the provider-specific callback supplied by the concrete database configuration.
+        /// </summary>
         public abstract Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionExtension { get; }
 
+        /// <summary>
+        /// Gets the delegate that selects and configures the provider for an EF Core options builder.
+        /// </summary>
         public abstract Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase { get; }
 
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Builds the provider-specific SQL statement for backing up a database.
         /// </summary>
-        /// <param name="dbConnection"></param>
-        /// <param name="backupFilePath"></param>
-        /// <returns></returns>
+        /// <param name="dbConnection">The active database connection.</param>
+        /// <param name="backupFilePath">The destination backup path.</param>
+        /// <returns>The provider-specific backup statement.</returns>
         public abstract string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath);
         /// <summary>
-        ///Legacy comment translated to English.
-        ///Legacy comment translated to English.
+        /// Builds the provider-specific SQL statement for dropping a table.
         /// </summary>
-        /// <param name="dbConnection"></param>
-        /// <param name="tableName"></param>
-        /// <returns></returns>
+        /// <param name="dbContext">The active database context.</param>
+        /// <param name="tableName">The table name to drop.</param>
+        /// <returns>The provider-specific drop-table statement.</returns>
         public abstract string GetDropTableSql(DbContext dbContext, string tableName);
 
         /// <summary>
-        ///Legacy comment translated to English.
-        /// <para>var builder = new DbContextOptionsBuilder&lt;TDbContext&gt;(); builder.UseSqlServer(sqlConnection, DbContextOptionsAction);</para>
+        /// Applies the common, provider-specific, and caller-supplied callbacks to an EF Core
+        /// options builder using the concrete database provider.
         /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="xncfDatabaseData"></param>
-        /// <param name="connectionString"></param>
-        ///Legacy comment translated to English.
+        /// <param name="builder">The EF Core options builder to configure.</param>
+        /// <param name="connectionString">The database connection string.</param>
+        /// <param name="xncfDatabaseData">Optional XNCF database registration metadata.</param>
+        /// <param name="dbContextOptionsAction">An optional callback for additional provider options.</param>
         public void UseDatabase(DbContextOptionsBuilder builder,/*IRelationalDbContextOptionsBuilderInfrastructure optionsBuilder,*/ string connectionString,
                 XncfDatabaseData xncfDatabaseData = null, 
                 Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null)
         {
-            //Legacy comment translated to English.
             SetUseDatabase(builder, connectionString, xncfDatabaseData, b =>
                 {
                     //executebasecode
                     DbContextOptionsActionBase(b, xncfDatabaseData);
                     //executeextensioncode
                     DbContextOptionsActionExtension?.Invoke(b, xncfDatabaseData);
-                    //Legacy comment translated to English.
                     dbContextOptionsAction?.Invoke(b, xncfDatabaseData);
                 }
             );
